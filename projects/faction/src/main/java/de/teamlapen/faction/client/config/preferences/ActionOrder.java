@@ -107,7 +107,7 @@ public class ActionOrder extends PreferenceValue<Map<Holder<? extends IFaction<?
     /**
      * Immutable saved action order for a single faction; {@code order} and {@code excluded} are always duplicate-free and disjoint.
      */
-    record ActionPreferenceValue(List<Holder<? extends IAction<?>>> order, List<Holder<? extends IAction<?>>> excluded) {
+    public record ActionPreferenceValue(List<Holder<? extends IAction<?>>> order, List<Holder<? extends IAction<?>>> excluded) {
 
         private static final ActionPreferenceValue EMPTY = new ActionPreferenceValue(List.of(), List.of());
 
@@ -116,7 +116,7 @@ public class ActionOrder extends PreferenceValue<Map<Holder<? extends IFaction<?
                 ModCodecs.action().listOf().fieldOf("excluded").forGetter(ActionPreferenceValue::excluded)
         ).apply(inst, ActionPreferenceValue::new)).validate(ActionPreferenceValue::validate);
 
-        ActionPreferenceValue {
+        public ActionPreferenceValue {
             order = List.copyOf(order);
             excluded = List.copyOf(excluded);
         }

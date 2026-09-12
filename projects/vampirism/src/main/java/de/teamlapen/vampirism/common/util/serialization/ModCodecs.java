@@ -26,6 +26,7 @@ public class ModCodecs {
             return ops.getStream(input).flatMap(s -> {
                 final List<T> list = s.toList();
                 if (list.stream().allMatch(element -> ops.getNumberValue(element).result().isPresent())) {
+                    //noinspection OptionalGetWithoutIsPresent
                     return DataResult.success(list.stream().mapToDouble(element -> ops.getNumberValue(element).result().get().doubleValue()));
                 }
                 return DataResult.error(() -> "Some elements are not doubles: " + input);

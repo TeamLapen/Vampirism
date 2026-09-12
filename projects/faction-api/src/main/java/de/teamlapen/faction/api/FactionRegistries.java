@@ -7,7 +7,6 @@ import de.teamlapen.faction.api.factions.refinements.IRefinement;
 import de.teamlapen.faction.api.factions.refinements.IRefinementSet;
 import de.teamlapen.faction.api.factions.skills.*;
 import de.teamlapen.faction.api.factions.tasks.*;
-import de.teamlapen.faction.api.registries.RegistryProvider;
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.api.world.entities.minion.IMinionEntry;
 import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
@@ -17,32 +16,34 @@ import de.teamlapen.faction.api.world.items.consume.IFactionFoodBehavior;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 
-import static de.teamlapen.faction.api.registries.ApiRegistryProvider.registryKey;
-import static de.teamlapen.faction.api.registries.ApiRegistryProvider.retrieveRegistry;
+import java.util.function.Supplier;
+
+import static de.teamlapen.faction.api.ApiUtil.registryKey;
+import static de.teamlapen.faction.api.ApiUtil.retrieveRegistry;
 
 @SuppressWarnings("unused")
 public class FactionRegistries {
 
-    public static final RegistryProvider<IFaction<?>> FACTION = retrieveRegistry(Keys.FACTION);
-    public static final RegistryProvider<ISkill<?>> SKILL = retrieveRegistry(Keys.SKILL);
-    public static final RegistryProvider<IAction<?>> ACTION = retrieveRegistry(Keys.ACTION);
-    public static final RegistryProvider<ISkillPointProvider> SKILL_POINT_PROVIDER = retrieveRegistry(Keys.SKILL_POINT_PROVIDER);
+    public static final Supplier<Registry<IFaction<?>>> FACTION = retrieveRegistry(Keys.FACTION);
+    public static final Supplier<Registry<ISkill<?>>> SKILL = retrieveRegistry(Keys.SKILL);
+    public static final Supplier<Registry<IAction<?>>> ACTION = retrieveRegistry(Keys.ACTION);
+    public static final Supplier<Registry<ISkillPointProvider>> SKILL_POINT_PROVIDER = retrieveRegistry(Keys.SKILL_POINT_PROVIDER);
 
-    public static final RegistryProvider<FactionPlayerConsumer> FACTION_PLAYER_CONSUMER = retrieveRegistry(Keys.FACTION_PLAYER_CONSUMER);
-    public static final RegistryProvider<FactionPlayerBooleanSupplier> FACTION_PLAYER_BOOLEAN_SUPPLIER = retrieveRegistry(Keys.FACTION_PLAYER_BOOLEAN_SUPPLIER);
+    public static final Supplier<Registry<FactionPlayerConsumer>> FACTION_PLAYER_CONSUMER = retrieveRegistry(Keys.FACTION_PLAYER_CONSUMER);
+    public static final Supplier<Registry<FactionPlayerBooleanSupplier>> FACTION_PLAYER_BOOLEAN_SUPPLIER = retrieveRegistry(Keys.FACTION_PLAYER_BOOLEAN_SUPPLIER);
 
-    public static final RegistryProvider<IMinionEntry<?, ?>> MINION = retrieveRegistry(Keys.MINION);
-    public static final RegistryProvider<IMinionTask<?, ?>> MINION_TASK = retrieveRegistry(Keys.MINION_TASK);
+    public static final Supplier<Registry<IMinionEntry<?, ?>>> MINION = retrieveRegistry(Keys.MINION);
+    public static final Supplier<Registry<IMinionTask<?, ?>>> MINION_TASK = retrieveRegistry(Keys.MINION_TASK);
 
-    public static final RegistryProvider<IRefinement> REFINEMENT = retrieveRegistry(Keys.REFINEMENT);
-    public static final RegistryProvider<IRefinementSet> REFINEMENT_SET = retrieveRegistry(Keys.REFINEMENT_SET);
+    public static final Supplier<Registry<IRefinement>> REFINEMENT = retrieveRegistry(Keys.REFINEMENT);
+    public static final Supplier<Registry<IRefinementSet>> REFINEMENT_SET = retrieveRegistry(Keys.REFINEMENT_SET);
 
-    public static final RegistryProvider<MapCodec<? extends TaskReward>> TASK_REWARD = retrieveRegistry(Keys.TASK_REWARD);
-    public static final RegistryProvider<MapCodec<? extends TaskUnlocker>> TASK_UNLOCKER = retrieveRegistry(Keys.TASK_UNLOCKER);
-    public static final RegistryProvider<MapCodec<? extends TaskRequirement.Requirement<?>>> TASK_REQUIREMENT = retrieveRegistry(Keys.TASK_REQUIREMENT);
-    public static final RegistryProvider<MapCodec<? extends ITaskRewardInstance>> TASK_REWARD_INSTANCE = retrieveRegistry(Keys.TASK_REWARD_INSTANCE);
+    public static final Supplier<Registry<MapCodec<? extends TaskReward>>> TASK_REWARD = retrieveRegistry(Keys.TASK_REWARD);
+    public static final Supplier<Registry<MapCodec<? extends TaskUnlocker>>> TASK_UNLOCKER = retrieveRegistry(Keys.TASK_UNLOCKER);
+    public static final Supplier<Registry<MapCodec<? extends TaskRequirement.Requirement<?>>>> TASK_REQUIREMENT = retrieveRegistry(Keys.TASK_REQUIREMENT);
+    public static final Supplier<Registry<MapCodec<? extends ITaskRewardInstance>>> TASK_REWARD_INSTANCE = retrieveRegistry(Keys.TASK_REWARD_INSTANCE);
 
-    public static final RegistryProvider<IFactionFoodBehavior> FOOD_BEHAVIOUR = retrieveRegistry(Keys.FOOD_BEHAVIOUR);
+    public static final Supplier<Registry<IFactionFoodBehavior>> FOOD_BEHAVIOUR = retrieveRegistry(Keys.FOOD_BEHAVIOUR);
 
 
     public static class Keys {

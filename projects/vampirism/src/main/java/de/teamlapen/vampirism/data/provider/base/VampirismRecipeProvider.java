@@ -229,7 +229,7 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
 
     protected void infusedMetalSmeltingRecipe(ItemLike rawIngredient, Holder<Item> result, int level) {
         String ingredientName = RegUtil.id(rawIngredient.asItem()).getPath();
-        String resultName = result.getKey().identifier().getPath();
+        String resultName = result.unwrapKey().orElseThrow().identifier().getPath();
         SimpleCookingRecipeBuilder
                 .smelting(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(level), rawIngredient), RecipeCategory.BUILDING_BLOCKS,CookingBookCategory.MISC, PureLevel.template(result, level), (float) Math.pow(2F, level), 200 + level * 100)
                 .unlockedBy("has_" + resultName, has(rawIngredient))

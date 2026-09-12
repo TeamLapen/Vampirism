@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.effects;
 
-import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.VampirismEffects;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.util.Helper;
 import net.minecraft.resources.Identifier;
@@ -51,7 +51,7 @@ public class ModEffectInstanceHelper {
                 return other == this;
             }
         };
-        return withSource(source, VReference.PERMANENT_INVISIBLE_MOB_EFFECT, VReference.VAMPIRE_NIGHT_VISION_EFFECT);
+        return withSource(source, VampirismEffects.PERMANENT_INVISIBLE_MOB_EFFECT, VampirismEffects.VAMPIRE_NIGHT_VISION_EFFECT);
     }
 
 

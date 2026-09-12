@@ -22,6 +22,7 @@ public class FactionLevelOverlay extends BaseOverlay {
 
     @Override
     public void render(GuiGraphicsExtractor graphics, DeltaTracker partialTicks) {
+        //noinspection DataFlowIssue
         if (canRenderOverlays() && this.player().jumpableVehicle() == null && !this.mc().options.hideGui && this.mc().gameMode != null && this.mc().gameMode.hasExperience()) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(this.player());
             Component component = handler.factionPlayer().getShortLevelDisplay();

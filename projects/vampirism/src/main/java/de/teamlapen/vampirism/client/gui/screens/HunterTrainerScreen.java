@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
+import de.teamlapen.faction.client.IMinecraftAccessor;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundSimpleInputEvent;
@@ -24,7 +25,7 @@ import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 
 import java.util.List;
 
-public class HunterTrainerScreen extends ItemCombinerScreen<HunterTrainerMenu> {
+public class HunterTrainerScreen extends ItemCombinerScreen<HunterTrainerMenu> implements IMinecraftAccessor {
 
     private static final Identifier EMPTY_SLOT_INGOT = VIdentifier.mc("container/slot/ingot");
     private static final Identifier EMPTY_SLOT_HUNTER_INTEL = VIdentifier.mod("container/slot/hunter_intel");
@@ -106,8 +107,8 @@ public class HunterTrainerScreen extends ItemCombinerScreen<HunterTrainerMenu> {
                 buttonWidth, 20, name,
                 _ -> {
                     VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.TRAINER_LEVELUP));
-                    Player player = Minecraft.getInstance().player;
-                    UtilLib.spawnParticles(player.level(), ParticleTypes.ENCHANT, player.getX(), player.getY(), player.getZ(), 1, 1, 1, 100, 1);
+                    Player player = player();
+                    UtilLib.spawnParticles(level(), ParticleTypes.ENCHANT, player.getX(), player.getY(), player.getZ(), 1, 1, 1, 100, 1);
                     this.onClose();
                 }
         ));

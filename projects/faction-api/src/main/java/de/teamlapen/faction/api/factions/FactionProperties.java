@@ -41,7 +41,7 @@ public class FactionProperties {
     private static final DependantName<IFaction<?>, String> DESCRIPTION_ID = (id) -> Util.makeDescriptionId("faction", id.identifier());
     private static final DependantName<IFaction<?>, String> DESCRIPTION_ID_SINGULAR = (id) -> Util.makeDescriptionId("faction", id.identifier().withSuffix("/singular"));
     private static final DependantName<IFaction<?>, String> DESCRIPTION_ID_PLURAL = (id) -> Util.makeDescriptionId("faction", id.identifier().withSuffix("/plural"));
-    private DataComponentInitializers.Initializer<IFaction<?>> componentInitializer = (builder, context, id) -> {};
+    private DataComponentInitializers.Initializer<IFaction<?>> componentInitializer = (_, _, id) -> {};
     private @Nullable ResourceKey<IFaction<?>> id;
 
     private final Map<Class<?>, FactionExtensionType<?>> extensions = new HashMap<>();
@@ -85,7 +85,7 @@ public class FactionProperties {
     }
 
     public FactionProperties chatColor(ChatFormatting color) {
-        return component(FactionDataComponents.CHAT_COLOR, TextColor.fromLegacyFormat(color));
+        return component(FactionDataComponents.CHAT_COLOR, Objects.requireNonNull(TextColor.fromLegacyFormat(color)));
     }
 
     public FactionProperties maxLevel(int level) {

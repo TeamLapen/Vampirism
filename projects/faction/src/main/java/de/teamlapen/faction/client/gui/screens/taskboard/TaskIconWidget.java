@@ -63,7 +63,7 @@ public class TaskIconWidget extends AbstractWidget {
         Component title = requirement.description();
 
         List<Component> tooltipLines = new ArrayList<>();
-        String progressText = null;
+        String progressText;
         int progressColor = 0xFFFFFFFF;
 
         int needed = requirement.getAmount(factionPlayer);

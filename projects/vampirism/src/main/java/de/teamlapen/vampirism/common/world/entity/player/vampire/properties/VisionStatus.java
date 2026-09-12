@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.common.world.entity.player.vampire.properties;
 
 import de.teamlapen.sync.PropertyParentSync;
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.common.core.ModRegistries;

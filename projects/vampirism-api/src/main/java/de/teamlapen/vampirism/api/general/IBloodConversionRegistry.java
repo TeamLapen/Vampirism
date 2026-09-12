@@ -8,7 +8,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.transfer.item.ItemResource;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Registry for blood conversion.
@@ -21,8 +20,8 @@ import org.jetbrains.annotations.NotNull;
  * <br>
  * <p>
  * Values are loaded using <a href="https://docs.neoforged.net/docs/datamaps/">neoforge datamaps</a>:<br>
- * {@link VampirismDataMaps#ITEM_BLOOD}<br>
- * {@link VampirismDataMaps#FLUID_BLOOD_CONVERSION}
+ * {@link VampirismDataMaps.Keys#ITEM_BLOOD}<br>
+ * {@link VampirismDataMaps.Keys#FLUID_BLOOD_CONVERSION}
  * <br>
  * <br>
  * Entity blood values are handled by {@link IVampirismEntityRegistry}
@@ -35,9 +34,9 @@ public interface IBloodConversionRegistry {
      * @param stack the item that should be converted
      * @return {@code true} if the item can be converted
      */
-    boolean canBeConverted(@NotNull ItemStack stack);
+    boolean canBeConverted(ItemStack stack);
 
-    boolean canBeConverted(@NotNull ItemResource resource);
+    boolean canBeConverted(ItemResource resource);
 
     /**
      * Gets a blood representation of the given item. This returns an instance of {@link IItemBlood} which can be used to get the blood value of the item.
@@ -47,8 +46,7 @@ public interface IBloodConversionRegistry {
      * @return an {@link IItemBlood} object for the given item
      * @implNote the calculation is limited by checking the {@link net.minecraft.tags.ItemTags#MEAT} method and checking for {@code "cooked"} in the item's registry name
      */
-    @NotNull
-    IItemBlood getItemBlood(@NotNull ItemStack stack);
+    IItemBlood getItemBlood(ItemStack stack);
 
     /**
      * Gets the conversion rate of the fluid into blood
@@ -57,8 +55,7 @@ public interface IBloodConversionRegistry {
      * @return the conversion rate
      * @implSpec if no explicit conversion exists, a default conversion rate of 0 is returned
      */
-    @NotNull
-    IFluidBloodConversion getFluidConversion(@NotNull Fluid fluid);
+    IFluidBloodConversion getFluidConversion(Fluid fluid);
 
     /**
      * Checks if the fluid can be converted to blood
@@ -66,7 +63,7 @@ public interface IBloodConversionRegistry {
      * @param fluid the fluid that should be converted
      * @return {@code true} if the fluid can be converted
      */
-    boolean hasConversion(@NotNull Fluid fluid);
+    boolean hasConversion(Fluid fluid);
 
     /**
      * Transforms the given fluid into blood. If there is conversion, the returned stack will be empty.
@@ -74,7 +71,6 @@ public interface IBloodConversionRegistry {
      * @param fluid the fluid stack that should be converted
      * @return a fluid stack representing the blood
      */
-    @NotNull
-    FluidStack getBloodFromFluid(@NotNull FluidStack fluid);
+    FluidStack getBloodFromFluid(FluidStack fluid);
 
 }

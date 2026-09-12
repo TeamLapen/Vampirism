@@ -134,7 +134,7 @@ public record FactionPredicate(@Nullable Holder<? extends IFaction<?>> viewedFac
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (o == null || getClass() != o.getClass()) return false;
 
             Builder build = (Builder) o;
@@ -150,7 +150,7 @@ public record FactionPredicate(@Nullable Holder<? extends IFaction<?>> viewedFac
 
         @Override
         public int hashCode() {
-            int result = sourceFaction == null ? 0 : sourceFaction.getKey().identifier().hashCode();
+            int result = sourceFaction == null ? 0 : sourceFaction.unwrapKey().orElseThrow().identifier().hashCode();
             result = result << 1 | (targetPlayers ? 0b1: 0b0);
             result = result << 1 | (targetNonPlayers ? 0b1: 0b0);
             result = result << 1 | (ignoreDisguise ? 0b1: 0b0);

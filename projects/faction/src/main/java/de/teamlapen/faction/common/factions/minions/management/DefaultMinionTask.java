@@ -54,6 +54,7 @@ public abstract class DefaultMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>
         }
     }
 
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public boolean isRequiredSkillUnlocked(Optional<? extends ISkillPlayer<?>> player) {
         return this.requiredSkill == null || player.map(x -> x.getSkillHandler().isSkillEnabled(this.requiredSkill)).orElse(false);
     }

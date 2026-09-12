@@ -35,7 +35,7 @@ public class VampireBookContentsReloadListener extends SimplePreparableReloadLis
         var contentByBook = vampireBooks.keySet().stream().collect(Collectors.groupingBy(x -> x.withPath(path -> {
             var parts = path.split("/");
             if (parts.length != 3){
-                return null;
+                return "";
             }
             return parts[1];
         })));

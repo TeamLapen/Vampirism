@@ -28,7 +28,7 @@ public interface IBloodChargeable {
      * @return the charge percentage of the item
      */
     default float getChargePercentage(ItemStack stack) {
-        IBloodCharged bloodCharge = stack.get(VampirismDataComponents.BLOOD_CHARGED.get());
+        IBloodCharged bloodCharge = stack.get(VampirismDataComponents.BLOOD_CHARGED);
         return bloodCharge != null ? bloodCharge.charged() : 0;
     }
 }

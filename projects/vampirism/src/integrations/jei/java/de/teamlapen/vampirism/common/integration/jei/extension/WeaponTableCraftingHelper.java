@@ -1,14 +1,12 @@
 package de.teamlapen.vampirism.common.integration.jei.extension;
 
-import com.mojang.datafixers.util.Pair;
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
-import mezz.jei.api.gui.ingredient.ICraftingGridHelper;
 import mezz.jei.api.ingredients.IIngredientType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.context.ContextMap;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 import org.jetbrains.annotations.Nullable;
@@ -17,18 +15,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class WeaponTableCraftingHelper implements ICraftingGridHelper {
+/**
+ * {@link mezz.jei.api.gui.ingredient.ICraftingGridHelper} implementation
+ */
+public class WeaponTableCraftingHelper {
     public static final WeaponTableCraftingHelper INSTANCE = new WeaponTableCraftingHelper();
 
-    @Override
-    public IRecipeSlotBuilder createAndSetOutputs(IRecipeLayoutBuilder builder, SlotDisplay outputs) {
+    public void createAndSetOutputs(IRecipeLayoutBuilder builder, SlotDisplay outputs) {
         Minecraft minecraft = Minecraft.getInstance();
         ContextMap contextmap = SlotDisplayContext.fromLevel(Objects.requireNonNull(minecraft.level));
         List<ItemStack> outputStacks = outputs.resolveForStacks(contextmap);
-        return createAndSetOutputs(builder, outputStacks);
+        createAndSetOutputs(builder, outputStacks);
     }
 
-    @Override
+    public void createAndSetOutputs(IRecipeLayoutBuilder builder, @Nullable List<@Nullable ItemStack> outputs) {
+        createAndSetOutputs(builder, VanillaTypes.ITEM_STACK, outputs);
+    }
+
     public void createAndSetIngredientsFromDisplays(IRecipeLayoutBuilder builder, List<SlotDisplay> displays, int width, int height) {
         Minecraft minecraft = Minecraft.getInstance();
         ContextMap contextmap = SlotDisplayContext.fromLevel(Objects.requireNonNull(minecraft.level));
@@ -39,7 +42,11 @@ public class WeaponTableCraftingHelper implements ICraftingGridHelper {
         createAndSetInputs(builder, ingredients, width, height);
     }
 
-    @Override
+    public void createAndSetInputs(IRecipeLayoutBuilder builder, List<@org.jspecify.annotations.Nullable List<@org.jspecify.annotations.Nullable ItemStack>> inputs, int width, int height) {
+        createAndSetInputs(builder, VanillaTypes.ITEM_STACK, inputs, width, height);
+    }
+
+
     public <T> IRecipeSlotBuilder createAndSetOutputs(IRecipeLayoutBuilder builder, IIngredientType<T> ingredientType, @Nullable List<@Nullable T> outputs) {
         IRecipeSlotBuilder outputSlot = builder.addOutputSlot(110, 28)
                 .setOutputSlotBackground();
@@ -49,14 +56,12 @@ public class WeaponTableCraftingHelper implements ICraftingGridHelper {
         return outputSlot;
     }
 
-    @Override
     public <T> List<IRecipeSlotBuilder> createAndSetInputs(IRecipeLayoutBuilder builder, IIngredientType<T> ingredientType, List<@Nullable List<@Nullable T>> inputs, int width, int height) {
         List<IRecipeSlotBuilder> inputSlots = createInputSlots(builder, width, height);
         setInputs(inputSlots, ingredientType, inputs, width, height);
         return inputSlots;
     }
 
-    @Override
     public <T> void setInputs(List<IRecipeSlotBuilder> slotBuilders, IIngredientType<T> ingredientType, List<@Nullable List<@Nullable T>> inputs, int width, int height) {
         if (width <= 0 || height <= 0) {
             width = height = getShapelessSize(inputs.size());
@@ -121,18 +126,4 @@ public class WeaponTableCraftingHelper implements ICraftingGridHelper {
         return gy * gridSize + gx;
     }
 
-    @Override
-    public List<IRecipeSlotBuilder> createAndSetNamedIngredients(IRecipeLayoutBuilder builder, List<Pair<String, Ingredient>> namedIngredients, int width, int height) {
-        return List.of();
-    }
-
-    @Override
-    public void createAndSetIngredients(IRecipeLayoutBuilder builder, List<Ingredient> ingredients, int width, int height) {
-
-    }
-
-    @Override
-    public <T> List<IRecipeSlotBuilder> createAndSetNamedInputs(IRecipeLayoutBuilder builder, IIngredientType<T> ingredientType, List<@Nullable Pair<String, List<@Nullable T>>> namedInputs, int width, int height) {
-        return List.of();
-    }
 }

@@ -13,6 +13,7 @@ public class ClientProxy extends CommonProxy {
         this.soundHandler = new ClientSoundHandler();
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Override
     public void sendToServer(CustomPacketPayload packetPayload) {
         Minecraft.getInstance().getConnection().send(packetPayload);

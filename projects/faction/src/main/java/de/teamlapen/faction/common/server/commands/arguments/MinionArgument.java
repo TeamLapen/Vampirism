@@ -55,6 +55,7 @@ public class MinionArgument implements ArgumentType<MinionArgument.MinionId> {
     }
 
     private Collection<MinionId> getPlayerMinionIds() {
+        //noinspection DataFlowIssue
         MinionWorldData data = MinionWorldData.getData(ServerLifecycleHooks.getCurrentServer());
 
 

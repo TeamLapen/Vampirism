@@ -5,27 +5,29 @@ import de.teamlapen.vampirism.api.world.items.components.*;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Unit;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.function.Supplier;
 
 import static de.teamlapen.vampirism.api.APIUtil.supplyDataComponent;
 
 /**
- * This API class does not necessarily contains all data components from Vampirism, but {@link de.teamlapen.vampirism.api.VampirismDataComponents.Keys} contains all keys.
+ * This API class does not necessarily contain all data components from Vampirism, but {@link de.teamlapen.vampirism.api.VampirismDataComponents.Keys} contains all keys.
  */
 @SuppressWarnings({"unused"})
 public class VampirismDataComponents {
 
-    public static final Supplier<DataComponentType<IOilContent>> OIL_CONTENT = supplyDataComponent(VampirismDataComponents.Keys.OIL_CONTENTS);
-    public static final Supplier<DataComponentType<IAppliedOilContent>> APPLIED_OIL = supplyDataComponent(VampirismDataComponents.Keys.APPLIED_OIL);
-    public static final Supplier<DataComponentType<IVampireBook>> VAMPIRE_BOOK = supplyDataComponent(VampirismDataComponents.Keys.VAMPIRE_BOOK);
-    public static final Supplier<DataComponentType<IContainedFluid>> BLOOD_CONTAINER = supplyDataComponent(VampirismDataComponents.Keys.BLOOD_CONTAINER);
-    public static final Supplier<DataComponentType<Unit>> DO_NOT_NAME = supplyDataComponent(VampirismDataComponents.Keys.DO_NOT_NAME);
-    public static final Supplier<DataComponentType<ISwordTraining>> VAMPIRE_SWORD = supplyDataComponent(VampirismDataComponents.Keys.VAMPIRE_SWORD);
-    public static final Supplier<DataComponentType<IBloodCharged>> BLOOD_CHARGED = supplyDataComponent(VampirismDataComponents.Keys.BLOOD_CHARGED);
-    public static final Supplier<DataComponentType<Float>> TRAINING_CACHE = supplyDataComponent(VampirismDataComponents.Keys.TRAINING_CACHE);
-    public static final Supplier<DataComponentType<ISelectedAmmunition>> SELECTED_AMMUNITION = supplyDataComponent(VampirismDataComponents.Keys.SELECTED_AMMUNITION);
-    public static final Supplier<DataComponentType<IBottleBlood>> BOTTLE_BLOOD = supplyDataComponent(VampirismDataComponents.Keys.BOTTLE_BLOOD);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<IOilContent>> OIL_CONTENT = supplyDataComponent(VampirismDataComponents.Keys.OIL_CONTENTS);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<IAppliedOilContent>> APPLIED_OIL = supplyDataComponent(VampirismDataComponents.Keys.APPLIED_OIL);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<IVampireBook>> VAMPIRE_BOOK = supplyDataComponent(VampirismDataComponents.Keys.VAMPIRE_BOOK);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<IContainedFluid>> BLOOD_CONTAINER = supplyDataComponent(VampirismDataComponents.Keys.BLOOD_CONTAINER);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> DO_NOT_NAME = supplyDataComponent(VampirismDataComponents.Keys.DO_NOT_NAME);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ISwordTraining>> VAMPIRE_SWORD = supplyDataComponent(VampirismDataComponents.Keys.VAMPIRE_SWORD);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<IBloodCharged>> BLOOD_CHARGED = supplyDataComponent(VampirismDataComponents.Keys.BLOOD_CHARGED);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Float>> TRAINING_CACHE = supplyDataComponent(VampirismDataComponents.Keys.TRAINING_CACHE);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ISelectedAmmunition>> SELECTED_AMMUNITION = supplyDataComponent(VampirismDataComponents.Keys.SELECTED_AMMUNITION);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<IBottleBlood>> BOTTLE_BLOOD = supplyDataComponent(VampirismDataComponents.Keys.BOTTLE_BLOOD);
 
 
     public static class Keys {
@@ -48,7 +50,6 @@ public class VampirismDataComponents {
         public static final Identifier CHARGED_RITUAL_KNIFE = VIdentifier.mod("charged_ritual_knife");
         public static final Identifier CONTAINED_PROJECTILES = VIdentifier.mod("contained_projectiles");
         public static final Identifier ENCHANTMENT_OVERRIDE = VIdentifier.mod("enchantment_override");
-        public static final Identifier MARKER = VIdentifier.mod("marker");
         public static final Identifier SHATTERED_ARMOR = VIdentifier.mod("shattered_armor");
     }
 }

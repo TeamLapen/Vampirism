@@ -8,7 +8,6 @@ import de.teamlapen.faction.client.gui.screens.ScreenEventHandler;
 import de.teamlapen.faction.client.world.ClientConnectionEventHandler;
 import de.teamlapen.faction.common.core.FactionKeys;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class ClientServices extends Services {
@@ -19,10 +18,6 @@ public class ClientServices extends Services {
     private final ClientConnectionEventHandler worldEventHandler = new ClientConnectionEventHandler();
     private final ClientEventHandler entityEventHandler = new ClientEventHandler();
     private final DescriptionTooltips descriptionTooltips = new DescriptionTooltips();
-
-    public ClientServices(ModContainer container) {
-        super(container);
-    }
 
     public CustomBossEventOverlay bossInfoOverlay() {
         return bossInfoOverlay;

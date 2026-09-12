@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.util;
 
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.world.items.oil.IOil;
 import de.teamlapen.vampirism.common.core.ModRegistries;
 import net.minecraft.core.Holder;
@@ -73,10 +74,6 @@ public class RegUtil extends de.teamlapen.faction.common.util.RegUtil {
 
     public static Biome getBiome(ServerLevel level, @NotNull Identifier id) {
         return level.registryAccess().lookupOrThrow(Registries.BIOME).getValue(id);
-    }
-
-    public static IOil getOil(@NotNull Identifier id) {
-        return ModRegistries.OILS.getValue(id);
     }
 
     public static <T, Z extends Registry<T>> Holder<T> getHolder(Level level, ResourceKey<Z> registry, T type) {

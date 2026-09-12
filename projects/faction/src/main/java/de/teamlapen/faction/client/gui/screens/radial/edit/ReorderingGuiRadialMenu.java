@@ -1,6 +1,7 @@
 package de.teamlapen.faction.client.gui.screens.radial.edit;
 
 import de.teamlapen.faction.api.util.FIdentifier;
+import de.teamlapen.faction.client.IMinecraftAccessor;
 import de.teamlapen.faction.client.gui.components.ColoredImageWidget;
 import de.teamlapen.faction.client.gui.components.RepositionCallback;
 import de.teamlapen.faction.client.gui.radialmenu.DrawCallback;
@@ -299,8 +300,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
         }
 
         private void selectItem(T selected) {
-            if (ReorderingGuiRadialMenu.this.movingItem != null) {
-            } else {
+            if (ReorderingGuiRadialMenu.this.movingItem == null) {
                 ReorderingGuiRadialMenu.this.pickExcludedItem(selected);
             }
         }

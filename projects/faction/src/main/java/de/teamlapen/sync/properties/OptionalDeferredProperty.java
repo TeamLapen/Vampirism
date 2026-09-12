@@ -106,7 +106,12 @@ public class OptionalDeferredProperty<T extends PropertySync> extends Property {
         public void register() {
             Preconditions.checkNotNull(this.factory, "Factory must be set");
             Preconditions.checkNotNull(this.consumer, "Consumer must be set");
-            this.propertySync.register(key -> new OptionalDeferredProperty<>(key, this.property, this.factory, this.consumer));
+
+            this.propertySync.register(key -> {
+                assert this.factory != null;
+                assert this.consumer != null;
+                return new OptionalDeferredProperty<>(key, this.property, this.factory, this.consumer);
+            });
         }
     }
 }

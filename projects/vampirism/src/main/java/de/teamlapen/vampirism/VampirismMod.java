@@ -40,10 +40,9 @@ public class VampirismMod {
 
         CONFIG = new ModConfig(modContainer);
         CONFIG.register(modEventBus);
-        SERVICES = new CommonServices(modContainer);
+        SERVICES = (CommonServices) VampirismApi.services();
         SERVICES.register(modEventBus);
-        VampirismApi.init(SERVICES);
-        INTEGRATIONS = new IntegrationServices(modContainer);
+        INTEGRATIONS = new IntegrationServices();
         INTEGRATIONS.register(modEventBus);
     }
 

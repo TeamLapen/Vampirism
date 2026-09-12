@@ -257,6 +257,7 @@ public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<Holde
         return new Builder(faction);
     }
 
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public static class Builder {
 
         @Nullable
@@ -265,7 +266,6 @@ public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<Holde
         @Nullable
         private TagKey<ISkill<?>> skillTag;
         private final List<Holder<? extends ISkill<?>>> skillHolder = new ArrayList<>();
-        @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
         private Optional<Integer> minLevel = Optional.empty();
         private Optional<Component> customMessage = Optional.empty();
 

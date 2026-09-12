@@ -18,7 +18,6 @@ import de.teamlapen.vampirism.client.renderer.VelmorraCollapseHandler;
 import de.teamlapen.vampirism.common.util.PlayerSkinHelper;
 import de.teamlapen.vampirism.data.reloadlistener.vampirebook.VampireBooks;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModContainer;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 public class ClientServices extends Services {
@@ -44,10 +43,6 @@ public class ClientServices extends Services {
     private final AuraOfDarknessStateTracker auraOfDarknessStateTracker = new AuraOfDarknessStateTracker();
 
     //</editor-fold>
-
-    public ClientServices(ModContainer container) {
-        super(container);
-    }
 
     //<editor-fold desc="Getters" >
 

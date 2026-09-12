@@ -67,7 +67,7 @@ public class BaronessAttireModel extends EntityModel<VampireBaronRenderer.Vampir
     @Override
     public void setupAnim(VampireBaronRenderer.VampireBaronRenderState state) {
         float bodyRotateY = 0;
-        float headRotateY = 0;
+        float headRotateY;
         headRotateY = state.yRot * ((float) Math.PI / 180f);
         if (state.attackTime > 0.0F) {
             HumanoidArm handside = state.attackArm;

@@ -24,7 +24,7 @@ public class ItemInVillagerHandLayer<S extends VillagerRenderState, M extends En
 
     public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packetLight, S renderState, float yRot, float xRot) {
         HumanoidArm arm = renderState.getRenderData(ModEntityRenderStates.ATTACK_ARM);
-        if (!renderState.heldItem.isEmpty()) {
+        if (!renderState.heldItem.isEmpty() && arm != null) {
             poseStack.pushPose();
             this.getParentModel().translateToHand(renderState, arm, poseStack);
             poseStack.mulPose(Axis.XP.rotationDegrees(-90));

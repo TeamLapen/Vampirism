@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.common.world.attachments;
 import com.google.common.collect.Maps;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.vampirism.api.EnumStrength;
+import de.teamlapen.vampirism.api.world.EnumStrength;
 import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
 import de.teamlapen.vampirism.common.core.ModAttachments;
 import net.minecraft.commands.CommandSourceStack;
@@ -18,6 +18,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -36,13 +37,13 @@ public class LevelGarlic implements IGarlicChunkHandler {
 
     @NotNull
     @Override
-    public EnumStrength getStrengthAtChunk(ChunkPos pos) {
+    public EnumStrength getStrengthAtChunk(@NonNull ChunkPos pos) {
         EnumStrength s = strengthHashMap.get(pos);
         return s == null ? EnumStrength.NONE : s;
     }
 
     @Override
-    public int registerGarlicBlock(EnumStrength strength, @NotNull List<ChunkPos> pos) {
+    public int registerGarlicBlock(@NonNull EnumStrength strength, @NotNull List<ChunkPos> pos) {
         for (ChunkPos p : pos) {
             if (p == null) {
                 throw new IllegalArgumentException("Garlic emitter position should not be null");

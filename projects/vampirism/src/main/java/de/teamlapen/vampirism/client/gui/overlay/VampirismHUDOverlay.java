@@ -93,6 +93,7 @@ public class VampirismHUDOverlay implements IMinecraftAccessor {
         LocalPlayer player = mc().player;
         if (player == null || !player.isAlive() || !Helper.isVampire(player)) return;
 
+        //noinspection DataFlowIssue
         if (event.getName() == VanillaGuiLayers.FOOD_LEVEL && !VampirismMod.services().imc().isRequestedToDisableBloodbar() && mc().gameMode.hasExperience()) {
             event.setCanceled(true);
         } else if (event.getName().equals(VanillaGuiLayers.AIR_LEVEL)) {
@@ -206,6 +207,7 @@ public class VampirismHUDOverlay implements IMinecraftAccessor {
 
     private void renderProgressBar(GuiGraphicsExtractor graphics, LocalPlayer player, Window window, Identifier iconSprite, float progress) {
         if (!mc().options.getCameraType().isFirstPerson()) return;
+        //noinspection DataFlowIssue
         if (mc().gameMode == null || mc().gameMode.getPlayerMode() == GameType.SPECTATOR) return;
         if (progress <= 0 || progress > 1f) return;
 
@@ -225,12 +227,14 @@ public class VampirismHUDOverlay implements IMinecraftAccessor {
 
     private void renderStakeInstantKill(GuiGraphicsExtractor graphics, int width, int height) {
         if (!mc().options.getCameraType().isFirstPerson()) return;
+        //noinspection DataFlowIssue
         if (mc().gameMode.getPlayerMode() == GameType.SPECTATOR) return;
 
         int color = ARGB.colorFromFloat(1f, 158 / 255f, 0f, 0f);
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, CROSSHAIR_SPRITE, (width - 15) / 2, (height - 15) / 2, 15, 15, color);
 
         LocalPlayer player = mc().player;
+        @SuppressWarnings("DataFlowIssue")
         float attackStrength = player.getAttackStrengthScale(0f);
         int centerX = width  / 2 - 8;
         int centerY = height / 2 - 7 + 16;

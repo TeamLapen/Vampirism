@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.integration.jei.recipes.maker;
 
-import de.teamlapen.vampirism.api.VampirismDataMaps;
 import de.teamlapen.vampirism.api.datamaps.IFogDiffuserFuel;
+import de.teamlapen.vampirism.common.core.ModDataMaps;
 import de.teamlapen.vampirism.common.integration.jei.recipes.FogDiffuserRecipe;
 import mezz.jei.api.runtime.IIngredientManager;
 
@@ -13,7 +13,7 @@ public class FogDiffuserRecipeMaker {
     public static List<FogDiffuserRecipe> getRecipes(IIngredientManager ingredientManager) {
         return ingredientManager.getAllItemStacks().stream()
                 .<FogDiffuserRecipe>mapMulti((stack, consumer) -> {
-                    IFogDiffuserFuel data = stack.typeHolder().getData(VampirismDataMaps.FOG_DIFFUSER_FUEL.get());
+                    IFogDiffuserFuel data = stack.typeHolder().getData(ModDataMaps.FOG_DIFFUSER_FUEL_MAP);
                     if (data != null) {
                         consumer.accept(new FogDiffuserRecipe(stack, data));
                     }

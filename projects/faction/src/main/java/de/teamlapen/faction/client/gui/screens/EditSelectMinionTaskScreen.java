@@ -19,6 +19,7 @@ public class EditSelectMinionTaskScreen extends ReorderingGuiRadialMenu<SelectMi
         super(getOrdering(player), entry -> entry.getText().plainCopy(), EditSelectMinionTaskScreen::drawActionPart, (ordering) -> saveOrdering(player, ordering), (item) -> EditSelectMinionTaskScreen.isEnabled(player, item));
     }
 
+    @SuppressWarnings("DataFlowIssue")
     public static void show() {
         Minecraft.getInstance().setScreen(new EditSelectMinionTaskScreen(FactionPlayerHandler.get(Minecraft.getInstance().player)));
     }

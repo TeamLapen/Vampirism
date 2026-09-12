@@ -90,6 +90,7 @@ public class HunterMinionRenderer extends DualSplitBipedRenderer<HunterMinionEnt
     public void extractRenderState(HunterMinionEntity entity, MinionRenderState state, float p_363123_) {
         super.extractRenderState(entity, state, p_363123_);
         if (entity.getMinionData().filter(HunterMinionEntity.HunterMinionData::isUsingLordSkin).isPresent()) {
+            //noinspection DataFlowIssue
             state.lordSkin = entity.getLordID().map(x -> Minecraft.getInstance().getConnection().getPlayerInfo(x)).map(PlayerInfo::getSkin).orElse(null);
         }
         state.skin = (entity.hasMinionSpecificSkin() && this.minionSpecificTextures.length > 0) ? minionSpecificTextures[entity.getHunterType() % minionSpecificTextures.length] : textures[entity.getHunterType() % textures.length];

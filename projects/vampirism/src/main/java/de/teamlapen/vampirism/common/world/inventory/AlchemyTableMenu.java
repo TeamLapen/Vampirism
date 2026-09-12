@@ -81,7 +81,7 @@ public class AlchemyTableMenu extends AbstractContainerMenu {
     public ItemStack quickMoveStack(Player player, int slotId) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(slotId);
-        if (slot != null && slot.hasItem()) {
+        if (slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
             if (slotId < OIL_SLOT_1 || slotId > FUEL_SLOT) {

@@ -4,7 +4,6 @@ import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.integration.jei.VampirismJEIPlugin;
 import de.teamlapen.vampirism.common.integration.jei.recipes.BlessableRecipe;
-import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;

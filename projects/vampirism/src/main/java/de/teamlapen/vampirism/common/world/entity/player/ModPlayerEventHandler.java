@@ -94,6 +94,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void eyeHeight(EntityEvent.Size event) {
+        //noinspection ConstantValue
         if (event.getEntity() instanceof Player && ((Player) event.getEntity()).getInventory() != null /*make sure we are not in the player's contructor*/ && (!(event.getEntity() instanceof ServerPlayer serverPlayer) || serverPlayer.connection != null)) {
             if (event.getEntity().isAlive() && event.getEntity().position().lengthSqr() != 0 && event.getEntity().getVehicle() == null) { //Do not attempt to get capability while entity is being initialized
                 if (VampirePlayer.get((Player) event.getEntity()).getSkillProperties().bat) {

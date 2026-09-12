@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.blockentity.diffuser;
 
-import de.teamlapen.vampirism.api.EnumStrength;
+import de.teamlapen.vampirism.api.world.EnumStrength;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.util.DamageHandler;
 import de.teamlapen.vampirism.common.world.blocks.diffuser.GarlicDiffuserCoreBlock;

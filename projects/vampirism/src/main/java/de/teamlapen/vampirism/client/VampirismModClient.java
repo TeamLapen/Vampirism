@@ -28,7 +28,7 @@ public class VampirismModClient {
     private static ClientServices SERVICES;
 
     public VampirismModClient(IEventBus modEventBus, ModContainer modContainer) {
-        SERVICES = new ClientServices(modContainer);
+        SERVICES = new ClientServices();
         SERVICES.register(modEventBus);
 
         modContainer.registerExtensionPoint(IConfigScreenFactory.class, (container, parent) -> new ConfigurationScreen(container, parent, new ConfigFilter()));

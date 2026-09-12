@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.entity.player.vampire.vision;
 
-import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.VampirismEffects;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.common.config.ModConfig;
@@ -30,7 +30,7 @@ public class NightVision implements IVampireVision {
     @Override
     public void onDeactivated(@NonNull IVampirePlayer player) {
         MobEffectInstance nightVision = player.asEntity().getEffect(MobEffects.NIGHT_VISION);
-        if (ModEffectInstanceHelper.hasSource(nightVision, VReference.VAMPIRE_NIGHT_VISION_EFFECT)) {
+        if (ModEffectInstanceHelper.hasSource(nightVision, VampirismEffects.VAMPIRE_NIGHT_VISION_EFFECT)) {
             player.asEntity().removeEffect(nightVision.getEffect());
         }
     }
@@ -39,7 +39,7 @@ public class NightVision implements IVampireVision {
     public void tick(@NonNull IVampirePlayer player) {
         if (player.asEntity().tickCount % 50 == 8) {
             MobEffectInstance effect = player.asEntity().getEffect(MobEffects.NIGHT_VISION);
-            if (!ModEffectInstanceHelper.hasSource(effect, VReference.VAMPIRE_NIGHT_VISION_EFFECT)) {
+            if (!ModEffectInstanceHelper.hasSource(effect, VampirismEffects.VAMPIRE_NIGHT_VISION_EFFECT)) {
                 player.asEntity().removeEffectNoUpdate(MobEffects.NIGHT_VISION);
                 effect = null;
             }

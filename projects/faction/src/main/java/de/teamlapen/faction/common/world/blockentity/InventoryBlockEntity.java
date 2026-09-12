@@ -109,7 +109,7 @@ public abstract class InventoryBlockEntity extends NetworkedContainerBlockEntity
 
     @Override
     public boolean stillValid(Player player) {
-        if (!hasLevel()) return false;
+        if (this.level == null) return false;
         if (this.level.getBlockEntity(this.worldPosition) != this) {
             return false;
         } else {

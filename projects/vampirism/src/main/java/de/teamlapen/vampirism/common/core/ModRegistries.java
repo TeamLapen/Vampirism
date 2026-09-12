@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.common.core;
 
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.faction.api.FactionRegistries;
-import de.teamlapen.faction.api.registries.RegistryProvider;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.world.entity.convertible.Converter;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampireVision;
@@ -17,8 +16,6 @@ import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
-
-import static de.teamlapen.vampirism.api.VampirismRegistries.Keys.VAMPIRE_BOOK;
 
 public class ModRegistries {
 
@@ -39,7 +36,7 @@ public class ModRegistries {
             .add(FactionRegistries.Keys.TASK, ModTasks::createTasks)
             .add(FactionRegistries.Keys.SKILL_SEGMENT, ModSkills::createSkillSegments)
             .add(FactionRegistries.Keys.SKILL_TREE, ModSkills::createSkillTrees)
-            .add(VAMPIRE_BOOK, ModVampireBooks::createVampireBooks)
+            .add(VampirismRegistries.Keys.VAMPIRE_BOOK, ModVampireBooks::createVampireBooks)
             .add(Registries.ENCHANTMENT, ModEnchantments::createEnchantments)
             .add(Registries.TIMELINE, ModVillage::createTimelines)
             .add(Registries.VILLAGER_TRADE, ModTrades::bootstrap)
@@ -57,10 +54,6 @@ public class ModRegistries {
     }
 
     static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
-        event.dataPackRegistry(VAMPIRE_BOOK, VampireBook.CODEC, VampireBook.CODEC);
-    }
-
-    static {
-        RegistryProvider.register(OILS, ENTITY_CONVERTER, VAMPIRE_VISION);
+        event.dataPackRegistry(VampirismRegistries.Keys.VAMPIRE_BOOK, VampireBook.CODEC, VampireBook.CODEC);
     }
 }

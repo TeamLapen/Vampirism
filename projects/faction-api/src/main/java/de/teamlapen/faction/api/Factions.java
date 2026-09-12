@@ -6,7 +6,7 @@ import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.api.world.entities.player.INeutralPlayer;
 import net.minecraft.resources.Identifier;
 
-import static de.teamlapen.faction.api.registries.ApiRegistryProvider.retrieveFaction;
+import static de.teamlapen.faction.api.ApiUtil.retrieveFaction;
 
 public class Factions {
 

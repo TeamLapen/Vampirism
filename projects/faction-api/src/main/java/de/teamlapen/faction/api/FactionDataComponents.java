@@ -26,7 +26,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.List;
 
-import static de.teamlapen.faction.api.registries.ApiRegistryProvider.retrieveDataComponent;
+import static de.teamlapen.faction.api.ApiUtil.retrieveDataComponent;
 
 @SuppressWarnings("unused")
 public class FactionDataComponents {

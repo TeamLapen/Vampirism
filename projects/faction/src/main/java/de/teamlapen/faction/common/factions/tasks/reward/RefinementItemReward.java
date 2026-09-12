@@ -97,7 +97,7 @@ public class RefinementItemReward implements IItemReward {
         @SuppressWarnings("unchecked")
         Z item = this.item != null ? (Z) this.item.item() : randomFaction.value().getRandomRefinementItem(random, IRefinementItem.AccessorySlotType.values()[random.nextInt(IRefinementItem.AccessorySlotType.values().length)]);
         IRefinementItem.AccessorySlotType slot = (item).getSlotType();
-        List<Weighted<IRefinementSet>> sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream()
+        List<Weighted<IRefinementSet>> sets = ModRegistries.REFINEMENT_SETS.stream()
                 .filter(set -> IFaction.is(randomFaction, set.getFaction()))
                 .filter(set -> this.rarity == null || set.getRarity().ordinal() >= this.rarity.ordinal())
                 .filter(set -> set.getSlotType().map(slot1 -> slot1 == slot).orElse(true))

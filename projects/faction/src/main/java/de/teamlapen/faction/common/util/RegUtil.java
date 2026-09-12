@@ -28,13 +28,14 @@ import java.util.Optional;
 public class RegUtil {
 
     public static Identifier id(Holder<?> key) {
-        return key.getKey().identifier();
+        return key.unwrapKey().orElseThrow().identifier();
     }
 
     public static Identifier id(ResourceKey<?> key) {
         return key.identifier();
     }
 
+    @SuppressWarnings("DataFlowIssue")
     public static Identifier id(IAction<?> action) {
         return ModRegistries.ACTIONS.getKey(action);
     }
@@ -43,98 +44,19 @@ public class RegUtil {
         return BuiltInRegistries.ENTITY_TYPE.getKey(type);
     }
 
-    public static Identifier id(Item item) {
-        return BuiltInRegistries.ITEM.getKey(item);
-    }
-
-    public static Identifier id(IFaction<?> faction) {
-        return ModRegistries.FACTIONS.getKey(faction);
-    }
-
-    public static Identifier id(ISkill<?> skill) {
-        return ModRegistries.SKILLS.getKey(skill);
-    }
-
+    @SuppressWarnings("DataFlowIssue")
     public static Identifier id(IMinionTask<?, ?> minionTask) {
         return ModRegistries.MINION_TASKS.getKey(minionTask);
     }
 
+    @SuppressWarnings("DataFlowIssue")
     public static Identifier id(IRefinement refinement) {
         return ModRegistries.REFINEMENTS.getKey(refinement);
     }
 
+    @SuppressWarnings("DataFlowIssue")
     public static Identifier id(IRefinementSet refinementSet) {
         return ModRegistries.REFINEMENT_SETS.getKey(refinementSet);
     }
 
-    public static Identifier id(Level level, ISkillTree tree) {
-        return level.registryAccess().lookupOrThrow(FactionRegistries.Keys.SKILL_TREE).getKey(tree);
-    }
-
-    public static Optional<ResourceKey<IAction<?>>> key(IAction<?> action) {
-        return ModRegistries.ACTIONS.getResourceKey(action);
-    }
-
-    public static boolean has(IAction<?> action) {
-        return ModRegistries.ACTIONS.containsValue(action);
-    }
-
-    public static boolean has(ISkill<?> skill) {
-        return ModRegistries.SKILLS.containsValue(skill);
-    }
-
-    public static boolean has(IMinionTask<?, ?> minionTask) {
-        return ModRegistries.MINION_TASKS.containsValue(minionTask);
-    }
-
-    public static boolean has(IRefinement refinement) {
-        return ModRegistries.REFINEMENTS.containsValue(refinement);
-    }
-
-    public static boolean has(IRefinementSet refinementSet) {
-        return ModRegistries.REFINEMENT_SETS.containsValue(refinementSet);
-    }
-
-    public static IAction<?> getAction(Identifier id) {
-        return ModRegistries.ACTIONS.getValue(id);
-    }
-
-    public static ISkill<?> getSkill(Identifier id) {
-        return ModRegistries.SKILLS.getValue(id);
-    }
-
-    public static IMinionTask<?, ?> getMinionTask(Identifier id) {
-        return ModRegistries.MINION_TASKS.getValue(id);
-    }
-
-    public static IRefinement getRefinement(Identifier id) {
-        return ModRegistries.REFINEMENTS.getValue(id);
-    }
-
-    public static IRefinementSet getRefinementSet(Identifier id) {
-        return ModRegistries.REFINEMENT_SETS.getValue(id);
-    }
-
-    public static Holder<ISkillTree> getSkillTree(Level level, String asString) {
-        return level.registryAccess().lookupOrThrow(FactionRegistries.Keys.SKILL_TREE).getOrThrow(ResourceKey.create(FactionRegistries.Keys.SKILL_TREE, Identifier.parse(asString)));
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T extends IFactionPlayer<T> & ISkillPlayer<T>> Holder<IAction<T>> holder(IAction<T> action) {
-        return (Holder<IAction<T>>) (Object) ModRegistries.ACTIONS.wrapAsHolder(action);
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T extends IFactionPlayer<T> & ISkillPlayer<T>> Holder<ILastingAction<T>> holder(ILastingAction<T> action) {
-        return (Holder<ILastingAction<T>>) (Object) ModRegistries.ACTIONS.wrapAsHolder(action);
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T extends IFaction<?>> Holder<T> holder(T faction) {
-        return (Holder<T>) ModRegistries.FACTIONS.wrapAsHolder(faction);
-    }
-
-    public static <T> @NotNull Collection<T> values(Registry<T> registry) {
-        return registry.stream().toList();
-    }
 }

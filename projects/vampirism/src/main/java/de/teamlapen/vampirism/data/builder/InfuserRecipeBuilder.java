@@ -103,7 +103,7 @@ public class InfuserRecipeBuilder implements RecipeBuilder {
 
     @Override
     public @NonNull ResourceKey<Recipe<?>> defaultId() {
-        return RecipeBuilder.getDefaultRecipeId(this.result);
+        return RecipeBuilder.getDefaultRecipeId(Objects.requireNonNull(this.result));
     }
 
     @Override

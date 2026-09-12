@@ -6,8 +6,10 @@ import de.teamlapen.vampirism.api.datamaps.IFluidBloodConversion;
 import de.teamlapen.vampirism.api.datamaps.IItemBlood;
 import de.teamlapen.vampirism.api.general.IBloodConversionRegistry;
 import de.teamlapen.vampirism.common.core.ModDataMaps;
+import de.teamlapen.vampirism.common.core.ModFluids;
 import de.teamlapen.vampirism.common.datamaps.FluidBloodConversion;
 import de.teamlapen.vampirism.common.datamaps.ItemBlood;
+import de.teamlapen.vampirism.common.tags.ModFluidTags;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -40,7 +42,7 @@ public class BloodConversionRegistry implements IBloodConversionRegistry {
 
     @Override
     public @NotNull IItemBlood getItemBlood(@NotNull ItemStack stack) {
-        IItemBlood data = stack.typeHolder().getData(VampirismDataMaps.ITEM_BLOOD.get());
+        IItemBlood data = stack.typeHolder().getData(ModDataMaps.ITEM_BLOOD_MAP);
         if (data == null) {
             data = CALCULATED.get(stack.getItem());
         }
@@ -76,10 +78,10 @@ public class BloodConversionRegistry implements IBloodConversionRegistry {
 
     @Override
     public @NotNull FluidStack getBloodFromFluid(@NotNull FluidStack fluid) {
-        if (fluid.getFluid().isSame(VReference.BLOOD.get())) {
+        if (fluid.getFluid().isSame(ModFluids.BLOOD.get())) {
             return fluid;
         }
-        return new FluidStack(VReference.BLOOD.get(), (int) (getBloodValue(fluid) * fluid.getAmount()));
+        return new FluidStack(ModFluids.BLOOD.get(), (int) (getBloodValue(fluid) * fluid.getAmount()));
     }
 
     private static @NotNull Identifier id(Item item) {

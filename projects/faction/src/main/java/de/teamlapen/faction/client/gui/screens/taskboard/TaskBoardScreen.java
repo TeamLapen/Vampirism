@@ -2,7 +2,6 @@ package de.teamlapen.faction.client.gui.screens.taskboard;
 
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
-import de.teamlapen.faction.client.gui.screens.ExtendedScreen;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.world.inventory.ITaskMenu;
 import de.teamlapen.faction.common.world.inventory.TaskBoardMenu;
@@ -18,7 +17,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 
-public class TaskBoardScreen extends AbstractContainerScreen<TaskBoardMenu> implements ExtendedScreen {
+public class TaskBoardScreen extends AbstractContainerScreen<TaskBoardMenu> {
 
     private static final Identifier BACKGROUND = FIdentifier.mod("background/default");
 
@@ -90,8 +89,4 @@ public class TaskBoardScreen extends AbstractContainerScreen<TaskBoardMenu> impl
                 .isPresent();
     }
 
-    @Override
-    public @NotNull ITaskMenu getTaskContainer() {
-        return this.menu;
-    }
 }

@@ -21,7 +21,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.client.gui.layouts.EqualSpacingLayout;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.options.controls.KeyBindsScreen;
@@ -34,6 +33,7 @@ import net.minecraft.util.ARGB;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -42,6 +42,7 @@ import java.util.Map;
 
 public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends ReorderingGuiRadialMenu<Holder<? extends IAction<?>>> {
 
+    @SuppressWarnings("DataFlowIssue")
     public static void show() {
         FactionPlayerHandler.get(Minecraft.getInstance().player).getCurrentSkillPlayer().ifPresent(factionPlayer -> Minecraft.getInstance().setScreen(new EditSelectActionScreen<>(factionPlayer)));
     }
@@ -123,7 +124,7 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
 
     private void resetKeyBindings() {
         FactionKeys.ACTION_KEYS.keySet().forEach(key -> {
-            FactionPlayerHandler handler = FactionPlayerHandler.get(getMinecraft().player);
+            FactionPlayerHandler handler = FactionPlayerHandler.get(player());
             FactionConfig.preferences().actionBindings().update(handler.getFaction(), Map.of());
         });
         this.keyBindingList.clearActions();
@@ -142,7 +143,7 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
         }
 
         public void updateContent() {
-            FactionPlayerHandler handler = FactionPlayerHandler.get(Minecraft.getInstance().player);
+            FactionPlayerHandler handler = FactionPlayerHandler.get(player());
             ActionBindings actionBindings = FactionConfig.preferences().actionBindings();
             replaceEntries(FactionKeys.ACTION_KEYS.entrySet().stream().map(pair -> new KeyBindingSetting(pair.getKey(), pair.getValue(), actionBindings.getOrder(handler.getFaction(), pair.getKey()))).sorted(Comparator.comparingInt((KeyBindingSetting o) -> o.actionKey.ordinal())).toList());
         }
@@ -154,7 +155,7 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
         }
 
         @Override
-        protected void extractListBackground(GuiGraphicsExtractor graphics) {
+        protected void extractListBackground(@NonNull GuiGraphicsExtractor graphics) {
         }
 
         @Override
@@ -194,7 +195,7 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
             public KeyBindingSetting(ActionKeys actionKey, KeyMapping keyMapping, Holder<? extends IAction<?>> action) {
                 this.actionKey = actionKey;
                 this.stringWidget = new StringWidget(0, 0, 80, 20, keyMapping.getTranslatedKeyMessage(), Minecraft.getInstance().font);
-                this.imageButton = new ImageButton(0, 0, 16, 16, REMOVE_ICON, (a) -> switchAction(null));
+                this.imageButton = new ImageButton(0, 0, 16, 16, REMOVE_ICON, (_) -> switchAction(null));
                 applyAction(action);
             }
 
@@ -213,7 +214,7 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
 
             private void switchAction(@Nullable Holder<? extends IAction<?>> action) {
                 applyAction(action);
-                FactionConfig.preferences().actionBindings().update(FactionPlayerHandler.get(Minecraft.getInstance().player).getFaction(), this.actionKey, this.action);
+                FactionConfig.preferences().actionBindings().update(FactionPlayerHandler.get(player()).getFaction(), this.actionKey, this.action);
             }
 
             private void applyAction(@Nullable Holder<? extends IAction<?>> action) {

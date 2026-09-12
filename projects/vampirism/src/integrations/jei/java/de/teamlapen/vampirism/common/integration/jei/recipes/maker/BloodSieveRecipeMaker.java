@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.integration.jei.recipes.maker;
 
-import de.teamlapen.vampirism.api.VampirismDataMaps;
 import de.teamlapen.vampirism.api.datamaps.IFluidBloodConversion;
+import de.teamlapen.vampirism.common.core.ModDataMaps;
 import de.teamlapen.vampirism.common.integration.jei.recipes.BloodSieveRecipe;
 import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.runtime.IIngredientManager;
@@ -14,7 +14,7 @@ public class BloodSieveRecipeMaker {
     public static List<BloodSieveRecipe> getRecipes(IIngredientManager ingredientManager) {
         return ingredientManager.getAllIngredients(NeoForgeTypes.FLUID_STACK).stream()
                 .<BloodSieveRecipe>mapMulti((stack, consumer) -> {
-                    IFluidBloodConversion data = stack.typeHolder().getData(VampirismDataMaps.FLUID_BLOOD_CONVERSION.get());
+                    IFluidBloodConversion data = stack.typeHolder().getData(ModDataMaps.FLUID_BLOOD_CONVERSION_MAP);
                     if (data != null && data.conversionRate() > 0) {
                         consumer.accept(new BloodSieveRecipe(stack, data));
                     }

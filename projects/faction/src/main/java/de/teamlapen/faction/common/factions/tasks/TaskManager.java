@@ -128,7 +128,7 @@ public class TaskManager extends FactionExtension implements ITaskManager, IPlay
     }
 
     private Task getTask(ResourceKey<Task> key) {
-        return this.registry.getValue(key.identifier());
+        return this.registry.getValueOrThrow(key);
     }
 
     @Override
@@ -241,6 +241,7 @@ public class TaskManager extends FactionExtension implements ITaskManager, IPlay
 
     @Override
     protected void registerProperties() {
+        super.registerProperties();
         this.registerProperty(FIdentifier.mod("completed_tasks")).set(ResourceKey.codec(FactionRegistries.Keys.TASK)).provider(() -> this.completedTasks).serverLoader(x -> CollectionUtil.updateCollection(this.completedTasks, x)).register();
         this.registerProperty(FIdentifier.mod("task_wrapper")).map(TASK_WRAPPER_CODEC).provider(() -> this.taskWrapperMap).serverLoader(x -> {
             this.taskWrapperMap.clear();

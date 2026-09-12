@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.gui.screens.diffuser;
 
+import de.teamlapen.faction.client.IMinecraftAccessor;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.gui.components.ProgressBar;
 import de.teamlapen.vampirism.common.network.packets.common.PlayerOwnedBlockEntityLockPacket;
@@ -15,7 +16,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 
-public abstract class DiffuserScreen<T extends DiffuserMenu> extends AbstractContainerScreen<T> {
+public abstract class DiffuserScreen<T extends DiffuserMenu> extends AbstractContainerScreen<T> implements IMinecraftAccessor {
     private static final Identifier BACKGROUND = VIdentifier.mod("textures/gui/container/diffuser.png");
     private static final Identifier LIT_PROGRESS_SPRITE = VIdentifier.mc("container/furnace/lit_progress");
 
@@ -61,7 +62,7 @@ public abstract class DiffuserScreen<T extends DiffuserMenu> extends AbstractCon
         lock.setLocked(locked);
         PlayerOwnedBlockEntity.Lock lock = locked ? PlayerOwnedBlockEntity.Lock.PRIVATE : PlayerOwnedBlockEntity.Lock.PUBLIC;
         menu.setLockStatus(lock);
-        this.minecraft.player.connection.send(new PlayerOwnedBlockEntityLockPacket(this.menu.containerId, new PlayerOwnedBlockEntity.LockDataHolder(lock)));
+        player().connection.send(new PlayerOwnedBlockEntityLockPacket(this.menu.containerId, new PlayerOwnedBlockEntity.LockDataHolder(lock)));
     }
 
     protected abstract int getProgressBarColor();

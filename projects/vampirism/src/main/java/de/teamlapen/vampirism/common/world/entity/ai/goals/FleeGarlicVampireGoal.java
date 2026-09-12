@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.entity.ai.goals;
 
-import de.teamlapen.vampirism.api.EnumStrength;
+import de.teamlapen.vampirism.api.world.EnumStrength;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.entity.vampire.VampireBaseEntity;
 import net.minecraft.core.BlockPos;

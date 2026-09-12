@@ -1,12 +1,8 @@
 package de.teamlapen.vampirism.client.extensions;
 
-import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.VampirismEffects;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
 
@@ -25,12 +21,12 @@ public class EffectExtensions {
 
         @Override
         public boolean isVisibleInInventory(MobEffectInstance instance) {
-            return !instance.factions$hasProperty(VReference.PERMANENT_INVISIBLE_MOB_EFFECT);
+            return !instance.factions$hasProperty(VampirismEffects.PERMANENT_INVISIBLE_MOB_EFFECT);
         }
 
         @Override
         public boolean isVisibleInGui(MobEffectInstance instance) {
-            return !instance.factions$hasProperty(VReference.PERMANENT_INVISIBLE_MOB_EFFECT);
+            return !instance.factions$hasProperty(VampirismEffects.PERMANENT_INVISIBLE_MOB_EFFECT);
         }
 
         @Override

@@ -4,19 +4,17 @@ import de.teamlapen.vampirism.api.world.entity.player.vampire.IDrinkBloodContext
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.world.entity.vampire.IVampire;
 import net.neoforged.bus.api.Event;
-import org.jetbrains.annotations.NotNull;
 
 
 @SuppressWarnings("unused")
 public abstract class BloodDrinkEvent extends Event {
-    @NotNull
     private final IVampire vampire;
     private int amount;
     private float saturation;
     private final IDrinkBloodContext bloodSource;
 
 
-    private BloodDrinkEvent(@NotNull IVampire vampire, int amount, float saturation, IDrinkBloodContext bloodSource) {
+    private BloodDrinkEvent(IVampire vampire, int amount, float saturation, IDrinkBloodContext bloodSource) {
         this.vampire = vampire;
         this.amount = amount;
         this.saturation = saturation;
@@ -26,7 +24,6 @@ public abstract class BloodDrinkEvent extends Event {
     /**
      * @return The VampirePlayer that is biting.
      */
-    @NotNull
     public IVampire getVampire() {
         return this.vampire;
     }
@@ -72,7 +69,7 @@ public abstract class BloodDrinkEvent extends Event {
     public static class PlayerDrinkBloodEvent extends BloodDrinkEvent {
         private boolean useRemaining;
 
-        public PlayerDrinkBloodEvent(@NotNull IVampirePlayer player, int amount, float saturation, boolean useRemaining, IDrinkBloodContext bloodSource) {
+        public PlayerDrinkBloodEvent(IVampirePlayer player, int amount, float saturation, boolean useRemaining, IDrinkBloodContext bloodSource) {
             super(player, amount, saturation, bloodSource);
             this.useRemaining = useRemaining;
         }
@@ -99,7 +96,7 @@ public abstract class BloodDrinkEvent extends Event {
 
         private boolean useRemaining;
 
-        public EntityDrinkBloodEvent(@NotNull IVampire vampire, int amount, float saturation, boolean useRemaining, IDrinkBloodContext bloodSource) {
+        public EntityDrinkBloodEvent(IVampire vampire, int amount, float saturation, boolean useRemaining, IDrinkBloodContext bloodSource) {
             super(vampire, amount, saturation, bloodSource);
             this.useRemaining = useRemaining;
         }

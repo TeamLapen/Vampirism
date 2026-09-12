@@ -4,7 +4,7 @@ package de.teamlapen.vampirism.api.datamaps;
  * Blood and converter extension for entities.
  * <br>
  * <br>
- * This interface is used as <a href="https://docs.neoforged.net/docs/datamaps/">neoforge datamap</a> entry for {@link de.teamlapen.vampirism.api.VampirismDataMaps#ENTITY_BLOOD}
+ * This interface is used as <a href="https://docs.neoforged.net/docs/datamaps/">neoforge datamap</a> entry for {@link de.teamlapen.vampirism.api.VampirismDataMaps.Keys#ENTITY_BLOOD}
  */
 public interface IEntityBlood {
 

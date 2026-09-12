@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.api.difficulty;
 
-import org.jetbrains.annotations.NotNull;
-
 import static net.minecraft.util.Mth.clamp;
 
 /**
@@ -24,7 +22,7 @@ public record Difficulty(int minPercLevel, int maxPercLevel, int avgPercLevel) {
     }
 
     @Override
-    public @NotNull String toString() {
+    public String toString() {
         return "Difficulty: min_" + minPercLevel + " max_" + maxPercLevel + " avg_" + avgPercLevel;
     }
 }

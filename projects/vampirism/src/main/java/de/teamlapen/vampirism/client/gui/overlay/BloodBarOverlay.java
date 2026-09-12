@@ -11,7 +11,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.NotNull;
 
 public class BloodBarOverlay extends BaseOverlay {
     public static final Identifier BACKGROUND = VIdentifier.mod("blood_bar/background");
@@ -22,8 +21,9 @@ public class BloodBarOverlay extends BaseOverlay {
     private final Minecraft mc = Minecraft.getInstance();
 
     @Override
-    public void render(@NotNull GuiGraphicsExtractor graphics, @NotNull DeltaTracker partialTicks) {
+    public void render(GuiGraphicsExtractor graphics, DeltaTracker partialTicks) {
         if (canRenderOverlays() && Helper.isVampire(this.player()) && !VampirismMod.services().imc().isRequestedToDisableBloodbar()) {
+            //noinspection DataFlowIssue
             if (this.mc.gameMode.hasExperience()) {
                 IBloodStats stats = VampirePlayer.get(this.player()).getBloodStats();
                 int left = this.mc.getWindow().getGuiScaledWidth() / 2 + 91;

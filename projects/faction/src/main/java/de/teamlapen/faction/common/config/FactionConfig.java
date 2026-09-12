@@ -28,9 +28,10 @@ public class FactionConfig extends Services {
     private final Config<ClientConfig> client;
     private final Config<ServerConfig> server;
     private final ConfigHelper helper;
+    private final ModContainer container;
 
     public FactionConfig(ModContainer container) {
-        super(container);
+        this.container = container;
         this.client = Config.create(FIdentifier.mod("client"), ClientConfig::new);
         this.server = Config.create(FIdentifier.mod("server"), ServerConfig::new);
         this.helper = new ConfigHelper(this);
@@ -82,8 +83,8 @@ public class FactionConfig extends Services {
     }
 
     private void setup(NewRegistryEvent event) {
-        container().registerConfig(Type.CLIENT, client.spec());
-        container().registerConfig(Type.SERVER, server.spec());
+        this.container.registerConfig(Type.CLIENT, client.spec());
+        this.container.registerConfig(Type.SERVER, server.spec());
     }
 
     private void configLoaded(ModConfigEvent event) {

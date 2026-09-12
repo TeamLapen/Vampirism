@@ -86,7 +86,7 @@ public class TaskBuilder {
     }
 
     public TaskBuilder addRequirement(Holder<FactionPlayerBooleanSupplier> function) {
-        return this.addRequirement(new BooleanRequirement(function, Component.translatable(Util.makeDescriptionId("faction_boolean_supplier", function.getKey().identifier()))));
+        return this.addRequirement(new BooleanRequirement(function, Component.translatable(Util.makeDescriptionId("faction_boolean_supplier", function.unwrapKey().orElseThrow().identifier()))));
     }
 
     public TaskBuilder addRequirement(TaskRequirement.Requirement<?> requirement) {

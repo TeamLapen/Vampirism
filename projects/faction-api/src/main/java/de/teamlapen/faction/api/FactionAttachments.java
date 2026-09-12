@@ -10,7 +10,7 @@ import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
-import static de.teamlapen.faction.api.registries.ApiRegistryProvider.retrieveAttachmentType;
+import static de.teamlapen.faction.api.ApiUtil.retrieveAttachmentType;
 
 @SuppressWarnings("unused")
 public class FactionAttachments {

@@ -39,7 +39,7 @@ public class SpawnUtil {
             if (world.noCollision(new AABB(c))) {
                 if (world.isAreaLoaded(c, 5) && SpawnPlacements.isSpawnPositionOk(e.getType(), world, c)) {//I see no other way
                     e.setPos(c.getX(), c.getY() + 0.2, c.getZ());
-                    if (SpawnPlacements.checkSpawnRules(e.getType(), world, reason, c, world.getRandom()) && !(e instanceof Mob) || (((Mob) e).checkSpawnRules(world, reason) && ((Mob) e).checkSpawnObstruction(e.level()))) {
+                    if (SpawnPlacements.checkSpawnRules(e.getType(), world, reason, c, world.getRandom()) && (!(e instanceof Mob mob) || (mob.checkSpawnRules(world, reason) && mob.checkSpawnObstruction(e.level())))) {
                         backupPos = c; //Store the location in case we do not find a better one
                         for (LivingEntity p : avoidedEntities) {
 

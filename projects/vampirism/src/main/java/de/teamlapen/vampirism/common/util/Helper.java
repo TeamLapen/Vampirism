@@ -6,7 +6,7 @@ import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.api.factions.skills.ISkillHandler;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.api.EnumStrength;
+import de.teamlapen.vampirism.api.world.EnumStrength;
 import de.teamlapen.vampirism.api.VampirismApi;
 import de.teamlapen.vampirism.api.world.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;

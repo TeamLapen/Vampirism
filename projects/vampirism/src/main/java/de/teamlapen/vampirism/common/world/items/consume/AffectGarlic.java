@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.common.world.items.consume;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.vampirism.api.EnumStrength;
+import de.teamlapen.vampirism.api.world.EnumStrength;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.util.DamageHandler;
 import net.minecraft.network.RegistryFriendlyByteBuf;

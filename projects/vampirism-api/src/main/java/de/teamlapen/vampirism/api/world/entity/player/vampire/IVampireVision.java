@@ -9,7 +9,7 @@ import net.minecraft.core.Holder;
  */
 public interface IVampireVision {
 
-    Codec<Holder<IVampireVision>> CODEC = Codec.lazyInitialized(() -> VampirismRegistries.VAMPIRE_VISION.get().holderByNameCodec());
+    Codec<Holder<IVampireVision>> CODEC = Codec.lazyInitialized(VampirismRegistries.VAMPIRE_VISION.get()::holderByNameCodec);
 
     String getTranslationKey();
 

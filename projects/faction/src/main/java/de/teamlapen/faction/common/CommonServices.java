@@ -15,9 +15,9 @@ import de.teamlapen.faction.common.network.packets.ModPacketDispatcher;
 import de.teamlapen.faction.common.world.entities.ModPlayerEventHandler;
 import de.teamlapen.faction.common.world.entities.PlayerListenerEventHandler;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
+import org.jetbrains.annotations.ApiStatus;
 
 public class CommonServices extends Services implements IFactionServices {
 
@@ -29,8 +29,12 @@ public class CommonServices extends Services implements IFactionServices {
     private final FactionSpecificTags factionSpecificTags = new FactionSpecificTags();
     private final PlayerListenerEventHandler playerListenerEventHandler = new PlayerListenerEventHandler();
 
-    public CommonServices(ModContainer container) {
-        super(container);
+    /**
+     * Instantiated by the {@link java.util.ServiceLoader} through {@code META-INF/services}.
+     * Use {@link de.teamlapen.faction.api.FactionsApi#services()} to get the instance.
+     */
+    @ApiStatus.Internal
+    public CommonServices() {
     }
 
     @Override

@@ -16,6 +16,10 @@ public interface IMinecraftAccessor {
         return mc().player;
     }
 
+    default boolean playerAlive() {
+        return mc().player != null && player().isAlive();
+    }
+
     @SuppressWarnings("DataFlowIssue")
     default ClientLevel level() {
         return mc().level;

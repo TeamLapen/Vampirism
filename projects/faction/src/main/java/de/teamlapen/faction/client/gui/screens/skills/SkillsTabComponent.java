@@ -5,6 +5,7 @@ import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.api.factions.skills.ISkillHandler;
 import de.teamlapen.faction.api.factions.skills.ISkillTree;
 import de.teamlapen.faction.api.util.FIdentifier;
+import de.teamlapen.faction.client.IMinecraftAccessor;
 import de.teamlapen.faction.client.gui.GuiRenderer;
 import de.teamlapen.faction.common.core.FactionEffects;
 import de.teamlapen.faction.common.factions.skills.SkillHandler;
@@ -28,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class SkillsTabComponent {
+public class SkillsTabComponent implements IMinecraftAccessor {
 
     private static final Identifier RED_TOOLTIP = FIdentifier.mod("red");
     public static final int SCREEN_WIDTH = SkillsScreen.SCREEN_WIDTH - 18;
@@ -39,7 +40,7 @@ public class SkillsTabComponent {
     private final ItemStack icon;
     private final Component title;
     private final Map<SkillTreeGraph.Entry, SkillSegmentComponent> segments = new LinkedHashMap<>();
-    private List<SkillSegmentConnection> connections = List.of();
+    private List<SkillSegmentConnection> connections;
     private final AdvancementTabType position;
     private final SkillTreeLayout layout;
     private final int treeWidth;
@@ -139,7 +140,7 @@ public class SkillsTabComponent {
         }
         pose.popMatrix();
 
-        if (this.minecraft.player.getEffect(FactionEffects.OBLIVION) != null) {
+        if (player().getEffect(FactionEffects.OBLIVION) != null) {
             pose.pushMatrix();
             graphics.fill(x, y, x + SCREEN_WIDTH, y + SCREEN_HEIGHT, Mth.floor(0.5 * 255.0F) << 24);
             this.drawDisableText(graphics, x, y);

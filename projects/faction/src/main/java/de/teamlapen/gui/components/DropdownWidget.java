@@ -36,7 +36,7 @@ public class DropdownWidget<TData> extends AbstractWidget implements IRenderLast
     private final BiConsumer<TData, Boolean> onHover;
 
     private boolean expanded = false;
-    private int selectedIndex = 0;
+    private int selectedIndex;
     private int hoveredIndex = -1;
     private int scrollOffset = 0;
 
