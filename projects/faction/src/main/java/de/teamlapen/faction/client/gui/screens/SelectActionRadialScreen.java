@@ -41,6 +41,7 @@ public class SelectActionRadialScreen<T extends ISkillPlayer<T>> extends DualSwi
         show(FactionKeys.ACTION);
     }
 
+    @SuppressWarnings("DataFlowIssue")
     public static <T extends ISkillPlayer<T>> void show(KeyMapping keyMapping) {
         FactionPlayerHandler.get(Minecraft.getInstance().player).getCurrentSkillPlayer().ifPresent(player -> {
             //noinspection rawtypes

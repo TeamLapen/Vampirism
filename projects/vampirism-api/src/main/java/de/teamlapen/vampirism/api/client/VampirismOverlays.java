@@ -8,19 +8,7 @@ import net.minecraft.resources.Identifier;
  */
 public class VampirismOverlays {
 
-    /**
-     * Blood bar element
-     * <br>
-     * Is rendered above {@link net.neoforged.neoforge.client.gui.VanillaGuiLayers#FOOD_LEVEL}, but the food rendering is canceled
-     */
-    public static final Identifier BLOOD_BAR_ID = VIdentifier.mod("blood_bar");
-
-
-    /**
-     * Action duration element
-     * <br>
-     * Is rendered in the lower right corner
-     */
+    public static final Identifier BLOOD_BAR = VIdentifier.mod("blood_bar");
     public static final Identifier RAGE = VIdentifier.mod("rage");
     public static final Identifier BAT = VIdentifier.mod("bat");
     public static final Identifier DISGUISE = VIdentifier.mod("disguise");

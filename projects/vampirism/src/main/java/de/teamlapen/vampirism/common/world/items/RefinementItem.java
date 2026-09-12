@@ -53,7 +53,7 @@ public class RefinementItem extends Item implements IRefinementItem, BaseDisplay
     }
 
     public static ItemStack getRandomRefinementItem(Holder<? extends IPlayableFaction<?>> faction) {
-        var sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream().filter(set -> IFaction.is(faction, set.getFaction())).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
+        var sets = ModRegistries.REFINEMENT_SETS.stream().filter(set -> IFaction.is(faction, set.getFaction())).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
         if (sets.isEmpty()) return ItemStack.EMPTY;
         IRefinementSet s = WeightedList.of(sets).getRandom(RANDOM).orElseGet(() -> sets.getFirst().value());
         AccessorySlotType t = s.getSlotType().orElseGet(() -> switch (RANDOM.nextInt(3)) {
@@ -70,7 +70,7 @@ public class RefinementItem extends Item implements IRefinementItem, BaseDisplay
     }
 
     public static @Nullable IRefinementSet getRandomRefinementForItem(@Nullable Holder<? extends IFaction<?>> faction, IRefinementItem stack) {
-        var sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream().filter(set -> faction == null || IFaction.is(faction, set.getFaction())).filter(set -> set.getSlotType().map(s -> s == stack.getSlotType()).orElse(true)).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
+        var sets = ModRegistries.REFINEMENT_SETS.stream().filter(set -> faction == null || IFaction.is(faction, set.getFaction())).filter(set -> set.getSlotType().map(s -> s == stack.getSlotType()).orElse(true)).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
         if (sets.isEmpty()) return null;
         return WeightedList.of(sets).getRandom(RANDOM).orElse(null);
     }

@@ -142,6 +142,7 @@ public class CoffinRenderer implements BlockEntityRenderer<CoffinBlockEntity, Co
 
     @Override
     public boolean shouldRender(CoffinBlockEntity blockEntity, Vec3 cameraPos) {
+        //noinspection DataFlowIssue
         return BlockEntityRenderer.super.shouldRender(blockEntity, cameraPos) && isHeadSafe(blockEntity.getLevel(), blockEntity.getBlockPos());
     }
 

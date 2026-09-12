@@ -7,7 +7,7 @@ public abstract class BaseOverlay implements GuiLayer, IMinecraftAccessor {
 
 
     public boolean canRenderOverlays() {
-        return this.player() != null && this.player().isAlive() && !this.mc().options.hideGui && isEnabledInConfig();
+        return this.player().isAlive() && !this.mc().options.hideGui && isEnabledInConfig();
     }
 
     protected boolean isEnabledInConfig() {

@@ -5,6 +5,7 @@ import de.teamlapen.faction.api.factions.tasks.Task;
 import de.teamlapen.faction.api.factions.tasks.TaskRequirement;
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
+import de.teamlapen.faction.client.IMinecraftAccessor;
 import de.teamlapen.faction.common.util.Util;
 import de.teamlapen.faction.common.world.inventory.ITaskMenu;
 import net.minecraft.ChatFormatting;
@@ -31,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class TaskEntryWidget extends AbstractWidget {
+public class TaskEntryWidget extends AbstractWidget implements IMinecraftAccessor {
 
     private static final Identifier TASK_ITEM_BACKGROUND = FIdentifier.mod("widget/task_background");
     private static final Identifier TASK_DETAIL_BACKGROUND = FIdentifier.mod("widget/task_background_2");
@@ -89,15 +90,16 @@ public class TaskEntryWidget extends AbstractWidget {
     private void sendCoordinateMessage() {
         Component message;
         if (lastKnownPosition != null) {
-            int i = Mth.floor(Util.horizontalDistance(Minecraft.getInstance().player.blockPosition(), lastKnownPosition));
-            MutableComponent itextcomponent = ComponentUtils.wrapInSquareBrackets(Component.translatable("chat.coordinates", lastKnownPosition.getX(), "~", lastKnownPosition.getZ())).withStyle((p_241055_1_) -> {
-                return p_241055_1_.withColor(ChatFormatting.GREEN).withClickEvent(new ClickEvent.SuggestCommand("/tp @s " + lastKnownPosition.getX() + " ~ " + lastKnownPosition.getZ())).withHoverEvent(new HoverEvent.ShowText(Component.translatable("chat.coordinates.tooltip")));
+            var pos = lastKnownPosition;
+            int i = Mth.floor(Util.horizontalDistance(player().blockPosition(), pos));
+            MutableComponent itextcomponent = ComponentUtils.wrapInSquareBrackets(Component.translatable("chat.coordinates", pos.getX(), "~", pos.getZ())).withStyle((p_241055_1_) -> {
+                return p_241055_1_.withColor(ChatFormatting.GREEN).withClickEvent(new ClickEvent.SuggestCommand("/tp @s " + pos.getX() + " ~ " + pos.getZ())).withHoverEvent(new HoverEvent.ShowText(Component.translatable("chat.coordinates.tooltip")));
             });
             message = Component.translatable("gui.factionapi.faction_menu.last_known_pos").append(itextcomponent.append(Component.translatable("gui.factionapi.faction_menu.distance", i)));
         } else {
             message = Component.translatable("gui.factionapi.faction_menu.last_known_pos.unknown").withStyle(ChatFormatting.GOLD);
         }
-        Minecraft.getInstance().player.sendSystemMessage(message);
+        player().sendSystemMessage(message);
     }
 
     private void buildWidgets() {

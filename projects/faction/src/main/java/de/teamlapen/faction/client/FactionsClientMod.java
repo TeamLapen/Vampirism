@@ -21,7 +21,7 @@ public class FactionsClientMod {
     private static ClientServices SERVICES;
 
     public FactionsClientMod(IEventBus modEventBus, ModContainer modContainer) {
-        SERVICES = new ClientServices(modContainer);
+        SERVICES = new ClientServices();
         SERVICES.register(modEventBus);
 
         modContainer.registerExtensionPoint(IConfigScreenFactory.class, (container, parent) -> new ConfigurationScreen(container, parent, (screen, type, config, title) -> new ExtendedConfigSectionScreen(screen, type, config, title, new ConfigFilter())));

@@ -137,6 +137,10 @@ public class SimpleProperty<T> extends Property {
 
             if (this.clientLoader != null && this.comparator != null) {
                 this.clientLoader = value -> {
+                    assert this.supplier != null;
+                    assert this.clientLoader != null;
+                    assert comparator != null;
+
                     T t = this.supplier.get();
                     this.clientLoader.apply(value);
                     return comparator.compare(t, value) != 0;
@@ -145,13 +149,21 @@ public class SimpleProperty<T> extends Property {
 
             if (this.clientLoaderSimple != null) {
                 this.clientLoader = value -> {
+                    assert this.supplier != null;
+                    assert this.clientLoaderSimple != null;
+                    assert comparator != null;
+
                     T t = this.supplier.get();
                     this.clientLoaderSimple.accept(value);
                     return comparator.compare(t, value) != 0;
                 };
             }
 
-            this.baseBuilder.register(key -> new SimpleProperty<>(key, this.codec, this.defaultValue, this.supplier, DataApply.create(serverLoader, clientLoader)));
+            this.baseBuilder.register(key -> {
+                assert this.defaultValue != null;
+                assert this.supplier != null;
+                return new SimpleProperty<>(key, this.codec, this.defaultValue, this.supplier, DataApply.create(serverLoader, clientLoader));
+            });
         }
 
 

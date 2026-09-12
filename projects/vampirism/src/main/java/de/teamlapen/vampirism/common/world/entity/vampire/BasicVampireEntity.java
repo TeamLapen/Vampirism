@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.common.world.entity.vampire;
 
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IFactionPredicate;
-import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.world.ICaptureAttributes;
 import de.teamlapen.faction.api.world.entities.IEntityLeader;
 import de.teamlapen.faction.common.core.FactionDataComponents;
@@ -14,21 +13,18 @@ import de.teamlapen.faction.common.world.effects.FactionBadOmenMobEffect;
 import de.teamlapen.faction.common.world.entities.goals.LookAtClosestVisibleGoal;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
-import de.teamlapen.vampirism.api.util.VampirismEventFactory;
+import de.teamlapen.vampirism.common.events.VampirismEventFactory;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IDrinkBloodContext;
-import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.world.entity.vampire.IBasicVampire;
 import de.teamlapen.vampirism.client.renderer.entities.state.AvatarLikeRenderState;
 import de.teamlapen.vampirism.common.config.BalanceMobProps;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.*;
 import de.teamlapen.vampirism.common.util.UtilLib;
-import de.teamlapen.vampirism.common.util.VampireVillage;
 import de.teamlapen.vampirism.common.world.entity.IEntityFollower;
 import de.teamlapen.vampirism.common.world.entity.ai.goals.*;
 import de.teamlapen.vampirism.common.world.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.common.world.entity.minion.VampireMinionEntity;
-import de.teamlapen.vampirism.common.world.entity.player.vampire.skills.VampireSkills;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -201,7 +197,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends LivingEntity & IEntityLeader> T getLeader() {
+    public <T extends LivingEntity & IEntityLeader> @Nullable T getLeader() {
         return (T) this.advancedLeader;
     }
 

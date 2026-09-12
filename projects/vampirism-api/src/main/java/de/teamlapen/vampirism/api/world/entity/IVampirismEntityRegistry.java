@@ -21,7 +21,7 @@ import java.util.Map;
  * <br>
  * <br>
  * Values are loaded using the following <a href="https://docs.neoforged.net/docs/datamaps/">neoforge datamaps</a>:<br>
- * - {@link de.teamlapen.vampirism.api.VampirismDataMaps#ENTITY_BLOOD}<br>
+ * - {@link de.teamlapen.vampirism.api.VampirismDataMaps.Keys#ENTITY_BLOOD}<br>
  */
 public interface IVampirismEntityRegistry {
 

@@ -27,11 +27,11 @@ import de.teamlapen.vampirism.common.world.items.recipes.RecipesSync;
 import de.teamlapen.vampirism.data.BloodConversionRegistry;
 import de.teamlapen.vampirism.data.reloadlistener.ModReloadListeners;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.fml.event.lifecycle.InterModProcessEvent;
 import net.neoforged.neoforge.event.DefaultDataComponentsBoundEvent;
+import org.jetbrains.annotations.ApiStatus;
 
 public class CommonServices extends Services implements IVampirismServices {
 
@@ -54,8 +54,12 @@ public class CommonServices extends Services implements IVampirismServices {
     private final WingsManager wingsManager = new WingsManager();
 
 
-    public CommonServices(ModContainer container) {
-        super(container);
+    /**
+     * Instantiated by the {@link java.util.ServiceLoader} through {@code META-INF/services}.
+     * Use {@link de.teamlapen.vampirism.api.VampirismApi#services()} or {@link de.teamlapen.vampirism.VampirismMod#services()} to obtain the instance.
+     */
+    @ApiStatus.Internal
+    public CommonServices() {
     }
 
     //<editor-fold desc="Getters" >

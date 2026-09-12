@@ -110,6 +110,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void sendToServer(CustomPacketPayload packetPayload) {
+        //noinspection DataFlowIssue
         Minecraft.getInstance().getConnection().send(packetPayload);
     }
 

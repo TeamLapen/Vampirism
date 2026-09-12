@@ -1,6 +1,7 @@
 package de.teamlapen.faction.client.gui.screens;
 
 import de.teamlapen.faction.api.util.FIdentifier;
+import de.teamlapen.faction.client.IMinecraftAccessor;
 import de.teamlapen.gui.components.IRenderLast;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -21,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
-public abstract class AppearanceScreen<T extends LivingEntity> extends Screen {
+public abstract class AppearanceScreen<T extends LivingEntity> extends Screen implements IMinecraftAccessor {
 
     private static final Identifier BACKGROUND = FIdentifier.mod("background/default");
 
@@ -71,7 +72,7 @@ public abstract class AppearanceScreen<T extends LivingEntity> extends Screen {
         GridLayout buttonsLayout = innerGrid.addChild(new GridLayout(),2,0,1,2, rowHelper.newCellSettings().alignHorizontallyCenter().padding(4));
         buttonsLayout.columnSpacing(50);
         buttonsLayout.addChild(new ExtendedButton(0,0, 80, 20,  Component.translatable("gui.back"), x -> {
-            if (this.minecraft != null && this.backScreen != null){
+            if (this.backScreen != null){
                 this.backScreen.returnToLastScreen();
             }
         }), 0, 0, buttonsLayout.newCellSettings().alignHorizontallyCenter());

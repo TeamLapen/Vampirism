@@ -163,7 +163,7 @@ public class VampireBookScreen extends Screen {
 
     @Override
     public boolean keyPressed(KeyEvent keyEvent) {
-        if (this.minecraft != null && (keyEvent.key() == GLFW.GLFW_KEY_BACKSPACE || keyEvent.key() == this.minecraft.options.keyUse.getKey().getValue())) {
+        if (keyEvent.key() == GLFW.GLFW_KEY_BACKSPACE || keyEvent.key() == this.minecraft.options.keyUse.getKey().getValue()) {
             this.minecraft.setScreen(null);
             return true;
         } else if ((keyEvent.key() == GLFW.GLFW_KEY_UP || keyEvent.key() == GLFW.GLFW_KEY_RIGHT) && pageNumber + 1 < content.size()) {

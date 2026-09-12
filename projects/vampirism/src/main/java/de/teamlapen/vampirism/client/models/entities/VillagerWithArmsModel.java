@@ -49,7 +49,6 @@ public class VillagerWithArmsModel extends VillagerModel implements ArmedModel<V
 
         float attackTime = entityIn.getRenderDataOrDefault(ModEntityRenderStates.ATTACK_TIME, 0f);
         if (attackTime > 0.0F) {
-            LogManager.getLogger().info("Attack time %f".formatted(attackTime));
             HumanoidArm enumhandside = entityIn.getRenderDataOrDefault(ModEntityRenderStates.ATTACK_ARM, HumanoidArm.RIGHT);
             ModelPart modelrenderer = this.getArmForSide(enumhandside);
             float f1;

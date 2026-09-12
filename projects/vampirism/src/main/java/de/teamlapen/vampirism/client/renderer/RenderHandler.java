@@ -2,9 +2,8 @@ package de.teamlapen.vampirism.client.renderer;
 
 import de.teamlapen.faction.client.IMinecraftAccessor;
 import de.teamlapen.faction.common.config.FactionConfig;
-import de.teamlapen.vampirism.api.util.VampirismEventFactory;
+import de.teamlapen.vampirism.common.events.VampirismEventFactory;
 import de.teamlapen.vampirism.client.core.ModEntityRenderStates;
-import de.teamlapen.vampirism.client.renderer.entities.layers.ConvertedVampireEntityLayer;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModRefinements;
 import de.teamlapen.vampirism.common.util.Helper;
@@ -19,12 +18,10 @@ import net.minecraft.client.model.player.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ambient.Bat;
@@ -62,8 +59,8 @@ public class RenderHandler implements IMinecraftAccessor {
                 this.mc().debugEntries.setStatus(DebugScreenEntries.ENTITY_HITBOXES, DebugScreenEntryStatus.NEVER);
             }
         }
-        if (event.getCamera().entity() instanceof LivingEntity && ((LivingEntity) event.getCamera().entity()).isSleeping()) {
-            ((LivingEntity) event.getCamera().entity()).getSleepingPos().map(pos -> event.getCamera().entity().level().getBlockState(pos)).filter(blockState -> blockState.getBlock() instanceof CoffinBlock).ifPresent(blockState -> {
+        if (event.getCamera().entity() instanceof LivingEntity living && living.isSleeping()) {
+            living.getSleepingPos().map(pos -> living.level().getBlockState(pos)).filter(blockState -> blockState.getBlock() instanceof CoffinBlock).ifPresent(blockState -> {
                 if (blockState.getValue(CoffinBlock.VERTICAL)) {
                     event.getCamera().invokeMove(0.2f, -0.2f, 0);
                 } else {
@@ -75,12 +72,12 @@ public class RenderHandler implements IMinecraftAccessor {
 
     @SubscribeEvent
     public void onClientTick(ClientTickEvent.Pre event) {
-        if (level() == null || player() == null || !player().isAlive()) return;
+        if (Minecraft.getInstance().player == null || !Minecraft.getInstance().player.isAlive()) return;
         VampirePlayer vampire = VampirePlayer.get(player());
 
         //Vampire biome/village fog
         if (player().tickCount % 10 == 0) {
-            if (!mc().player.isSpectator() && (ModConfig.client().renderVampireForestFog.get() || ModConfig.server().enforceRenderForestFog.get()) && (Helper.isEntityInArtificalVampireFogArea(player()) || Helper.isEntityInVampireBiome(player()))) {
+            if (!player().isSpectator() && (ModConfig.client().renderVampireForestFog.get() || ModConfig.server().enforceRenderForestFog.get()) && (Helper.isEntityInArtificalVampireFogArea(player()) || Helper.isEntityInVampireBiome(player()))) {
                 insideFog = true;
                 vampireBiomeFogDistanceMultiplier = vampire.getLevel() > 0 ? 2 : 1;
                 vampireBiomeFogDistanceMultiplier += vampire.getRefinementHandler().isRefinementEquipped(ModRefinements.VISTA) ? ModConfig.balance().vrVistaMod.get().floatValue() : 0;

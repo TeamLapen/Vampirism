@@ -6,6 +6,7 @@ import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.api.world.items.IRefinementItem;
+import de.teamlapen.faction.client.IMinecraftAccessor;
 import de.teamlapen.faction.client.core.FactionAppearanceScreens;
 import de.teamlapen.faction.client.gui.GuiRenderer;
 import de.teamlapen.faction.client.gui.screens.skills.SkillsScreen;
@@ -42,7 +43,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
 
-public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> implements ExtendedScreen {
+public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> implements IMinecraftAccessor {
 
     private static final Identifier BACKGROUND = FIdentifier.mod("textures/gui/container/faction_menu.png");
     private static final Identifier BACKGROUND_REFINEMENTS = FIdentifier.mod("textures/gui/container/faction_menu_refinements.png");
@@ -74,11 +75,6 @@ public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> impl
         if (this.taskList != null) {
             this.taskList.refreshEntries(new ArrayList<>(this.menu.getTaskInfos()));
         }
-    }
-
-    @Override
-    public @NotNull ITaskMenu getTaskContainer() {
-        return this.menu;
     }
 
     @Override
@@ -160,10 +156,10 @@ public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> impl
         this.taskList.setEmptyMessage(Component.translatable("gui.factionapi.faction_menu.no_tasks"));
        // this.list = this.addRenderableWidget(new TaskList(Minecraft.getInstance(), this.menu, factionPlayer, this.leftPos + 83, this.topPos + 7, 137, 104, () -> new ArrayList<>(this.menu.getTaskInfos())));
 
-        var button1 = this.addRenderableWidget(new ImageButton(this.leftPos + 7, this.topPos + 90, 20, 20, SKILLS, context -> {
-            if (this.minecraft.player.isAlive()) {
-                this.minecraft.player.closeContainer();
-                FactionPlayerHandler.get(this.minecraft.player).getCurrentSkillPlayer().ifPresent(f -> Minecraft.getInstance().setScreen(new SkillsScreen(f, () -> FactionsMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.FACTION_MENU)))));
+        var button1 = this.addRenderableWidget(new ImageButton(this.leftPos + 7, this.topPos + 90, 20, 20, SKILLS, _ -> {
+            if (player().isAlive()) {
+                player().closeContainer();
+                FactionPlayerHandler.get(player()).getCurrentSkillPlayer().ifPresent(f -> Minecraft.getInstance().setScreen(new SkillsScreen(f, () -> FactionsMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.FACTION_MENU)))));
             }
         }, Component.empty()));
         button1.setTooltip(Tooltip.create(Component.translatable("gui.factionapi.faction_menu.skill_screen")));
@@ -229,7 +225,7 @@ public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> impl
         super.extractBackground(graphics, mouseX, mouseY, a);
         var texture = this.menu.areRefinementsAvailable() ? BACKGROUND_REFINEMENTS : BACKGROUND;
         GuiRenderer.blit(graphics, texture, this.leftPos, this.topPos, this.imageWidth, this.imageHeight);
-        InventoryScreen.extractEntityInInventoryFollowsMouse(graphics, this.leftPos + 7, this.topPos + 8, this.leftPos + 56, this.topPos + 78, 30, 0.0625f, mouseX, mouseY, this.minecraft.player);
+        InventoryScreen.extractEntityInInventoryFollowsMouse(graphics, this.leftPos + 7, this.topPos + 8, this.leftPos + 56, this.topPos + 78, 30, 0.0625f, mouseX, mouseY, player());
     }
 
 }

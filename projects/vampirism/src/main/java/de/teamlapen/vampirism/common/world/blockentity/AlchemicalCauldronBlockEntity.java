@@ -70,7 +70,7 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
     private String ownerName;
     private @Nullable RecipeHolder<AlchemicalCauldronRecipe> recipeChecked;
     private final RecipeType<? extends AlchemicalCauldronRecipe> recipeType;
-    protected NonNullList<ItemStack> items = NonNullList.withSize(3, ItemStack.EMPTY);
+    protected NonNullList<ItemStack> items;
     protected int litTime;
     protected int litDuration;
     protected int cookingProgress;
@@ -348,7 +348,7 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
             } else {
                 pBlockEntity.cookingProgress = 0;
             }
-        } else if (!pBlockEntity.isLit() && pBlockEntity.cookingProgress > 0) {
+        } else if (pBlockEntity.cookingProgress > 0) {
             pBlockEntity.cookingProgress = Mth.clamp(pBlockEntity.cookingProgress - 2, 0, pBlockEntity.cookingTotalTime);
         }
 

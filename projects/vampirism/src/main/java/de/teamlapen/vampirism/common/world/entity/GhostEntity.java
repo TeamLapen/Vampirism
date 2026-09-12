@@ -35,15 +35,15 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class GhostEntity extends VampirismEntity implements IRemainsEntity, IEntityFollower {
 
     private static final Identifier SPEED_MODIFIER = VIdentifier.mod("not_in_block");
+    @Nullable
     private IEntityLeader leader;
 
-    public GhostEntity(@NotNull EntityType<? extends VampirismEntity> type, @NotNull Level world) {
+    public GhostEntity(EntityType<? extends VampirismEntity> type, Level world) {
         super(type, world);
         this.moveControl = new FlyingMoveControl(this, 20, true);
     }
@@ -53,7 +53,7 @@ public class GhostEntity extends VampirismEntity implements IRemainsEntity, IEnt
     }
 
     @Override
-    protected @NotNull PathNavigation createNavigation(@NotNull Level pLevel) {
+    protected PathNavigation createNavigation(Level pLevel) {
         GhostPathNavigation navigation = new GhostPathNavigation(this, pLevel);
         navigation.setCanOpenDoors(false);
         navigation.setCanFloat(true);
@@ -62,7 +62,7 @@ public class GhostEntity extends VampirismEntity implements IRemainsEntity, IEnt
     }
 
     @Override
-    public boolean isInvulnerableTo(@NotNull ServerLevel level, DamageSource pSource) {
+    public boolean isInvulnerableTo(ServerLevel level, DamageSource pSource) {
         return pSource.is(DamageTypeTags.IS_PROJECTILE) || pSource.is(ModDamageTypeTags.MOTHER_RESISTANT_TO) && super.isInvulnerableTo(level, pSource);
     }
 
@@ -118,6 +118,8 @@ public class GhostEntity extends VampirismEntity implements IRemainsEntity, IEnt
         return this.leader != null;
     }
 
+    @SuppressWarnings("unchecked")
+    @Nullable
     @Override
     public <T extends LivingEntity & IEntityLeader> T getLeader() {
         return (T) this.leader;
@@ -150,7 +152,7 @@ public class GhostEntity extends VampirismEntity implements IRemainsEntity, IEnt
     }
 
     @Override
-    public @NotNull SoundSource getSoundSource() {
+    public SoundSource getSoundSource() {
         return SoundSource.HOSTILE;
     }
 
@@ -169,7 +171,7 @@ public class GhostEntity extends VampirismEntity implements IRemainsEntity, IEnt
         }
 
         @Override
-        protected boolean canMoveDirectly(@NotNull Vec3 pPosVec31, @NotNull Vec3 pPosVec32) {
+        protected boolean canMoveDirectly(Vec3 pPosVec31, Vec3 pPosVec32) {
             return true;
         }
     }

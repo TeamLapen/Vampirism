@@ -348,7 +348,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
     }
 
     public void ringBell(@NotNull Player playerEntity) {
-        if (this.capturingFaction != null) {
+        if (this.capturingFaction != null && this.level != null) {
             Holder<? extends IPlayableFaction<?>> faction = IFactionHelper.get().getFaction(playerEntity);
             boolean defender = faction == this.controllingFaction;
             boolean attacker = faction == this.capturingFaction;
@@ -425,7 +425,9 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
     @Override
     public void setRemoved() {
         FactionEventFactory.fireVillageTotemRemovedEvent(this);
-        TotemHelper.removeTotem(this.level.dimension(), this.village, this.worldPosition, true);
+        if (this.level != null) {
+            TotemHelper.removeTotem(this.level.dimension(), this.village, this.worldPosition, true);
+        }
         if (!unloaded) {
             // @Volatile: MC calls setRemoved when a chunk unloads now as well (see ServerLevel#unload -> LevelChunk#clearAllBlockEntities).
             // Since we don't want to remove network node data in that case, we need to know if it was removed due to unloading.
@@ -470,7 +472,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
      */
     private void serverTickSecondNonCapture(int timeInSeconds) {
         //Update/spawn entities
-        if (!IFaction.isNeutral(this.controllingFaction) && timeInSeconds % 16 == 0) {
+        if (!IFaction.isNeutral(this.controllingFaction) && timeInSeconds % 16 == 0 && level != null) {
             int beds = (int) ((ServerLevel) level).getPoiManager().getInRange(pointOfInterestType -> pointOfInterestType.is(PoiTypes.HOME), this.worldPosition, ((int) Math.sqrt(Math.pow(this.getVillageArea().getXsize(), 2) + Math.pow(this.getVillageArea().getZsize(), 2))) / 2, PoiManager.Occupancy.ANY).count();
             boolean spawnTaskMaster = RNG.nextInt(6) == 0;
             int villagerCount = this.level.getEntitiesOfClass(Villager.class, this.getVillageArea().inflate(20)).size();
@@ -500,7 +502,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
         }
 
         //Random raids
-        if (timeSinceLastRaid > 12000 && this.level.getDifficulty() != Difficulty.PEACEFUL && this.level.getRandom().nextFloat() < FactionConfig.server().raidRandomChance.get() * 20) {
+        if (timeSinceLastRaid > 12000 && this.level != null && this.level.getDifficulty() != Difficulty.PEACEFUL && this.level.getRandom().nextFloat() < FactionConfig.server().raidRandomChance.get() * 20) {
             List<Holder<IFaction<?>>> factions = ModRegistries.FACTIONS.get(de.teamlapen.faction.api.tags.FactionTags.HAS_RANDOM_RAID).stream().flatMap(HolderSet.ListBacked::stream).collect(Collectors.toList());
             factions.remove(this.controllingFaction);
             this.initiateCapture(factions.get(this.level.getRandom().nextInt(factions.size())), null, 0, -1f);
@@ -512,6 +514,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
      * Handle raid activity
      */
     private void serverTickSecondCapture(int timeInSeconds) {
+        if (this.level == null) return;
         List<LivingEntity> entities = this.level.getEntitiesOfClass(LivingEntity.class, this.getVillageArea());
         this.updateBossinfoPlayers(entities);
         int currentAttacker = 0; //include player
@@ -943,7 +946,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
     }
 
     private void spawnCaptureEntity(@Nullable Holder<? extends IFaction<?>> faction) {
-        if (faction == null) return;
+        if (faction == null || this.level == null) return;
 
         LivingEntity entity = FactionEventFactory.fireCreateCaptureEntityEvent(this, faction);
         List<? extends Player> players = new ArrayList<>(this.level.players());
@@ -1015,7 +1018,9 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
         }
     }
 
+    @Nullable
     private Map<LivingEntity, FactionVillageEvent.UpdateCreaturesOnCaptureFinishEvent.Action> updateCreaturesOnCapture(boolean fullConvert) {
+        if (this.level == null) return null;
         List<Villager> villagerEntities = this.level.getEntitiesOfClass(Villager.class, getVillageArea());
         if (FactionEventFactory.fireVillagerCaptureEventPre(this, villagerEntities, fullConvert)) {
             return Collections.emptyMap();
@@ -1031,6 +1036,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
     }
 
     private void updateVillageArea() {
+        if (this.level == null) return;
         if (this.villageArea != null && this.villageAreaReduced != null) {
             if (this.village.stream().allMatch(point -> this.villageAreaReduced.contains(Vec3.atLowerCornerOf(point.getPos())))) {
                 return;

@@ -58,6 +58,7 @@ import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
@@ -322,6 +323,7 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
     public void onRemovedFromLevel() {
         if (playerMinionController != null) {
             playerMinionController.checkInMinion(this.minionId, this.token);
+            //noinspection DataFlowIssue
             this.minionData.updateEntityCaps(this.serializeMinionCaps());
             this.minionData = null;
             this.playerMinionController = null;

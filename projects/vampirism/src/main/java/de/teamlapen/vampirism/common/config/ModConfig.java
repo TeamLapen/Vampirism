@@ -1,36 +1,27 @@
 package de.teamlapen.vampirism.common.config;
 
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.faction.Services;
 import de.teamlapen.faction.client.config.values.ColorConfigValue;
 import de.teamlapen.faction.common.util.ConfigValueCodec;
-import de.teamlapen.faction.misc.extensions.IConfigValue;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.config.ClientConfig;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.StringRepresentable;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.IConfigSpec;
 import net.neoforged.fml.config.ModConfig.Type;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
-import net.neoforged.neoforge.common.util.NeoForgeExtraCodecs;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class ModConfig extends Services {
 
@@ -44,9 +35,10 @@ public class ModConfig extends Services {
 
     private ModConfigSpec balanceSpec;
     private @Nullable BalanceBuilder balanceBuilder;
+    private final ModContainer container;
 
     public ModConfig(ModContainer container) {
-        super(container);
+        this.container = container;
         this.client = Config.create(VIdentifier.mod("client"), ClientConfig::new);
         this.common = Config.create(VIdentifier.mod("common"), CommonConfig::new);
         this.server = Config.create(VIdentifier.mod("server"), ServerConfig::new);
@@ -63,7 +55,6 @@ public class ModConfig extends Services {
         ColorConfigValue.subscribe(bus);
     }
 
-    @ThreadSafeAPI
     public <T extends BalanceBuilder.Conf> void addBalanceModification(String key, Consumer<T> modifier) {
         if (this.balanceBuilder == null) {
             throw new IllegalStateException("Must add balance modifications during mod construction");
@@ -123,10 +114,10 @@ public class ModConfig extends Services {
 
     private void setup(NewRegistryEvent event) {
         buildBalanceConfig();
-        container().registerConfig(Type.COMMON, common.spec());
-        container().registerConfig(Type.CLIENT, client.spec());
-        container().registerConfig(Type.SERVER, server.spec());
-        container().registerConfig(Type.SERVER, balanceSpec, "vampirism-balance.toml");
+        this.container.registerConfig(Type.COMMON, common.spec());
+        this.container.registerConfig(Type.CLIENT, client.spec());
+        this.container.registerConfig(Type.SERVER, server.spec());
+        this.container.registerConfig(Type.SERVER, balanceSpec, "vampirism-balance.toml");
     }
 
     public void onLoad(final ModConfigEvent.Loading configEvent) {

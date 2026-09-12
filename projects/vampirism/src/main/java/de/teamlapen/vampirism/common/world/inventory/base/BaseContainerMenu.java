@@ -34,14 +34,14 @@ public abstract class BaseContainerMenu extends AbstractContainerMenu {
     public @NotNull ItemStack quickMoveStack(@NotNull Player pPlayer, int index) {
         ItemStack result = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
-        if (slot != null && slot.hasItem()) {
+        if (slot.hasItem()) {
             ItemStack slotStack = slot.getItem();
             result = slotStack.copy();
             if (index < size) {
                 if (!this.moveItemStackTo(slotStack, size, 36 + size, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (index >= size && index < 27 + size) {
+            } else if (index < 27 + size) {
                 if (!this.moveItemStackTo(slotStack, 0, size, false)) {
                     if (slotStack.isEmpty()) {
                         return ItemStack.EMPTY;

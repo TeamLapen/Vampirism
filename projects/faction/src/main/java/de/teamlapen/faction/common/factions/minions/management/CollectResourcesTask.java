@@ -32,6 +32,7 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -127,8 +128,8 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
             return RecordCodecBuilder.create(inst -> {
                 return inst.group(
                         Codec.INT.fieldOf("cooldown").forGetter(x -> x.coolDown),
-                        UUIDUtil.CODEC.fieldOf("lordid").forGetter(x -> x.lordEntityID)
-                ).apply(inst, (i, u) -> new Desc<>(taskSupplier.get(), i, u));
+                        UUIDUtil.CODEC.optionalFieldOf("lordid").forGetter(x -> Optional.ofNullable(x.lordEntityID))
+                ).apply(inst, (i, u) -> new Desc<>(taskSupplier.get(), i, u.orElse(null)));
             });
         }
 

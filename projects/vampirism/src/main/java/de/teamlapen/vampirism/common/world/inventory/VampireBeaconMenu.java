@@ -63,8 +63,8 @@ public class VampireBeaconMenu extends BaseContainerMenu {
     @Override
     public ItemStack quickMoveStack(Player player, int slotIndex) {
         ItemStack clicked = ItemStack.EMPTY;
-        Slot slot = (Slot)this.slots.get(slotIndex);
-        if (slot != null && slot.hasItem()) {
+        Slot slot = this.slots.get(slotIndex);
+        if (slot.hasItem()) {
             ItemStack stack = slot.getItem();
             clicked = stack.copy();
             if (slotIndex == 0) {

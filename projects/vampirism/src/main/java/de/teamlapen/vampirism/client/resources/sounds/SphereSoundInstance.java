@@ -11,6 +11,7 @@ public class SphereSoundInstance extends AbstractTickableSoundInstance {
     private final AltarInfusionBlockEntity blockEntity;
 
     public SphereSoundInstance(AltarInfusionBlockEntity blockEntity) {
+        //noinspection DataFlowIssue
         super(ModSounds.SPHERE_SPINNING.get(), SoundSource.BLOCKS, blockEntity.getLevel().getRandom());
         this.blockEntity = blockEntity;
         this.looping = false;

@@ -20,20 +20,13 @@ public class FactionsMod {
     public static final IProxy proxy = FMLEnvironment.getDist() == Dist.CLIENT ? FactionsClientMod.create() : new ServerProxy();
     @UnknownNullability
     private static FactionConfig CONFIG;
-    @UnknownNullability
-    private static CommonServices SERVICES;
 
     public FactionsMod(ModContainer container, IEventBus modBus) {
         CONFIG = new FactionConfig(container);
         CONFIG.register(modBus);
-        SERVICES = new CommonServices(container);
-        SERVICES.register(modBus);
-        FactionsApi.init(SERVICES);
+        ((CommonServices) FactionsApi.services()).register(modBus);
     }
 
-    public static CommonServices services() {
-        return SERVICES;
-    }
     public static FactionConfig config() {
         return CONFIG;
     }

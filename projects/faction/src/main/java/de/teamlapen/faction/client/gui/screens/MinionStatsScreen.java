@@ -2,6 +2,7 @@ package de.teamlapen.faction.client.gui.screens;
 
 import de.teamlapen.faction.FactionsMod;
 import de.teamlapen.faction.api.util.FIdentifier;
+import de.teamlapen.faction.client.IMinecraftAccessor;
 import de.teamlapen.faction.client.gui.screens.taskboard.SeparatorWidget;
 import de.teamlapen.faction.common.core.FactionItems;
 import de.teamlapen.faction.common.factions.minions.MinionData;
@@ -28,7 +29,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 
-public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEntity<T>> extends Screen {
+public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEntity<T>> extends Screen implements IMinecraftAccessor {
 
     private static final Identifier BACKGROUND = FIdentifier.mod("background/default");
     protected static final WidgetSprites RESET = new WidgetSprites(FIdentifier.mod("widget/reset"), FIdentifier.mod("widget/reset_disabled"), FIdentifier.mod("widget/reset_highlighted"));
@@ -101,7 +102,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
                 .spacing(10);
 
         layout.addChild(new StringWidget(this.title, this.font),0,0);
-        this.reset = layout.addChild(new ImageButton(18,18, RESET, s -> {
+        this.reset = layout.addChild(new ImageButton(18,18, RESET, _ -> {
             FactionsMod.proxy.sendToServer(new ServerboundResetMinionStatPacket(entity.getId()));
             getOblivionPotion().ifPresent(stack -> stack.shrink(1));//server syncs after the screen is closed
         }, Component.translatable("gui.factionapi.minion_screen.reset_stats")) {
@@ -131,7 +132,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
         GridLayout buttonsLayout = layout.addChild(new GridLayout(),2,0,1,2, layout.newCellSettings().alignHorizontallyCenter());
         buttonsLayout.columnSpacing(20);
         buttonsLayout.addChild(new ExtendedButton(0,0, 80, 20,  Component.translatable("gui.back"), x -> {
-            if (this.minecraft != null && this.backScreen != null) {
+            if (this.backScreen != null) {
                 this.backScreen.returnToLastScreen();
             }
         }), 0, 0, buttonsLayout.newCellSettings().alignHorizontallyCenter());
@@ -153,14 +154,14 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
     }
 
     private @NotNull Optional<ItemStack> getOblivionPotion() {
-        return Optional.ofNullable(entity.getMinionData().flatMap(data -> Optional.ofNullable(InventoryHelper.getFirst(data.getInventory(), FactionItems.OBLIVION_POTION.get()))).orElse(InventoryHelper.getFirst(this.minecraft.player.getInventory(), FactionItems.OBLIVION_POTION.get())));
+        return Optional.ofNullable(entity.getMinionData().flatMap(data -> Optional.ofNullable(InventoryHelper.getFirst(data.getInventory(), FactionItems.OBLIVION_POTION.get()))).orElse(InventoryHelper.getFirst(player().getInventory(), FactionItems.OBLIVION_POTION.get())));
     }
 
     private void createStatRow(GridLayout layout, int row, StatRow statRow) {
         layout.addChild(new StringWidget(statRow.name, font), row, 0);
         var value = layout.addChild(new StringWidget(Component.empty(), font), row, 1);
         var level = layout.addChild(new StringWidget(Component.empty(), font), row, 2);
-        var button = layout.addChild(new ImageButton(18,18, ADD, s -> updateStat(statRow), Component.empty()) {
+        var button = layout.addChild(new ImageButton(18,18, ADD, _ -> updateStat(statRow), Component.empty()) {
             @Override
             public boolean shouldTakeFocusAfterInteraction() {
                 return false;

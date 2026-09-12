@@ -391,12 +391,12 @@ public class GuideBook implements IGuideBook {
         ArrayList<IPage> hunterPages = new ArrayList<>();
         hunterPages.add(new PageEntity((world, reason) -> {
             BasicHunterEntity entity = ModEntities.HUNTER.get().create(world, reason);
-            entity.setEntityLevel(3);
+            Objects.requireNonNull(entity).setEntityLevel(3);
             return entity;
         }));
         hunterPages.add(new PageEntity((world, reason) -> {
             BasicHunterEntity entity = ModEntities.HUNTER.get().create(world, reason);
-            entity.setEntityLevel(0);
+            Objects.requireNonNull(entity).setEntityLevel(0);
             return entity;
         }));
         hunterPages.addAll(PageHelper.pagesForLongText(translateComponent(base + "hunter.text", loc(ModItems.HUMAN_HEART.get()))));
@@ -421,7 +421,7 @@ public class GuideBook implements IGuideBook {
         vampireBaronPages.add(new PageEntity(ModEntities.VAMPIRE_BARON.get()));
         vampireBaronPages.add(new PageEntity((world, reason) -> {
             VampireBaronEntity baron = ModEntities.VAMPIRE_BARON.get().create(world, reason);
-            baron.setLady(true);
+            Objects.requireNonNull(baron).setLady(true);
             return baron;
         }, ModEntities.VAMPIRE_BARON.get().getDescription()));
         vampireBaronPages.addAll(PageHelper.pagesForLongText(translateComponent(base + "vampire_baron.text", loc(ModItems.PURE_BLOOD_0.get()))));

@@ -1,5 +1,6 @@
 package de.teamlapen.faction.common.factions.minions;
 
+import com.google.common.base.Preconditions;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
@@ -38,7 +39,7 @@ public class MinionWorldData extends SavedData implements ValueIOSerializable {
 
     @NotNull
     public static MinionWorldData getData(final @NotNull MinecraftServer server) {
-        return server.getLevel(Level.OVERWORLD).getDataStorage().computeIfAbsent(TYPE);
+        return server.overworld().getDataStorage().computeIfAbsent(TYPE);
     }
 
 
@@ -53,7 +54,8 @@ public class MinionWorldData extends SavedData implements ValueIOSerializable {
     private final MinecraftServer server;
     private final Object2ObjectOpenHashMap<UUID, PlayerMinionController> controllers = new Object2ObjectOpenHashMap<>();
 
-    public MinionWorldData(ServerLevel level) {
+    public MinionWorldData(@Nullable ServerLevel level) {
+        Preconditions.checkArgument(level != null, "Use the Level sensitive SavedDataType constructor instead");
         this.server = level.getServer();
     }
 

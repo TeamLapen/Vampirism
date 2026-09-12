@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class InfuserRecipe implements Recipe<InfuserRecipe.InfuserRecipeInput> {
 
     private final CommonInfo commonInfo;
@@ -44,7 +45,6 @@ public class InfuserRecipe implements Recipe<InfuserRecipe.InfuserRecipeInput> {
     @Nullable
     private PlacementInfo placementInfo;
 
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public InfuserRecipe(CommonInfo commonInfo, String groupIn, Optional<Ingredient> ingredient1, Optional<Ingredient> ingredient2, Optional<Ingredient> ingredient3, Optional<Ingredient> ingredient4, Ingredient ingredient, Optional<ItemStackTemplate> result1, Optional<ItemStackTemplate> result2, Optional<ItemStackTemplate> result3, Optional<ItemStackTemplate> result, int cookingTime) {
         this(commonInfo, groupIn, ingredient1.orElse(null), ingredient2.orElse(null), ingredient3.orElse(null), ingredient4.orElse(null), ingredient, result1.orElse(null), result2.orElse(null), result3.orElse(null), result, cookingTime);
     }

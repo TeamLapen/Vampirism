@@ -28,7 +28,7 @@ public class DefendLordGoal extends TargetGoal {
 
     @Override
     public boolean canContinueToUse() {
-        return entity.getCurrentTask().map(d -> d.getTask() == FactionMinionTasks.PROTECT_LORD.get()).orElse(false) && super.canContinueToUse() && entity.getLordOpt().map(lp -> lp.asEntity().distanceToSqr(targetMob) < maxStopDistSQ).orElse(true);
+        return entity.getCurrentTask().map(d -> d.getTask() == FactionMinionTasks.PROTECT_LORD.get()).orElse(false) && super.canContinueToUse() && entity.getLordOpt().map(lp -> targetMob != null && lp.asEntity().distanceToSqr(targetMob) < maxStopDistSQ).orElse(true);
     }
 
     @Override

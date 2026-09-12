@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.common.integration.jei.extension;
 import de.teamlapen.vampirism.common.world.items.recipes.IWeaponTableRecipe;
 import de.teamlapen.vampirism.common.world.items.recipes.ShapedWeaponTableRecipe;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
-import mezz.jei.api.gui.ingredient.ICraftingGridHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.category.extensions.IRecipeCategoryExtension;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -66,7 +65,7 @@ public class WeaponTableCategoryExtension implements IRecipeCategoryExtension<IW
         }
     }
 
-    public void setRecipe(RecipeHolder<IWeaponTableRecipe> recipeHolder, IRecipeLayoutBuilder builder, ICraftingGridHelper craftingGridHelper, IFocusGroup focuses) {
+    public void setRecipe(RecipeHolder<IWeaponTableRecipe> recipeHolder, IRecipeLayoutBuilder builder, WeaponTableCraftingHelper craftingGridHelper, IFocusGroup focuses) {
         IWeaponTableRecipe recipe = recipeHolder.value();
         RecipeDisplay display = recipe.display().getFirst();
         SlotDisplay resultItem = display.result();

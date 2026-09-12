@@ -10,6 +10,7 @@ import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.common.core.FactionItems;
+import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.actions.ActionHandler;
 import de.teamlapen.faction.common.factions.minions.MinionData;
@@ -51,7 +52,7 @@ public class ServerPayloadHandler {
     public static void handleSelectMinionTaskPacket(ServerboundSelectMinionTaskPacket msg, IPayloadContext context) {
         context.enqueueWork(() -> {
             FactionPlayerHandler.get(context.player()).getPlayerLord().ifPresent(player -> {
-                PlayerMinionController controller = MinionWorldData.getData(context.player().level()).get().getOrCreateController(player);
+                PlayerMinionController controller = MinionWorldData.getData(((ServerPlayer) context.player()).level()).getOrCreateController(player);
                 if (RECALL.equals(msg.taskID())) {
                     if (msg.minionID() < 0) {
                         Collection<Integer> ids = controller.recallMinions(false);
@@ -75,14 +76,14 @@ public class ServerPayloadHandler {
                     printRecoveringMinions(((ServerPlayer) context.player()), controller.getRecoveringMinionNames());
 
                 } else {
-                    //noinspection unchecked
-                    IMinionTask<?, MinionData> task = (IMinionTask<?, MinionData>) RegUtil.getMinionTask(msg.taskID());
-                    if (task == null) {
+                    var task = ModRegistries.MINION_TASKS.get(msg.taskID());
+                    if (task.isEmpty()) {
                         LOGGER.error("Cannot find action to activate {}", msg.taskID());
                     } else if (msg.minionID() < -1) {
                         LOGGER.error("Illegal minion id {}", msg.minionID());
                     } else {
-                        controller.activateTask(msg.minionID(), task);
+                        //noinspection unchecked
+                        controller.activateTask(msg.minionID(), (IMinionTask<?, MinionData>) task.get().value());
                     }
                 }
             });

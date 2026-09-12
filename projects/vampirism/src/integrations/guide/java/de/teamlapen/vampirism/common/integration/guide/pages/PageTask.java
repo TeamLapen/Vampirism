@@ -9,6 +9,7 @@ import de.maxanier.guideapi.api.util.GuiHelper;
 import de.maxanier.guideapi.api.util.IngredientCycler;
 import de.teamlapen.faction.FactionsMod;
 import de.teamlapen.faction.api.FactionRegistries;
+import de.teamlapen.faction.api.FactionsApi;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.tasks.Task;
 import de.teamlapen.faction.api.factions.tasks.TaskUnlocker;
@@ -51,7 +52,7 @@ public class PageTask extends PageText {
             if (holder.is(ModTaskTags.HAS_FACTION)) {
                 // Old ModRegistries.FACTIONS.stream().filter(x -> x.getTag(VampirismRegistries.Keys.TASK).filter(holder::is).isPresent())
                 //Check if this task is contained in the faction task tag
-                text.add(Component.translatable("gui.vampirism.guide.task.reward_obtain_for", String.join(", ", FactionRegistries.FACTION.get().stream().filter(x -> FactionsMod.services().factionTags().get(FactionRegistries.FACTION.get().wrapAsHolder(x), FactionRegistries.Keys.TASK).map(holder::is).isPresent()).map(IFaction::getNamePlural).map(Component::getString).toList()) + " ")); //TODO is this correct, can this be done simpler? We want to find all factions that have this task
+                text.add(Component.translatable("gui.vampirism.guide.task.reward_obtain_for", String.join(", ", FactionRegistries.FACTION.get().stream().filter(x -> FactionsApi.services().factionTags().get(FactionRegistries.FACTION.get().wrapAsHolder(x), FactionRegistries.Keys.TASK).map(holder::is).isPresent()).map(IFaction::getNamePlural).map(Component::getString).toList()) + " ")); //TODO is this correct, can this be done simpler? We want to find all factions that have this task
             } else {
                 text.add(Component.translatable("gui.vampirism.guide.task.reward_obtain_all"));
             }
@@ -77,6 +78,7 @@ public class PageTask extends PageText {
     @Override
     public void drawExtras(GuiGraphicsExtractor graphics, Book book, CategoryBase category, EntryBase entry, int pageLeft, int pageTop, int mouseX, int mouseY, GuideBookScreen screen, Font fontRendererObj) {
         if (this.setup) {
+            //noinspection DataFlowIssue
             ingredientCycler.tick(screen.getMinecraft().level.getGameTime());
             ItemStack s = ingredientCycler.getCycledIngredientStack(stacks, 0);
             GuiHelper.drawScaledItemStack(graphics, s, pageLeft - 39 + 101, pageTop - 13 + 20, 3);

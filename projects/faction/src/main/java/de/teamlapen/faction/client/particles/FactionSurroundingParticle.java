@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 public class FactionSurroundingParticle extends SingleQuadParticle {
 
@@ -29,7 +29,7 @@ public class FactionSurroundingParticle extends SingleQuadParticle {
     public record Provider(SpriteSet spriteSet) implements ParticleProvider<ColorParticleOption> {
 
         @Override
-        public @Nullable Particle createParticle(ColorParticleOption options, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, RandomSource random) {
+        public @NonNull Particle createParticle(ColorParticleOption options, @NonNull ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, @NonNull RandomSource random) {
             var particle = new FactionSurroundingParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, spriteSet.get(random));
             particle.setColor(options.getRed(), options.getGreen(), options.getBlue());
             particle.setAlpha(options.getAlpha());

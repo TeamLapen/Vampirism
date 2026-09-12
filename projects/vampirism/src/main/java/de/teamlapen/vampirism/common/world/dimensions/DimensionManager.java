@@ -31,6 +31,7 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -207,7 +208,8 @@ public class DimensionManager {
         }
 
         final Set<ResourceKey<Level>> removedLevelKeys = new HashSet<>();
-        final ServerLevel overworld = server.getLevel(Level.OVERWORLD);
+        @NotNull
+        final ServerLevel overworld = Objects.requireNonNull(server.getLevel(Level.OVERWORLD));
 
         for (final ResourceKey<Level> levelKeyToRemove : keysToRemove.keySet())
         {
@@ -245,12 +247,8 @@ public class DimensionManager {
                             player.setRespawnPosition(null, false);
                         }
                     }
-                    if (respawnKey == null)
-                    {
-                        respawnKey = Level.OVERWORLD;
-                    }
 
-                    @Nullable ServerLevel destinationLevel = server.getLevel(respawnKey);
+                    ServerLevel destinationLevel = server.getLevel(respawnKey);
                     if (destinationLevel == null)
                     {
                         destinationLevel = overworld;

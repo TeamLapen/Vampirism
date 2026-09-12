@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.common.integration;
 
 import com.google.common.base.Preconditions;
 import de.teamlapen.faction.Services;
-import net.neoforged.fml.ModContainer;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,10 +11,6 @@ public class IntegrationServices extends Services {
 
     @Nullable
     private ITerraBlenderBiomeProvider terraBlenderBiomeProvider;
-
-    public IntegrationServices(ModContainer container) {
-        super(container);
-    }
 
     public boolean isUsingTerraBlender() {
         return Objects.requireNonNullElse(this.terraBlenderBiomeProvider, ITerraBlenderBiomeProvider.FALLBACK).isUsingTerraBlender();

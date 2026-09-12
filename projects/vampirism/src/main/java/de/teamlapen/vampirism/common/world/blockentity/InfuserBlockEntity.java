@@ -28,7 +28,6 @@ import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Stream;
@@ -134,9 +133,7 @@ public class InfuserBlockEntity extends BaseContainerBlockEntity implements Worl
                 if (blockEntity.cookingTimer == blockEntity.totalCookingTime) {
                     blockEntity.cookingTimer = 0;
                     blockEntity.totalCookingTime = getTotalCookTime((ServerLevel) level, blockEntity);
-                    if (burn(level.registryAccess(), recipeHolder, recipeInput, blockEntity.items)) {
-
-                    }
+                    burn(level.registryAccess(), recipeHolder, recipeInput, blockEntity.items);
                     changed = true;
                 }
             } else {
@@ -179,7 +176,7 @@ public class InfuserBlockEntity extends BaseContainerBlockEntity implements Worl
     }
 
     private static boolean burn(RegistryAccess registryAccess, @Nullable RecipeHolder<InfuserRecipe> recipeHolder, InfuserRecipe.InfuserRecipeInput recipeInput, NonNullList<ItemStack> items) {
-        if (recipeHolder != null && canBurn(registryAccess, recipeHolder, recipeInput, items)) {
+        if (canBurn(registryAccess, recipeHolder, recipeInput, items)) {
             ItemStack result = recipeHolder.value().assemble(recipeInput);
 
             ItemStack resultSlotItem = items.get(SLOT_RESULT);
@@ -229,7 +226,7 @@ public class InfuserBlockEntity extends BaseContainerBlockEntity implements Worl
     }
 
     @Override
-    public int @NotNull [] getSlotsForFace(Direction side) {
+    public int[] getSlotsForFace(Direction side) {
         return switch (side) {
             case UP -> SLOTS_FOR_UP;
             case DOWN -> SLOTS_FOR_DOWN;
@@ -238,12 +235,12 @@ public class InfuserBlockEntity extends BaseContainerBlockEntity implements Worl
     }
 
     @Override
-    public boolean canPlaceItemThroughFace(int index, @NotNull ItemStack itemStack, @Nullable Direction direction) {
+    public boolean canPlaceItemThroughFace(int index, ItemStack itemStack, @Nullable Direction direction) {
         return this.canPlaceItem(index, itemStack);
     }
 
     @Override
-    public boolean canTakeItemThroughFace(int index, @NotNull ItemStack stack, @NotNull Direction direction) {
+    public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
         return true;
     }
 
@@ -261,7 +258,7 @@ public class InfuserBlockEntity extends BaseContainerBlockEntity implements Worl
     }
 
     @Override
-    public boolean canPlaceItem(int slot, @NotNull ItemStack stack) {
+    public boolean canPlaceItem(int slot, ItemStack stack) {
         return switch (slot) {
             case SLOT_INGREDIENT_1, SLOT_INGREDIENT_2, SLOT_INGREDIENT_3, SLOT_INGREDIENT_4, SLOT_INPUT -> true;
             default -> false;
@@ -269,7 +266,7 @@ public class InfuserBlockEntity extends BaseContainerBlockEntity implements Worl
     }
 
     @Override
-    public void fillStackedContents(@NotNull StackedItemContents itemContents) {
+    public void fillStackedContents(StackedItemContents itemContents) {
         for (ItemStack item : this.items) {
             itemContents.accountStack(item);
         }

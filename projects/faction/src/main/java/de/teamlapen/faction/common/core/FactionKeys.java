@@ -137,7 +137,7 @@ public class FactionKeys implements IMinecraftAccessor {
     }
 
     private void openMinionTaskMenu() {
-        if (Minecraft.getInstance().player.isSpectator()) return;
+        if (player().isSpectator()) return;
         if (FactionPlayerHandler.get(player()).getPlayerLord().map(ILordPlayer::getLordLevel).orElse(0) > 0) {
             SelectMinionTaskRadialScreen.show();
         }

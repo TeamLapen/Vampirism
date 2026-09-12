@@ -70,10 +70,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
       - name: Setup Java
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: '25'
-          distribution: 'adopt'
+          distribution: 'temurin'
           cache: 'gradle'
       - name: Set Gradle version property
         run: echo "ORG_GRADLE_PROJECT_${{ needs.prepare.outputs.mod_version_parameter }}=${{ needs.prepare.outputs.mod_version }}" >> "$GITHUB_ENV"
@@ -100,15 +100,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
       - name: Setup Java
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: '25'
-          distribution: 'adopt'
+          distribution: 'temurin'
           cache: 'gradle'
       - name: Set Gradle version property
         run: echo "ORG_GRADLE_PROJECT_${{ needs.prepare.outputs.mod_version_parameter }}=${{ needs.prepare.outputs.mod_version }}" >> "$GITHUB_ENV"
       - name: Get Artifacts
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: ${{ needs.prepare.outputs.project }}-jars
           path: projects/
@@ -140,7 +140,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get Artifacts
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: ${{ needs.prepare.outputs.project }}-jars
           path: projects/

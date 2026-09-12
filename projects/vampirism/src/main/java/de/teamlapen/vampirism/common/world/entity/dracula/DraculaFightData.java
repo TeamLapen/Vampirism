@@ -163,7 +163,7 @@ public class DraculaFightData implements ValueIOSerializable {
             GlobalPos data = player.getExistingData(ModAttachments.VELMORRA_PORTAL).orElseGet(() -> {
                 ServerPlayer.RespawnConfig respawnConfig = player.getRespawnConfig();
                 LevelData.RespawnData respawnData = respawnConfig == null ? this.level.getServer().getRespawnData() : respawnConfig.respawnData();
-                return GlobalPos.of(respawnData.dimension() == null ? Level.OVERWORLD : respawnData.dimension(), respawnData.pos());
+                return GlobalPos.of(respawnData.dimension(), respawnData.pos());
             });
             ServerLevel targetLevel = this.level.getServer().getLevel(data.dimension());
             if (targetLevel == null || targetLevel == this.level) {

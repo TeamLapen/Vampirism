@@ -2,10 +2,10 @@ package de.teamlapen.vampirism.common.world.entity.vampire;
 
 import de.teamlapen.faction.common.util.StructureUtil;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.EnumStrength;
+import de.teamlapen.vampirism.api.world.EnumStrength;
 import de.teamlapen.vampirism.api.VampirismApi;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
-import de.teamlapen.vampirism.api.util.VampirismEventFactory;
+import de.teamlapen.vampirism.common.events.VampirismEventFactory;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IDrinkBloodContext;
 import de.teamlapen.vampirism.api.world.entity.vampire.IVampireMob;
@@ -190,7 +190,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
         }
         if (entity instanceof LivingEntity living) {
             for (ItemStack e : Arrays.stream(EquipmentSlot.values()).filter(x -> x.getType() == EquipmentSlot.Type.HUMANOID_ARMOR).map(living::getItemBySlot).toList()) {
-                if (e != null && e.getItem() instanceof HunterCoatItem) {
+                if (e.getItem() instanceof HunterCoatItem) {
                     int j = 1;
                     if (((HunterCoatItem) e.getItem()).getVampirismTier().equals(IItemWithTier.Tier.ENHANCED)) {
                         j = 2;

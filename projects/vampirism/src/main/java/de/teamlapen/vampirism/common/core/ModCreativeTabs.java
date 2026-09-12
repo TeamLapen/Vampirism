@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.common.core;
 
 import de.teamlapen.faction.common.core.FactionItems;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.util.ColorListsUtil;
 import de.teamlapen.vampirism.common.util.ItemDataUtils;
@@ -265,7 +266,7 @@ public class ModCreativeTabs {
             add(FEEDING_ADAPTER);
             add(CHALICE);
 
-            ModRegistries.OILS.listElements().filter(s -> !s.is(ModOils.EMPTY)).map(s -> ItemDataUtils.createOil(OIL_BOTTLE.get(), s)).forEach(this::add);
+            VampirismRegistries.OIL.get().listElements().filter(s -> !s.is(ModOils.EMPTY)).map(s -> ItemDataUtils.createOil(OIL_BOTTLE.get(), s)).forEach(this::add);
         }
 
         private void addWeapons() {

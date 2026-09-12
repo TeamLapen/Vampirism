@@ -17,7 +17,9 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.item.ItemArgument;
 import net.minecraft.commands.arguments.item.ItemInput;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -51,7 +53,7 @@ public class MinionInventoryCommand extends BasicCommand {
 
     private static int addItem(CommandSourceStack source, ServerPlayer player, MinionArgument.MinionId playerMinionIdentifier, ItemInput item, int count) throws CommandSyntaxException {
         ItemStack itemStack = item.createItemStack(count);
-        getInventory(playerMinionIdentifier).ifPresent(minionInventory -> {
+        getInventory(source.getServer(), playerMinionIdentifier).ifPresent(minionInventory -> {
             minionInventory.addItemStack(itemStack.copy());
             FactionLogger.info(FactionLogger.MINION_INVENTORY, "{} added {} {} to inventory of {}", player.getName().getString(), itemStack.getCount(), itemStack.getDisplayName().getString(), playerMinionIdentifier);
             source.sendSystemMessage(Component.translatable("command.factionapi.base.minion_inventory.add_success", itemStack.getCount(), itemStack.getDisplayName().getString(), playerMinionIdentifier).withStyle(ChatFormatting.AQUA));
@@ -62,7 +64,7 @@ public class MinionInventoryCommand extends BasicCommand {
 
     private static int removeItem(CommandSourceStack source, ServerPlayer player, MinionArgument.MinionId playerMinionIdentifier, ItemInput item, int count) throws CommandSyntaxException {
         ItemStack itemStack = item.createItemStack(1);
-        getInventory(playerMinionIdentifier).ifPresent(minionInventory -> {
+        getInventory(source.getServer(), playerMinionIdentifier).ifPresent(minionInventory -> {
             List<ItemStack> itemStacks = minionInventory.getAllInventories().stream().flatMap(Collection::stream).filter(s -> ItemStack.isSameItemSameComponents(s, itemStack)).toList();
             if (!itemStacks.isEmpty()) {
                 ItemStack stack = itemStacks.getFirst().split(count);
@@ -78,25 +80,25 @@ public class MinionInventoryCommand extends BasicCommand {
     }
 
     private static int listInventory(CommandSourceStack source, ServerPlayer player, MinionArgument.MinionId playerMinionIdentifier) throws CommandSyntaxException {
-        getInventory(playerMinionIdentifier).ifPresent(inv -> {
-            Map<Item, Integer> count = new HashMap<>();
-            inv.getAllInventories().stream().flatMap(Collection::stream).filter(stack -> !stack.isEmpty()).forEach(item -> count.merge(item.getItem(), item.getCount(), Integer::sum));
+        getInventory(source.getServer(), playerMinionIdentifier).ifPresent(inv -> {
+            Map<Holder<Item>, Integer> count = new HashMap<>();
+            inv.getAllInventories().stream().flatMap(Collection::stream).filter(stack -> !stack.isEmpty()).forEach(item -> count.merge(item.typeHolder(), item.getCount(), Integer::sum));
             if (count.isEmpty()) {
                 source.sendSuccess(() -> Component.translatable("command.factionapi.base.minion_inventory.empty", playerMinionIdentifier).withStyle(ChatFormatting.AQUA), false);
             } else {
                 FactionLogger.info(FactionLogger.MINION_INVENTORY, "{} views inventory of {}", player.getName().getString(), playerMinionIdentifier);
                 source.sendSuccess(() -> Component.translatable("command.factionapi.base.minion_inventory.content", playerMinionIdentifier.toString()).withStyle(ChatFormatting.AQUA).withStyle(ChatFormatting.UNDERLINE), false);
-                source.sendSuccess(() -> Component.literal(count.entrySet().stream().map(a -> a.getValue() + " " + RegUtil.id(a.getKey())).collect(Collectors.joining("\n"))).withStyle(ChatFormatting.AQUA), false);
+                source.sendSuccess(() -> Component.literal(count.entrySet().stream().map(a -> a.getValue() + " " + a.getKey().unwrapKey().orElseThrow().identifier()).collect(Collectors.joining("\n"))).withStyle(ChatFormatting.AQUA), false);
             }
         });
         return 0;
     }
 
-    private static Optional<MinionInventory> getInventory(MinionArgument.MinionId playerMinionIdentifier) throws CommandSyntaxException {
+    private static Optional<MinionInventory> getInventory(MinecraftServer server, MinionArgument.MinionId playerMinionIdentifier) throws CommandSyntaxException {
         String playerName = playerMinionIdentifier.player;
         int minionId = playerMinionIdentifier.id;
-        MinionWorldData data = MinionWorldData.getData(ServerLifecycleHooks.getCurrentServer());
-        var profile = ServerLifecycleHooks.getCurrentServer().services().nameToIdCache().get(playerName).orElseThrow(NO_PLAYER::create);
+        MinionWorldData data = MinionWorldData.getData(server);
+        var profile = server.services().nameToIdCache().get(playerName).orElseThrow(NO_PLAYER::create);
         PlayerMinionController controller = data.getController(profile.id());
         if (controller == null) {
             throw NO_MINION.create();

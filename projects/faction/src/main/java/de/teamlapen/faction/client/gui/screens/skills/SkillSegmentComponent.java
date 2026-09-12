@@ -125,7 +125,7 @@ public class SkillSegmentComponent {
                 color = ARGB.colorFromFloat(1, 0.5f, 0.5f, 0.5f);
             }
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, this.entry.isRoot() ? START_SKILL_BACKGROUND_SPRITE : SKILL_BACKGROUND_SPRITE, x, this.placement.y() + offsetY, SkillTreeLayout.SKILL_SIZE, SkillTreeLayout.SKILL_SIZE, color);
-            GuiRenderer.blit(graphics, getSkillIconLocation(skill.value()), x + 5, this.placement.y() + offsetY + 5, 16, 16, 16, 16);
+            GuiRenderer.blit(graphics, getSkillIconLocation(skill), x + 5, this.placement.y() + offsetY + 5, 16, 16, 16, 16);
 
             x += SkillTreeLayout.SKILL_SIZE + SkillTreeLayout.SKILL_GAP;
         }
@@ -199,6 +199,7 @@ public class SkillSegmentComponent {
             if (state == SkillSegmentState.UNLOCKED && !this.skillHandler.isSkillEnabled(hoveredSkill)) {
                 texture = SkillSegmentState.LOCKED.sprite;
             }
+            //noinspection DataFlowIssue
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, texture, scrollX + x - 5, scrollY + this.placement.y() + 3, this.width[hoveredSkillIndex], 20);
             graphics.text(this.minecraft.font, this.titles[hoveredSkillIndex], scrollX + x + 40, scrollY + this.placement.y() + 9, -1, true);
 
@@ -213,7 +214,7 @@ public class SkillSegmentComponent {
 
             //draw skill
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, this.entry.isRoot() ? START_SKILL_BACKGROUND_SPRITE : SKILL_BACKGROUND_SPRITE, scrollX + x, scrollY + this.placement.y(), SkillTreeLayout.SKILL_SIZE, SkillTreeLayout.SKILL_SIZE);
-            GuiRenderer.blit(graphics, getSkillIconLocation(hoveredSkill.value()), x + scrollX + 5, this.placement.y() + scrollY + 5, 16, 16, 16, 16);
+            GuiRenderer.blit(graphics, getSkillIconLocation(hoveredSkill), x + scrollX + 5, this.placement.y() + scrollY + 5, 16, 16, 16, 16);
 
             if (heldSkill != null && heldSkill.equals(hoveredSkill)) {
                 int fill = Mth.ceil(SkillTreeLayout.SKILL_SIZE * holdingProgress);
@@ -223,13 +224,13 @@ public class SkillSegmentComponent {
         }
     }
 
-    private Identifier getSkillIconLocation(ISkill<?> skill) {
-        var action = skill.getAction();
+    private Identifier getSkillIconLocation(Holder<? extends ISkill<?>> skill) {
+        var action = skill.value().getAction();
         if (action != null) {
             Identifier location = action.unwrapKey().orElseThrow().identifier();
             return location.withPath(x -> "textures/actions/" + x + ".png");
         } else {
-            Identifier id = RegUtil.id(skill);
+            Identifier id = skill.unwrapKey().orElseThrow().identifier();
             return id.withPath(x -> "textures/skills/" + x + ".png");
         }
     }

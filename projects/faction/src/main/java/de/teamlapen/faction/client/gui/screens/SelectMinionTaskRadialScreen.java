@@ -46,6 +46,7 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
         show(FactionKeys.MINION);
     }
 
+    @SuppressWarnings("DataFlowIssue")
     public static void show(KeyMapping mapping) {
         FactionPlayerHandler.get(Minecraft.getInstance().player).getPlayerLord().filter(x -> x.getLordLevel() > 0).ifPresent(lord -> {
             Collection<Entry> tasks = getTasks(lord);

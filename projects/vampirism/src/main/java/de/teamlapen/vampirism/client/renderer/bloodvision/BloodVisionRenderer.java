@@ -87,44 +87,45 @@ public class BloodVisionRenderer implements IMinecraftAccessor {
     public void onRenderWorldLast(RenderLevelStageEvent.AfterWeather event) {
         if (shouldRenderBloodVision() && !reducedBloodVision) {
             PostChain blur = this.mc().getShaderManager().getPostChain(Identifier.withDefaultNamespace("blur"), LevelTargetBundle.MAIN_TARGETS);
-//                blur.setUniform("Radius", 12 * getBloodVisionProgress(partalTicks));
-            blur.process(Minecraft.getInstance().getMainRenderTarget(), Minecraft.getInstance().gameRenderer.resourcePool);
+            if (blur != null) {
+                blur.process(Minecraft.getInstance().getMainRenderTarget(), Minecraft.getInstance().gameRenderer.resourcePool);
 
-            var poseStack = new PoseStack();
-            ILevelRenderer levelRenderer = event.getLevelRenderer();
+                var poseStack = new PoseStack();
+                ILevelRenderer levelRenderer = event.getLevelRenderer();
 
-            var parts = Minecraft.getInstance().gameRenderer.getFeatureRenderDispatcher().vampirism$modelPartFeatureRenderer();
-            var models = Minecraft.getInstance().gameRenderer.getFeatureRenderDispatcher().vampirism$modelFeatureFeatureRenderer();
+                var parts = Minecraft.getInstance().gameRenderer.getFeatureRenderDispatcher().vampirism$modelPartFeatureRenderer();
+                var models = Minecraft.getInstance().gameRenderer.getFeatureRenderDispatcher().vampirism$modelFeatureFeatureRenderer();
 
-            for (IEntityEntry entry : this.cachedEntityRenderStates) {
-                double distanceToCameraSq = entry.renderState().distanceToCameraSq;
+                for (IEntityEntry entry : this.cachedEntityRenderStates) {
+                    double distanceToCameraSq = entry.renderState().distanceToCameraSq;
 
-                float perc = getBloodVisionProgress();
+                    float perc = getBloodVisionProgress();
 
-                if (distanceToCameraSq > ENTITY_NEAR_SQ_DISTANCE) {
-                    perc *= (float) (1- (distanceToCameraSq - ENTITY_NEAR_SQ_DISTANCE) / ENTITY_NEAR_SQ_DISTANCE);
+                    if (distanceToCameraSq > ENTITY_NEAR_SQ_DISTANCE) {
+                        perc *= (float) (1 - (distanceToCameraSq - ENTITY_NEAR_SQ_DISTANCE) / ENTITY_NEAR_SQ_DISTANCE);
+                    }
+
+                    this.bloodVisionBuffer.setColor(ARGB.color(perc, entry.color()));
+
+                    submitEntities(poseStack, event.getLevelRenderState(), List.of(entry.renderState()), this.nodeCollector, levelRenderer.vampirism$entityRenderDispatcher());
+
+                    for (SubmitNodeCollection value : this.nodeCollector.getSubmitsPerOrder().values()) {
+                        parts.renderSolid(value, this.bloodVisionBuffer, this.noOp, this.bloodVisionBuffer);
+                        parts.renderTranslucent(value, this.bloodVisionBuffer, this.noOp, this.bloodVisionBuffer);
+                        models.renderSolid(value, this.bloodVisionBuffer, this.noOp, this.bloodVisionBuffer);
+                        models.renderTranslucent(value, this.bloodVisionBuffer, this.noOp, this.bloodVisionBuffer);
+                    }
+
+                    this.nodeCollector.clear();
+                    this.bloodVisionBuffer.endBatch();
                 }
 
-                this.bloodVisionBuffer.setColor(ARGB.color(perc, entry.color()));
-
-                submitEntities(poseStack, event.getLevelRenderState(), List.of(entry.renderState()), this.nodeCollector, levelRenderer.vampirism$entityRenderDispatcher());
-
-                for (SubmitNodeCollection value : this.nodeCollector.getSubmitsPerOrder().values()) {
-                    parts.renderSolid(value, this.bloodVisionBuffer, this.noOp, this.bloodVisionBuffer);
-                    parts.renderTranslucent(value, this.bloodVisionBuffer, this.noOp, this.bloodVisionBuffer);
-                    models.renderSolid(value, this.bloodVisionBuffer, this.noOp, this.bloodVisionBuffer);
-                    models.renderTranslucent(value, this.bloodVisionBuffer, this.noOp, this.bloodVisionBuffer);
+                if (!poseStack.isEmpty()) {
+                    throw new IllegalStateException("Pose stack not empty");
                 }
 
-                this.nodeCollector.clear();
-                this.bloodVisionBuffer.endBatch();
+                this.cachedEntityRenderStates = List.of();
             }
-
-            if (!poseStack.isEmpty()) {
-                throw new IllegalStateException("Pose stack not empty");
-            }
-
-            this.cachedEntityRenderStates = List.of();
         }
     }
 
@@ -165,7 +166,7 @@ public class BloodVisionRenderer implements IMinecraftAccessor {
 
     @SubscribeEvent
     public void onTick(ClientTickEvent.Pre event) {
-        if (this.level() == null || this.player() == null || !player().isAlive()) return;
+        if (!playerAlive()) return;
         this.lastBloodVisionTicks = this.bloodVisionTicks;
         VampirePlayer vampire = VampirePlayer.get(player());
         if (vampire.getSkillProperties().blood_vision && ModConfig.client().renderBloodVision.get() && !vampire.isGettingSundamage(level())) {
@@ -187,7 +188,7 @@ public class BloodVisionRenderer implements IMinecraftAccessor {
     }
 
     public boolean shouldRenderBloodVision() {
-        return this.bloodVisionTicks > 0 && this.player() != null;
+        return this.bloodVisionTicks > 0 && Minecraft.getInstance().player != null;
     }
 
     private float getBloodVisionProgress() {

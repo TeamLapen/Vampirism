@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.world.entity.vampire;
 
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.world.entities.goals.LookAtClosestVisibleGoal;
-import de.teamlapen.vampirism.api.EnumStrength;
+import de.teamlapen.vampirism.api.world.EnumStrength;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IWingsEntity;
 import de.teamlapen.vampirism.api.world.entity.vampire.IVampireBaron;
@@ -41,9 +41,6 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -294,9 +291,6 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, EntitySpawnReason reason, @Nullable SpawnGroupData spawnDataIn) {
         this.getEntityData().set(LADY, this.getRandom().nextBoolean());
-        if (reason == EntitySpawnReason.COMMAND || reason == EntitySpawnReason.SPAWN_ITEM_USE) {
-//            this.setEntityLevel(getRandom().nextInt(getMaxEntityLevel() + 1));
-        }
         return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
     }
 
@@ -455,7 +449,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         this.goalSelector.addGoal(4, new FleeGarlicVampireGoal(this, 0.9F, false));
         this.goalSelector.addGoal(5, new BaronAIAttackMelee(this, 1.0F));
         this.goalSelector.addGoal(6, new BaronAIAttackRanged(this, 60, 64, 6, 4));
-        this.goalSelector.addGoal(6, new AvoidEntityGoal<>(this, Player.class, 6.0F, 0.6, 0.7F, (input) -> input != null && !isLowerLevel(input, input.level())));//Works only partially. Pathfinding somehow does not find escape routes
+        this.goalSelector.addGoal(6, new AvoidEntityGoal<>(this, Player.class, 6.0F, 0.6, 0.7F, (input) -> !isLowerLevel(input, input.level())));//Works only partially. Pathfinding somehow does not find escape routes
         this.goalSelector.addGoal(7, new RandomStrollGoal(this, 0.2));
         this.goalSelector.addGoal(9, new LookAtClosestVisibleGoal(this, Player.class, 10.0F));
         this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));

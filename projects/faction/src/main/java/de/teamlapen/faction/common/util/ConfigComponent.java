@@ -34,7 +34,7 @@ public abstract class ConfigComponent<T> implements ComponentContents {
     private static class DefaultConfigComponent extends ConfigComponent<Object> {
 
         public static final MapCodec<DefaultConfigComponent> MAP_CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-                ConfigValueCodec.<Object>codec().fieldOf("configValue").forGetter(x -> x.value)
+                ConfigValueCodec.codec().fieldOf("configValue").forGetter(x -> x.value)
         ).apply(i, DefaultConfigComponent::new));
 
         @SuppressWarnings("unchecked")
@@ -140,12 +140,12 @@ public abstract class ConfigComponent<T> implements ComponentContents {
     }
 
     @Override
-    public <T> Optional<T> visit(FormattedText.StyledContentConsumer<T> output, Style currentStyle) {
+    public <TOutput> Optional<TOutput> visit(FormattedText.StyledContentConsumer<TOutput> output, Style currentStyle) {
         return output.accept(currentStyle, getValue());
     }
 
     @Override
-    public <T> Optional<T> visit(FormattedText.ContentConsumer<T> output) {
+    public <TOutput> Optional<TOutput> visit(FormattedText.ContentConsumer<TOutput> output) {
         return output.accept(getValue());
     }
 

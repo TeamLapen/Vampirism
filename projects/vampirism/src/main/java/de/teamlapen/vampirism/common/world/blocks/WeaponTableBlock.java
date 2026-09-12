@@ -160,7 +160,7 @@ public class WeaponTableBlock extends BaseHorizontalBlock {
 
             BlockState blockState = location.getBlockState();
 
-            return blockState.getValue(WeaponTableBlock.LAVA) * MB_PER_META;
+            return (long) blockState.getValue(WeaponTableBlock.LAVA) * MB_PER_META;
         }
 
         @Override

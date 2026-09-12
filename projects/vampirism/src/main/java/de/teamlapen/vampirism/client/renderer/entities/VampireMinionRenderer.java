@@ -69,6 +69,7 @@ public class VampireMinionRenderer extends DualSplitBipedRenderer<VampireMinionE
     public void extractRenderState(VampireMinionEntity entity, MinionRenderState state, float p_363123_) {
         super.extractRenderState(entity, state, p_363123_);
         if (entity.getMinionData().filter(VampireMinionEntity.VampireMinionData::isUsingLordSkin).isPresent()) {
+            //noinspection DataFlowIssue
             state.lordSkin = entity.getLordID().map(x -> Minecraft.getInstance().getConnection().getPlayerInfo(x)).map(PlayerInfo::getSkin).orElse(null);
         }
         state.skin = (entity.hasMinionSpecificSkin() && this.minionSpecificTextures.length > 0) ? minionSpecificTextures[entity.getVampireType() % minionSpecificTextures.length] : textures[entity.getVampireType() % textures.length];

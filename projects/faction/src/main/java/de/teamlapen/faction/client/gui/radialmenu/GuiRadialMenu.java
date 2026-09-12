@@ -31,6 +31,7 @@ package de.teamlapen.faction.client.gui.radialmenu;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import de.teamlapen.faction.client.IMinecraftAccessor;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -57,7 +58,7 @@ import java.util.List;
 import java.util.Optional;
 
 //@EventBusSubscriber
-public abstract class GuiRadialMenu<T> extends Screen {
+public abstract class GuiRadialMenu<T> extends Screen implements IMinecraftAccessor {
     private static final float PRECISION = 5.0f;
     protected static final int MAX_SLOTS = 30;
 
@@ -255,6 +256,7 @@ public abstract class GuiRadialMenu<T> extends Screen {
         } else if (mouseButtonEvent.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             if (this.selectedItem != -1) {
                 radialMenu.setCurrentSlot(selectedItem);
+                //noinspection DataFlowIssue
                 minecraft.player.closeContainer();
             }
         }

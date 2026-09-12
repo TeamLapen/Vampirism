@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.api.util;
+package de.teamlapen.vampirism.common.events;
 
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.api.event.VampireFogEvent;

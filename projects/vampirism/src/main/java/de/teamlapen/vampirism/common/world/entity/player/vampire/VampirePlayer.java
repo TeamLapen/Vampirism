@@ -15,12 +15,13 @@ import de.teamlapen.faction.common.world.entities.appearance.IAppearanceHolder;
 import de.teamlapen.faction.misc.extensions.IEffectInstanceWithSource;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.EnumStrength;
+import de.teamlapen.vampirism.api.VampirismEffects;
+import de.teamlapen.vampirism.api.world.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismApi;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.api.util.VIdentifier;
-import de.teamlapen.vampirism.api.util.VampirismEventFactory;
+import de.teamlapen.vampirism.common.events.VampirismEventFactory;
 import de.teamlapen.vampirism.api.world.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.world.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.*;
@@ -45,7 +46,6 @@ import de.teamlapen.vampirism.common.world.entity.player.vampire.properties.Cust
 import de.teamlapen.vampirism.common.world.entity.player.vampire.properties.VampireDisguise;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.properties.VisionStatus;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.skills.VampirePlayerSkillProperties;
-import de.teamlapen.vampirism.common.world.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.common.world.entity.vampire.DrinkBloodContext;
 import de.teamlapen.vampirism.common.world.items.HunterArmorItem;
 import net.minecraft.core.BlockPos;
@@ -236,7 +236,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
      */
     public void biteBlock(BlockPos pos, Direction side) {
         if (player.isSpectator()) {
-            LOGGER.warn("Player can't bite in spectator mode");
+            LOGGER.warn("Player can't drink from blocks in spectator mode");
             return;
         }
         double dist = player.getAttribute(Attributes.ENTITY_INTERACTION_RANGE).getValue() + 1;
@@ -694,7 +694,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     public void leaveFaction() {
         this.removeEntityAttributes();
         this.vision.deactivate();
-        IEffectInstanceWithSource.removePotionEffect(player, MobEffects.NIGHT_VISION, VReference.VAMPIRE_NIGHT_VISION_EFFECT);
+        IEffectInstanceWithSource.removePotionEffect(player, MobEffects.NIGHT_VISION, VampirismEffects.VAMPIRE_NIGHT_VISION_EFFECT);
         super.leaveFaction();
     }
 

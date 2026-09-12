@@ -6,6 +6,7 @@ import de.teamlapen.faction.api.factions.skills.ISkillHandler;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.factions.skills.ISkillTree;
 import de.teamlapen.faction.api.util.FIdentifier;
+import de.teamlapen.faction.client.IMinecraftAccessor;
 import de.teamlapen.faction.client.gui.GuiRenderer;
 import de.teamlapen.faction.client.gui.screens.ILastScreenProvider;
 import de.teamlapen.faction.common.core.FactionEffects;
@@ -47,7 +48,7 @@ import java.util.stream.Collectors;
  * relevant classes {@link SkillsScreen} {@link SkillsTabComponent} {@link SkillSegmentComponent}
  */
 @NullMarked
-public class SkillsScreen extends Screen {
+public class SkillsScreen extends Screen implements IMinecraftAccessor {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -136,13 +137,9 @@ public class SkillsScreen extends Screen {
         }
 
         if (backScreen != null) {
-            addRenderableWidget(new ExtendedButton(guiLeft + 4, guiTop + 194, 80, 20, Component.translatable("gui.back"), (context) -> {
-                backScreen.returnToLastScreen();
-            }));
+            addRenderableWidget(new ExtendedButton(guiLeft + 4, guiTop + 194, 80, 20, Component.translatable("gui.back"), (_) -> backScreen.returnToLastScreen()));
         }
-        addRenderableWidget(new ExtendedButton(guiLeft + 168, guiTop + 194, 80, 20, Component.translatable("gui.done"), (context) -> {
-            minecraft.setScreen(null);
-        }));
+        addRenderableWidget(new ExtendedButton(guiLeft + 168, guiTop + 194, 80, 20, Component.translatable("gui.done"), (_) -> minecraft.setScreen(null)));
         boolean test = !FMLEnvironment.isProduction();
 
         //server syncs after the screen is closed
@@ -150,11 +147,11 @@ public class SkillsScreen extends Screen {
         Button resetSkills = addRenderableWidget(new ExtendedButton(guiLeft + 85, guiTop + 194, 80, 20, Component.translatable("gui.factionapi.skills.resetall"), (context) -> {
             FactionsMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.RESET_SKILLS));
             InventoryHelper.removeItemFromInventory(factionPlayer.asEntity().getInventory(), new ItemStack(FactionItems.OBLIVION_POTION.get())); //server syncs after the screen is closed
-            if ((factionPlayer.getLevel() < 2 || minecraft.player.getInventory().countItem(FactionItems.OBLIVION_POTION.get()) <= 1) && !test) {
+            if ((factionPlayer.getLevel() < 2 || player().getInventory().countItem(FactionItems.OBLIVION_POTION.get()) <= 1) && !test) {
                 context.active = false;
             }
         }));
-        if ((factionPlayer.getLevel() < 2 || minecraft.player.getInventory().countItem(FactionItems.OBLIVION_POTION.get()) <= 0) && !test) {
+        if ((factionPlayer.getLevel() < 2 || player().getInventory().countItem(FactionItems.OBLIVION_POTION.get()) <= 0) && !test) {
             resetSkills.active = false;
             resetSkills.setTooltip(Tooltip.create(Component.translatable("gui.factionapi.skills.reset_consume")));
         } else {
@@ -207,7 +204,7 @@ public class SkillsScreen extends Screen {
     }
 
     public void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY, int guiLeft, int guiTop) {
-        if (minecraft.player.getEffect(FactionEffects.OBLIVION) != null) return;
+        if (player().getEffect(FactionEffects.OBLIVION) != null) return;
         if (selectedTab != null) {
             var pose = graphics.pose();
             pose.pushMatrix();
@@ -250,7 +247,7 @@ public class SkillsScreen extends Screen {
 
     @Override
     public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
-        if (selectedTab != null && minecraft.player.getEffect(FactionEffects.OBLIVION) == null && isMouseOverContent(pMouseX, pMouseY)) {
+        if (selectedTab != null && player().getEffect(FactionEffects.OBLIVION) == null && isMouseOverContent(pMouseX, pMouseY)) {
             return selectedTab.mouseScrolled(pMouseX - 9 - guiLeft, pMouseY - 18 - guiTop, pScrollX, pScrollY);
         }
         return super.mouseScrolled(pMouseX, pMouseY, pScrollX, pScrollY);
@@ -270,7 +267,7 @@ public class SkillsScreen extends Screen {
     @Override
     public boolean mouseDragged(MouseButtonEvent event, double xDragged, double yDragged) {
         scrolling = true;
-        if (selectedTab != null && minecraft.player.getEffect(FactionEffects.OBLIVION) == null && isMouseOverContent(event.x(), event.y())) {
+        if (selectedTab != null && player().getEffect(FactionEffects.OBLIVION) == null && isMouseOverContent(event.x(), event.y())) {
             selectedTab.mouseDragged(event.x(), event.y(), event.button(), xDragged, yDragged);
         }
         return super.mouseDragged(event, xDragged, yDragged);

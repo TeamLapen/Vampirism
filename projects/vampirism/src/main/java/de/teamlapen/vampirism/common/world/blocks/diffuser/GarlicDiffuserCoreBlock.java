@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.world.blocks.diffuser;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.vampirism.api.EnumStrength;
+import de.teamlapen.vampirism.api.world.EnumStrength;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.world.blockentity.diffuser.GarlicDiffuserCoreBlockEntity;
 import net.minecraft.core.BlockPos;

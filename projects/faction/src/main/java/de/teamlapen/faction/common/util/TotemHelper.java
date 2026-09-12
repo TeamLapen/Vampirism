@@ -108,7 +108,7 @@ public class TotemHelper {
         TotemBlockEntity totem1 = ((TotemBlockEntity) world.getBlockEntity(totem));
         TotemBlockEntity totem2 = ((TotemBlockEntity) world.getBlockEntity(conflicting));
 
-        if (totem2 == null) {
+        if (totem2 == null || totem1 == null) {
             return;
         }
 

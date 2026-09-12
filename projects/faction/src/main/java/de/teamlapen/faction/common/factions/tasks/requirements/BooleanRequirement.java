@@ -20,7 +20,7 @@ public record BooleanRequirement(Holder<FactionPlayerBooleanSupplier> function, 
             ).apply(inst, BooleanRequirement::new));
 
     public Identifier id() {
-        return this.function.getKey().identifier();
+        return this.function.unwrapKey().orElseThrow().identifier();
     }
 
     @Override

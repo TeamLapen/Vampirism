@@ -37,7 +37,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<RecipeHolder<I
     private final Component localizedName;
     private final IDrawable icon;
     private final IDrawable bucket;
-    private final ICraftingGridHelper craftingGridHelper;
+    private final WeaponTableCraftingHelper craftingGridHelper;
     private final IGuiHelper guiHelper;
     private final WeaponTableCategoryExtension weaponTableCategoryExtension = new WeaponTableCategoryExtension();
 
@@ -79,7 +79,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<RecipeHolder<I
                 skillText.append(skill.value().getName()).append(" ");
 
             }
-            y += UtilLib.renderMultiLine(minecraft.font, graphics, skillText, 132, x, y, Color.GRAY.getRGB());
+            UtilLib.renderMultiLine(minecraft.font, graphics, skillText, 132, x, y, Color.GRAY.getRGB());
 
         }
     }

@@ -6,8 +6,7 @@ import de.teamlapen.faction.common.world.blocks.base.BaseSplitBlock;
 import de.teamlapen.faction.common.world.blocks.base.WaterloggedHorizontalBlock;
 import de.teamlapen.faction.common.world.blocks.base.WaterloggedSplitBlock;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.EnumStrength;
-import de.teamlapen.vampirism.api.ModRegistryItems;
+import de.teamlapen.vampirism.api.world.EnumStrength;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.util.VampirismVoxelShapes;
 import de.teamlapen.vampirism.common.world.blocks.*;
@@ -128,7 +127,7 @@ public class ModBlocks {
     public static final DeferredBlock<RotatedPillarBlock> STRIPPED_DARK_SPRUCE_LOG = BLOCKS.registerBlock("stripped_dark_spruce_log", RotatedPillarBlock::new, logProperties(MapColor.COLOR_BLACK, MapColor.COLOR_GRAY));
     public static final DeferredBlock<RotatedPillarBlock> STRIPPED_DARK_SPRUCE_WOOD = BLOCKS.registerBlock("stripped_dark_spruce_wood", RotatedPillarBlock::new, logProperties(MapColor.COLOR_BLACK, MapColor.COLOR_GRAY));
 
-    public static final DeferredBlock<Block> DARK_SPRUCE_PLANKS = BLOCKS.registerBlock(ModRegistryItems.DARK_SPRUCE_PLANKS.getId().getPath(), Block::new, () -> copyProperties(Blocks.SPRUCE_PLANKS).mapColor(MapColor.COLOR_GRAY));
+    public static final DeferredBlock<Block> DARK_SPRUCE_PLANKS = BLOCKS.registerBlock("dark_spruce_planks", Block::new, () -> copyProperties(Blocks.SPRUCE_PLANKS).mapColor(MapColor.COLOR_GRAY));
     public static final DeferredBlock<StairBlock> DARK_SPRUCE_STAIRS = BLOCKS.registerBlock("dark_spruce_stairs", props -> new StairBlock(DARK_SPRUCE_PLANKS.get().defaultBlockState(), props), () -> copyProperties(Blocks.SPRUCE_STAIRS, DARK_SPRUCE_PLANKS));
     public static final DeferredBlock<SlabBlock> DARK_SPRUCE_SLAB = BLOCKS.registerBlock("dark_spruce_slab", SlabBlock::new, () -> copyProperties(Blocks.SPRUCE_SLAB, DARK_SPRUCE_PLANKS));
     public static final DeferredBlock<FenceBlock> DARK_SPRUCE_FENCE = BLOCKS.registerBlock("dark_spruce_fence", FenceBlock::new, () -> copyProperties(Blocks.SPRUCE_FENCE, DARK_SPRUCE_PLANKS));
@@ -147,7 +146,7 @@ public class ModBlocks {
     public static final DeferredBlock<RotatedPillarBlock> STRIPPED_CURSED_SPRUCE_LOG = BLOCKS.registerBlock("stripped_cursed_spruce_log", RotatedPillarBlock::new, logProperties(MapColor.COLOR_BLACK, MapColor.CRIMSON_HYPHAE));
     public static final DeferredBlock<RotatedPillarBlock> STRIPPED_CURSED_SPRUCE_WOOD = BLOCKS.registerBlock("stripped_cursed_spruce_wood", RotatedPillarBlock::new, logProperties(MapColor.COLOR_BLACK, MapColor.CRIMSON_HYPHAE));
 
-    public static final DeferredBlock<Block> CURSED_SPRUCE_PLANKS = BLOCKS.registerBlock(ModRegistryItems.CURSED_SPRUCE_PLANKS.getId().getPath(), Block::new, () -> copyProperties(Blocks.SPRUCE_PLANKS).mapColor(MapColor.CRIMSON_HYPHAE));
+    public static final DeferredBlock<Block> CURSED_SPRUCE_PLANKS = BLOCKS.registerBlock("cursed_spruce_planks", Block::new, () -> copyProperties(Blocks.SPRUCE_PLANKS).mapColor(MapColor.CRIMSON_HYPHAE));
     public static final DeferredBlock<StairBlock> CURSED_SPRUCE_STAIRS = BLOCKS.registerBlock("cursed_spruce_stairs", props -> new StairBlock(CURSED_SPRUCE_PLANKS.get().defaultBlockState(), props), () -> copyProperties(Blocks.SPRUCE_STAIRS, CURSED_SPRUCE_PLANKS));
     public static final DeferredBlock<SlabBlock> CURSED_SPRUCE_SLAB = BLOCKS.registerBlock("cursed_spruce_slab", SlabBlock::new, () -> copyProperties(Blocks.SPRUCE_SLAB, CURSED_SPRUCE_PLANKS));
     public static final DeferredBlock<FenceBlock> CURSED_SPRUCE_FENCE = BLOCKS.registerBlock("cursed_spruce_fence", FenceBlock::new, () -> copyProperties(Blocks.SPRUCE_FENCE, CURSED_SPRUCE_PLANKS));

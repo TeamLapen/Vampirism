@@ -10,7 +10,6 @@ import de.teamlapen.faction.api.factions.refinements.IRefinementSet;
 import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.api.factions.skills.ISkillPointProvider;
 import de.teamlapen.faction.api.factions.tasks.*;
-import de.teamlapen.faction.api.registries.RegistryProvider;
 import de.teamlapen.faction.api.world.entities.minion.IMinionEntry;
 import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
 import de.teamlapen.faction.api.world.entities.player.FactionPlayerBooleanSupplier;
@@ -43,7 +42,7 @@ public class ModRegistries {
 
     public static final Registry<IFactionFoodBehavior> FOOD_BEHAVIOURS = new RegistryBuilder<>(FactionRegistries.Keys.FOOD_BEHAVIOUR).create();
 
-    public static final Registry<IFaction<?>> FACTIONS = new RegistryBuilder<>(FactionRegistries.Keys.FACTION).sync(true).defaultKey(Factions.NEUTRAL.getRawKey()).withIntrusiveHolders().create();
+    public static final Registry<IFaction<?>> FACTIONS = new RegistryBuilder<>(FactionRegistries.Keys.FACTION).sync(true).defaultKey(Factions.Keys.NEUTRAL).withIntrusiveHolders().create();
     public static final Registry<IMinionEntry<?, ?>> MINIONS = new RegistryBuilder<>(FactionRegistries.Keys.MINION).callback(new MinionEntryCallbacks()).sync(true).create();
 
     public static final RegistrySetBuilder DATA_BUILDER = new RegistrySetBuilder()
@@ -76,7 +75,4 @@ public class ModRegistries {
         event.dataPackRegistry(FactionRegistries.Keys.SKILL_SEGMENT, SkillSegment.CODEC, SkillSegment.CODEC);
     }
 
-    static {
-        RegistryProvider.register(SKILLS, ACTIONS, MINION_TASKS, REFINEMENTS, REFINEMENT_SETS, TASK_REWARDS, TASK_UNLOCKER, TASK_REQUIREMENTS, TASK_REWARD_INSTANCES, FOOD_BEHAVIOURS, FACTIONS, MINIONS, FACTION_PLAYER_CONSUMERS, SKILL_POINT_PROVIDERS, FACTION_PLAYER_BOOLEAN_SUPPLIERS);
-    }
 }

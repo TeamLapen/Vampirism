@@ -7,6 +7,7 @@ import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
+import de.teamlapen.faction.common.util.ModCodecs;
 import net.minecraft.advancements.criterion.EntitySubPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
@@ -18,12 +19,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
+@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class FactionSubPredicate implements EntitySubPredicate {
 
-    @SuppressWarnings("unchecked")
     public static final MapCodec<FactionSubPredicate> CODEC = RecordCodecBuilder.mapCodec(inst ->
             inst.group(
-                    ModRegistries.FACTIONS.holderByNameCodec().optionalFieldOf("faction", null).forGetter(p -> (Holder<IFaction<?>>) p.faction),
+                    ModCodecs.faction().optionalFieldOf("faction").forGetter(p -> Optional.ofNullable(p.faction)),
                     Codec.INT.optionalFieldOf("level").forGetter(p -> p.level),
                     Codec.INT.optionalFieldOf("lord_level").forGetter(p -> p.lordLevel)
             ).apply(inst, FactionSubPredicate::new)
@@ -31,18 +32,19 @@ public class FactionSubPredicate implements EntitySubPredicate {
 
     @Nullable
     private final Holder<? extends IFaction<?>> faction;
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @NotNull
     private final Optional<Integer> level;
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @NotNull
     private final Optional<Integer> lordLevel;
 
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private FactionSubPredicate(@Nullable Holder<? extends IFaction<?>> faction, @NotNull Optional<Integer> level, @NotNull Optional<Integer> lordLevel) {
         this.faction = faction;
         this.level = level;
         this.lordLevel = lordLevel;
+    }
+
+    private FactionSubPredicate(Optional<Holder<? extends IFaction<?>>> faction, @NotNull Optional<Integer> level, @NotNull Optional<Integer> lordLevel) {
+        this(faction.orElse(null), level, lordLevel);
     }
 
     public static FactionSubPredicate faction(@NotNull Holder<? extends IFaction<?>> faction) {
@@ -58,7 +60,7 @@ public class FactionSubPredicate implements EntitySubPredicate {
     }
 
     public static FactionSubPredicate lord(int lordLevel) {
-        return new FactionSubPredicate(null, Optional.empty(), Optional.of(lordLevel));
+        return new FactionSubPredicate(Optional.empty(), Optional.empty(), Optional.of(lordLevel));
     }
 
     public static FactionSubPredicate lord(@NotNull Holder<? extends IFaction<?>> faction) {
@@ -66,7 +68,7 @@ public class FactionSubPredicate implements EntitySubPredicate {
     }
 
     public static FactionSubPredicate level(int level) {
-        return new FactionSubPredicate(null, Optional.of(level), Optional.empty());
+        return new FactionSubPredicate(Optional.empty(), Optional.of(level), Optional.empty());
     }
 
     @Override

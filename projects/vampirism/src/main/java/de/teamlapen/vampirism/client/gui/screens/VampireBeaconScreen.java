@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
+import de.teamlapen.faction.client.IMinecraftAccessor;
 import de.teamlapen.faction.client.gui.GuiRenderer;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.util.VIdentifier;
@@ -32,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMenu> {
+public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMenu> implements IMinecraftAccessor {
     private static final Identifier BEACON_LOCATION = VIdentifier.mod("textures/gui/container/vampire_beacon.png");
     static final Identifier BUTTON_DISABLED_SPRITE = VIdentifier.mc("container/beacon/button_disabled");
     static final Identifier BUTTON_SELECTED_SPRITE = VIdentifier.mc("container/beacon/button_selected");
@@ -139,7 +140,7 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
 
         @Override
         public void onPress(InputWithModifiers input) {
-            VampireBeaconScreen.this.minecraft.player.closeContainer();
+            VampireBeaconScreen.this.player().closeContainer();
         }
 
         public void updateStatus(int pBeaconTier) {
@@ -154,7 +155,7 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
         @Override
         public void onPress(InputWithModifiers input) {
             VampirismMod.proxy.sendToServer(new ServerboundSetVampireBeaconPacket(Optional.ofNullable(VampireBeaconScreen.this.primary), Optional.of(VampireBeaconScreen.this.amplifier)));
-            VampireBeaconScreen.this.minecraft.player.closeContainer();
+            VampireBeaconScreen.this.player().closeContainer();
         }
 
         public void updateStatus(int pBeaconTier) {

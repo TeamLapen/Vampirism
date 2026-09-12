@@ -1,8 +1,6 @@
 package de.teamlapen.vampirism.api.world;
 
-import de.teamlapen.vampirism.api.EnumStrength;
 import net.minecraft.world.level.ChunkPos;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -15,7 +13,6 @@ public interface IGarlicChunkHandler {
     /**
      * @return The garlic strength at the given position
      */
-    @NotNull
     EnumStrength getStrengthAtChunk(ChunkPos pos);
 
     /**

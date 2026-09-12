@@ -47,6 +47,7 @@ public class VulnerableRemainsBlockEntity extends BlockEntity {
         }
     }
 
+    @Nullable
     private BlockPos motherPos;
     private int health = MAX_HEALTH;
     @Nullable

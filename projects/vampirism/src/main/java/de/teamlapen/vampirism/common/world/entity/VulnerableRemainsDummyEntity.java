@@ -23,7 +23,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -32,6 +31,7 @@ import java.util.Optional;
 
 public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntityLeader, IRemainsEntity {
 
+    @Nullable
     private BlockPos ownerPos = null;
     private final Object2IntMap<Direction> delayRespawn = new Object2IntOpenHashMap<>();
 
@@ -39,7 +39,7 @@ public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntit
         super(type, pLevel);
     }
 
-    public static AttributeSupplier.@NotNull Builder createAttributes() {
+    public static AttributeSupplier.Builder createAttributes() {
         return LivingEntity.createLivingAttributes();
     }
 
@@ -54,16 +54,16 @@ public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntit
     }
 
     @Override
-    public @NotNull Vec3 getDeltaMovement() {
+    public Vec3 getDeltaMovement() {
         return Vec3.ZERO;
     }
 
     @Override
-    public void setDeltaMovement(@NotNull Vec3 pMotion) {
+    public void setDeltaMovement(Vec3 pMotion) {
     }
 
     @Override
-    protected void actuallyHurt(@NotNull ServerLevel level, @NotNull DamageSource pDamageSource, float pDamageAmount) {
+    protected void actuallyHurt(ServerLevel level, DamageSource pDamageSource, float pDamageAmount) {
         getTile().ifPresent(vr -> {
             vr.onDamageDealt(pDamageSource, pDamageAmount);
         });
@@ -82,17 +82,17 @@ public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntit
     }
 
     @Override
-    public boolean isInvulnerableTo(@NotNull ServerLevel level, @NotNull DamageSource pSource) {
+    public boolean isInvulnerableTo(ServerLevel level, DamageSource pSource) {
         return this.isRemoved() || pSource.is(ModDamageTypeTags.MOTHER_RESISTANT_TO);
     }
 
     @Override
-    public @NotNull ItemStack getItemBySlot(@NotNull EquipmentSlot pSlot) {
+    public ItemStack getItemBySlot(EquipmentSlot pSlot) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public void setItemSlot(@NotNull EquipmentSlot pSlot, @NotNull ItemStack pStack) {
+    public void setItemSlot(EquipmentSlot pSlot, ItemStack pStack) {
 
     }
 
@@ -102,13 +102,13 @@ public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntit
     }
 
     @Override
-    public @NotNull HumanoidArm getMainArm() {
+    public HumanoidArm getMainArm() {
         return HumanoidArm.LEFT;
     }
 
 
     @Override
-    public void push(@NotNull Entity pEntity) {
+    public void push(Entity pEntity) {
     }
 
     public void setOwnerLocation(BlockPos pos) {
@@ -186,17 +186,17 @@ public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntit
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull ValueOutput output) {
+    public void addAdditionalSaveData(ValueOutput output) {
         output.putIntArray("ownerPos", new int[]{this.ownerPos.getX(), this.ownerPos.getY(), this.ownerPos.getZ()});
     }
 
     @Override
-    protected Entity.@NotNull MovementEmission getMovementEmission() {
+    protected Entity.MovementEmission getMovementEmission() {
         return Entity.MovementEmission.NONE;
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull ValueInput input) {
+    public void readAdditionalSaveData(ValueInput input) {
         input.getIntArray("ownerPos").ifPresentOrElse(pos -> this.ownerPos = new BlockPos(pos[0], pos[1], pos[2]), this::discard);
     }
 
@@ -218,7 +218,7 @@ public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntit
     }
 
     @Override
-    public @NotNull LivingEntity asEntity() {
+    public LivingEntity asEntity() {
         return this;
     }
 
@@ -235,13 +235,13 @@ public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntit
     }
 
     @Override
-    public @NotNull SoundSource getSoundSource() {
+    public SoundSource getSoundSource() {
         return SoundSource.HOSTILE;
     }
 
     @Nullable
     @Override
-    protected SoundEvent getHurtSound(@NotNull DamageSource pDamageSource) {
+    protected SoundEvent getHurtSound(DamageSource pDamageSource) {
         return ModSounds.REMAINS_HURT.get();
     }
 }

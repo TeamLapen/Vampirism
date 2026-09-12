@@ -71,8 +71,6 @@ public class ClientPayloadHandler {
                 return;
 
             final Set<ResourceKey<Level>> dimensionList = player.connection.levels();
-            if (dimensionList == null)
-                return;
 
             Consumer<ResourceKey<Level>> keyConsumer = msg.add()
                     ? dimensionList::add

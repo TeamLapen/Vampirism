@@ -25,13 +25,11 @@ import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.List;
 import java.util.SequencedMap;
-import java.util.stream.IntStream;
 
 public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
 
@@ -49,6 +47,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
     private final SequencedMap<Identifier, Identifier> eyeTextures;
 
 
+    @SuppressWarnings("DataFlowIssue")
     public VampirePlayerAppearanceScreen(@Nullable ILastScreenProvider backScreen) {
         super(NAME, Minecraft.getInstance().player, backScreen);
         this.fangTextures = TextureLoader.mapTexturesInById("textures/entity/fangs");
@@ -69,14 +68,14 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
 
     @Override
     protected void init() {
-        VampirePlayer vampire = VampirePlayer.get(minecraft.player);
+        VampirePlayer vampire = VampirePlayer.get(player());
         var customization = vampire.getCustomization();
         this.fangType = customization.fangType();
         this.eyeType = customization.eyeType();
         this.glowingEyes = customization.glowingEyes();
         this.titleGender = vampire.getPlayerLord().map(ILordPlayer::titleGender).orElse(IPlayableFaction.TitleGender.UNKNOWN) == IPlayableFaction.TitleGender.FEMALE;
         this.wingsTexture = customization.wingsTexture();
-        if (IDraculaPlayer.getPresentDracula(minecraft.player).isPresent()) {
+        if (IDraculaPlayer.getPresentDracula(player()).isPresent()) {
             this.availableWingsTextures = VampirismMod.services().wingsManager().getAvailableWings(vampire.asEntity()).sorted().toList();
         }
         super.init();
@@ -146,22 +145,22 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
     }
 
     private void eye(Identifier eyeType) {
-        VampirePlayer vampire = VampirePlayer.get(this.minecraft.player);
+        VampirePlayer vampire = VampirePlayer.get(player());
         vampire.setEyeType(this.eyeType = eyeType);
     }
 
     private void wingsTexture(int wingsTexture) {
-        VampirePlayer vampire = VampirePlayer.get(this.minecraft.player);
+        VampirePlayer vampire = VampirePlayer.get(player());
         vampire.getCustomization().setWingsTexture(this.wingsTexture = availableWingsTextures.get(wingsTexture));
     }
 
     private void fang(Identifier fangType) {
-        VampirePlayer vampire = VampirePlayer.get(this.minecraft.player);
+        VampirePlayer vampire = VampirePlayer.get(player());
         vampire.setFangType(this.fangType = fangType);
     }
 
     private void hoverEye(Identifier eyeType, boolean hovered) {
-        VampirePlayer vampire = VampirePlayer.get(this.minecraft.player);
+        VampirePlayer vampire = VampirePlayer.get(player());
         if (hovered) {
             vampire.setEyeType(eyeType);
         } else {
@@ -172,7 +171,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
     }
 
     private void hoverFang(Identifier fangType, boolean hovered) {
-        VampirePlayer vampire = VampirePlayer.get(this.minecraft.player);
+        VampirePlayer vampire = VampirePlayer.get(player());
         if (hovered) {
             vampire.setFangType(fangType);
         } else {

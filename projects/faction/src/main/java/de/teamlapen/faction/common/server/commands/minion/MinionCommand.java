@@ -86,7 +86,7 @@ public class MinionCommand extends BasicCommand {
                 }
                 currentCommand = builder;
             }
-            spawnNew.then(Commands.literal(entry.getKey().identifier().toString()).executes(context -> spawnNewMinionExtra(context, context.getSource(), faction, (IMinionEntry.IMinionCreator<?, MinionData>) minion.data(), minion.type(), List.of(), (Collection<IMinionEntryBuilder.IMinionCommandBuilder.ICommandArgument<MinionData, ?>>) arguments)).then(currentCommand));
+            spawnNew.then(Commands.literal(entry.unwrapKey().orElseThrow().identifier().toString()).executes(context -> spawnNewMinionExtra(context, context.getSource(), faction, (IMinionEntry.IMinionCreator<?, MinionData>) minion.data(), minion.type(), List.of(), (Collection<IMinionEntryBuilder.IMinionCommandBuilder.ICommandArgument<MinionData, ?>>) arguments)).then(currentCommand));
 
         }
         return spawnNew;

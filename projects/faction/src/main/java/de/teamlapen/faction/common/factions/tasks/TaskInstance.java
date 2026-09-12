@@ -46,7 +46,7 @@ public class TaskInstance implements ITaskInstance {
     private boolean completed;
 
     public TaskInstance(Holder<Task> task, UUID taskGiver, IFactionPlayer<?> player, long taskDuration) {
-        this.task = task.getKey();
+        this.task = task.unwrapKey().orElseThrow();
         this.taskGiver = taskGiver;
         this.instanceId = UUID.randomUUID();
         this.stats = new HashMap<>();

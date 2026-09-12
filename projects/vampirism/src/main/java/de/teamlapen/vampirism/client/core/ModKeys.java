@@ -97,6 +97,7 @@ public class ModKeys implements IMinecraftAccessor {
             HitResult mouseOver = Minecraft.getInstance().hitResult;
             suckKeyDown = true;
             LocalPlayer player = Minecraft.getInstance().player;
+            //noinspection DataFlowIssue
             if (mouseOver != null && !player.isSpectator()) {
                 VampirePlayer vampire = VampirePlayer.get(player);
                 if (vampire.getLevel() > 0 && !vampire.getActionHandler().isActionActive(VampireActions.BAT)) {

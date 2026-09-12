@@ -26,7 +26,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.List;
@@ -56,7 +55,6 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<RecipeHolder<
         return VampirismJEIPlugin.ALCHEMY_TABLE;
     }
 
-    @NotNull
     @Override
     public Component getTitle() {
         return this.localizedName;
@@ -72,7 +70,6 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<RecipeHolder<
         return 110;
     }
 
-    @NotNull
     @Override
     public IDrawable getIcon() {
         return this.icon;
@@ -111,7 +108,7 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<RecipeHolder<
                 skillText.append(skill.value().getName()).append(" ");
 
             }
-            y += UtilLib.renderMultiLine(minecraft.font, graphics, skillText, 132, x, y, Color.gray.getRGB());
+            UtilLib.renderMultiLine(minecraft.font, graphics, skillText, 132, x, y, Color.gray.getRGB());
 
         }
 
