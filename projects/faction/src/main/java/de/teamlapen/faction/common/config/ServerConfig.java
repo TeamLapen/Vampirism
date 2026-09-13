@@ -143,7 +143,12 @@ public class ServerConfig implements FactionConfig.IConfigs {
         builder.pop();
     }
 
-    public enum IMobOptions {
-        ALWAYS_IMOB, NEVER_IMOB, SMART
+    public enum IMobOptions implements TranslatableConfigEnum {
+        ALWAYS_IMOB, NEVER_IMOB, SMART;
+
+        @Override
+        public String configTranslationKey() {
+            return "factionapi.configuration.entitiesIMob";
+        }
     }
 }

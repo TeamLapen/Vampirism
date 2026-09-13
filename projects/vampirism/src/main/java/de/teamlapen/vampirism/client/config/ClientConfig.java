@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.client.config;
 
 import de.teamlapen.faction.client.config.values.ColorConfigValue;
+import de.teamlapen.faction.common.config.TranslatableConfigEnum;
 import net.neoforged.neoforge.common.ModConfigSpec;
-import net.neoforged.neoforge.common.TranslatableEnum;
 
 public class ClientConfig {
 
@@ -96,7 +96,12 @@ public class ClientConfig {
         builder.pop();
     }
 
-    public enum ChargeBarDisplay implements TranslatableEnum {
-        CORNER, ITEM
+    public enum ChargeBarDisplay implements TranslatableConfigEnum {
+        CORNER, ITEM;
+
+        @Override
+        public String configTranslationKey() {
+            return "vampirism.configuration.chargeBarDisplayType";
+        }
     }
 }
