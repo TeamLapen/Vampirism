@@ -1,12 +1,11 @@
 package de.teamlapen.vampirism.client.core;
 
-import de.teamlapen.faction.client.core.ItemBars;
+import de.teamlapen.faction.api.client.RegisterItemBarsEvent;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.color.item.QuarrelTint;
 import de.teamlapen.vampirism.client.color.item.OilBottleTint;
 import de.teamlapen.vampirism.client.extensions.ItemExtensions;
 import de.teamlapen.vampirism.client.models.armor.*;
-import de.teamlapen.vampirism.client.models.entities.ClothedModel;
 import de.teamlapen.vampirism.client.models.items.properties.BloodFilled;
 import de.teamlapen.vampirism.client.models.items.properties.ClipFilled;
 import de.teamlapen.vampirism.client.models.items.properties.HasName;
@@ -55,7 +54,7 @@ public class ModItemsRender {
                 .forEach(item -> event.register(item, ModItemDecorators.CROSSBOW_AMMUNITION));
     }
 
-    public static void registerItemBars(ItemBars.RegisterItemBarsEvent event) {
+    public static void registerItemBars(RegisterItemBarsEvent event) {
         event.register(VIdentifier.mod("applied_oil"), ModItemDecorators.APPLIED_OIL);
         event.register(VIdentifier.mod("blood_charge"), ModItemDecorators.BLOOD_CHARGE);
     }

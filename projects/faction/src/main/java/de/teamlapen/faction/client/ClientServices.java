@@ -18,9 +18,14 @@ public class ClientServices extends Services {
     private final ClientConnectionEventHandler worldEventHandler = new ClientConnectionEventHandler();
     private final ClientEventHandler entityEventHandler = new ClientEventHandler();
     private final DescriptionTooltips descriptionTooltips = new DescriptionTooltips();
+    private final ItemBars itemBars = new ItemBars();
 
     public CustomBossEventOverlay bossInfoOverlay() {
         return bossInfoOverlay;
+    }
+
+    public ItemBars itemBars() {
+        return itemBars;
     }
 
     public FactionKeys modKeys() {
@@ -40,7 +45,7 @@ public class ClientServices extends Services {
         bus.addListener(FactionBlockRenderer::registerBlockEntityRenderers);
         bus.addListener(FMLClientSetupEvent.class, _ -> {
             FactionAppearanceScreens.init();
-            ItemBars.init();
+            this.itemBars.init();
         });
         bus.addListener(FactionParticleFactories::registerFactories);
     }

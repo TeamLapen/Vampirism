@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.client.core;
 
+import de.teamlapen.faction.api.client.ItemBar;
+import de.teamlapen.faction.api.client.ItemBarProvider;
 import de.teamlapen.faction.client.core.ItemBars;
 import de.teamlapen.vampirism.api.world.items.IBloodChargeable;
 import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
@@ -25,7 +27,7 @@ public class ModItemDecorators {
         return false;
     };
 
-    public static final ItemBars.ItemBarProvider APPLIED_OIL = (stack, bars) -> {
+    public static final ItemBarProvider APPLIED_OIL = (stack, bars) -> {
         if (!itemBarsEnabled()) return;
 
         AppliedOilContent oil = AppliedOilContent.getAppliedOil(stack).orElse(null);
@@ -34,20 +36,20 @@ public class ModItemDecorators {
         if (maxDuration <= 0) return;
 
         float duration = (float) oil.duration() / maxDuration;
-        bars.accept(new ItemBars.ItemBar(duration, ItemBars.staged(ModConfig.client().appliedOilColor.getARGB(), duration)));
+        bars.accept(new ItemBar(duration, ItemBars.staged(ModConfig.client().appliedOilColor.getARGB(), duration)));
     };
 
-    public static final ItemBars.ItemBarProvider BLOOD_CHARGE = (stack, bars) -> {
+    public static final ItemBarProvider BLOOD_CHARGE = (stack, bars) -> {
         if (!itemBarsEnabled()) return;
         if (!(stack.getItem() instanceof IBloodChargeable chargeable)) return;
 
         float charge = chargeable.getChargePercentage(stack);
-        bars.accept(new ItemBars.ItemBar(charge, ItemBars.staged(ModConfig.client().vampireSwordChargeColor.getARGB(), charge)));
+        bars.accept(new ItemBar(charge, ItemBars.staged(ModConfig.client().vampireSwordChargeColor.getARGB(), charge)));
 
         if (stack.getItem() instanceof VampireSwordItem sword) {
             float trained = sword.getTrained(stack);
             if (trained > 0 && trained < 1) {
-                bars.accept(new ItemBars.ItemBar(trained, ItemBars.staged(ModConfig.client().vampireSwordTrainingColor.getARGB(), trained)));
+                bars.accept(new ItemBar(trained, ItemBars.staged(ModConfig.client().vampireSwordTrainingColor.getARGB(), trained)));
             }
         }
     };
