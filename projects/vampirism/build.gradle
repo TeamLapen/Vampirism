@@ -4,6 +4,10 @@ plugins {
 group = project.vampirism_group_id
 version = project.vampirism_version
 
+base {
+    archivesName = project.vampirism_mod_name
+}
+
 apply from: file('integrations.gradle')
 
 java {
