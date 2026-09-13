@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.core;
 
-import de.teamlapen.faction.api.client.RegisterItemBarsEvent;
+import de.teamlapen.faction.api.event.RegisterItemBarsEvent;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.color.item.QuarrelTint;
 import de.teamlapen.vampirism.client.color.item.OilBottleTint;

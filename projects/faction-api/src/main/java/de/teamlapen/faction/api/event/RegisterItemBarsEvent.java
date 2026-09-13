@@ -1,5 +1,6 @@
-package de.teamlapen.faction.api.client;
+package de.teamlapen.faction.api.event;
 
+import de.teamlapen.faction.api.client.ItemBarProvider;
 import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.Event;
 import net.neoforged.fml.event.IModBusEvent;

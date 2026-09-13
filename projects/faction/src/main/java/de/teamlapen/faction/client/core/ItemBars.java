@@ -2,7 +2,7 @@ package de.teamlapen.faction.client.core;
 
 import de.teamlapen.faction.api.client.ItemBar;
 import de.teamlapen.faction.api.client.ItemBarProvider;
-import de.teamlapen.faction.api.client.RegisterItemBarsEvent;
+import de.teamlapen.faction.api.event.RegisterItemBarsEvent;
 import de.teamlapen.faction.client.color.ColorWheel;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
