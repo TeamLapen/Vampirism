@@ -15,7 +15,6 @@ import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
@@ -50,16 +49,17 @@ public class HeritageScreen extends Screen {
 
     private static final Identifier WINDOW_LOCATION = FIdentifier.mod("textures/gui/skills/window.png");
     private static final List<PageTexture> CURRENT_PAGE_TEXTURES = List.of(
-            new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_clean.png"), 85),
-            new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_stain_small.png"), 13),
-            new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_stain_big.png"), 2),
-            new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_stain_lines.png"), 1)
+            new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_clean.png"), 80),
+            new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_stain_small.png"), 10),
+            new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_stain_big.png"), 6),
+            new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_stain_lines.png"), 3),
+            new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_stain_blood.png"), 1)
     );
     private static final List<PageTexture> PREVIOUS_PAGE_TEXTURES = List.of(
             new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_clean.png"), 60),
-            new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_stain_small.png"), 15),
-            new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_stain_big.png"), 10),
-            new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_stain_lines.png"), 10),
+            new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_stain_small.png"), 16),
+            new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_stain_big.png"), 14),
+            new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_stain_lines.png"), 5),
             new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_hole_big.png"), 1),
             new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_hole_slash.png"), 2),
             new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_hole_small.png"), 2)
@@ -202,20 +202,42 @@ public class HeritageScreen extends Screen {
     private void drawBackground(GuiGraphicsExtractor graphics) {
         for (int x = -(int) ((CONTENT_WIDTH / 2f + this.centerX) / 64 / this.zoom) - 1; x <= (int) ((CONTENT_WIDTH / 2f - this.centerX) / 64 / this.zoom); ++x) {
             for (int y = -(int) ((CONTENT_TOP_PADDING + this.centerY) / 64 / this.zoom) - 1; y <= (int) ((CONTENT_HEIGHT - this.centerY) / 64 / this.zoom); ++y) {
-                Identifier pageTexture = this.getPageTexture(x, y);
-                GuiRenderer.blit(graphics, pageTexture, 64 * x, 64 * y, 64, 64, 64, 64);
+                this.drawPageTile(graphics, x, y);
             }
         }
     }
 
-    private Identifier getPageTexture(int x, int y) {
+    private void drawPageTile(GuiGraphicsExtractor graphics, int x, int y) {
+        long hash = tileHash(x, y);
+        Identifier pageTexture = this.getPageTexture(hash);
+        int rotation = (int) ((hash >>> 24) & 3);
+        var pose = graphics.pose();
+        pose.pushMatrix();
+        pose.translate(64 * x + 32, 64 * y + 32);
+        pose.rotate((float) (rotation * Math.PI / 2));
+        GuiRenderer.blit(graphics, pageTexture, -32, -32, 64, 64, 64, 64);
+        pose.popMatrix();
+    }
+
+    /**
+     * Avoids {@code Mth#getSeed}, whose values are tiny and mirror-symmetric around the origin,
+     * which is exactly the area shown by default.
+     */
+    private static long tileHash(int x, int y) {
+        long hash = x * 0x9E3779B97F4A7C15L ^ y * 0xC2B2AE3D27D4EB4FL ^ 0x165667B19E3779F9L;
+        hash = (hash ^ (hash >>> 33)) * 0xFF51AFD7ED558CCDL;
+        hash = (hash ^ (hash >>> 33)) * 0xC4CEB9FE1A85EC53L;
+        return hash ^ (hash >>> 33);
+    }
+
+    private Identifier getPageTexture(long hash) {
         List<PageTexture> pageTextures = this.heritage != null && !this.heritage.currentHeritage()
                 ? PREVIOUS_PAGE_TEXTURES
                 : CURRENT_PAGE_TEXTURES;
         int pageTextureWeight = this.heritage != null && !this.heritage.currentHeritage()
                 ? PREVIOUS_PAGE_TEXTURE_WEIGHT
                 : CURRENT_PAGE_TEXTURE_WEIGHT;
-        int selection = RandomSource.create(Mth.getSeed(new BlockPos(x, y, 0))).nextInt(pageTextureWeight);
+        int selection = (int) Long.remainderUnsigned(hash >>> 32, pageTextureWeight);
         for (PageTexture pageTexture : pageTextures) {
             selection -= pageTexture.weight();
             if (selection < 0) {
