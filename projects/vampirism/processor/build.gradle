@@ -17,6 +17,7 @@ neoForge {
     neoFormVersion = "${project.minecraft_version}-1"
 }
 
+apply from: rootProject.file('gradle/repositories.gradle')
 dependencies {
     implementation(project(':vampirism-api'))
 }
