@@ -10,7 +10,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 public class ModPacketDispatcher {
 
-    private static final String PROTOCOL_VERSION = Integer.toString(4);
+    private static final String PROTOCOL_VERSION = Integer.toString(2);
 
     public static void registerHandler(RegisterPayloadHandlersEvent event) {
         registerPackets(event.registrar(REFERENCE.MODID).versioned(PROTOCOL_VERSION));
