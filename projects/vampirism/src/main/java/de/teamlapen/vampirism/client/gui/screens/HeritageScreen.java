@@ -190,7 +190,6 @@ public class HeritageScreen extends Screen {
         this.drawBackground(graphics);
         if (this.heritage == null) {
             pose.popMatrix();
-            graphics.centeredText(this.font, Component.translatable("gui.vampirism.heritage.loading"), contentX + CONTENT_WIDTH / 2, contentY + CONTENT_HEIGHT / 2 - this.font.lineHeight / 2, 0xffffffff);
         } else if (this.nodes.isEmpty()) {
             pose.popMatrix();
             graphics.centeredText(this.font, Component.translatable("gui.vampirism.heritage.empty"), contentX + CONTENT_WIDTH / 2, contentY + CONTENT_HEIGHT / 2 - this.font.lineHeight / 2, 0xffffffff);
