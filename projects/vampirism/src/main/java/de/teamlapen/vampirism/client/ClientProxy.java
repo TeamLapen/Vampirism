@@ -64,6 +64,11 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
+    public void displayHeritageBookScreen(String targetName) {
+        openScreen(new HeritageScreen(ILastScreenProvider.current(), targetName));
+    }
+
+    @Override
     public void displayVampireMinionAppearanceScreen(VampireMinionEntity entity) {
         openScreen(new VampireMinionAppearanceScreen(entity, ILastScreenProvider.current()));
     }

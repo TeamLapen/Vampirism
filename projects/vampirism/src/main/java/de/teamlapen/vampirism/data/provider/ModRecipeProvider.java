@@ -492,6 +492,12 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
     }
 
     private void recipesMisc() {
+        shapeless(RecipeCategory.MISC, ModItems.HERITAGE_BOOK)
+                .requires(Items.BOOK)
+                .requires(ModItems.VAMPIRE_BLOOD_BOTTLE)
+                .unlockedBy("has_vampire_blood_bottle", has(ModItems.VAMPIRE_BLOOD_BOTTLE))
+                .save(output);
+
         shapeless(RecipeCategory.FOOD, ModItems.GARLIC_BREAD)
                 .requires(GARLIC)
                 .requires(BREAD)

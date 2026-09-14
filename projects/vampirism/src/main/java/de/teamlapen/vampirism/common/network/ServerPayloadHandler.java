@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
 import de.teamlapen.vampirism.common.network.packets.client.ClientboundHeritagePacket;
 import de.teamlapen.vampirism.common.network.packets.server.*;
 import de.teamlapen.vampirism.common.util.supporter.Supporter;
+import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.world.heritage.HeritageMembership;
 import de.teamlapen.vampirism.common.world.heritage.HeritageWorldData;
 import de.teamlapen.vampirism.common.world.heritage.HeritageManager;
@@ -151,6 +152,19 @@ public class ServerPayloadHandler {
         context.enqueueWork(() -> {
             ServerPlayer player = (ServerPlayer) context.player();
             HeritageWorldData heritageData = HeritageWorldData.getData(player.level().getServer());
+            if (msg.targetName() != null) {
+                if (!hasNamedHeritageBook(player, msg.targetName())) {
+                    sendUnavailableHeritagePacket(player, List.of());
+                    return;
+                }
+
+                findHeritageBookMembership(heritageData, msg.targetName()).ifPresentOrElse(
+                        membership -> sendHeritagePacket(player, heritageData, membership, List.of(membership.heritageId()), false),
+                        () -> sendUnavailableHeritagePacket(player, List.of())
+                );
+                return;
+            }
+
             List<HeritageWorldData.HeritageHistory> history = heritageData.getHeritagesForPlayer(player.getUUID());
             Optional<HeritageMembership> current = HeritageManager.getMembership(player);
             List<UUID> heritageIds = new ArrayList<>();
@@ -171,9 +185,38 @@ public class ServerPayloadHandler {
             selected.ifPresentOrElse(
                     membership -> sendHeritagePacket(player, heritageData, membership, heritageIds,
                             current.map(currentMembership -> currentMembership.heritageId().equals(membership.heritageId())).orElse(false)),
-                    () -> player.connection.send(new ClientboundHeritagePacket(null, List.of(), List.of(), null, heritageIds, false))
+                    () -> sendUnavailableHeritagePacket(player, heritageIds)
             );
         });
+    }
+
+    private static boolean hasNamedHeritageBook(ServerPlayer player, String targetName) {
+        return hasHeritageBookName(player.getMainHandItem(), targetName)
+                || hasHeritageBookName(player.getOffhandItem(), targetName);
+    }
+
+    private static Optional<HeritageMembership> findHeritageBookMembership(HeritageWorldData heritageData, String targetName) {
+        return heritageData.findMembershipByName(targetName)
+                .or(() -> findPredefinedHeritageMembership(targetName));
+    }
+
+    private static Optional<HeritageMembership> findPredefinedHeritageMembership(String targetName) {
+        var supporterManager = VampirismMod.services().supporterManager();
+        return supporterManager.getSupporter()
+                .filter(supporter -> supporter.name().getString().equalsIgnoreCase(targetName))
+                .map(Supporter::player)
+                .findFirst()
+                .flatMap(supporterManager::getPredefinedHeritage)
+                .map(heritage -> HeritageWorldData.membershipForNamedNpc(heritage.id()));
+    }
+
+    private static boolean hasHeritageBookName(ItemStack stack, String targetName) {
+        Component customName = stack.get(DataComponents.CUSTOM_NAME);
+        return stack.is(ModItems.HERITAGE_BOOK) && customName != null && customName.getString().equals(targetName);
+    }
+
+    private static void sendUnavailableHeritagePacket(ServerPlayer player, List<UUID> heritageIds) {
+        player.connection.send(new ClientboundHeritagePacket(null, List.of(), List.of(), null, heritageIds, false));
     }
 
     private static void sendHeritagePacket(ServerPlayer player, HeritageWorldData heritageData, HeritageMembership membership, List<UUID> heritageIds, boolean currentHeritage) {

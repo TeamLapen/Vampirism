@@ -371,6 +371,7 @@
   "item.vampirism.mother_core": "Mother Core",
   "item.vampirism.vampire_blood_bottle": "Vampire Blood",
   "item.vampirism.vampire_book": "Vampire Book",
+  "item.vampirism.heritage_book": "Heritage Book",
   "item.vampirism.vampire_fang": "Vampire Fang",
   "item.vampirism.umbrella": "Umbrella",
   "item.vampirism.vampire_minion_binding": "Vampire Minion Binding",
@@ -1083,6 +1084,7 @@
   "gui.vampirism.heritage_run_away.title": "Run away from your heritage?",
   "gui.vampirism.heritage_run_away.warning": "History cannot be rewritten, so your origin and descendants will not be affected, but you will no longer be connected to your current heritage. This will not allow you to join another heritage and is an irreversible choice.",
   "message.vampirism.heritage_run_away.success": "You have run away from your heritage.",
+  "message.vampirism.heritage_book.needs_name": "Name this book in an anvil to view a heritage.",
   "gui.vampirism.appearance": "Change Your Appearance",
   "gui.vampirism.appearance.fang": "Fang Type",
   "gui.vampirism.appearance.eye": "Eye Type",
@@ -1242,6 +1244,7 @@
   "misc.vampirism.unknown": "Unknown",
 
   "tooltip.vampirism.tier.normal": "Normal",
+  "tooltip.vampirism.heritage_book": "Name this book in an anvil after a player or named vampire to view their recorded heritage.",
   "tooltip.vampirism.tier.enhanced": "Enhanced",
   "tooltip.vampirism.tier.ultimate": "Ultimate",
   "tooltip.vampirism.minion_upgrade": "One Level-Up",

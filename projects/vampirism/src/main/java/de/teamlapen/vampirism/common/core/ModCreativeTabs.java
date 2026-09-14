@@ -75,6 +75,7 @@ public class ModCreativeTabs {
             add(VAMPIRE_BLOOD_BOTTLE);
             add(DRACULAS_BLOOD);
             addItemGen(VAMPIRE_BOOK);
+            add(HERITAGE_BOOK);
             addIfPresent(VIdentifier.loc(REFERENCE.GUIDEAPI_MODID, REFERENCE.GUIDEBOOK_ID));
             add(VAMPIRE_FANG);
 

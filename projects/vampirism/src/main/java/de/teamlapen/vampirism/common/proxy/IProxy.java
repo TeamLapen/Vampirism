@@ -34,6 +34,9 @@ public interface IProxy {
     default void displayHeritageRunAwayScreen() {
     }
 
+    default void displayHeritageBookScreen(String targetName) {
+    }
+
     @Nullable
     Entity getMouseOverEntity();
 

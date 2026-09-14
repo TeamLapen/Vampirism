@@ -263,6 +263,7 @@ public class ModItemModelGenerators extends ItemModelGenerators {
                 ModItems.VAMPIRE_CLOAK_PINK,
                 ModItems.VAMPIRE_FANG,
                 ModItems.VAMPIRE_BOOK,
+                ModItems.HERITAGE_BOOK,
                 ModItems.WEAK_HUMAN_HEART,
                 ModItems.GARLIC_BREAD,
                 ModItems.ITEM_TENT,

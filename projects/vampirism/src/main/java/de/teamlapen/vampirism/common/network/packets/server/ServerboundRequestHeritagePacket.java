@@ -12,16 +12,17 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
-public record ServerboundRequestHeritagePacket(@Nullable UUID heritageId) implements CustomPacketPayload {
+public record ServerboundRequestHeritagePacket(@Nullable UUID heritageId, @Nullable String targetName) implements CustomPacketPayload {
 
     public static final Type<ServerboundRequestHeritagePacket> TYPE = new Type<>(VIdentifier.mod("request_heritage"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundRequestHeritagePacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.optional(UUIDUtil.STREAM_CODEC), packet -> Optional.ofNullable(packet.heritageId()),
-            heritageId -> new ServerboundRequestHeritagePacket(heritageId.orElse(null))
+            ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8), packet -> Optional.ofNullable(packet.targetName()),
+            (heritageId, targetName) -> new ServerboundRequestHeritagePacket(heritageId.orElse(null), targetName.orElse(null))
     );
 
     public ServerboundRequestHeritagePacket() {
-        this(null);
+        this(null, null);
     }
 
     @Override

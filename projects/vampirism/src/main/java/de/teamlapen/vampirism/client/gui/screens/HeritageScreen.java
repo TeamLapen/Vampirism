@@ -76,6 +76,7 @@ public class HeritageScreen extends Screen {
     private static final Component TITLE = Component.translatable("gui.vampirism.heritage.title");
 
     private final ILastScreenProvider backScreen;
+    private final @Nullable String targetName;
     private @Nullable ClientboundHeritagePacket heritage;
     private List<UUID> availableHeritageIds = List.of();
     private List<Node> nodes = List.of();
@@ -95,8 +96,13 @@ public class HeritageScreen extends Screen {
     private ExtendedButton nextHeritageButton;
 
     public HeritageScreen(ILastScreenProvider backScreen) {
+        this(backScreen, null);
+    }
+
+    public HeritageScreen(ILastScreenProvider backScreen, @Nullable String targetName) {
         super(GameNarrator.NO_TITLE);
         this.backScreen = backScreen;
+        this.targetName = targetName;
     }
 
     @Override
@@ -145,7 +151,7 @@ public class HeritageScreen extends Screen {
         this.nodes = List.of();
         this.lostHistoryNodes = List.of();
         this.updateHeritageNavigation();
-        VampirismMod.proxy.sendToServer(new ServerboundRequestHeritagePacket(heritageId));
+        VampirismMod.proxy.sendToServer(new ServerboundRequestHeritagePacket(heritageId, this.targetName));
     }
 
     private void updateHeritageNavigation() {

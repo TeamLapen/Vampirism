@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:book",
+    "vampirism:vampire_blood_bottle"
+  ],
+  "result": {
+    "id": "vampirism:heritage_book"
+  }
+}

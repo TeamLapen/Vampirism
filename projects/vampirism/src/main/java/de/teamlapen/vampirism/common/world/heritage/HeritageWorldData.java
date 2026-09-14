@@ -48,6 +48,10 @@ public final class HeritageWorldData extends SavedData implements ValueIOSeriali
         return UUID.nameUUIDFromBytes(("vampirism:heritage:named:" + namedNpc).getBytes(StandardCharsets.UTF_8));
     }
 
+    public static HeritageMembership membershipForNamedNpc(String namedNpc) {
+        return new HeritageMembership(idForNamedNpc(namedNpc), HeritageOrigin.INHERITED, null, namedNpc, null);
+    }
+
     public Map<UUID, HeritageMember> getMembers(UUID heritageId) {
         HeritageRecord record = this.records.get(heritageId);
         return record == null ? Map.of() : Collections.unmodifiableMap(record.members);
@@ -59,6 +63,24 @@ public final class HeritageWorldData extends SavedData implements ValueIOSeriali
                         .stream()
                         .map(member -> new HeritageHistory(entry.getKey(), entry.getValue().namedNpc, member)))
                 .toList();
+    }
+
+    /**
+     * Resolves names stored for actual player and NPC heritage members. Predefined heritage entries are not persisted
+     * here and therefore cannot be resolved by this method.
+     */
+    public Optional<HeritageMembership> findMembershipByName(String name) {
+        return this.records.values().stream()
+                .flatMap(record -> record.members.values().stream())
+                .filter(member -> member.playerName().equalsIgnoreCase(name))
+                .map(HeritageMember::playerId)
+                .map(this::getMembership)
+                .flatMap(Optional::stream)
+                .findFirst()
+                .or(() -> this.records.entrySet().stream()
+                        .filter(entry -> entry.getValue().namedNpc != null && entry.getValue().namedNpc.equalsIgnoreCase(name))
+                        .map(entry -> new HeritageMembership(entry.getKey(), HeritageOrigin.INHERITED, null, entry.getValue().namedNpc, null))
+                        .findFirst());
     }
 
     Optional<HeritageMembership> getMembership(UUID playerId) {

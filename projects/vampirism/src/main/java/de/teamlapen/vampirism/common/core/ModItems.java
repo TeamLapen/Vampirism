@@ -220,6 +220,7 @@ public class ModItems {
     public static final DeferredItem<Item> MOTHER_CORE = ITEMS.registerItem("mother_core",  Item::new, props -> props.rarity(Rarity.UNCOMMON));
     public static final DeferredItem<Item> VAMPIRE_BLOOD_BOTTLE = ITEMS.registerItem("vampire_blood_bottle", props -> new Item(props.factions$withShiftDescription()));
     public static final DeferredItem<VampireBookItem> VAMPIRE_BOOK = ITEMS.registerItem("vampire_book", VampireBookItem::new, props -> props.rarity(Rarity.UNCOMMON).stacksTo(1));
+    public static final DeferredItem<HeritageBookItem> HERITAGE_BOOK = ITEMS.registerItem("heritage_book", HeritageBookItem::new, props -> props.stacksTo(1).factions$withShiftDescription());
     public static final DeferredItem<VampireFangItem> VAMPIRE_FANG = ITEMS.registerItem("vampire_fang", VampireFangItem::new);
 
     public static final DeferredItem<UmbrellaItem> UMBRELLA = ITEMS.registerItem("umbrella", UmbrellaItem::new, props -> props.stacksTo(1));
