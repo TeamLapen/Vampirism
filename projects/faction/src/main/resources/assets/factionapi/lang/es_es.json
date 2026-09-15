@@ -5,7 +5,6 @@
   "block.factionapi.totem_base": "Base del tótem de la aldea",
   "block.factionapi.totem_top": "Tótem superior de la aldea frágil",
   "block.factionapi.totem_top_crafted": "Tótem superior de la Aldea",
-  "item.factionapi.oblivion_potion": "Poción de Oblivion",
   "effect.factionapi.oblivion": "Olvido",
   "effect.factionapi.resurrection_fatigue": "Fatiga de Resurrection",
   "stat_type.factionapi.action_used": "Acción activada",
