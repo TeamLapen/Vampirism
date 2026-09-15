@@ -9,7 +9,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gizmos.GizmoStyle;
 import net.minecraft.gizmos.Gizmos;
-import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -111,7 +110,7 @@ public class OutlineRenderer {
             return;
         }
 
-        GizmoStyle style = GizmoStyle.fill(ARGB.color(1.0F, ModConfig.client().garlicFinderAuraColor.get()));
+        GizmoStyle style = GizmoStyle.fill(ModConfig.client().garlicFinderAuraColor.getARGB());
 
         for (BlockPos pos : cachedHighlightPositions) {
             double distance = playerPos.distanceToSqr(pos.getCenter());

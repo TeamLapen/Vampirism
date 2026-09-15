@@ -2,6 +2,8 @@ package de.teamlapen.vampirism.client.gui.overlay;
 
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.items.IBloodChargeable;
+import de.teamlapen.vampirism.client.config.ClientConfig;
+import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.world.items.VampireSwordItem;
 import de.teamlapen.vampirism.common.world.items.component.AppliedOilContent;
 import net.minecraft.client.DeltaTracker;
@@ -36,8 +38,9 @@ public class ItemChargeOverlay extends HeldItemOverlay {
     }
 
     private void render(GuiGraphicsExtractor pGuiGraphicsExtractor, ItemStack stack, int x, int y) {
-        if (stack.getItem() instanceof IBloodChargeable item) {
+        if (ModConfig.client().chargeBarDisplayType.get() != ClientConfig.ChargeBarDisplay.CORNER) return;
 
+        if (stack.getItem() instanceof IBloodChargeable item) {
             if (item instanceof VampireSwordItem sword && sword.getTrained(stack) < 0.99) {
                 pGuiGraphicsExtractor.blitSprite(RenderPipelines.GUI_TEXTURED, OUTER_BAR_BIG, x, y + (OUTER_HEIGHT - OUTER_BIG_HEIGHT), OUTER_WIDTH, OUTER_BIG_HEIGHT);
                 pGuiGraphicsExtractor.blitSprite(RenderPipelines.GUI_TEXTURED, INNER_BAR_BLOOD, x + INNER_WIDTH_DIFF / 2, y + INNER_HEIGHT_DIFF / 2, (int) ((OUTER_WIDTH - INNER_WIDTH_DIFF) * item.getChargePercentage(stack)), OUTER_HEIGHT - INNER_HEIGHT_DIFF);

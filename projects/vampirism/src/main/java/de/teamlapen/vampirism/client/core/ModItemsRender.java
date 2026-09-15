@@ -1,16 +1,18 @@
 package de.teamlapen.vampirism.client.core;
 
+import de.teamlapen.faction.api.event.RegisterItemBarsEvent;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.color.item.QuarrelTint;
 import de.teamlapen.vampirism.client.color.item.OilBottleTint;
 import de.teamlapen.vampirism.client.extensions.ItemExtensions;
 import de.teamlapen.vampirism.client.models.armor.*;
-import de.teamlapen.vampirism.client.models.entities.ClothedModel;
 import de.teamlapen.vampirism.client.models.items.properties.BloodFilled;
 import de.teamlapen.vampirism.client.models.items.properties.ClipFilled;
 import de.teamlapen.vampirism.client.models.items.properties.HasName;
 import de.teamlapen.vampirism.client.models.items.properties.HunterCrossbowCharging;
 import de.teamlapen.vampirism.client.models.items.ShatteredArmorModel;
 import de.teamlapen.vampirism.client.models.items.properties.HunterCrossbowPull;
+import de.teamlapen.vampirism.client.models.items.properties.StrongOil;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.util.ColorListsUtil;
 import net.minecraft.client.model.HumanoidModel;
@@ -40,6 +42,7 @@ public class ModItemsRender {
     public static void registerConditional(RegisterConditionalItemModelPropertyEvent event) {
         event.register(HasName.ID, HasName.CODEC);
         event.register(HunterCrossbowCharging.ID, HunterCrossbowCharging.CODEC);
+        event.register(StrongOil.ID, StrongOil.CODEC);
     }
 
     public static void registerItemModels(RegisterItemModelsEvent event) {
@@ -49,6 +52,11 @@ public class ModItemsRender {
     public static void registerItemDecorator(RegisterItemDecorationsEvent event) {
         Stream.of(ModItems.BASIC_CROSSBOW, ModItems.ENHANCED_CROSSBOW, ModItems.BASIC_DOUBLE_CROSSBOW, ModItems.ENHANCED_DOUBLE_CROSSBOW, ModItems.BASIC_TECH_CROSSBOW, ModItems.ENHANCED_TECH_CROSSBOW)
                 .forEach(item -> event.register(item, ModItemDecorators.CROSSBOW_AMMUNITION));
+    }
+
+    public static void registerItemBars(RegisterItemBarsEvent event) {
+        event.register(VIdentifier.mod("applied_oil"), ModItemDecorators.APPLIED_OIL);
+        event.register(VIdentifier.mod("blood_charge"), ModItemDecorators.BLOOD_CHARGE);
     }
 
     public static void registerClientExtensions(RegisterClientExtensionsEvent event) {

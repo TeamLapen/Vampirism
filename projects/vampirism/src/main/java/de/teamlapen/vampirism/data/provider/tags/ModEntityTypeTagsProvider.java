@@ -26,7 +26,7 @@ public class ModEntityTypeTagsProvider extends EntityTypeTagsProvider {
         tag(ModEntityTags.ADVANCED_VAMPIRE).add(ModEntities.ADVANCED_VAMPIRE.get(), ModEntities.ADVANCED_VAMPIRE_IMOB.get());
         tag(ModEntityTags.ZOMBIES).add(EntityType.ZOMBIE, EntityType.HUSK, EntityType.DROWNED, EntityType.ZOMBIE_VILLAGER, EntityType.ZOMBIE_HORSE);
         tag(ModEntityTags.IGNORE_VAMPIRE_SWORD_FINISHER).add(ModEntities.VULNERABLE_REMAINS_DUMMY.get(), ModEntities.GHOST.get()).addTag(Tags.EntityTypes.BOSSES);
-        tag(ModEntityTags.CONVERTED_CREATURES).add(ModEntities.CONVERTED_CREATURE.get(), ModEntities.CONVERTED_CREATURE_IMOB.get(), ModEntities.VILLAGER_CONVERTED.get());
+        tag(ModEntityTags.CONVERTED_CREATURES).addOptionalTag(ModEntityTags.GENERATED_CONVERTED_CREATURES).add(ModEntities.CONVERTED_CREATURE.get(), ModEntities.CONVERTED_CREATURE_IMOB.get(), ModEntities.VILLAGER_CONVERTED.get());
         tag(ModEntityTags.ALERTABLE_HUNTERS).add(ModEntities.HUNTER.get(), ModEntities.HUNTER_IMOB.get(), ModEntities.ADVANCED_HUNTER.get(), ModEntities.ADVANCED_HUNTER_IMOB.get());
         tag(ModEntityTags.ALERTABLE_VAMPIRES).add(ModEntities.VAMPIRE.get(), ModEntities.VAMPIRE_IMOB.get());
         tag(EntityTypeTags.POWDER_SNOW_WALKABLE_MOBS).addTag(ModEntityTags.HUNTER);

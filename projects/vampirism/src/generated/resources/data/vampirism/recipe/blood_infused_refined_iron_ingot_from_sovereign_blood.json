@@ -2,7 +2,7 @@
   "type": "vampirism:alchemical_cauldron",
   "cookTime": 450,
   "experience": 1.0,
-  "fluid": "vampirism:draculas_blood",
+  "fluid": "vampirism:sovereign_blood",
   "info": {},
   "ingredient": "minecraft:iron_block",
   "result": {

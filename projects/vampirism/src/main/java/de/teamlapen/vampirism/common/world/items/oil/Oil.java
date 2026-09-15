@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.world.items.oil.IOil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,7 +19,7 @@ public class Oil implements IOil {
     }
 
     @Override
-    public void getDescription(ItemStack stack, @Nullable Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltips) {
+    public void getDescription(ItemStack stack, @Nullable Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltips, TooltipFlag tooltipFlag) {
     }
 
     @Override

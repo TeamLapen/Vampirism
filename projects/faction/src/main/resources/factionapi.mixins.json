@@ -11,6 +11,7 @@
     "MobEffectInstanceMixin"
   ],
   "client": [
+    "client.GuiGraphicsExtractorMixin",
     "client.ImageWidgetSpriteAccessor",
     "client.ImageWidgetTextureAccessor",
     "client.StatsScreenAccessor",

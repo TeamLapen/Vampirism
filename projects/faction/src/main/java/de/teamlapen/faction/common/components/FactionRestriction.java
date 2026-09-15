@@ -92,6 +92,11 @@ public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<Holde
         return new Builder(factions).apply(properties);
     }
 
+    @SuppressWarnings("unchecked")
+    public boolean supports(Holder<? extends IFaction<?>> faction) {
+        return factions.contains((Holder<IFaction<?>>) faction);
+    }
+
     public static <T extends IFaction<?>, Z extends Holder<T>> boolean matchFaction(ItemStack stack, Z faction) {
         var restrictions = stack.getAllOfType(IFactionRestrictionProvider.class).map(IFactionRestrictionProvider::getFactionRestriction).filter(Objects::nonNull).toList();
         if (restrictions.isEmpty()) return true;

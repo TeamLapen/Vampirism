@@ -59,5 +59,4 @@ public class ClientConfig implements FactionConfig.IConfigs {
         builder.pop();
 
     }
-
 }

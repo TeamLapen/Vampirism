@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client;
 
+import de.teamlapen.faction.client.config.ConfigFilter;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.client.config.ConfigFilter;
 import de.teamlapen.vampirism.client.renderer.items.BatCageSpecialRenderer;
 import de.teamlapen.vampirism.client.renderer.items.BloodContainerRenderer;
 import de.teamlapen.vampirism.client.renderer.items.MotherTrophyRenderer;

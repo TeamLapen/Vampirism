@@ -1,6 +1,7 @@
 package de.teamlapen.faction.client.config.values;
 
 import de.teamlapen.faction.Services;
+import net.minecraft.util.ARGB;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.config.IConfigSpec;
 import net.neoforged.fml.event.config.ModConfigEvent;
@@ -79,6 +80,10 @@ public class ColorConfigValue {
 
     public int get() {
         return cached;
+    }
+
+    public int getARGB() {
+        return ARGB.color(1.0F, get());
     }
 
     public void reload() {
