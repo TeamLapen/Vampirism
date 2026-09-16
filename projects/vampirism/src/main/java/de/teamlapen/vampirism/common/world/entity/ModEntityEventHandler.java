@@ -35,6 +35,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -215,7 +216,7 @@ public class ModEntityEventHandler {
 
     @SubscribeEvent
     public void checkUndeadVampireEffect(MobEffectEvent.Applicable event) {
-        if (event.getEffectSource() instanceof Player player && ModDataPacks.isEnabled(ModDataPacks.UNDEAD_VAMPIRES) && Helper.isVampire(player)){
+        if (event.getEffectSource() instanceof Player player && ModDataPacks.isEnabled(ModDataPacks.UNDEAD_VAMPIRES) && Helper.isVampire(player) && (event.getEffectInstance().is(MobEffects.REGENERATION) || event.getEffectInstance().is(MobEffects.POISON))) {
             event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
         }
     }
