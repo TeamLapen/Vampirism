@@ -24,6 +24,7 @@ import de.teamlapen.vampirism.common.world.items.HunterAxeItem;
 import de.teamlapen.vampirism.common.world.items.VampireSwordItem;
 import de.teamlapen.vampirism.common.world.items.crossbow.HunterCrossbowItem;
 import de.teamlapen.vampirism.common.world.items.oil.EvasionOil;
+import de.teamlapen.vampirism.data.ModDataPacks;
 import de.teamlapen.vampirism.misc.extension.INearestTargetGoal;
 import de.teamlapen.vampirism.misc.mixin.accessor.NearestAttackableTargetGoalAccessor;
 import it.unimi.dsi.fastutil.objects.Object2BooleanArrayMap;
@@ -209,6 +210,13 @@ public class ModEntityEventHandler {
                 //noinspection UnnecessaryReturnStatement
                 return;
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void checkUndeadVampireEffect(MobEffectEvent.Applicable event) {
+        if (event.getEffectSource() instanceof Player player && ModDataPacks.isEnabled(ModDataPacks.UNDEAD_VAMPIRES) && Helper.isVampire(player)){
+            event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
         }
     }
 

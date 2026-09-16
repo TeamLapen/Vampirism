@@ -23,6 +23,7 @@ import net.minecraft.world.item.enchantment.LevelBasedValue;
 import net.minecraft.world.item.enchantment.effects.AddValue;
 import net.minecraft.world.item.enchantment.effects.EnchantmentValueEffect;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.predicates.AnyOfCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -64,9 +65,14 @@ public class ModEnchantments {
                         .withEffect(
                                 EnchantmentEffectComponents.DAMAGE,
                                 new AddValue(LevelBasedValue.perLevel(1F)),
-                                LootItemEntityPropertyCondition.hasProperties(
-                                        LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().subPredicate(FactionSubPredicate.faction(ModFactions.VAMPIRE))
+                                AnyOfCondition.anyOf(
+                                        LootItemEntityPropertyCondition.hasProperties(
+                                                LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().subPredicate(FactionSubPredicate.faction(ModFactions.VAMPIRE))
+                                        ),LootItemEntityPropertyCondition.hasProperties(
+                                                LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().subPredicate(FactionSubPredicate.faction(ModFactions.VAMPIRE))
+                                        )
                                 )
+
                         ).withEffect(
                                 EnchantmentEffectComponents.DAMAGE,
                                 new AddValue(LevelBasedValue.constant(2F)),
