@@ -1,7 +1,7 @@
 {
   "anvil_cost": 2,
   "description": {
-    "translate": "enchantment.vampirism.vampire_slayer"
+    "translate": "enchantment.minecraft.smite"
   },
   "effects": {
     "minecraft:damage": [
@@ -10,8 +10,8 @@
           "type": "minecraft:add",
           "value": {
             "type": "minecraft:linear",
-            "base": 1.0,
-            "per_level_above_first": 1.0
+            "base": 2.5,
+            "per_level_above_first": 2.5
           }
         },
         "requirements": {
@@ -21,10 +21,7 @@
               "condition": "minecraft:entity_properties",
               "entity": "this",
               "predicate": {
-                "type_specific": {
-                  "type": "factionapi:faction",
-                  "faction": "vampirism:vampire"
-                }
+                "type": "#minecraft:sensitive_to_smite"
               }
             },
             {
@@ -39,36 +36,20 @@
             }
           ]
         }
-      },
-      {
-        "effect": {
-          "type": "minecraft:add",
-          "value": 2.0
-        },
-        "requirements": {
-          "condition": "minecraft:entity_properties",
-          "entity": "this",
-          "predicate": {
-            "type_specific": {
-              "type": "factionapi:faction",
-              "faction": "vampirism:vampire"
-            }
-          }
-        }
       }
     ]
   },
   "exclusive_set": "#minecraft:exclusive_set/damage",
   "max_cost": {
-    "base": 20,
-    "per_level_above_first": 10
+    "base": 25,
+    "per_level_above_first": 8
   },
   "max_level": 5,
   "min_cost": {
-    "base": 3,
-    "per_level_above_first": 10
+    "base": 5,
+    "per_level_above_first": 8
   },
-  "primary_items": "#vampirism:enchantable/vampire_slayer",
+  "primary_items": "#minecraft:enchantable/melee_weapon",
   "slots": [
     "mainhand"
   ],

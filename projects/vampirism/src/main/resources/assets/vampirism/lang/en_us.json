@@ -1856,5 +1856,12 @@
   "vampirism.configuration.lordAttackSpeedCooldown": "Lord Attack Speed Cooldown",
   "vampirism.configuration.lordAttackSpeedCooldown.tooltip": "Cooldown for the vampire lord attack speed action, in seconds.",
 
-  "credits.vampirism.translators": "No translators"
+  "credits.vampirism.translators": "No translators",
+
+  "pack.vampirism.undeadvampires": "Undead Vampires",
+  "pack.vampirism.undeadvampires.desc": "Make Vampires undead",
+  "pack.vampirism.2dtextures": "Vanilla style Vampirism",
+  "pack.vampirism.2dtextures.desc": "2d textures",
+  "pack.vampirism.modcompat": "Vampirism modcompat",
+  "pack.vampirism.modcompat.desc": "Compatibility pack for vampirism"
 }
