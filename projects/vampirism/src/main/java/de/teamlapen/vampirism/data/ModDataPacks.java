@@ -40,7 +40,7 @@ public class ModDataPacks {
 
     public static void registerPackRepository(AddPackFindersEvent event) {
         if (event.getPackType() == PackType.CLIENT_RESOURCES) {
-            add(VAMPIRISM_2D_PACK_ID, event::addRepositorySource, PackSource.BUILT_IN, false);
+            add(VAMPIRISM_2D_PACK_ID, event::addRepositorySource, PackSource.FEATURE, false);
         }
         if (event.getPackType() == PackType.SERVER_DATA) {
             add(UNDEAD_VAMPIRES, event::addRepositorySource, PackSource.FEATURE, false);
