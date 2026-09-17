@@ -78,7 +78,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     private @NotNull EnumStrength garlicCache = EnumStrength.NONE;
 
     public VampireMinionEntity(EntityType<? extends MinionEntity<?>> type, Level world) {
-        super(type, world, IFactionPredicate.builder(ModFactions.VAMPIRE).targetFaction(ModFactionTags.VAMPIRE_MINION_TARGETS).build().or(e -> !(e instanceof IFactionEntity) && e instanceof Enemy && !(e instanceof Zombie) && !(e instanceof Skeleton) && !(e instanceof Creeper)));
+        super(type, world, IFactionPredicate.defaultTargets(ModFactions.VAMPIRE).targetFaction(ModFactionTags.VAMPIRE_MINION_TARGETS).build().or(e -> !(e instanceof IFactionEntity) && e instanceof Enemy && !(e instanceof Zombie) && !(e instanceof Skeleton) && !(e instanceof Creeper)));
     }
 
     @Override

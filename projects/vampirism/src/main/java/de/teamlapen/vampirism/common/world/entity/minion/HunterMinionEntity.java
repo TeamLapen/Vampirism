@@ -76,7 +76,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     }
 
     public HunterMinionEntity(EntityType<? extends MinionEntity<?>> type, Level world) {
-        super(type, world, IFactionPredicate.builder(ModFactions.HUNTER).targetFaction(ModFactionTags.HUNTER_MINION_TARGETS).build().or(e -> !(e instanceof IFactionEntity) && (e instanceof Enemy) && !(e instanceof Creeper)));
+        super(type, world, IFactionPredicate.defaultTargets(ModFactions.HUNTER).targetFaction(ModFactionTags.HUNTER_MINION_TARGETS).build().or(e -> !(e instanceof IFactionEntity) && (e instanceof Enemy) && !(e instanceof Creeper)));
     }
 
     @Override

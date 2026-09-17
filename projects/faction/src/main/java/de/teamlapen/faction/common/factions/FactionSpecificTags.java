@@ -1,5 +1,6 @@
 package de.teamlapen.faction.common.factions;
 
+import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Table;
 import de.teamlapen.faction.api.event.AddFactionTagEvent;
 import de.teamlapen.faction.api.factions.IFaction;
@@ -24,24 +25,24 @@ public class FactionSpecificTags implements IFactionSpecificTags {
 
     @Override
     public <T> Optional<TagKey<T>> getCustom(Holder<? extends IFaction<?>> faction, ResourceKey<T> key) {
-        return SafeCast.cast(Optional.ofNullable(this.tags.get(faction, key)));
+        return SafeCast.cast(Optional.ofNullable(this.tags.get(faction.getDelegate(), key)));
     }
 
     @Override
     public <T> TagKey<T> getCustom(Holder<? extends IFaction<?>> faction, ResourceKey<T> key, TagKey<T> fallback) {
-        var tag = this.tags.get(faction, key);
+        var tag = this.tags.get(faction.getDelegate(), key);
         if (tag == null) return fallback;
         return SafeCast.cast(tag);
     }
 
     @Override
     public <T> Optional<TagKey<T>> get(Holder<? extends IFaction<?>> faction, ResourceKey<? extends Registry<T>> key) {
-        return SafeCast.cast(Optional.ofNullable(this.tags.get(faction, key)));
+        return SafeCast.cast(Optional.ofNullable(this.tags.get(faction.getDelegate(), key)));
     }
 
     @Override
     public <T> TagKey<T> get(Holder<? extends IFaction<?>> faction, ResourceKey<? extends Registry<T>> key, TagKey<T> fallback) {
-        var tag = this.tags.get(faction, key);
+        var tag = this.tags.get(faction.getDelegate(), key);
         if (tag == null) return fallback;
         return SafeCast.cast(tag);
     }
@@ -60,7 +61,10 @@ public class FactionSpecificTags implements IFactionSpecificTags {
 
     @ApiStatus.Internal
     public void collectTags() {
-        this.tags = ModLoader.postEventWithReturn(new AddFactionTagEvent()).create();
+        // registries are frozen at this point. Key the table by the registry holders, as DeferredHolder and Holder.Reference have different hashCodes
+        ImmutableTable.Builder<Holder<? extends IFaction<?>>, ResourceKey<?>, TagKey<?>> builder = ImmutableTable.builder();
+        ModLoader.postEventWithReturn(new AddFactionTagEvent()).create().cellSet().forEach(cell -> builder.put(cell.getRowKey().getDelegate(), cell.getColumnKey(), cell.getValue()));
+        this.tags = builder.build();
     }
 
 }
