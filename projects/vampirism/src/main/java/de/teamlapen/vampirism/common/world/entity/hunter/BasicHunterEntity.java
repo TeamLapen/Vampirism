@@ -471,8 +471,8 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         this.targetSelector.addGoal(1, new HunterHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new AttackVillageGoal<>(this));
         this.targetSelector.addGoal(2, new DefendVillageGoal<>(this));//Should automatically be mutually exclusive with  attack village
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, 5, true, false, IFactionPredicate.builder(getFaction()).onlyPlayer().notNeutral().build()));
-        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, PathfinderMob.class, 5, true, false, IFactionPredicate.builder(getFaction()).onlyNonPlayers().notNeutral().build()) {
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, 5, true, false, IFactionPredicate.defaultTargets(getFaction()).onlyPlayer().notNeutral().build()));
+        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, PathfinderMob.class, 5, true, false, IFactionPredicate.defaultTargets(getFaction()).onlyNonPlayers().notNeutral().build()) {
             @Override
             protected double getFollowDistance() {
                 return super.getFollowDistance() / 2;

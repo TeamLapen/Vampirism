@@ -32,6 +32,9 @@ public class ModEntityTypeTagsProvider extends EntityTypeTagsProvider {
         tag(EntityTypeTags.POWDER_SNOW_WALKABLE_MOBS).addTag(ModEntityTags.HUNTER);
         tag(EntityTypeTags.ARROWS).add(ModEntities.QUARREL.get());
         tag(ModEntityTags.HUNTER_VILLAGE_GUARDS).add(ModEntities.HUNTER.get(), ModEntities.HUNTER_IMOB.get(), ModEntities.ADVANCED_HUNTER.get(), ModEntities.ADVANCED_HUNTER_IMOB.get());
+        tag(ModEntityTags.HUNTER_DEFAULT_TARGETS)
+                .addTag(EntityTypeTags.UNDEAD).addTag(EntityTypeTags.ILLAGER).addTag(EntityTypeTags.RAIDERS);
+        tag(ModEntityTags.VAMPIRE_DEFAULT_TARGETS);
         tag(ModEntityTags.VAMPIRE_VILLAGE_GUARDS).add(ModEntities.VAMPIRE.get(), ModEntities.VAMPIRE_IMOB.get(), ModEntities.ADVANCED_VAMPIRE.get(), ModEntities.ADVANCED_VAMPIRE_IMOB.get());
         tag(EntityTypeTags.CAN_WEAR_HORSE_ARMOR).add(GeneratedVampirismConvertedEntities.CONVERTED_HORSE.get());
         tag(EntityTypeTags.CAN_EQUIP_SADDLE).add(GeneratedVampirismConvertedEntities.CONVERTED_HORSE.get())
