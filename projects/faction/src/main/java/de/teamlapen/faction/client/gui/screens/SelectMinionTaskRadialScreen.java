@@ -20,6 +20,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
@@ -71,8 +72,8 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
     }
 
     private static RadialMenu<Entry> getRadialMenu(Collection<Entry> playerHandler) {
-        List<IRadialMenuSlot<Entry>> parts = playerHandler.stream().map(entry -> (IRadialMenuSlot<Entry>) new RadialMenuSlot<>(entry.text, entry)).toList();
-        return new RadialMenu<>(i -> parts.get(i).primarySlotIcon().onSelected.run(), parts, SelectMinionTaskRadialScreen::drawActionPart, 0);
+        List<IRadialMenuSlot<Entry>> parts = playerHandler.stream().map(entry -> (IRadialMenuSlot<Entry>) new RadialMenuSlot<>(entry.text, entry)).collect(Collectors.toList());
+        return new RadialMenu<>(i -> parts.get(i).primarySlotIcon().onSelected.run(), parts, SelectMinionTaskRadialScreen::drawActionPart);
     }
 
     private static void drawActionPart(Entry t, GuiGraphicsExtractor graphics, int posX, int posY, int size, boolean transparent) {

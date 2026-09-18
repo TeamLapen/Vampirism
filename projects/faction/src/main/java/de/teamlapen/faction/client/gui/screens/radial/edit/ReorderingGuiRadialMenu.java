@@ -279,7 +279,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
         return new RadialMenu<>((i) -> {
         }, collect, (objectToBeDrawn, poseStack, positionX, positionY, size, renderTransparent) -> {
             objectToBeDrawn.run(item -> drawCallback.accept(item, poseStack, positionX, positionY, size, renderTransparent));
-        }, 0);
+        });
     }
 
     public class ExcludedItemList extends ContainerObjectSelectionList<ExcludedEntry<T>> {

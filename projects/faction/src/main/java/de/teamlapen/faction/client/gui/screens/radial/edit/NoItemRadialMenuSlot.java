@@ -37,7 +37,7 @@ public class NoItemRadialMenuSlot<T> implements IRadialMenuSlot<ItemWrapper<T>> 
     }
 
     @Override
-    public List<ItemWrapper<T>> secondarySlotIcons() {
+    public List<Item<ItemWrapper<T>>> secondaryItems() {
         return Collections.emptyList();
     }
 }

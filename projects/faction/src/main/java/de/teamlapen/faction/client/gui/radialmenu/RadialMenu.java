@@ -34,52 +34,39 @@ import java.util.List;
 import java.util.function.IntConsumer;
 
 public class RadialMenu<T> {
-    private final IntConsumer setSelectedSlot;
+    private final SlotSelectionCallback selectionCallback;
     private final List<IRadialMenuSlot<T>> radialMenuSlots;
-    private final boolean showMoreSecondaryItems;
-    private final SecondaryIconPosition secondaryIconStartingPosition;
     private final DrawCallback<T> drawCallback;
-    private final int offset;
 
     /**
-     * Returns the basic SpellBook-Like Radial Menu configuration.
-     * Only one secondary Icon is shown below the primary Icon.
-     * Look at the Spellbook for an example on how to use the radial menu.
+     * Radial menu configuration that only handles the selection of primary slots.
+     * Selecting a secondary item of a slot is ignored.
      *
      * @param setSelectedSlot Provide a callback that sets the selected Slot to the provided integer.
      *                        REMEMBER to also handle the Serverside tag-setting!
-     * @param drawCallback    Provide a callback that handles the drawing of the radial menu Icons. Refer to the SpellBook for an example
-     *                        GuiRadialMenuUtils provides methods to handle either drawing Items or drawing textures provided as ResourceLocations
+     * @param drawCallback    Provide a callback that handles the drawing of the radial menu Icons.
      *                        YOU are responsible to provide a method that handles the objects provided in your RadialMenuSlots
-     * @param offset          Additional offset amount for secondary icons. If your Icons don't above each other try around with this parameter
      */
-    public RadialMenu(IntConsumer setSelectedSlot, List<IRadialMenuSlot<T>> radialMenuSlots, DrawCallback<T> drawCallback, int offset) {
-        this.setSelectedSlot = setSelectedSlot;
-        this.radialMenuSlots = radialMenuSlots;
-        this.showMoreSecondaryItems = false;
-        this.secondaryIconStartingPosition = SecondaryIconPosition.NORTH;
-        this.drawCallback = drawCallback;
-        this.offset = offset;
+    public RadialMenu(IntConsumer setSelectedSlot, List<IRadialMenuSlot<T>> radialMenuSlots, DrawCallback<T> drawCallback) {
+        this((slot, secondarySlot) -> {
+            if (secondarySlot == -1) {
+                setSelectedSlot.accept(slot);
+            }
+        }, radialMenuSlots, drawCallback);
     }
 
     /**
-     * Returns a Radial Menu configuration that displays up to 4 secondary Icons arranged around the primary Icon,
-     * starting with the provided starting position and continuing counterclockwise
-     * Look at the Spellbook for an example on how to use the radial menu.
+     * Radial menu configuration that handles the selection of primary slots and their secondary items.
+     * Secondary items are displayed in an outer ring, attached to their primary slot.
      *
-     * @param setSelectedSlot Provide a callback that sets the selected Slot to the provided integer. REMEMBER to also handle the Serverside tag-setting!
-     * @param drawCallback    Provide a callback that handles the drawing of the radial menu Icons. Refer to the SpellBook for an example
-     *                        GuiRadialMenuUtils provides methods to handle either drawing Items or drawing textures provided as ResourceLocations
-     *                        YOU are responsible to provide a method that handles the objects provided in your RadialMenuSlots
-     * @param offset          Additional offset amount for secondary icons. If your Icons don't above each other try around with this parameter
+     * @param selectionCallback Called with the selected slot and the index of the selected secondary item, or {@code -1} if the primary item was selected
+     * @param drawCallback      Provide a callback that handles the drawing of the radial menu Icons.
+     *                          YOU are responsible to provide a method that handles the objects provided in your RadialMenuSlots
      */
-    public RadialMenu(IntConsumer setSelectedSlot, List<IRadialMenuSlot<T>> radialMenuSlots, SecondaryIconPosition secondaryIconStartingPosition, DrawCallback<T> drawCallback, int offset) {
-        this.setSelectedSlot = setSelectedSlot;
+    public RadialMenu(SlotSelectionCallback selectionCallback, List<IRadialMenuSlot<T>> radialMenuSlots, DrawCallback<T> drawCallback) {
+        this.selectionCallback = selectionCallback;
         this.radialMenuSlots = radialMenuSlots;
-        this.showMoreSecondaryItems = true;
-        this.secondaryIconStartingPosition = secondaryIconStartingPosition;
         this.drawCallback = drawCallback;
-        this.offset = offset;
     }
 
     public List<IRadialMenuSlot<T>> getRadialMenuSlots() {
@@ -87,22 +74,26 @@ public class RadialMenu<T> {
     }
 
     public void setCurrentSlot(int slot) {
-        setSelectedSlot.accept(slot);
+        setCurrentSlot(slot, -1);
     }
 
-    public boolean isShowMoreSecondaryItems() {
-        return showMoreSecondaryItems;
-    }
-
-    public SecondaryIconPosition getSecondaryIconStartingPosition() {
-        return this.secondaryIconStartingPosition;
+    /**
+     * @param secondarySlot index into {@link IRadialMenuSlot#secondaryItems()} or {@code -1} for the primary item
+     */
+    public void setCurrentSlot(int slot, int secondarySlot) {
+        selectionCallback.accept(slot, secondarySlot);
     }
 
     public void drawIcon(T objectToBeDrawn, GuiGraphicsExtractor graphics, int positionX, int positionY, int size) {
         this.drawCallback.accept(objectToBeDrawn, graphics, positionX, positionY, size, false);
     }
 
-    public int getOffset() {
-        return this.offset;
+    @FunctionalInterface
+    public interface SlotSelectionCallback {
+        /**
+         * @param slot          the selected slot
+         * @param secondarySlot index into {@link IRadialMenuSlot#secondaryItems()} or {@code -1} if the primary item was selected
+         */
+        void accept(int slot, int secondarySlot);
     }
 }

@@ -63,7 +63,7 @@ public class SelectActionRadialScreen<T extends ISkillPlayer<T>> extends DualSwi
         List<IRadialMenuSlot<Holder<? extends IAction<?>>>> parts = actions.stream().map(a -> (IRadialMenuSlot<Holder<? extends IAction<?>>>) (Object) new RadialMenuSlot<>(a.value().getName(), a, Collections.emptyList())).toList();
         return new RadialMenu<>((i) -> {
             FactionsMod.proxy.sendToServer(ServerboundToggleActionPacket.createFromRaytrace(parts.get(i).primarySlotIcon(), Minecraft.getInstance().hitResult));
-        }, parts, SelectActionRadialScreen::drawActionPart, 0);
+        }, parts, SelectActionRadialScreen::drawActionPart);
     }
 
     private static void drawActionPart(Holder<? extends IAction<?>> action, GuiGraphicsExtractor graphics, int posX, int posY, int size, boolean transparent) {

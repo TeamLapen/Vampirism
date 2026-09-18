@@ -10,5 +10,8 @@ public interface IRadialMenuSlot<T> {
 
     T primarySlotIcon();
 
-    List<T> secondarySlotIcons();
+    List<Item<T>> secondaryItems();
+
+    record Item<T>(T item, Component name) {
+    }
 }
