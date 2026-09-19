@@ -7,5 +7,6 @@
   "gui.factionapi.skills.skills_reset": "تم اعادة تعيين مهاراتك",
   "gui.factionapi.minion.active_task": "المهمة الحالية",
   "gui.factionapi.minion_stats.level": "مستوى",
-  "gui.factionapi.level": "مستوى"
+  "gui.factionapi.level": "مستوى",
+  "command.factionapi.failed_to_execute": "فشل تنفيذ الأمر. حدث خطأ داخلي."
 }
