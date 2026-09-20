@@ -22,11 +22,11 @@ import org.jetbrains.annotations.ApiStatus;
 public class CommonServices extends Services implements IFactionServices {
 
     private final FactionHelper factionRegistry = new FactionHelper();
-    private final FactionPredicates factionPredicates = new FactionPredicates(this.factionRegistry);
     private final ModRegistryManager registryManager = new ModRegistryManager();
     private final ModPacketDispatcher packetDispatcher = new ModPacketDispatcher();
     private final ModPlayerEventHandler playerEventHandler = new ModPlayerEventHandler();
     private final FactionSpecificTags factionSpecificTags = new FactionSpecificTags();
+    private final FactionPredicates factionPredicates = new FactionPredicates(this.factionRegistry, this.factionSpecificTags);
     private final PlayerListenerEventHandler playerListenerEventHandler = new PlayerListenerEventHandler();
 
     /**

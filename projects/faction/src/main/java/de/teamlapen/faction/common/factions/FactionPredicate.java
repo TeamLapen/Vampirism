@@ -1,49 +1,55 @@
 package de.teamlapen.faction.common.factions;
 
-import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IFactionEntity;
 import de.teamlapen.faction.api.factions.IFactionPredicate;
 import de.teamlapen.faction.api.tags.FactionTags;
 import de.teamlapen.faction.api.util.SafeCast;
-import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
-import de.teamlapen.faction.common.core.DefaultFactions;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.registries.holdersets.AndHolderSet;
-import net.neoforged.neoforge.registries.holdersets.NotHolderSet;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-// TODO add default target factions based on tags. -> hunter ignore neutral by default. better compatibility between additional factions -> maybe use FRIENDLY_TOWARDS_NEUTRAL
-public record FactionPredicate(@Nullable Holder<? extends IFaction<?>> viewedFaction, Predicate<LivingEntity> predicate, boolean ignoreDisguise, Supplier<HolderSet<IFaction<?>>> targetFaction, Function<LivingEntity, Holder<? extends IFaction<?>>> factionFallback) implements IFactionPredicate {
+/**
+ * @param viewerFaction  the faction of the entity using this predicate. Used to resolve disguises
+ * @param predicate      additional non-faction conditions that must be met
+ * @param ignoreDisguise whether to use the actual faction of players instead of the disguised one
+ * @param targetFactions the factions that are targeted
+ * @param defaultTargets entity types that are always targeted regardless of their faction
+ * @param factionLookup  resolves the faction of entities that are neither players nor {@link IFactionEntity}
+ */
+public record FactionPredicate(@Nullable Holder<? extends IFaction<?>> viewerFaction, Predicate<? super LivingEntity> predicate, boolean ignoreDisguise, Supplier<HolderSet<IFaction<?>>> targetFactions, Supplier<Optional<TagKey<EntityType<?>>>> defaultTargets, Function<LivingEntity, Holder<? extends IFaction<?>>> factionLookup) implements IFactionPredicate {
 
     @Override
     public boolean test(@Nullable LivingEntity livingEntity) {
-        if (livingEntity == null) return false;
-        if (!predicate.test(livingEntity)) return false;
+        if (livingEntity == null || !this.predicate.test(livingEntity)) return false;
 
-        return switch (livingEntity) {
-            case IFactionEntity iFactionEntity -> this.targetFaction.get().contains(SafeCast.cast(iFactionEntity.getFaction()));
-            case Player player -> {
-                FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-                yield this.targetFaction.get().contains(SafeCast.cast(handler.factionPlayer().getDisguise().getViewedFaction(this.viewedFaction)));
-            }
-            default -> this.targetFaction.get().contains(SafeCast.cast(factionFallback.apply(livingEntity)));
+        Optional<TagKey<EntityType<?>>> defaultTargets = this.defaultTargets.get();
+        if (defaultTargets.isPresent() && livingEntity.typeHolder().is(defaultTargets.get())) {
+            return true;
+        }
+
+        Holder<? extends IFaction<?>> faction = switch (livingEntity) {
+            case IFactionEntity factionEntity -> factionEntity.getFaction();
+            case Player player -> FactionPlayerHandler.get(player).factionPlayer().getDisguise().getViewedFaction(this.viewerFaction, this.ignoreDisguise);
+            default -> this.factionLookup.apply(livingEntity);
         };
+        return IFaction.contains(this.targetFactions.get(), faction.getDelegate());
     }
 
     @Override
@@ -53,14 +59,31 @@ public record FactionPredicate(@Nullable Holder<? extends IFaction<?>> viewedFac
 
     public interface FactionPredicateLookup {
 
-        @Nullable
-        IFactionPredicate getExisting(Builder builder);
+        /**
+         * @return a lazily resolved (and cached) set of target factions
+         */
+        Supplier<HolderSet<IFaction<?>>> targetFactions(TargetKey key);
 
-        void update(Builder builder, FactionPredicate predicate);
-
-        Registry<IFaction<?>> registry();
+        /**
+         * @return a lazily resolved default target entity tag of the given faction
+         */
+        Supplier<Optional<TagKey<EntityType<?>>>> defaultTargets(@Nullable Holder<? extends IFaction<?>> faction);
 
         Holder<? extends IFaction<?>> getFallbackFaction(LivingEntity livingEntity);
+    }
+
+    /**
+     * Identifies the target faction set of a predicate. Used as cache key
+     *
+     * @param sourceFaction   the faction of the predicate owner
+     * @param targetTag       the targeted faction tag, mutually exclusive with targetFactions
+     * @param targetFactions  the targeted factions, mutually exclusive with targetTag
+     * @param allowOwnFaction whether the source faction may be targeted
+     */
+    public record TargetKey(@Nullable ResourceKey<IFaction<?>> sourceFaction, @Nullable TagKey<IFaction<?>> targetTag, List<ResourceKey<IFaction<?>>> targetFactions, boolean allowOwnFaction) {
+        public TargetKey {
+            targetFactions = List.copyOf(targetFactions);
+        }
     }
 
     public static class Builder implements IFactionPredicate.Builder {
@@ -72,9 +95,10 @@ public record FactionPredicate(@Nullable Holder<? extends IFaction<?>> viewedFac
         private boolean targetNonPlayers = true;
         private boolean ignoreDisguise;
         private boolean allowOwnFaction;
+        private boolean defaultTargets;
         @Nullable
         private TagKey<IFaction<?>> targetFaction = null;
-        private final List<Holder<? extends IFaction<?>>> targetFactions = new ArrayList<>();
+        private final List<ResourceKey<IFaction<?>>> targetFactions = new ArrayList<>();
         private Predicate<Entity> other = EntitySelector.NO_CREATIVE_OR_SPECTATOR;
 
         public Builder(@Nullable Holder<? extends IFaction<?>> sourceFaction, FactionPredicateLookup lookup) {
@@ -103,137 +127,58 @@ public record FactionPredicate(@Nullable Holder<? extends IFaction<?>> viewedFac
         }
 
         @Override
-        public IFactionPredicate.Builder allowOwnFaction() {
+        public Builder allowOwnFaction() {
             this.allowOwnFaction = true;
             return this;
         }
 
         @Override
-        public IFactionPredicate.Builder notNeutral() {
+        public Builder defaultTargets() {
+            this.defaultTargets = true;
+            return this;
+        }
+
+        @Override
+        public Builder notNeutral() {
             return targetFaction(FactionTags.NOT_NEUTRAL);
         }
 
         @Override
         public Builder targetFaction(Holder<? extends IFaction<?>> targetFaction) {
             Preconditions.checkArgument(this.targetFaction == null, "Cannot use both target Holder and target TagKey at the same time!");
-            this.targetFactions.add(targetFaction);
+            this.targetFactions.add(SafeCast.cast(targetFaction.unwrapKey().orElseThrow(() -> new IllegalArgumentException("Target faction must be a registered faction"))));
             return this;
         }
 
         @Override
         public Builder targetFaction(TagKey<IFaction<?>> targetFaction) {
-            Preconditions.checkArgument(targetFactions.isEmpty(), "Cannot use both target Holder and target TagKey at the same time!");
+            Preconditions.checkArgument(this.targetFactions.isEmpty(), "Cannot use both target Holder and target TagKey at the same time!");
             this.targetFaction = targetFaction;
             return this;
         }
 
         @Override
-        public IFactionPredicate.Builder and(Predicate<Entity> other) {
+        public Builder and(Predicate<Entity> other) {
             this.other = other;
             return this;
         }
 
         @Override
-        public boolean equals(@Nullable Object o) {
-            if (o == null || getClass() != o.getClass()) return false;
-
-            Builder build = (Builder) o;
-            return targetPlayers == build.targetPlayers
-                    && targetNonPlayers == build.targetNonPlayers
-                    && ignoreDisguise == build.ignoreDisguise
-                    && allowOwnFaction == build.allowOwnFaction
-                    && Objects.equals(sourceFaction, build.sourceFaction)
-                    && Objects.equals(targetFaction, build.targetFaction)
-                    && targetFactions.equals(build.targetFactions)
-                    && other.equals(build.other);
-        }
-
-        @Override
-        public int hashCode() {
-            int result = sourceFaction == null ? 0 : sourceFaction.unwrapKey().orElseThrow().identifier().hashCode();
-            result = result << 1 | (targetPlayers ? 0b1: 0b0);
-            result = result << 1 | (targetNonPlayers ? 0b1: 0b0);
-            result = result << 1 | (ignoreDisguise ? 0b1: 0b0);
-            result = result << 1 | (allowOwnFaction ? 0b1: 0b0);
-            result = 31 * result + (targetFaction == null ? 0 : Objects.hashCode(targetFaction.location()));
-            result = 31 * result + targetFactions.hashCode();
-            result = 31 * result + other.hashCode();
-            return result;
-        }
-
-        @Override
         public IFactionPredicate build() {
-            if (targetFaction == null && this.targetFactions.isEmpty()) {
-                targetFaction = FactionTags.ALL_FACTIONS;
-            }
+            TagKey<IFaction<?>> targetTag = this.targetFaction == null && this.targetFactions.isEmpty() ? FactionTags.ALL_FACTIONS : this.targetFaction;
+            ResourceKey<IFaction<?>> source = this.sourceFaction == null ? null : SafeCast.cast(this.sourceFaction.unwrapKey().orElseThrow(() -> new IllegalArgumentException("Source faction must be a registered faction")));
+            var targets = this.lookup.targetFactions(new TargetKey(source, targetTag, this.targetFactions, this.allowOwnFaction));
+            var defaults = this.defaultTargets ? this.lookup.defaultTargets(this.sourceFaction) : FactionPredicate.NO_DEFAULT_TARGETS;
 
-            IFactionPredicate existing = this.lookup.getExisting(this);
-            if (existing != null) return existing;
+            // copy into locals so later modifications of the builder do not affect the predicate
+            boolean players = this.targetPlayers;
+            boolean nonPlayers = this.targetNonPlayers;
+            Predicate<Entity> other = this.other;
+            Predicate<LivingEntity> predicate = entity -> (entity instanceof Player ? players : nonPlayers) && other.test(entity);
 
-            var pred = new Predicate<LivingEntity>() {
-
-                @Override
-                public boolean test(LivingEntity livingEntity) {
-                    return (targetPlayers && livingEntity instanceof Player) || targetNonPlayers;
-                }
-            };
-
-            var predicate = new FactionPredicate(this.sourceFaction, pred.and(other), this.ignoreDisguise, new LazyFactionResolver(this), this.lookup::getFallbackFaction);
-            this.lookup.update(this, predicate);
-            return predicate;
-        }
-
-        private static class LazyFactionResolver implements Supplier<HolderSet<IFaction<?>>> {
-
-            @Nullable
-            private Builder builder;
-            @Nullable
-            private HolderSet<IFaction<?>> holder;
-
-            public LazyFactionResolver(Builder builder) {
-                this.builder = builder;
-            }
-
-            @Override
-            public HolderSet<IFaction<?>> get() {
-                if (this.holder == null) {
-                    if (this.builder == null) {
-                        throw new IllegalStateException("FactionPredicate has not been initialized yet!");
-                    }
-                    this.holder = this.builder.faction();
-                    this.builder = null;
-                }
-                return this.holder;
-            }
-        }
-
-        private HolderSet<IFaction<?>> faction() {
-            Registry<IFaction<?>> iFactions = this.lookup.registry();
-
-            HolderSet<IFaction<?>> holderSet;
-            if (this.targetFaction != null) {
-                holderSet = iFactions.getOrThrow(this.targetFaction);
-            } else {
-                holderSet = HolderSet.direct(SafeCast.<List<? extends Holder<IFaction<?>>>>cast(this.targetFactions));
-            }
-
-            if (this.sourceFaction != null) {
-                List<Holder<? extends IFaction<?>>> factions = new ArrayList<>();
-                if (!this.allowOwnFaction) {
-                    factions.add(this.sourceFaction);
-                }
-
-                if (!IFaction.is(this.sourceFaction, FactionTags.HOSTILE_TOWARDS_NEUTRAL)) {
-                    factions.add(DefaultFactions.NEUTRAL);
-                }
-
-                if (!factions.isEmpty()) {
-                    holderSet = new AndHolderSet<>(holderSet, new NotHolderSet<>(iFactions, HolderSet.direct(SafeCast.<List<? extends Holder<IFaction<?>>>>cast(factions))));
-                }
-            }
-
-            return holderSet;
+            return new FactionPredicate(this.sourceFaction, predicate, this.ignoreDisguise, targets, defaults, this.lookup::getFallbackFaction);
         }
     }
 
+    private static final Supplier<Optional<TagKey<EntityType<?>>>> NO_DEFAULT_TARGETS = Optional::empty;
 }

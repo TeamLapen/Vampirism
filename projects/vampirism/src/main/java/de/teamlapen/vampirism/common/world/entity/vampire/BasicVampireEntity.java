@@ -444,8 +444,8 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         this.targetSelector.addGoal(3, new VampireHurtByTargetGoal(this).setAlertOthers());
         this.targetSelector.addGoal(4, new AttackVillageGoal<>(this));
         this.targetSelector.addGoal(4, new DefendVillageGoal<>(this));//Should automatically be mutually exclusive with  attack village
-        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, Player.class, 5, true, false, IFactionPredicate.builder(getFaction()).onlyPlayer().build()));
-        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, PathfinderMob.class, 5, true, false, IFactionPredicate.builder(getFaction()).notNeutral().onlyNonPlayers().build()));
+        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, Player.class, 5, true, false, IFactionPredicate.defaultTargets(getFaction()).onlyPlayer().build()));
+        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, PathfinderMob.class, 5, true, false, IFactionPredicate.defaultTargets(getFaction()).notNeutral().onlyNonPlayers().build()));
         this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, PatrollingMonster.class, 5, true, true, (living, level) -> UtilLib.isInsideStructure(living, StructureTags.VILLAGE)));
         this.targetSelector.addGoal(8, new DefendLeaderGoal<>(this));
     }

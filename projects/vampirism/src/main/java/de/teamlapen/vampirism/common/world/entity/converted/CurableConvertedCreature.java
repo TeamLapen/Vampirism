@@ -276,8 +276,8 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
         entity.goalSelector.addGoal(15, new RandomLookAroundGoal(entity));
 
         entity.targetSelector.addGoal(1, new HurtByTargetGoal(entity));
-        entity.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(entity, Player.class, 5, true, false, IFactionPredicate.builder(getFaction()).onlyPlayer().build()));
-        entity.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(entity, PathfinderMob.class, 5, true, false, IFactionPredicate.builder(getFaction()).notNeutral().build()));
+        entity.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(entity, Player.class, 5, true, false, IFactionPredicate.defaultTargets(getFaction()).onlyPlayer().build()));
+        entity.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(entity, PathfinderMob.class, 5, true, false, IFactionPredicate.defaultTargets(getFaction()).notNeutral().build()));
     }
 
     @Override
