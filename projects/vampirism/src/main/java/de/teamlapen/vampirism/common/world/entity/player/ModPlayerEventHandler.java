@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.world.entity.player;
 
+import com.mojang.datafixers.util.Either;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IFactionHelper;
 import de.teamlapen.faction.api.factions.actions.IActionHandler;
@@ -30,23 +31,28 @@ import de.teamlapen.vampirism.common.world.items.component.AppliedOilContent;
 import de.teamlapen.vampirism.common.world.items.crossbow.HunterCrossbowItem;
 import de.teamlapen.vampirism.common.world.potions.BasePotion;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.TriState;
+import net.minecraft.util.Unit;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.attribute.BedRule;
+import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.clock.ClockTimeMarkers;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.skeleton.Skeleton;
@@ -59,8 +65,10 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.EventPriority;
@@ -81,6 +89,7 @@ import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -382,55 +391,81 @@ public class ModPlayerEventHandler {
         }
     }
 
+    public static final Player.BedSleepingProblem COFFIN_TOO_FAR_AWAY = new Player.BedSleepingProblem(Component.translatable("message.vampirism.coffin.too_far_away"));
+    public static final Player.BedSleepingProblem COFFIN_OBSTRUCTED = new Player.BedSleepingProblem(Component.translatable("message.vampirism.coffin.obstructed"));
+    public static final Player.BedSleepingProblem COFFIN_DAY_ONLY = new Player.BedSleepingProblem(Component.translatable("message.vampirism.coffin.day_only"));
+
+    @Nullable
+    public Player.BedSleepingProblem checkVampireCanSleep(ServerPlayer player, BlockPos pos) {
+        if (!player.level().getBlockState(pos).hasProperty(HorizontalDirectionalBlock.FACING)) {
+            return null;
+        } else {
+            Direction direction = player.level().getBlockState(pos).getValue(HorizontalDirectionalBlock.FACING);
+            if (!player.isSleeping() && player.isAlive()) {
+                BedRule rule = player.level().environmentAttributes().getValue(EnvironmentAttributes.BED_RULE, pos);
+                boolean canSleep = (rule.canSleep() == BedRule.Rule.WHEN_DARK) != rule.canSleep(player.level());
+                boolean canSetSpawn = rule.canSetSpawn(player.level());
+                if (!canSetSpawn && !canSleep) {
+                    return convertProblem(rule.asProblem());
+                } else if (!player.bedInRange(pos, direction)) {
+                    return COFFIN_TOO_FAR_AWAY;
+                } else if (player.bedBlocked(pos, direction)) {
+                    return COFFIN_OBSTRUCTED;
+                } else {
+                    if (canSetSpawn) {
+                        player.setRespawnPosition(new ServerPlayer.RespawnConfig(LevelData.RespawnData.of(player.level().dimension(), pos, player.getYRot(), player.getXRot()), false), true);
+                    }
+
+                    if (!canSleep) {
+                        return convertProblem(rule.asProblem());
+                    } else {
+                        if (!player.isCreative()) {
+                            BalanceConfig config = ModConfig.balance();
+                            boolean zombie = config.zombieIgnoreVampire.get();
+                            boolean skeleton = config.skeletonIgnoreVampire.get();
+                            boolean creeper = config.creeperIgnoreVampire.get();
+                            Vec3 bedCenter = Vec3.atBottomCenterOf(pos);
+                            List<Monster> monsters = player.level().getEntitiesOfClass(Monster.class, new AABB(bedCenter.x() - (double)8.0F, bedCenter.y() - (double)5.0F, bedCenter.z() - (double)8.0F, bedCenter.x() + (double)8.0F, bedCenter.y() + (double)5.0F, bedCenter.z() + (double)8.0F), (monster) -> {
+                                return monster.isPreventingPlayerRest(player.level(), player)
+                                        && (!(monster instanceof Zombie) || !zombie)
+                                        && (!(monster instanceof Skeleton) || !skeleton)
+                                        && (!(monster instanceof Creeper) || !creeper);
+                            });
+                            if (!monsters.isEmpty()) {
+                                return Player.BedSleepingProblem.NOT_SAFE;
+                            }
+                        }
+                        return null;
+                    }
+                }
+            } else {
+                return Player.BedSleepingProblem.OTHER_PROBLEM;
+            }
+        }
+    }
+
+    private static Player.BedSleepingProblem convertProblem(Player.BedSleepingProblem problem) {
+        if (problem.message() != null && problem.message().getContents() instanceof TranslatableContents s && s.getKey().equals("block.minecraft.bed.no_sleep")) {
+            problem = COFFIN_DAY_ONLY;
+        }
+        return problem;
+    }
+
     @SubscribeEvent
     public void sleepTimeCheck(CanPlayerSleepEvent event) {
         if (Helper.isVampire(event.getEntity()) && event.getState().getBlock() instanceof CoffinBlock) {
-            //This complete overwrites sleep check logic from net.minecraft.server.level.ServerPlayer.startSleepInBed
-            //Vanilla checks for several things in order. We only want to overwrite the last two things: NOT_POSSIBLE_NOW and NOT_SAFE.
-            boolean day = Helper.isDay(event.getLevel(), event.getPos());
-            if (!day && event.getProblem() == null) {
-                //If everything is fine, but it is night, we change it to NOT POSSIBLE NOW
-                event.setProblem(new Player.BedSleepingProblem(Component.translatable("block.minecraft.bed.no_sleep")));
-                return;
-            }
-            if (day && event.getProblem() != null && (event.getProblem().message() == BedRule.CAN_SLEEP_WHEN_DARK.errorMessage().orElse(null) || event.getProblem() == Player.BedSleepingProblem.NOT_SAFE)) {
-                //If vanilla comes up with NOT_POSSIBLE_NOW or NOT_SAFE, it means all other conditions are met.
-                //Respawn position is already set by vanilla at this point in code
-                if (!event.getEntity().isCreative()) {
-                    //Perform vanilla style check for monsters nearby, but ignore monsters that don't attack vampires
-                    Vec3 vec3 = Vec3.atBottomCenterOf(event.getPos());
-                    List<Monster> list = event.getLevel().getEntitiesOfClass(Monster.class, new AABB(vec3.x() - 8.0, vec3.y() - 5.0, vec3.z() - 8.0, vec3.x() + 8.0, vec3.y() + 5.0, vec3.z() + 8.0));
-                    BalanceConfig config = ModConfig.balance();
-                    boolean zombie = config.zombieIgnoreVampire.get();
-                    boolean skeleton = config.skeletonIgnoreVampire.get();
-                    boolean creeper = config.creeperIgnoreVampire.get();
-                    if (list.stream().anyMatch(monster ->
-                            {
-                                if (zombie && monster instanceof Zombie) return false;
-                                if (skeleton && (monster instanceof Skeleton || monster instanceof Stray)) return false;
-                                if (creeper && (monster instanceof Creeper)) return false;
-                                return monster.isPreventingPlayerRest(event.getEntity().level(), event.getEntity());
-                            }
-                    )) {
-                        event.setProblem(Player.BedSleepingProblem.NOT_SAFE);
-                        return;
-                    }
-                }
-
-                event.setProblem(null);
-
-            }
+            event.setProblem(checkVampireCanSleep(event.getEntity(), event.getPos()));
         }
     }
 
     @SubscribeEvent
     public void canContinueToSleep(CanContinueSleepingEvent event) {
         if (Helper.isVampire(event.getEntity()) && event.getEntity().getSleepingPos().map(s -> event.getEntity().level().getBlockState(s)).map(s -> s.getBlock() instanceof CoffinBlock).orElse(false)) {
-            boolean day = Helper.isDay(event.getEntity().level(), event.getEntity().blockPosition());
-            if (day && event.getProblem() != null && event.getProblem().message() == BedRule.CAN_SLEEP_WHEN_DARK.errorMessage().orElse(null)) {
-                event.setContinueSleeping(true);
-            } else if (!day) {
-                event.setContinueSleeping(false);
+            BedRule value = event.getEntity().level().environmentAttributes().getValue(EnvironmentAttributes.BED_RULE, event.getEntity().position());
+            if (value.canSleep() == BedRule.Rule.WHEN_DARK) {
+                event.setContinueSleeping(!value.canSleep(event.getEntity().level()));
+            } else {
+                event.setContinueSleeping(value.canSleep(event.getEntity().level()));
             }
         }
     }

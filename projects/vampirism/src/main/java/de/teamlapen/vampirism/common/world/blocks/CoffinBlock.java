@@ -70,8 +70,6 @@ public class CoffinBlock extends BaseContainerBlock {
     
     private static final ShapeTable SHAPES = new ShapeTable();
     
-    private static final Map<Player.BedSleepingProblem, Component> sleepResults = ImmutableMap.of(new Player.BedSleepingProblem(BedRule.CAN_SLEEP_WHEN_DARK.errorMessage().orElse(Component.empty())), Component.translatable("message.vampirism.coffin.day_only"), Player.BedSleepingProblem.TOO_FAR_AWAY, Component.translatable("message.vampirism.coffin.too_far_away"), Player.BedSleepingProblem.OBSTRUCTED, Component.translatable("message.vampirism.coffin.obstructed"));
-
     public CoffinBlock(Properties properties, DyeColor color) {
         this(color, properties);
     }
@@ -226,10 +224,9 @@ public class CoffinBlock extends BaseContainerBlock {
             } else {
                 final BlockPos finalPos = pos;
                 BlockState finalState = state;
-                // TODO: Cannot sleep at day
-                player.startSleepInBed(pos).ifLeft(sleepResult1 -> {
-                    if (sleepResult1.message() != null) {
-                        player.sendOverlayMessage(sleepResults.getOrDefault(sleepResult1, sleepResult1.message()));
+                player.startSleepInBed(pos).ifLeft(sleepResult -> {
+                    if (sleepResult.message() != null) {
+                        player.sendOverlayMessage(sleepResult.message());
                     }
                 }).ifRight(u -> setCoffinSleepPosition(player, finalPos, finalState));
                 return InteractionResult.CONSUME;
