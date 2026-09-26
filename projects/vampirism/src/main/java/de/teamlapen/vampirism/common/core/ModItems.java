@@ -201,7 +201,7 @@ public class ModItems {
     public static final DeferredItem<PureBloodItem> PURE_BLOOD_3 = ITEMS.registerItem("pure_blood_3",  props -> new PureBloodItem(3, props.rarity(Rarity.UNCOMMON)));
     public static final DeferredItem<PureBloodItem> PURE_BLOOD_4 = ITEMS.registerItem("pure_blood_4",  props -> new PureBloodItem(4, props.rarity(Rarity.UNCOMMON)));
 
-    public static final DeferredItem<Item> SOVEREIGN_BLOOD = ITEMS.registerItem("sovereign_blood", props -> new Item(props.rarity(VEnums.SOVEREIGN.getValue())));
+    public static final DeferredItem<Item> SOVEREIGN_BLOOD = ITEMS.registerItem("sovereign_blood", props -> new Item(props.rarity(VEnums.SOVEREIGN.getValue()).component(ModDataComponents.PURE_LEVEL, PureLevel.SOVEREIGN)));
 
     public static final DeferredItem<Item> GARLIC_BREAD = ITEMS.registerItem("garlic_bread", props -> new Item(props.factions$factionFood(ModFoods.GARLIC_BREAD, ModConsumables.GARLIC)));
     public static final DeferredItem<Item> HUMAN_HEART = ITEMS.registerItem("human_heart", props -> new Item(props.factions$factionFood(ModFoods.HUMAN_HEART, ModConsumables.NASTY_NON_VAMPIRES)));
