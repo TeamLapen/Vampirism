@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.core;
 
+import com.mojang.math.Axis;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.models.armor.*;
 import de.teamlapen.vampirism.client.models.blocks.BloodSphereModel;
@@ -156,6 +157,10 @@ public class ModEntitiesRender {
                 LivingEntityRenderer<S, T, PlayerModel> renderPlayer2 = (LivingEntityRenderer<S, T, PlayerModel>) renderPlayer;
                 renderPlayer2.addLayer(new VampirePlayerHeadLayer<>(renderPlayer2));
                 renderPlayer.addLayer(new WingsLayer<>(renderPlayer, event.getEntityModels(), (state, poseStack) -> {
+                    if (state.isCrouching) {
+                        poseStack.translate(0,0.32f,0);
+                        poseStack.mulPose(Axis.XP.rotation(0.5f));
+                    }
                     poseStack.translate(0,-11/16f,2/16f);
                 }));
             }
