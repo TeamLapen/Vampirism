@@ -150,6 +150,7 @@ public class MigrationData {
         mapping.remap("vampirism:boat", "boat");
         mapping.remap("vampirism:chest_boat", "chest_boat");
         mapping.remap("vampirism:crossbow_arrow", "vampirism:quarrel");
+        mapping.remap("vampirism:villager_converted", "vampirism:converted_villager");
     }
 
     private static void fixEffects(@NotNull Mapping mapping) {

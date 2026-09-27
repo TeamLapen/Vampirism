@@ -82,7 +82,7 @@ public class ModEntitiesRender {
         event.registerEntityRenderer(ModEntities.ADVANCED_HUNTER_IMOB.get(), AdvancedHunterRenderer::new);
         event.registerEntityRenderer(ModEntities.ADVANCED_VAMPIRE.get(), AdvancedVampireRenderer::new);
         event.registerEntityRenderer(ModEntities.ADVANCED_VAMPIRE_IMOB.get(), AdvancedVampireRenderer::new);
-        event.registerEntityRenderer(ModEntities.VILLAGER_CONVERTED.get(), convertedRenderer(VillagerRenderer::new));
+        event.registerEntityRenderer(ModEntities.CONVERTED_VILLAGER.get(), convertedRenderer(VillagerRenderer::new));
         event.registerEntityRenderer(ModEntities.VILLAGER_ANGRY.get(), HunterVillagerRenderer::new);
         event.registerEntityRenderer(ModEntities.QUARREL.get(), (QuarrelRenderer::new));
         event.registerEntityRenderer(ModEntities.PARTICLE_CLOUD.get(), (NoopRenderer::new));
