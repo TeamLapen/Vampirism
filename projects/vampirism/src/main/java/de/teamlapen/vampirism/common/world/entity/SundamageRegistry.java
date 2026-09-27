@@ -77,8 +77,8 @@ public class SundamageRegistry implements ISundamageRegistry {
     }
 
     private boolean checkDimensionProperties(Level level, BlockPos pos) {
-        return level.environmentAttributes().getValue(ModEnvironmentAttributes.SUN_DAMAGE.get(), pos)
-                && Helper.isDay(level, pos);
+        return Helper.isDay(level, pos)
+                && level.environmentAttributes().getValue(ModEnvironmentAttributes.SUN_DAMAGE.get(), pos);
     }
 
     @SubscribeEvent

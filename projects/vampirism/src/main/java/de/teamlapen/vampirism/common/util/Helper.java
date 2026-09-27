@@ -70,8 +70,8 @@ public class Helper {
 
     public static boolean hasLevelSunDamage(Level level, BlockPos pos) {
         return level.dimensionType().hasSkyLight()
-                && level.environmentAttributes().getValue(ModEnvironmentAttributes.SUN_DAMAGE.get(), pos)
-                && isDay( level, pos);
+                && isDay(level, pos)
+                && level.environmentAttributes().getValue(ModEnvironmentAttributes.SUN_DAMAGE.get(), pos);
     }
 
     public static boolean isDay(LevelAccessor level, BlockPos pos) {

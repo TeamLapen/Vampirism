@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class LevelFog implements IFogHandler {
 
@@ -35,7 +34,22 @@ public class LevelFog implements IFogHandler {
 
     @Override
     public boolean isInsideArtificialVampireFogArea(@NotNull BlockPos blockPos) {
-        return Stream.concat(this.fogAreas.entrySet().stream(), this.tmpFogAreas.entrySet().stream()).anyMatch(entry -> entry.getValue().box.contains(blockPos.getCenter()));
+        if (this.fogAreas.isEmpty() && this.tmpFogAreas.isEmpty()) {
+            return false;
+        }
+        double x = blockPos.getX() + 0.5;
+        double y = blockPos.getY() + 0.5;
+        double z = blockPos.getZ() + 0.5;
+        return containsPos(this.fogAreas, x, y, z) || containsPos(this.tmpFogAreas, x, y, z);
+    }
+
+    private static boolean containsPos(Map<BlockPos, Emitter> areas, double x, double y, double z) {
+        for (Emitter emitter : areas.values()) {
+            if (emitter.box.contains(x, y, z)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
