@@ -25,7 +25,7 @@ public class SunDamageAttributeLayer implements EnvironmentAttributeLayer.Positi
     @Override
     public Boolean applyPositional(Boolean baseValue, Vec3 pos, @Nullable SpatialAttributeInterpolator biomeInterpolator) {
         BlockPos containing = BlockPos.containing(pos);
-        return baseValue && level.precipitationAt(containing) == Biome.Precipitation.NONE && (fog.isInsideArtificialVampireFogArea(containing) || canBlockSeeSun(containing));
+        return baseValue && level.precipitationAt(containing) == Biome.Precipitation.NONE && canBlockSeeSun(containing) && !fog.isInsideArtificialVampireFogArea(containing);
     }
 
     private boolean canBlockSeeSun(BlockPos pos) {
