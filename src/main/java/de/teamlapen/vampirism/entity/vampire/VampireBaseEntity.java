@@ -23,8 +23,6 @@ import de.teamlapen.vampirism.util.VampirismEventFactory;
 import de.teamlapen.vampirism.world.ModDamageSources;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.StructureTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
@@ -138,13 +136,6 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
             if (spawnRestriction.level >= SpawnRestriction.NORMAL.level) {
                 if (-worldIn.getPathfindingCostFromLightLevels(blockPosition()) < 0.0 && random.nextInt(5) != 0) {
                     return false;
-                }
-                if (this.level().isLoaded(blockPosition()) && worldIn instanceof ServerLevel) { //TODO check performance
-                    if (UtilLib.getStructureStartAt(level(), blockPosition(), StructureTags.VILLAGE).isPresent()) {
-                        if (getRandom().nextInt(60) != 0) {
-                            return false;
-                        }
-                    }
                 }
                 if (spawnRestriction.level >= SpawnRestriction.SPECIAL.level) {
                     if (!getCanSpawnHereRestricted(worldIn)) {
