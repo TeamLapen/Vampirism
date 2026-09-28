@@ -10,10 +10,11 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 public class ModPacketDispatcher {
 
-    private static final String PROTOCOL_VERSION = Integer.toString(1);
+    private static final String PROTOCOL_VERSION = String.format("%s/%s", de.teamlapen.faction.api.util.REFERENCE.MOD_ID, 1);
+
 
     public static void registerHandler(RegisterPayloadHandlersEvent event) {
-        registerPackets(event.registrar(REFERENCE.MODID).versioned(PROTOCOL_VERSION));
+        registerPackets(event.registrar(PROTOCOL_VERSION));
     }
 
     @SuppressWarnings("Convert2MethodRef")
