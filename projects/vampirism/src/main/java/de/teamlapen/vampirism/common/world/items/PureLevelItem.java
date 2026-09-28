@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.world.items;
 
+import de.teamlapen.vampirism.api.VEnums;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.world.items.component.PureLevel;
 import net.minecraft.ChatFormatting;
@@ -20,8 +21,7 @@ public class PureLevelItem extends Item implements BaseDisplayItemGenerator.Crea
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        int level = stack.getOrDefault(ModDataComponents.PURE_LEVEL, PureLevel.EMPTY).level() ;
-        tooltipComponents.accept(Component.translatable("tooltip.vampirism.purity", level + 1).withStyle(level == 5 ? ChatFormatting.DARK_PURPLE : ChatFormatting.DARK_RED));
+        tooltipComponents.accept(stack.getOrDefault(ModDataComponents.PURE_LEVEL, PureLevel.EMPTY).getPurityTooltip());
         super.appendHoverText(stack, context, tooltipDisplay, tooltipComponents, tooltipFlag);
     }
 
@@ -31,5 +31,9 @@ public class PureLevelItem extends Item implements BaseDisplayItemGenerator.Crea
         for (int i = 1; i < 6; i++) {
             output.accept(PureLevel.pureBlood(this, i), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
         }
+    }
+
+    private static String asLatin(int number) {
+        return "tooltip.vampirism.infused.level"+number;
     }
 }

@@ -170,12 +170,12 @@ public class ModItems {
     public static final DeferredItem<BloodBottleItem> BLOOD_BOTTLE = ITEMS.registerItem("blood_bottle", props -> new BloodBottleItem(props.component(DataComponents.CONSUMABLE, Consumables.defaultDrink().build())));
     public static final DeferredItem<BucketItem> BLOOD_BUCKET = ITEMS.registerItem("blood_bucket",  props -> new BucketItem(ModFluids.BLOOD.get(), props.craftRemainder(Items.BUCKET).stacksTo(1).factions$withShiftDescription()));
 
-    public static final DeferredItem<PureLevelItem> BLOOD_INFUSED_RAW_IRON = ITEMS.registerItem("blood_infused_raw_iron", PureLevelItem::new);
-    public static final DeferredItem<PureLevelItem> BLOOD_INFUSED_RAW_GOLD = ITEMS.registerItem("blood_infused_raw_gold", PureLevelItem::new);
-    public static final DeferredItem<PureLevelItem> BLOOD_INFUSED_IRON_INGOT = ITEMS.registerItem("blood_infused_iron_ingot", PureLevelItem::new);
-    public static final DeferredItem<PureLevelItem> BLOOD_INFUSED_GOLD_INGOT = ITEMS.registerItem("blood_infused_gold_ingot", PureLevelItem::new);
-    public static final DeferredItem<PureLevelItem> BLOOD_INFUSED_DIAMOND = ITEMS.registerItem("blood_infused_diamond", PureLevelItem::new);
-    public static final DeferredItem<PureLevelItem> BLOOD_INFUSED_NETHERITE_INGOT = ITEMS.registerItem("blood_infused_netherite_ingot", PureLevelItem::new);
+    public static final DeferredItem<PureLevelItem> BLOOD_INFUSED_RAW_IRON = ITEMS.registerItem("blood_infused_raw_iron",PureLevelItem::new, s -> s.factions$description(Items.RAW_IRON));
+    public static final DeferredItem<PureLevelItem> BLOOD_INFUSED_RAW_GOLD = ITEMS.registerItem("blood_infused_raw_gold", PureLevelItem::new, s -> s.factions$description(Items.RAW_GOLD));
+    public static final DeferredItem<PureLevelItem> BLOOD_INFUSED_IRON_INGOT = ITEMS.registerItem("blood_infused_iron_ingot", PureLevelItem::new, s -> s.factions$description(Items.IRON_INGOT));
+    public static final DeferredItem<PureLevelItem> BLOOD_INFUSED_GOLD_INGOT = ITEMS.registerItem("blood_infused_gold_ingot", PureLevelItem::new, s -> s.factions$description(Items.GOLD_INGOT));
+    public static final DeferredItem<PureLevelItem> BLOOD_INFUSED_DIAMOND = ITEMS.registerItem("blood_infused_diamond", PureLevelItem::new, s -> s.factions$description(Items.DIAMOND));
+    public static final DeferredItem<PureLevelItem> BLOOD_INFUSED_NETHERITE_INGOT = ITEMS.registerItem("blood_infused_netherite_ingot", PureLevelItem::new, s -> s.factions$description(Items.NETHERITE_INGOT));
 
     public static final DeferredItem<HolyWaterBottleItem> HOLY_WATER_BOTTLE_ULTIMATE = ITEMS.registerItem("holy_water_bottle_ultimate",  props -> new HolyWaterBottleItem(IItemWithTier.Tier.ULTIMATE, props));
     public static final DeferredItem<HolyWaterBottleItem> HOLY_WATER_BOTTLE_ENHANCED = ITEMS.registerItem("holy_water_bottle_enhanced",  props -> new HolyWaterBottleItem(IItemWithTier.Tier.ENHANCED, props, HOLY_WATER_BOTTLE_ULTIMATE::get, HunterSkills.ENHANCED_BLESSING));
@@ -310,9 +310,9 @@ public class ModItems {
     public static final DeferredItem<BlockItem> GARLIC_DIFFUSER_CORE = fromBlock(ModBlocks.GARLIC_DIFFUSER_CORE, x -> x.useBlockDescriptionPrefix().factions$withShiftDescription());
     public static final DeferredItem<BlockItem> GARLIC_DIFFUSER_CORE_STRONG = fromBlock(ModBlocks.GARLIC_DIFFUSER_CORE_STRONG, x -> x.factions$withShiftDescription(Component.translatable("tooltip.vampirism.garlic_diffuser_core")));
     public static final DeferredItem<BlockItem> GARLIC_DIFFUSER_CORE_LONG = fromBlock(ModBlocks.GARLIC_DIFFUSER_CORE_LONG, x -> x.factions$withShiftDescription(Component.translatable("tooltip.vampirism.garlic_diffuser_core")));
-    public static final DeferredItem<PureLevelBlockItem> BLOOD_INFUSED_IRON_BLOCK = fromBlock(ModBlocks.BLOOD_INFUSED_IRON_BLOCK, (block, itemProps) -> new PureLevelBlockItem(block, itemProps.component(ModDataComponents.PURE_LEVEL, PureLevel.LOW)));
-    public static final DeferredItem<PureLevelBlockItem> BLOOD_INFUSED_ENHANCED_IRON_BLOCK = fromBlock(ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK,  (block, itemProps) -> new PureLevelBlockItem(block, itemProps.component(ModDataComponents.PURE_LEVEL, new PureLevel(4))));
-    public static final DeferredItem<PureLevelBlockItem> BLOOD_INFUSED_REFINED_IRON_BLOCK = fromBlock(ModBlocks.BLOOD_INFUSED_REFINED_IRON_BLOCK,  (block, itemProps) -> new PureLevelBlockItem(block, itemProps.component(ModDataComponents.PURE_LEVEL, new PureLevel(5))));
+    public static final DeferredItem<PureLevelBlockItem> BLOOD_INFUSED_IRON_BLOCK = fromBlock(ModBlocks.BLOOD_INFUSED_IRON_BLOCK, (block, itemProps) -> new PureLevelBlockItem(block, itemProps.component(ModDataComponents.PURE_LEVEL, PureLevel.LOW).factions$description(Items.IRON_BLOCK)));
+    public static final DeferredItem<PureLevelBlockItem> BLOOD_INFUSED_ENHANCED_IRON_BLOCK = fromBlock(ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK,  (block, itemProps) -> new PureLevelBlockItem(block, itemProps.component(ModDataComponents.PURE_LEVEL, new PureLevel(4)).factions$description(Items.IRON_BLOCK)));
+    public static final DeferredItem<PureLevelBlockItem> BLOOD_INFUSED_REFINED_IRON_BLOCK = fromBlock(ModBlocks.BLOOD_INFUSED_REFINED_IRON_BLOCK,  (block, itemProps) -> new PureLevelBlockItem(block, itemProps.component(ModDataComponents.PURE_LEVEL, new PureLevel(5)).factions$description(Items.IRON_BLOCK)));
     public static final DeferredItem<BlockItem> ALTAR_INSPIRATION = fromBlock(ModBlocks.ALTAR_INSPIRATION);
     public static final DeferredItem<BlockItem> ALTAR_INFUSION = fromBlock(ModBlocks.ALTAR_INFUSION);
     public static final DeferredItem<BlockItem> ALTAR_PILLAR = fromBlock(ModBlocks.ALTAR_PILLAR);

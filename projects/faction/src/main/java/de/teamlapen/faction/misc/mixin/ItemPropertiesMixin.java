@@ -40,6 +40,9 @@ public abstract class ItemPropertiesMixin implements IItemProperties {
     @Shadow
     private DataComponentInitializers.Initializer<Item> componentInitializer;
 
+    @Shadow
+    public abstract Item.Properties overrideDescription(String descriptionId);
+
     @Override
     public Item.Properties factions$restrictFaction(@NotNull TagKey<IFaction<?>> faction) {
         return FactionRestriction.apply((Item.Properties) (Object) this, faction);
@@ -104,5 +107,10 @@ public abstract class ItemPropertiesMixin implements IItemProperties {
         });
 
         return (Item.Properties) (Object) this;
+    }
+
+    @Override
+    public Item.Properties factions$description(Item item) {
+        return this.overrideDescription(item.getDescriptionId());
     }
 }
