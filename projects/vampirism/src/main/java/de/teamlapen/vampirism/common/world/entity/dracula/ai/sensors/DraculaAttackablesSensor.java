@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.world.entity.dracula.ai.sensors;
 
+import de.teamlapen.faction.api.world.entities.minion.IMinionEntity;
 import de.teamlapen.vampirism.common.core.ModMemoryTypes;
 import de.teamlapen.vampirism.common.world.entity.dracula.Dracula;
 import net.minecraft.server.level.ServerLevel;
@@ -9,8 +10,9 @@ import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.NearestVisibleLivingEntities;
 import net.minecraft.world.entity.ai.sensing.Sensor;
-import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.player.Player;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -20,7 +22,7 @@ public class DraculaAttackablesSensor extends Sensor<Dracula> {
 
     @Override
     public Set<MemoryModuleType<?>> requires() {
-        return Set.of(ModMemoryTypes.NEAREST_ATTACKABLE.get(), ModMemoryTypes.NEAREST_VISIBLE_ATTACKABLE.get(), MemoryModuleType.NEAREST_LIVING_ENTITIES, ModMemoryTypes.ALLIES.get());
+        return Set.of(ModMemoryTypes.NEAREST_ATTACKABLE.get(), ModMemoryTypes.NEAREST_VISIBLE_ATTACKABLE.get(), MemoryModuleType.NEAREST_LIVING_ENTITIES, ModMemoryTypes.ALLIES.get(), ModMemoryTypes.AGGRESSORS.get());
     }
 
     @Override
@@ -34,10 +36,32 @@ public class DraculaAttackablesSensor extends Sensor<Dracula> {
             entities = entities.filter(x -> !allies.get().contains(x.getUUID()));
         }
 
+        // only target players, minions and entities that have attacked dracula
+        Set<UUID> aggressors = updateAggressors(level, brain);
+        entities = entities.filter(x -> x instanceof Player || x instanceof IMinionEntity || aggressors.contains(x.getUUID()));
+
         // the list is already sorted by distance
         List<LivingEntity> list = entities.filter(x -> isEntityAttackable(level, entity, x)).toList();
         brain.setMemory(ModMemoryTypes.NEAREST_ATTACKABLE.get(), list);
         brain.setMemory(ModMemoryTypes.NEAREST_VISIBLE_ATTACKABLE.get(), new NearestVisibleLivingEntities(level, entity, list));
     }
 
+    /**
+     * Removes aggressors that are dead or no longer loaded
+     */
+    private static Set<UUID> updateAggressors(ServerLevel level, Brain<?> brain) {
+        Set<UUID> aggressors = brain.getMemory(ModMemoryTypes.AGGRESSORS.get()).orElse(Set.of());
+        if (aggressors.isEmpty()) return aggressors;
+
+        Set<UUID> alive = new HashSet<>(aggressors);
+        alive.removeIf(uuid -> !(level.getEntity(uuid) instanceof LivingEntity living) || !living.isAlive());
+        if (alive.size() != aggressors.size()) {
+            if (alive.isEmpty()) {
+                brain.eraseMemory(ModMemoryTypes.AGGRESSORS.get());
+            } else {
+                brain.setMemory(ModMemoryTypes.AGGRESSORS.get(), alive);
+            }
+        }
+        return alive;
+    }
 }

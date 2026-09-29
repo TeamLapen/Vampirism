@@ -2,15 +2,15 @@ package de.teamlapen.vampirism.common.world.entity.dracula;
 
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Dynamic;
+import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.api.factions.IFactionEntity;
 import de.teamlapen.faction.api.world.entities.IEntityLeader;
 import de.teamlapen.faction.common.world.entities.IEntityEventReceiver;
-import de.teamlapen.vampirism.common.core.ModAttachments;
-import de.teamlapen.vampirism.common.core.ModEntities;
-import de.teamlapen.vampirism.common.core.ModMemoryTypes;
-import de.teamlapen.vampirism.common.core.ModSounds;
+import de.teamlapen.vampirism.common.core.*;
 import de.teamlapen.vampirism.common.world.entity.ai.memory.HurtByEntities;
 import de.teamlapen.vampirism.common.world.entity.dracula.ai.DraculaAiSystem;
 import de.teamlapen.vampirism.common.world.entity.dracula.ai.DraculaState;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.DustColorTransitionOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -40,9 +40,12 @@ import net.neoforged.neoforge.common.damagesource.DamageContainer;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
-public class Dracula extends PathfinderMob implements IDraculaAnimations, IEntityLeader, IEntityEventReceiver {
+public class Dracula extends PathfinderMob implements IDraculaAnimations, IEntityLeader, IEntityEventReceiver, IFactionEntity {
 
     public static final EntityDataAccessor<DraculaState> FIGHT_STAGE = SynchedEntityData.defineId(Dracula.class, ModEntities.DRACULA_STATE.get());
     public static final EntityDataAccessor<Long> TRANSFORMATION_START = SynchedEntityData.defineId(Dracula.class, EntityDataSerializers.LONG);
@@ -61,6 +64,11 @@ public class Dracula extends PathfinderMob implements IDraculaAnimations, IEntit
 
     public Dracula(EntityType<? extends Dracula> type, Level level) {
         super(type, level);
+    }
+
+    @Override
+    public Holder<? extends IFaction<?>> getFaction() {
+        return ModFactions.VAMPIRE;
     }
 
     /**
@@ -553,6 +561,12 @@ public class Dracula extends PathfinderMob implements IDraculaAnimations, IEntit
         if(super.hurtServer(level, source, p_376610_)) {
             HurtByEntities hurtByEntities = getBrain().getMemory(ModMemoryTypes.HURT_BY_ENTITIES.get()).orElseGet(HurtByEntities::empty);
             getBrain().setMemory(ModMemoryTypes.HURT_BY_ENTITIES.get(), hurtByEntities.hurtBy(level,this, source));
+            if (source.getEntity() instanceof LivingEntity attacker && attacker != this) {
+                Set<UUID> aggressors = new HashSet<>(getBrain().getMemory(ModMemoryTypes.AGGRESSORS.get()).orElseGet(Set::of));
+                if (aggressors.add(attacker.getUUID())) {
+                    getBrain().setMemory(ModMemoryTypes.AGGRESSORS.get(), aggressors);
+                }
+            }
             return true;
         }
         return false;
