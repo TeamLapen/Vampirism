@@ -121,6 +121,10 @@ public class Dracula extends PathfinderMob implements IDraculaAnimations, IEntit
         if (this.getState() == DraculaState.MIST) {
             tickMistForm();
         }
+        if (!this.level().isClientSide() && this.isAlive()) {
+            // invulnerability also changes through mist form ending and brain memories (flying sword/needle), so sync every tick. Only changed values are sent.
+            updateEvent();
+        }
     }
 
     private void tickMistForm() {

@@ -26,9 +26,8 @@ public class ServerDraculaEvent extends DraculaEvent {
         setStage(dracula.getStage());
         setInVulnerable(dracula.isInvulnerable());
         setPercentage(dracula.getHealth() / dracula.getMaxHealth());
-        if (this.isVisible) {
-            sendUpdate(ClientboundDraculaEventPacket.OperationType.UPDATE);
-        } else {
+        // the setters already send an update for every value that changed
+        if (!this.isVisible) {
             setVisible(true);
         }
     }
