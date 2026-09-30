@@ -30,7 +30,7 @@ public class HunterBasicMenu extends ItemCombinerMenu {
     @Nullable
     private final BasicHunterEntity entity;
 
-    private LevelingState canLevelUp;
+    private LevelingState canLevelUp = LevelingState.UNKNOWN;
     private int requiredBloodBottles;
 
     @SuppressWarnings("DeprecatedIsStillUsed")
@@ -101,6 +101,7 @@ public class HunterBasicMenu extends ItemCombinerMenu {
     }
 
     public enum LevelingState {
+        UNKNOWN,
         NEED_BLOOD,
         CAN_LEVEL_UP,
         WRONG_LEVEL,
