@@ -33,7 +33,9 @@ dependencies {
     }
 
     if (!vampirism_factions_source_dependency.toBoolean()) {
-        api(accessTransformers(interfaceInjectionData("de.teamlapen.faction:FactionApi:${project.vampirism_factions_version}")))
+        // TODO check how it is done better. Currently there is a cycle in IItemPropertiesFactionsMock#factions$description -> Item
+        compileOnly(accessTransformers(interfaceInjectionData("de.teamlapen.faction:FactionApi:${project.vampirism_factions_version}")))
+        runtimeOnly(accessTransformers(interfaceInjectionData("de.teamlapen.faction:FactionApi:${project.vampirism_factions_version}")))
     }
 
     if (include_jei.toBoolean()) {
