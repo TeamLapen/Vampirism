@@ -2,6 +2,7 @@ package de.teamlapen.faction.api.world.entities.minion;
 
 import de.teamlapen.faction.api.factions.IFactionEntity;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
+import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Optional;
@@ -16,7 +17,7 @@ public interface IMinionEntity extends IFactionEntity {
     /**
      * @return The description of the currently executed task. Empty if minion data is not available
      */
-    Optional<IMinionTask.IMinionTaskDesc<?>> getCurrentTask();
+    Optional<IMinionTask.IMinionTaskState<?>> getCurrentTask();
 
     /**
      * @return The minion inventory. Empty if minion data is not available

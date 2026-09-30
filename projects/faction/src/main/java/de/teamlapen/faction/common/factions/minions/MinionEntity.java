@@ -5,7 +5,7 @@ import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.api.world.entities.minion.IMinionEntity;
 import de.teamlapen.faction.api.world.entities.minion.IMinionInventory;
-import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
+import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
 import de.teamlapen.faction.common.Permissions;
 import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.faction.common.core.FactionEntities;
@@ -19,7 +19,6 @@ import de.teamlapen.faction.common.world.inventory.MinionContainer;
 import de.teamlapen.sync.PropertySync;
 import de.teamlapen.sync.api.ISyncable;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -58,7 +57,6 @@ import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
@@ -256,8 +254,8 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
     public abstract List<IMinionTask<?, ?>> getAvailableTasks();
 
     @Override
-    public @NotNull Optional<IMinionTask.IMinionTaskDesc<?>> getCurrentTask() {
-        return minionData != null ? Optional.of(minionData.getCurrentTaskDesc()) : Optional.empty();
+    public @NotNull Optional<IMinionTask.IMinionTaskState<?>> getCurrentTask() {
+        return minionData != null ? Optional.of(minionData.getActiveTask()) : Optional.empty();
     }
 
     /**

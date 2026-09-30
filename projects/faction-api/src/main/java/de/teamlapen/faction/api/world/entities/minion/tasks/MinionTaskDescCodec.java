@@ -1,15 +1,16 @@
-package de.teamlapen.faction.api.world.entities.minion;
+package de.teamlapen.faction.api.world.entities.minion.tasks;
 
 import com.mojang.datafixers.util.Pair;
 import com.mojang.datafixers.util.Unit;
 import com.mojang.serialization.*;
 import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.util.SafeCast;
+import de.teamlapen.faction.api.world.entities.minion.IMinionData;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Stream;
 
-public class MinionTaskDescCodec<Z extends IMinionData, I extends IMinionTask<U, Z>, U extends IMinionTask.IMinionTaskDesc<Z>> implements Codec<U> {
+public class MinionTaskDescCodec<Z extends IMinionData, I extends IMinionTask<U, Z>, U extends IMinionTask.IMinionTaskState<Z>> implements Codec<U> {
 
     private final InnerCodec inner = new InnerCodec();
 
@@ -63,7 +64,7 @@ public class MinionTaskDescCodec<Z extends IMinionData, I extends IMinionTask<U,
                     taskDecode.resultOrPartial().ifPresent(x -> this.task = SafeCast.cast(x.getFirst()));
                     this.result = this.result.apply2stable((result, element) -> result, taskDecode);
                 } else {
-                    DataResult<? extends Pair<?, T>> decode1 = this.task.descriptionCodec().decode(this.ops, d);
+                    DataResult<? extends Pair<?, T>> decode1 = this.task.stateCodec().decode(this.ops, d);
                     decode1.error().ifPresent(x -> this.failed.add(d));
                     decode1.resultOrPartial().ifPresent(x -> this.desc = SafeCast.cast(x.getFirst()));
                     this.result = this.result.apply2stable((result, element) -> result, decode1);
@@ -89,7 +90,7 @@ public class MinionTaskDescCodec<Z extends IMinionData, I extends IMinionTask<U,
         public <T> DataResult<T> encode(Pair<I, U> input, DynamicOps<T> ops, T prefix) {
             final ListBuilder<T> builder = ops.listBuilder();
             builder.add(FactionRegistries.MINION_TASK.get().byNameCodec().encode(input.getFirst(), ops, prefix));
-            builder.add(input.getFirst().descriptionCodec().encode(input.getSecond(), ops, prefix));
+            builder.add(input.getFirst().stateCodec().encode(input.getSecond(), ops, prefix));
             return builder.build(prefix);
         }
     }

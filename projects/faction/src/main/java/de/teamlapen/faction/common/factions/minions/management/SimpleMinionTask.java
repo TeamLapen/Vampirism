@@ -2,7 +2,7 @@ package de.teamlapen.faction.common.factions.minions.management;
 
 import com.mojang.serialization.Codec;
 import de.teamlapen.faction.api.world.entities.minion.IMinionEntity;
-import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
+import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
 import de.teamlapen.faction.common.factions.minions.MinionData;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.storage.ValueInput;
@@ -33,7 +33,7 @@ public class SimpleMinionTask extends DefaultMinionTask<IMinionTask.NoDesc<Minio
     }
 
     @Override
-    public @NotNull Codec<NoDesc<MinionData>> descriptionCodec() {
+    public @NotNull Codec<NoDesc<MinionData>> stateCodec() {
         return this.codec;
     }
 

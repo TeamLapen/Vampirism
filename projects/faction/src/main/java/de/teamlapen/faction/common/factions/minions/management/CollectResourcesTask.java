@@ -6,9 +6,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.factions.skills.ISkill;
-import de.teamlapen.faction.api.world.entities.minion.IFactionMinionTask;
+import de.teamlapen.faction.api.world.entities.minion.tasks.IFactionMinionTask;
 import de.teamlapen.faction.api.world.entities.minion.IMinionEntity;
-import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
+import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
 import de.teamlapen.faction.common.config.FactionConfig;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.minions.MinionData;
@@ -77,7 +77,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
     }
 
     @Override
-    public @NotNull Codec<Desc<Q>> descriptionCodec() {
+    public @NotNull Codec<Desc<Q>> stateCodec() {
         return this.descriptionCodec;
     }
 
@@ -118,7 +118,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
         return this.faction;
     }
 
-    public static class Desc<Z extends MinionData> implements IMinionTask.IMinionTaskDesc<Z> {
+    public static class Desc<Z extends MinionData> implements IMinionTaskState<Z> {
         private final CollectResourcesTask<Z> task;
         @Nullable
         private final UUID lordEntityID;

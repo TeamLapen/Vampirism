@@ -3,7 +3,7 @@ package de.teamlapen.faction.common.world.inventory;
 import de.teamlapen.faction.FactionsMod;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.world.entities.minion.IMinionInventory;
-import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
+import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
 import de.teamlapen.faction.common.core.FactionMenus;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
@@ -72,7 +72,7 @@ public class MinionContainer extends AbstractInventoryContainer {
         this.availableTasks = this.minionEntity.getAvailableTasks().stream().filter(task -> task.isAvailable(lord)).toArray(IMinionTask[]::new);
         this.minionEntity.setInteractingPlayer(playerInventory.player);
         this.addPlayerInventorySlots(playerInventory, 27, 103);
-        this.previousTask = this.minionEntity.getCurrentTask().map(IMinionTask.IMinionTaskDesc::getTask).orElse(null);
+        this.previousTask = this.minionEntity.getCurrentTask().map(IMinionTask.IMinionTaskState::getTask).orElse(null);
         this.previousTaskLocked = this.taskLocked = this.minionEntity.isTaskLocked();
 
     }

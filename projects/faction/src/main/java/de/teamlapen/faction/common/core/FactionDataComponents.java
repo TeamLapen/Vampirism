@@ -75,6 +75,8 @@ public class FactionDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Holder<FactionPlayerConsumer>>> SKILL_ENABLE_CONSUMABLE = ITEM_DATA_COMPONENTS.registerComponentType(de.teamlapen.faction.api.FactionDataComponents.Keys.SKILL_ENABLE_CONSUMABLE.getPath(), builder -> builder.networkSynchronized(ByteBufCodecs.holderRegistry(FactionRegistries.Keys.FACTION_PLAYER_CONSUMER)));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Holder<FactionPlayerConsumer>>> SKILL_DISABLE_CONSUMABLE = ITEM_DATA_COMPONENTS.registerComponentType(de.teamlapen.faction.api.FactionDataComponents.Keys.SKILL_DISABLE_CONSUMABLE.getPath(), builder -> builder.networkSynchronized(ByteBufCodecs.holderRegistry(FactionRegistries.Keys.FACTION_PLAYER_CONSUMER)));
 
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Component>> MINION_TASK_NAME = ITEM_DATA_COMPONENTS.registerComponentType(de.teamlapen.faction.api.FactionDataComponents.Keys.MINION_TASK_NAME.getPath(), builder -> builder.networkSynchronized(ComponentSerialization.STREAM_CODEC));
+
 
     static void register(IEventBus eventBus) {
         ITEM_DATA_COMPONENTS.register(eventBus);

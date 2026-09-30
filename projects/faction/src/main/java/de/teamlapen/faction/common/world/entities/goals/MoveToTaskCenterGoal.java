@@ -26,9 +26,9 @@ public class MoveToTaskCenterGoal extends MoveToPositionGoal<MinionEntity<?>> {
     public @NotNull Optional<BlockPos> getTargetPos() {
         return entity.getCurrentTask().map(desc -> {
             if (desc.getTask() == FactionMinionTasks.DEFEND_AREA.get()) {
-                return ((DefendAreaTask.Desc) desc).center;
+                return ((DefendAreaTask.State) desc).center();
             } else if (desc.getTask() == FactionMinionTasks.STAY.get()) {
-                return ((StayTask.Desc) desc).position();
+                return ((StayTask.State) desc).position();
             }
             return null;
         });

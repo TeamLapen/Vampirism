@@ -1,12 +1,15 @@
 package de.teamlapen.faction.api;
 
+import com.mojang.serialization.Codec;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.actions.IAction;
 import de.teamlapen.faction.api.factions.lord.LordTitles;
+import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.api.factions.skills.SkillTreeRequirement;
 import de.teamlapen.faction.api.factions.village.TotemPair;
 import de.teamlapen.faction.api.factions.village.VillageBanner;
 import de.teamlapen.faction.api.util.FIdentifier;
+import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
 import de.teamlapen.faction.api.world.entities.player.FactionPlayerConsumer;
 import de.teamlapen.faction.api.world.items.RefinementItems;
 import de.teamlapen.faction.api.world.items.components.IEffectiveRefinementSet;
@@ -75,6 +78,28 @@ public class FactionDataComponents {
 
     //</editor-fold>
 
+    //<editor-fold desc="MinionTasks>
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Component>> MINION_TASK_NAME = retrieveDataComponent(Keys.MINION_TASK_NAME);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<TagKey<IFaction<?>>>> MINION_TASK_FACTIONS = retrieveDataComponent(Keys.MINION_TASK_FACTIONS);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Holder<? extends ISkill<?>>>> MINION_TASK_SKILL_REQUIREMENT = retrieveDataComponent(Keys.MINION_TASK_SKILL_REQUIREMENT);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> MINION_TASK_GLOBAL_COMMAND = retrieveDataComponent(Keys.MINION_TASK_SKILL_REQUIREMENT);
+
+    //</editor-fold>
+
+    //<editor-fold desc="MinionData>
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MINION_LEVEL = retrieveDataComponent(Keys.MINION_LEVEL);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Component>> MINION_NAME = retrieveDataComponent(Keys.MINION_NAME);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> MINION_USE_LORD_SKIN = retrieveDataComponent(Keys.MINION_USE_LORD_SKIN);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> MINION_HAS_INCREASED_STATS = retrieveDataComponent(Keys.MINION_HAS_INCREASED_STATS);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MINION_HEALTH_LEVEL = retrieveDataComponent(Keys.MINION_HEALTH_LEVEL);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MINION_INVENTORY_LEVEL = retrieveDataComponent(Keys.MINION_INVENTORY_LEVEL);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MINION_SPEED_LEVEL = retrieveDataComponent(Keys.MINION_SPEED_LEVEL);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MINION_STRENGTH_LEVEL = retrieveDataComponent(Keys.MINION_STRENGTH_LEVEL);
+
+    //</editor-fold>
+
 
 
     public static class Keys {
@@ -103,6 +128,21 @@ public class FactionDataComponents {
         public static final Identifier SKILL_TREE_REQUIREMENT = FIdentifier.mod("skill_tree_requirement");
         public static final Identifier SKILL_ENABLE_CONSUMABLE = FIdentifier.mod("skill_enable_consumable");
         public static final Identifier SKILL_DISABLE_CONSUMABLE = FIdentifier.mod("skill_deactivate_consumable");
+
+        public static final Identifier MINION_TASK_NAME = FIdentifier.mod("minion_task_name");
+        public static final Identifier MINION_TASK_FACTIONS = FIdentifier.mod("minion_task_factions");
+        public static final Identifier MINION_TASK_SKILL_REQUIREMENT = FIdentifier.mod("minion_task_factions");
+        public static final Identifier MINION_TASK_GLOBAL_COMMAND = FIdentifier.mod("minion_task_global_command");
+        public static final Identifier MINION_TASK_STATE_CODEC = FIdentifier.mod("minion_task_state_codec");
+
+        public static final Identifier MINION_LEVEL = FIdentifier.mod("minion_level");
+        public static final Identifier MINION_NAME = FIdentifier.mod("minion_name");
+        public static final Identifier MINION_USE_LORD_SKIN = FIdentifier.mod("minion_use_lord_skin");
+        public static final Identifier MINION_HAS_INCREASED_STATS = FIdentifier.mod("minion_has_increased_stats");
+        public static final Identifier MINION_HEALTH_LEVEL = FIdentifier.mod("minion_health_level");
+        public static final Identifier MINION_INVENTORY_LEVEL = FIdentifier.mod("minion_inventory_level");
+        public static final Identifier MINION_SPEED_LEVEL = FIdentifier.mod("minion_speed_level");
+        public static final Identifier MINION_STRENGTH_LEVEL = FIdentifier.mod("minion_strength_level");
 
         public static final Identifier REFINEMENT_SET = FIdentifier.mod("refinement_set");
         public static final Identifier IS_FACTION_BANNER = FIdentifier.mod("is_faction_banner");

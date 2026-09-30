@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.world.entity.minion.management;
 
 
 import de.teamlapen.faction.api.FactionRegistries;
-import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
+import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
 import de.teamlapen.faction.common.factions.minions.management.CollectResourcesTask;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.common.config.ModConfig;

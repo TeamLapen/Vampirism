@@ -4,76 +4,47 @@ package de.teamlapen.faction.common.factions.minions.management;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.faction.api.world.entities.minion.IMinionEntity;
-import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
-import de.teamlapen.faction.common.core.FactionMinionTasks;
+import de.teamlapen.faction.api.world.entities.minion.tasks.MinionTaskProperties;
 import de.teamlapen.faction.common.factions.minions.MinionData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
-import static de.teamlapen.faction.common.factions.minions.management.DefendAreaTask.Desc;
+import static de.teamlapen.faction.common.factions.minions.management.DefendAreaTask.State;
 
 
-public class DefendAreaTask extends DefaultMinionTask<Desc, MinionData> {
+public class DefendAreaTask extends MinionTask<MinionData, State> {
 
+    public DefendAreaTask(MinionTaskProperties properties) {
+        super(properties, State.CODEC);
+    }
 
     @Override
-    public Desc activateTask(@Nullable Player lord, @Nullable IMinionEntity minion, @NonNull MinionData inventory) {
+    public @NonNull State activateTask(@Nullable Player lord, @Nullable IMinionEntity minion, @NonNull MinionData inventory) {
         this.triggerAdvancements(lord);
         BlockPos pos = minion != null ? minion.asEntity().blockPosition() : (lord != null ? lord.blockPosition() : null);
-        return pos == null ? null : new Desc(pos, 10);
+        return pos == null ? null : new State(pos, 10);
     }
 
 
     @Override
-    public void deactivateTask(@NonNull Desc desc) {
+    public void deactivateTask(DefendAreaTask.@NonNull State desc) {
 
     }
 
+    @Nullable
     @Override
-    public @NotNull Codec<Desc> descriptionCodec() {
-        return Desc.CODEC;
+    public Codec<State> stateCodec() {
+        return State.CODEC;
     }
 
-    @Override
-    public @NotNull Desc load(@NotNull ValueInput input) {
-        return new Desc(input);
-    }
+    public record State(BlockPos center, int distance) implements IMinionTaskState {
 
+            public static Codec<State> CODEC = RecordCodecBuilder.create(inst -> inst.group(
+                    BlockPos.CODEC.fieldOf("center").forGetter(d -> d.center),
+                    Codec.INT.fieldOf("radius").forGetter(d -> d.distance)
+            ).apply(inst, State::new));
 
-    public static class Desc implements IMinionTask.IMinionTaskDesc<MinionData> {
-
-        public static Codec<Desc> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-                BlockPos.CODEC.fieldOf("center").forGetter(d -> d.center),
-                Codec.INT.fieldOf("radius").forGetter(d -> d.distance)
-        ).apply(inst, Desc::new));
-
-        public final BlockPos center;
-        public final int distance;
-
-        public Desc(BlockPos center, int distance) {
-            this.center = center;
-            this.distance = distance;
-        }
-
-        private Desc(ValueInput input) {
-            this.center = input.read("center", BlockPos.CODEC).orElseThrow();
-            this.distance = input.getIntOr("radius", 0);
-        }
-
-        @Override
-        public @NotNull IMinionTask<?, MinionData> getTask() {
-            return FactionMinionTasks.DEFEND_AREA.get();
-        }
-
-        @Override
-        public void serialize(@NotNull ValueOutput output) {
-            output.store("center", BlockPos.CODEC, center);
-            output.putInt("radius", distance);
-        }
     }
 }

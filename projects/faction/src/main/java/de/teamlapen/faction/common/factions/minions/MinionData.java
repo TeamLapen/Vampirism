@@ -1,11 +1,16 @@
 package de.teamlapen.faction.common.factions.minions;
 
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.DynamicOps;
+import com.mojang.serialization.MapCodec;
+import de.teamlapen.faction.api.FactionDataComponents;
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.api.util.SafeCast;
 import de.teamlapen.faction.api.world.entities.minion.IMinionData;
 import de.teamlapen.faction.api.world.entities.minion.IMinionEntry;
-import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
+import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
 import de.teamlapen.faction.common.core.FactionItems;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
 import de.teamlapen.faction.common.core.ModRegistries;
@@ -16,6 +21,9 @@ import de.teamlapen.faction.common.world.entities.appearance.AppearancePacket;
 import de.teamlapen.faction.common.world.entities.appearance.IAppearanceHolder;
 import de.teamlapen.faction.common.world.inventory.InventoryHelper;
 import de.teamlapen.sync.PropertySync;
+import de.teamlapen.sync.SimpleMutableDataComponentMap;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -23,6 +31,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.ItemStackWithSlot;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -35,15 +44,13 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
-public abstract class MinionData extends PropertySync implements IMinionData, IAppearanceHolder {
+public class MinionData extends SimpleMutableDataComponentMap implements IMinionData, IAppearanceHolder, DataComponentMap {
 
     public static final AppearanceKey<Integer> AppearanceType = AppearancePacket.register(FIdentifier.mod("type"), ByteBufCodecs.VAR_INT);
     public static final AppearanceKey<Integer> SkinType = AppearancePacket.register(FIdentifier.mod("skin"), ByteBufCodecs.VAR_INT);
     public static final AppearanceKey<String> NameType = AppearancePacket.register(FIdentifier.mod("name"), ByteBufCodecs.STRING_UTF8);
 
-    private static final Codec<IMinionTask.IMinionTaskDesc<MinionData>> MINION_TASK_CODEC = SafeCast.cast(IMinionTask.IMinionTaskDesc.TASK_CODEC);
     public static final int MAX_NAME_LENGTH = 15;
     protected static final Logger LOGGER = LogManager.getLogger();
 
@@ -63,26 +70,24 @@ public abstract class MinionData extends PropertySync implements IMinionData, IA
 
     private final @NotNull MinionInventory inventory;
     private float health;
-    private String name;
     private @NotNull CompoundTag entityCaps = new CompoundTag();
     private MinionStat.StatCollection statCollection;
 
 
     @NotNull
-    private IMinionTask.IMinionTaskDesc<MinionData> activeTaskDesc;
+    private ActiveTask<?> activeTaskDesc;
     private boolean taskLocked;
 
     protected MinionData(String name, int invSize) {
         this.health = getMaxHealth();
-        this.name = name;
         this.inventory = new MinionInventory(invSize);
-        this.activeTaskDesc = new IMinionTask.NoDesc<>(FactionMinionTasks.NOTHING.get());
+        this.activeTaskDesc = ActiveTask.DEFAULT;
         this.collectStats();
     }
 
     protected MinionData() {
         this.inventory = new MinionInventory();
-        this.activeTaskDesc = new IMinionTask.NoDesc<>(FactionMinionTasks.NOTHING.get());
+        this.activeTaskDesc = ActiveTask.DEFAULT;
         this.collectStats();
     }
 
@@ -92,7 +97,9 @@ public abstract class MinionData extends PropertySync implements IMinionData, IA
         this.statCollection = new MinionStat.StatCollection(this, stats);
     }
 
-    public abstract int getLevel();
+    public int getLevel() {
+        return getOrDefault(FactionDataComponents.MINION_LEVEL,0);
+    }
 
 
     protected int getMaxStatLevel() {
@@ -108,13 +115,8 @@ public abstract class MinionData extends PropertySync implements IMinionData, IA
     }
 
     @Override
-    public void sync() {
-        // this instance itself cannot sync.
-    }
-
-    @Override
     @NotNull
-    public IMinionTask.IMinionTaskDesc<MinionData> getCurrentTaskDesc() {
+    public ActiveTask<?> getActiveTask() {
         return activeTaskDesc;
     }
 
@@ -123,11 +125,6 @@ public abstract class MinionData extends PropertySync implements IMinionData, IA
     }
 
     public abstract void setIncreasedStats(boolean hasIncreasedStats);
-
-    @Override
-    public @NotNull MutableComponent getFormattedName() {
-        return Component.literal(name);
-    }
 
     @Override
     public float getHealth() {
@@ -153,12 +150,12 @@ public abstract class MinionData extends PropertySync implements IMinionData, IA
     }
 
     @Override
-    public @NotNull String getName() {
-        return name;
+    public @NotNull Component getName() {
+        return getOrDefault(FactionDataComponents.MINION_NAME, Component.literal("Minion"));
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(Component name) {
+        this.set(FactionDataComponents.MINION_NAME, name);
     }
 
     public <T> void setAppearanceData(@NonNull AppearanceKey<T> id, @NonNull T data) {
@@ -212,15 +209,15 @@ public abstract class MinionData extends PropertySync implements IMinionData, IA
 
     @Override
     protected void registerProperties() {
+        super.registerProperties();
         this.registerProperty(FIdentifier.mod("health")).simple(10, () -> this.health, h -> this.health = h);
-        this.registerProperty(FIdentifier.mod("name")).simple("Minion", () -> this.name, n -> this.name = n);
         //noinspection Convert2MethodRef
         this.registerProperty(FIdentifier.mod("inventory_size")).simple(getDefaultInventorySize(), () -> this.inventory.getAvailableSize(), x -> this.inventory.setAvailableSize(x));
         this.registerProperty(FIdentifier.mod("task_locked")).simple(false, () -> this.taskLocked, l -> this.taskLocked = l);
-        this.registerProperty(FIdentifier.mod("active_task")).simple(MINION_TASK_CODEC).defaultValue(() -> new IMinionTask.NoDesc<>(FactionMinionTasks.NOTHING.get())).provider(() -> this.activeTaskDesc).clientLoader(x -> {
+        this.registerProperty(FIdentifier.mod("active_task")).simple(ActiveTask.CODEC).defaultValue(() -> ActiveTask.DEFAULT).provider(() -> this.activeTaskDesc).clientLoader(x -> {
             var old = this.activeTaskDesc;
             this.activeTaskDesc = x;
-            return old.getTask().equals(x.getTask());
+            return old.equals(x);
         }).register();
         this.registerProperty(FIdentifier.mod("stats")).subProperty(() -> this.statCollection).register();
     }
@@ -256,10 +253,16 @@ public abstract class MinionData extends PropertySync implements IMinionData, IA
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public <Q extends IMinionTask.IMinionTaskDesc<MinionData>, T extends IMinionTask<Q, ?>> void switchTask(@NotNull T oldTask, IMinionTask.IMinionTaskDesc<MinionData> oldDesc, IMinionTask.@NotNull IMinionTaskDesc<MinionData> newDesc) {
-        oldTask.deactivateTask((Q) oldDesc);
-        this.activeTaskDesc = newDesc;
+    public boolean switchTask(@Nullable Player player, @Nullable MinionEntity<?> minion, @NotNull Holder<IMinionTask<?, ?>> task) {
+        var result = task.value().activateTask(player, minion, this);
+        if (result.successful()) {
+            this.activeTaskDesc.task().value().deactivateTask(this.activeTaskDesc.data());
+            this.activeTaskDesc = new ActiveTask<>(task, result.data());
+            return true;
+        } else if (player != null) {
+            player.sendOverlayMessage(Component.translatable("message.factionapi.minion_task.could_not_activate"));
+        }
+        return false;
     }
 
     public int getRemainingStatPoints() {
@@ -274,4 +277,25 @@ public abstract class MinionData extends PropertySync implements IMinionData, IA
     }
 
     protected abstract Identifier getDataType();
+
+    public record ActiveTask<TState extends IMinionTask.IMinionTaskState>(Holder<? extends IMinionTask<?, TState>> task, TState data) implements IActiveTask<TState> {
+
+        public static final ActiveTask<?> DEFAULT = new ActiveTask<IMinionTask.IMinionTaskState>(FactionMinionTasks.NOTHING, IMinionTask.EmptyState.INSTANCE);
+        public static final Codec<ActiveTask<?>> CODEC = ModRegistries.MINION_TASKS.holderByNameCodec().dispatch("task", ActiveTask::holder, ActiveTask::stateCodec);
+
+        @SuppressWarnings("unchecked")
+        private Holder<IMinionTask<?, ?>> holder() {
+            return (Holder<IMinionTask<?, ?>>) this.task;
+        }
+
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        private static MapCodec<ActiveTask<?>> stateCodec(Holder<IMinionTask<?, ?>> holder) {
+            Holder<IMinionTask<MinionData, IMinionTask.IMinionTaskState>> task = (Holder) holder;
+            Codec<IMinionTask.IMinionTaskState> stateCodec = task.value().stateCodec();
+            if (stateCodec == null) {
+                return MapCodec.unit(() -> new ActiveTask<>(task, null));
+            }
+            return stateCodec.fieldOf("state").xmap(state -> new ActiveTask<>(task, state), ActiveTask::data);
+        }
+    }
 }

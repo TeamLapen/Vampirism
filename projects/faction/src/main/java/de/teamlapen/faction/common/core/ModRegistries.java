@@ -11,7 +11,7 @@ import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.api.factions.skills.ISkillPointProvider;
 import de.teamlapen.faction.api.factions.tasks.*;
 import de.teamlapen.faction.api.world.entities.minion.IMinionEntry;
-import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
+import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
 import de.teamlapen.faction.api.world.entities.player.FactionPlayerBooleanSupplier;
 import de.teamlapen.faction.api.world.entities.player.FactionPlayerConsumer;
 import de.teamlapen.faction.api.world.items.consume.IFactionFoodBehavior;

@@ -6,7 +6,7 @@ import de.teamlapen.faction.api.factions.IFactionEntity;
 import de.teamlapen.faction.api.factions.IFactionPredicate;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.factions.skills.ISkillHandler;
-import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
+import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
 import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
 import de.teamlapen.faction.common.factions.minions.MinionData;
@@ -42,6 +42,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Unit;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -278,11 +279,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     public static class VampireMinionData extends MinionData {
         public static final Identifier ID = VIdentifier.mod("vampire");
 
-        private static final Identifier INVENTORY_STATS_ID = VIdentifier.mod("inventory");
-        private static final Identifier HEALTH_STATS_ID = VIdentifier.mod("health");
-        private static final Identifier STRENGTH_STATS_ID = VIdentifier.mod("strength");
-        private static final Identifier SPEED_STATS_ID = VIdentifier.mod("speed");
-        public static final MinionStat<VampireMinionData> INVENTORY_STATS = new MinionStat<>(INVENTORY_STATS_ID, 2, Component.translatable("gui.vampirism.minion.stats.inventory_level")) {
+        public static final MinionStat<VampireMinionData> INVENTORY_STATS = new MinionStat<>(de.teamlapen.faction.api.FactionDataComponents.MINION_INVENTORY_LEVEL, 2, Component.translatable("gui.vampirism.minion.stats.inventory_level")) {
             @Override
             public void apply(int level, MinionEntity<?> minion, VampireMinionData data) {
                 int size = data.getDefaultInventorySize();
@@ -297,19 +294,19 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
                 return String.valueOf(data.getInventory().getContainerSize());
             }
         };
-        public static final MinionStat<VampireMinionData> HEALTH_STATS = new MinionStat<>(HEALTH_STATS_ID, 3, Component.translatable(Attributes.MAX_HEALTH.value().getDescriptionId())){
+        public static final MinionStat<VampireMinionData> HEALTH_STATS = new MinionStat<>(de.teamlapen.faction.api.FactionDataComponents.MINION_HEALTH_LEVEL, 3, Component.translatable(Attributes.MAX_HEALTH.value().getDescriptionId())){
             @Override
             public String currentValue(MinionEntity<?> minion, MinionData data) {
                 return String.format("%.1f", minion.getAttribute(Attributes.MAX_HEALTH).getBaseValue());
             }
         };
-        public static final MinionStat<VampireMinionData> STRENGTH_STATS = new MinionStat<>(STRENGTH_STATS_ID, 3, Component.translatable(Attributes.ATTACK_DAMAGE.value().getDescriptionId())){
+        public static final MinionStat<VampireMinionData> STRENGTH_STATS = new MinionStat<>(de.teamlapen.faction.api.FactionDataComponents.MINION_STRENGTH_LEVEL, 3, Component.translatable(Attributes.ATTACK_DAMAGE.value().getDescriptionId())){
             @Override
             public String currentValue(MinionEntity<?> minion, MinionData data) {
                 return String.format("%.1f", minion.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue());
             }
         };
-        public static final MinionStat<VampireMinionData> SPEED_STATS = new MinionStat<>(SPEED_STATS_ID, 3, Component.translatable(Attributes.MOVEMENT_SPEED.value().getDescriptionId())){
+        public static final MinionStat<VampireMinionData> SPEED_STATS = new MinionStat<>(de.teamlapen.faction.api.FactionDataComponents.MINION_SPEED_LEVEL, 3, Component.translatable(Attributes.MOVEMENT_SPEED.value().getDescriptionId())){
             @Override
             public String currentValue(MinionEntity<?> minion, MinionData data) {
                 return String.format("%.1f", minion.getAttribute(Attributes.MOVEMENT_SPEED).getBaseValue());
@@ -318,7 +315,6 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
 
         public static final int MAX_LEVEL = 6;
         private int type;
-        private boolean useLordSkin;
         private boolean minionSkin;
         /**
          * Should be between 0 and {@link VampireMinionData#MAX_LEVEL}
@@ -330,7 +326,6 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         public VampireMinionData(String name, int type, boolean useLordSkin, boolean hasIncreasedStats) {
             super(name, 9);
             this.type = type;
-            this.useLordSkin = useLordSkin;
             this.level = 0;
             this.minionSkin = false;
             this.hasIncreasedStats = hasIncreasedStats;
@@ -364,22 +359,15 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
             super.registerProperties();
             registerProperty(VIdentifier.mod("type")).simple(0, () -> type, t -> type = t);
             registerProperty(VIdentifier.mod("level")).simple(0, () -> level, t -> level = t);
-            registerProperty(VIdentifier.mod("use_lord_skin")).simple(false, () -> useLordSkin, t -> useLordSkin = t);
             registerProperty(VIdentifier.mod("minion_skin")).simple(false, () -> minionSkin, t -> minionSkin = t);
-            registerProperty(VIdentifier.mod("has_increased_stats")).simple(false, () -> hasIncreasedStats, t -> hasIncreasedStats = t);
-        }
-
-        @Override
-        public @NotNull MutableComponent getFormattedName() {
-            return super.getFormattedName().withStyle(style -> style.withColor(ModFactions.VAMPIRE.value().getChatColor()));
         }
 
         public int getHealthLevel() {
-            return getStatLevel(HEALTH_STATS_ID);
+            return HEALTH_STATS.currentLevel(this);
         }
 
         public int getInventoryLevel() {
-            return this.getStatLevel(INVENTORY_STATS_ID);
+            return INVENTORY_STATS.currentLevel(this);
         }
 
         public int getLevel() {
@@ -387,11 +375,11 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         public int getSpeedLevel() {
-            return this.getStatLevel(SPEED_STATS_ID);
+            return SPEED_STATS.currentLevel(this);
         }
 
         public int getStrengthLevel() {
-            return getStatLevel(STRENGTH_STATS_ID);
+            return STRENGTH_STATS.currentLevel(this);
         }
 
         @Override
@@ -402,7 +390,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
             } else if (id.equals(AppearanceType)) {
                 int intData = (Integer) data;
                 this.minionSkin = (intData & 0b10) == 0b10;
-                this.useLordSkin = (intData & 0b1) == 1;
+                setUseLordSkin((intData & 0b1) == 1);
             }
         }
 
@@ -419,7 +407,11 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
 
         @Override
         public void setIncreasedStats(boolean hasIncreasedStats) {
-            this.hasIncreasedStats = hasIncreasedStats;
+            if (hasIncreasedStats) {
+                set(de.teamlapen.faction.api.FactionDataComponents.MINION_HAS_INCREASED_STATS, Unit.INSTANCE);
+            } else {
+                remove(de.teamlapen.faction.api.FactionDataComponents.MINION_HAS_INCREASED_STATS.get());
+            }
         }
 
         @Override
@@ -432,11 +424,15 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         public void setUseLordSkin(boolean useLordSkin) {
-            this.useLordSkin = useLordSkin;
+            if (useLordSkin) {
+                set(de.teamlapen.faction.api.FactionDataComponents.MINION_USE_LORD_SKIN, Unit.INSTANCE);
+            } else {
+                remove(de.teamlapen.faction.api.FactionDataComponents.MINION_USE_LORD_SKIN.get());
+            }
         }
 
         public boolean isUsingLordSkin() {
-            return this.useLordSkin;
+            return this.has(de.teamlapen.faction.api.FactionDataComponents.MINION_USE_LORD_SKIN);
         }
     }
 }

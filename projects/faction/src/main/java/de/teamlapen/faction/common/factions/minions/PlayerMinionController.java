@@ -5,11 +5,11 @@ import de.teamlapen.faction.api.factions.IFactionHelper;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
-import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
+import de.teamlapen.faction.api.world.entities.minion.IMinionData;
+import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
 import de.teamlapen.faction.common.config.FactionConfig;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
 import de.teamlapen.faction.common.core.FactionSkills;
-import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.server.commands.arguments.MinionArgument;
 import de.teamlapen.faction.common.util.ModCodecs;
@@ -73,7 +73,6 @@ public class PlayerMinionController implements ValueIOSerializable {
     @NotNull
     private final UUID lordID;
     private int maxMinions;
-    @NotNull
     private Holder<? extends IPlayableFaction<?>> faction;
     @NotNull
     private MinionInfo @NotNull [] minions = new MinionInfo[0];
@@ -86,7 +85,7 @@ public class PlayerMinionController implements ValueIOSerializable {
         this.lordID = lordID;
     }
 
-    public void activateTask(int minionID, @NotNull IMinionTask<?, MinionData> task) {
+    public void activateTask(int minionID, @NotNull IMinionTask<?, ?> task) {
         if (!this.getLordPlayer().map(LivingEntity::isSpectator).orElse(false)) {
             if (minionID >= minions.length) {
                 LOGGER.warn("Trying to activate a task for a non-existent minion {}", minionID);
@@ -460,20 +459,16 @@ public class PlayerMinionController implements ValueIOSerializable {
                     getLordPlayer().ifPresent(player -> player.sendOverlayMessage(Component.translatable("dialogue.factionapi.minion.can_respawn", i.data.getFormattedName())));
                 }
             } else {
-                IMinionTask.IMinionTaskDesc<MinionData> taskDesc = i.data.getCurrentTaskDesc();
+                IMinionTask.IMinionTaskState<MinionData> taskDesc = i.data.getActiveTask();
                 tickTask(taskDesc.getTask(), taskDesc, i);
             }
         }
     }
 
-    private void activateTask(@NotNull MinionInfo info, @NotNull IMinionTask<?, MinionData> task) {
-        @Nullable
-        IMinionTask.IMinionTaskDesc<MinionData> desc = task.activateTask(getLordPlayer().orElse(null), getMinionEntity(info).orElse(null), info.data);
-        if (desc == null) {
-            getLordPlayer().ifPresent(player -> player.sendOverlayMessage(Component.translatable("message.factionapi.minion_task.could_not_activate")));
-        } else {
-            MinionData d = info.data;
-            d.switchTask(d.getCurrentTaskDesc().getTask(), d.getCurrentTaskDesc(), desc);
+    private void activateTask(@NotNull MinionInfo info, @NotNull Holder<IMinionTask<?, ?>> task) {
+        MinionEntity<?> minionEntity = getMinionEntity(info).orElse(null);
+        MinionData data = info.data;
+        if (data.switchTask(getLordPlayer().orElse(null), minionEntity, task)) {
             this.contactMinion(info.minionID, MinionEntity::onTaskChanged);
         }
     }
@@ -530,11 +525,11 @@ public class PlayerMinionController implements ValueIOSerializable {
     }
 
     @SuppressWarnings("unchecked")
-    private <Q extends IMinionTask.IMinionTaskDesc<MinionData>, T extends IMinionTask<Q, MinionData>> void tickTask(@NotNull T task, IMinionTask.IMinionTaskDesc<MinionData> desc, @NotNull MinionInfo info) {
+    private <Q extends IMinionTask.IMinionTaskState> void tickTask(@NotNull IMinionData.IActiveTask<Q> task, @NotNull MinionInfo info) {
         if (info.isActive()) {
-            task.tickActive((Q) desc, () -> getMinionEntity(info).map(m -> m), info.data);
+            task.task().value().tickActive((Q) task.data(), () -> getMinionEntity(info).map(m -> m), info.data);
         } else {
-            task.tickBackground((Q) desc, info.data);
+            task.task().value().tickBackground((Q) task.data(), info.data);
 
         }
     }

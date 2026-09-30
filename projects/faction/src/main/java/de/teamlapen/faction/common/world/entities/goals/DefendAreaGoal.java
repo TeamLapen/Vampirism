@@ -39,10 +39,10 @@ public class DefendAreaGoal extends TargetGoal {
 
     @Override
     public boolean canUse() {
-        return entity.getCurrentTask().filter(task -> task.getTask() == FactionMinionTasks.DEFEND_AREA.get() && ((DefendAreaTask.Desc) task).center != null).map(task -> {
-                    BlockPos newCenter = ((DefendAreaTask.Desc) task).center;
+        return entity.getCurrentTask().filter(task -> task.getTask() == FactionMinionTasks.DEFEND_AREA.get() && ((DefendAreaTask.State) task).center() != null).map(task -> {
+                    BlockPos newCenter = ((DefendAreaTask.State) task).center();
                     if (bb == null || center == null || !center.equals(newCenter)) {
-                        this.bb = new AABB(newCenter).inflate(((DefendAreaTask.Desc) task).distance);
+                        this.bb = new AABB(newCenter).inflate(((DefendAreaTask.State) task).distance());
                         this.center = newCenter;
                     }
 

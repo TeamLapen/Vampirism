@@ -2,7 +2,7 @@ package de.teamlapen.faction.common.advancements.criterion;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
+import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
 import de.teamlapen.faction.common.core.FactionAdvancements;
 import de.teamlapen.faction.common.core.ModRegistries;
 import net.minecraft.advancements.Criterion;

@@ -15,12 +15,14 @@ import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.common.CommonHooks;
+import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -32,10 +34,15 @@ import java.util.stream.Collectors;
 public class SimpleMutableDataComponentMap extends PropertySync implements DataComponentMap {
 
     private Reference2ObjectArrayMap<DataComponentType<?>, Object> map = new Reference2ObjectArrayMap<>();
+    @Nullable
     private final ISyncable syncable;
 
-    public SimpleMutableDataComponentMap(ISyncable syncable) {
+    public SimpleMutableDataComponentMap(@Nullable ISyncable syncable) {
         this.syncable = syncable;
+    }
+
+    public SimpleMutableDataComponentMap() {
+        this(null);
     }
 
     @Override
@@ -46,9 +53,12 @@ public class SimpleMutableDataComponentMap extends PropertySync implements DataC
 
     @Override
     public void sync() {
-        this.syncable.sync();
+        if (this.syncable != null) {
+            this.syncable.sync();
+        }
     }
 
+    @MustBeInvokedByOverriders
     @Override
     protected void registerProperties() {
         this.registerProperty(FIdentifier.mod("data")).map(DataComponentType.VALUE_MAP_CODEC).commonLoader(x -> map = new Reference2ObjectArrayMap<>(x), new CollectionUtil.MapHashComparator<>()).provider(() -> map).register();
@@ -81,9 +91,17 @@ public class SimpleMutableDataComponentMap extends PropertySync implements DataC
         return (T) (value == null ? this.map.remove(type) : this.map.put(type, value));
     }
 
+    public <T> @Nullable T set(Supplier<DataComponentType<T>> type, @Nullable T value) {
+        return set(type.get(), value);
+    }
+
     public <T> @Nullable T remove(DataComponentType<? extends T> type) {
         //noinspection unchecked
         return (T) this.map.remove(type);
+    }
+
+    public <T> @Nullable T remove(Supplier<DataComponentType<? extends T>> type) {
+        return remove(type.get());
     }
 
     public void applyPatch(DataComponentPatch patch) {

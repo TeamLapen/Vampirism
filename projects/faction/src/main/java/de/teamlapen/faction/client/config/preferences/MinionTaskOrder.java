@@ -4,13 +4,13 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
+import de.teamlapen.faction.api.FactionDataComponents;
 import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.IFaction;
-import de.teamlapen.faction.api.factions.actions.IAction;
 import de.teamlapen.faction.api.util.FIdentifier;
-import de.teamlapen.faction.api.world.entities.minion.IFactionMinionTask;
-import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
-import de.teamlapen.faction.api.world.entities.minion.INoGlobalCommandTask;
+import de.teamlapen.faction.api.world.entities.minion.tasks.IFactionMinionTask;
+import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
+import de.teamlapen.faction.api.world.entities.minion.tasks.INoGlobalCommandTask;
 import de.teamlapen.faction.client.gui.screens.SelectMinionTaskRadialScreen;
 import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.faction.common.util.ModCodecs;
@@ -46,7 +46,7 @@ public class MinionTaskOrder extends PreferenceValue<Map<Holder<? extends IFacti
         map.forEach((faction, list) -> list.addAll(SelectMinionTaskRadialScreen.CUSTOM_ENTRIES.values()));
         registryAccess.lookupOrThrow(FactionRegistries.Keys.MINION_TASK)
                 .listElements().forEach(task -> {
-                    map.entrySet().stream().filter(x -> !(task.value() instanceof INoGlobalCommandTask<?, ?>) && (!(task.value() instanceof IFactionMinionTask<?, ?> s) || IFaction.is(x.getKey(), s.getFaction()))).forEach(list -> list.getValue().add(new SelectMinionTaskRadialScreen.Entry(task)));
+                    map.entrySet().stream().filter(x -> task.components().has(FactionDataComponents.MINION_TASK_GLOBAL_COMMAND) && IFaction.is(x.getKey(), task.value().allowedFactions())).forEach(list -> list.getValue().add(new SelectMinionTaskRadialScreen.Entry(task)));
                 });
 
         return map;
@@ -55,8 +55,8 @@ public class MinionTaskOrder extends PreferenceValue<Map<Holder<? extends IFacti
     public List<SelectMinionTaskRadialScreen.Entry> allowedValues(Holder<? extends IFaction<?>> faction) {
         Registry<IMinionTask<?, ?>> registry = registryAccess.lookupOrThrow(FactionRegistries.Keys.MINION_TASK);
         return Stream.concat(registry.listElements()
-                                .filter(x -> !(x.value() instanceof INoGlobalCommandTask<?, ?>))
-                                .filter(x -> !(x.value() instanceof IFactionMinionTask<?, ?> factionTask) || IFaction.is(faction, factionTask.getFaction()))
+                                .filter(x -> x.components().has(FactionDataComponents.MINION_TASK_GLOBAL_COMMAND))
+                                .filter(x -> IFaction.is(faction, x.value().allowedFactions()))
                                 .map(SelectMinionTaskRadialScreen.Entry::new),
                         SelectMinionTaskRadialScreen.CUSTOM_ENTRIES.values().stream())
                 .toList();
@@ -64,7 +64,7 @@ public class MinionTaskOrder extends PreferenceValue<Map<Holder<? extends IFacti
 
     public boolean isAllowed(Holder<? extends IFaction<?>> faction, SelectMinionTaskRadialScreen.Entry task) {
         return SelectMinionTaskRadialScreen.CUSTOM_ENTRIES.containsKey(task.getId()) ||
-                (task.getTask() != null && ((!(task.getTask().value() instanceof INoGlobalCommandTask<?,?>) || (!(task.getTask().value() instanceof IFactionMinionTask<?,?> fac) || IFaction.is(faction, fac.getFaction())))));
+                (task.getTask() != null && task.getTask().components().has(FactionDataComponents.MINION_TASK_GLOBAL_COMMAND) && IFaction.is(faction, task.getTask().value().allowedFactions()));
     }
 
     public <T extends Holder<? extends IFaction<?>>> List<SelectMinionTaskRadialScreen.Entry> getOrder(T faction) {

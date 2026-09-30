@@ -6,8 +6,11 @@ import de.teamlapen.faction.common.factions.minions.MinionData;
 import de.teamlapen.faction.common.factions.minions.MinionEntity;
 import de.teamlapen.faction.common.util.collections.CollectionUtil;
 import de.teamlapen.sync.PropertySync;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.Range;
 
 import java.util.*;
@@ -17,9 +20,9 @@ public abstract class MinionStat<T extends MinionData>  {
 
     private final int maxLevel;
     private final Component description;
-    private final Identifier identifier;
+    private final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> identifier;
 
-    public MinionStat(Identifier identifier, @Range(from = 1, to = Integer.MAX_VALUE) int maxLevel, Component description) {
+    public MinionStat(DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> identifier, @Range(from = 1, to = Integer.MAX_VALUE) int maxLevel, Component description) {
         this.identifier = identifier;
         this.maxLevel = maxLevel;
         this.description = description;
@@ -32,7 +35,8 @@ public abstract class MinionStat<T extends MinionData>  {
     public int getMaxLevel() {
         return maxLevel;
     }
-    public Identifier getIdentifier() {
+
+    public DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> getIdentifier() {
         return identifier;
     }
 
@@ -41,7 +45,7 @@ public abstract class MinionStat<T extends MinionData>  {
     }
 
     public int currentLevel(MinionData minion) {
-        return minion.getStatLevel(this.identifier);
+        return minion.getOrDefault(this.identifier, 0);
     }
 
     public abstract String currentValue(MinionEntity<?> minion, MinionData data);
