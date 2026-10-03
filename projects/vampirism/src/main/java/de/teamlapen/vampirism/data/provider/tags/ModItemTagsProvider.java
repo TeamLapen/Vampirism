@@ -125,6 +125,7 @@ public class ModItemTagsProvider extends BlockTagCopyingItemTagProvider {
         tag(ItemTags.FIRE_ASPECT_ENCHANTABLE).addTag(ModItemTags.HUNTER_AXE);
         tag(ItemTags.MINING_ENCHANTABLE).addTag(ModItemTags.HUNTER_AXE);
         tag(ModItemTags.PURIFIED_GARLIC).add(ModItems.PURIFIED_GARLIC.get());
+        tag(Tags.Items.FOODS_GOLDEN).add(ModItems.GOLDEN_HEART.get()).add(ModItems.ENCHANTED_GOLDEN_HEART.get());
 
         addCompatibilityTags();
     }

@@ -451,6 +451,8 @@ public class ModItems {
     public static final DeferredItem<BlockItem> CHANDELIER_BLACK = fromChandelier(ModBlocks.CHANDELIER_BLACK);
     public static final DeferredItem<BlockItem> VELMORRA_ALTAR = fromBlock(ModBlocks.VELMORRA_ALTAR);
     public static final DeferredItem<BlockItem> CHALICE = fromBlock(ModBlocks.CHALICE);
+    public static final DeferredItem<Item> GOLDEN_HEART = ITEMS.registerSimpleItem("golden_heart", x -> x.factions$factionFood(ModFoods.GOLDEN_HEART, ModConsumables.GOLDEN_HEART));
+    public static final DeferredItem<Item> ENCHANTED_GOLDEN_HEART = ITEMS.registerSimpleItem("enchanted_golden_heart", x -> x.rarity(Rarity.RARE).factions$factionFood(ModFoods.ENCHANTED_GOLDEN_HEART, ModConsumables.ENCHANTED_GOLDEN_HEART).component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true));
 
 
     @SuppressWarnings("unchecked")

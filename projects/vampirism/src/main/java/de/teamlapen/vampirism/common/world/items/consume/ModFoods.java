@@ -14,10 +14,13 @@ public class ModFoods {
     public static final FoodProperties HUMAN_HEART_VAMPIRE = new FoodProperties.Builder().nutrition(20).saturationModifier(1.5F).build();
     public static final FoodProperties WEAK_HUMAN_HEART_HUMAN = new FoodProperties.Builder().nutrition(3).saturationModifier(1f).build();
     public static final FoodProperties WEAK_HUMAN_HEART_VAMPIRE = new FoodProperties.Builder().nutrition(10).saturationModifier(0.9F).build();
+    public static final FoodProperties GOLDEN_HEART_VAMPIRE = new FoodProperties.Builder().nutrition(30).saturationModifier(3F).alwaysEdible().build();
 
     public static final FactionFoodList GARLIC_BREAD = new FactionFoodList(GARLIC_BREAD_HUMAN, hunterFood(GARLIC_BREAD_HUNTER));
     public static final FactionFoodList HUMAN_HEART = new FactionFoodList(HUMAN_HEART_HUMAN, vampireFood(HUMAN_HEART_VAMPIRE));
     public static final FactionFoodList WEAK_HUMAN_HEART = new FactionFoodList(WEAK_HUMAN_HEART_HUMAN, vampireFood(WEAK_HUMAN_HEART_VAMPIRE));
+    public static final FactionFoodList GOLDEN_HEART = new FactionFoodList(HUMAN_HEART_HUMAN, vampireFood(GOLDEN_HEART_VAMPIRE));
+    public static final FactionFoodList ENCHANTED_GOLDEN_HEART = new FactionFoodList(HUMAN_HEART_HUMAN, vampireFood(GOLDEN_HEART_VAMPIRE));
 
     public static FactionFoodEntry vampireFood(FoodProperties foodProperties) {
         return new FactionFoodEntry(VampirismTags.Factions.IS_VAMPIRE, foodProperties, ModFoodBehaviours.VAMPIRE_FOOD);
