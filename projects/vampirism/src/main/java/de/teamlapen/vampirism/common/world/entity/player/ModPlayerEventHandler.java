@@ -270,7 +270,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void isEntityInvulnerable(EntityInvulnerabilityCheckEvent event) {
-        if (event.getEntity() instanceof Player player && VampirePlayer.get(player).getSkillProperties().mist) {
+        if (event.getEntity() instanceof Player player && VampirePlayer.get(player).getSkillProperties().mist && !event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
             event.setInvulnerable(true);
         }
     }
