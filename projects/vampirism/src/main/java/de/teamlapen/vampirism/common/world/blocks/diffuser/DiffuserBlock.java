@@ -141,6 +141,6 @@ public abstract class DiffuserBlock extends BaseContainerBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return createTickerHelper(blockEntityType, this.blockEntityType.get(), DiffuserBlockEntity::serverTick);
+        return level.isClientSide() ? null : createTickerHelper(blockEntityType, this.blockEntityType.get(), DiffuserBlockEntity::serverTick);
     }
 }

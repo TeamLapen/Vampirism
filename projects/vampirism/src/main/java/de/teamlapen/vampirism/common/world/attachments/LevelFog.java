@@ -60,8 +60,10 @@ public class LevelFog implements IFogHandler {
             updateTemporaryArtificialFog(totemPos, null);
         } else {
             Emitter emitter = new Emitter(totemPos, box, false);
-            this.fogAreas.put(totemPos, emitter);
-            this.notifyChange(emitter);
+            if (!emitter.equals(this.fogAreas.get(totemPos))) {
+                this.fogAreas.put(totemPos, emitter);
+                this.notifyChange(emitter);
+            }
         }
     }
 
@@ -72,8 +74,10 @@ public class LevelFog implements IFogHandler {
             this.notifyRemove(totemPos, true);
         } else {
             Emitter emitter = new Emitter(totemPos, box, true);
-            this.tmpFogAreas.put(totemPos, emitter);
-            this.notifyChange(emitter);
+            if (!emitter.equals(this.tmpFogAreas.get(totemPos))) {
+                this.tmpFogAreas.put(totemPos, emitter);
+                this.notifyChange(emitter);
+            }
 
         }
     }
