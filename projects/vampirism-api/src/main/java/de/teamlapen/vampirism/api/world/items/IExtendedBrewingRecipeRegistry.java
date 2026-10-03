@@ -4,7 +4,9 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.level.Level;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,9 +25,10 @@ public interface IExtendedBrewingRecipeRegistry {
      * @param inputIndexes Which positions of the inputs list should be tested
      * @return Whether at least one of the given inputs has an output considering the ingredients
      */
-    boolean canBrew(Level level, NonNullList<ItemStack> inputs, ItemStack ingredient, ItemStack extraIngredient, IExtendedBrewingCapabilities capabilities, int[] inputIndexes);
+    @Nullable
+    BrewingData canBrew(Level level, NonNullList<ItemStack> inputs, ItemStack ingredient, ItemStack extraIngredient, IExtendedBrewingCapabilities capabilities, int[] inputIndexes);
 
-    Optional<Triple<ItemStack, Integer, Integer>> getOutput(Level level, ItemStack bottle, ItemStack ingredient, ItemStack extraIngredient, IExtendedBrewingCapabilities capabilities, boolean onlyExtended);
+    Optional<Pair<ItemStack, BrewingData>> getOutput(Level level, ItemStack bottle, ItemStack ingredient, ItemStack extraIngredient, IExtendedBrewingCapabilities capabilities, boolean onlyExtended);
 
     List<ExtendedPotionMix> getPotionMixes();
 
@@ -80,6 +83,13 @@ public interface IExtendedBrewingRecipeRegistry {
 
         default boolean hasUltimateBrewing() {
             return false;
+        }
+    }
+
+    record BrewingData(boolean efficient, int reagent1Count, int reagent2Count) {
+
+        public BrewingData(ExtendedPotionMix extendedPotionMix) {
+            this(extendedPotionMix.efficient, extendedPotionMix.reagent1Count, extendedPotionMix.reagent2Count);
         }
     }
 

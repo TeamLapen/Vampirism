@@ -81,6 +81,7 @@ public class VaporStillBlockEntity extends BaseContainerBlockEntity implements W
     private int fuel;
     private Item ingredientID = Items.AIR;
     private Item extraIngredientID = Items.AIR;
+    private int maxBrewTime = 0;
 
     protected final ContainerData syncedProperties = new ContainerData() {
         @Override
@@ -88,7 +89,7 @@ public class VaporStillBlockEntity extends BaseContainerBlockEntity implements W
             return switch (index) {
                 case 0 -> brewTime;
                 case 1 -> fuel;
-                case 2 -> getMaxBrewTime();
+                case 2 -> maxBrewTime;
                 default -> 0;
             };
         }
@@ -155,7 +156,8 @@ public class VaporStillBlockEntity extends BaseContainerBlockEntity implements W
             }
         }
 
-        boolean canBrew  = blockEntity.canBrew();
+        var brewData  = blockEntity.canBrew();
+        boolean canBrew = brewData != null;
         boolean isBrewing = blockEntity.brewTime > 0;
 
         if (isBrewing) {
@@ -170,7 +172,7 @@ public class VaporStillBlockEntity extends BaseContainerBlockEntity implements W
             }
         } else if (canBrew && blockEntity.fuel > 0) {
             blockEntity.fuel--;
-            blockEntity.brewTime = blockEntity.getMaxBrewTime();
+            blockEntity.brewTime = blockEntity.maxBrewTime = blockEntity.getMaxBrewTime() * (brewData.efficient() ? 2 : 1);
             blockEntity.ingredientID = blockEntity.brewingItemStacks.get(2).getItem();
             blockEntity.extraIngredientID = blockEntity.brewingItemStacks.get(1).getItem();
             blockEntity.setChanged();
@@ -362,9 +364,10 @@ public class VaporStillBlockEntity extends BaseContainerBlockEntity implements W
         return stack;
     }
 
-    private boolean canBrew() {
+    @Nullable
+    private IExtendedBrewingRecipeRegistry.BrewingData canBrew() {
         ItemStack ingredient = this.brewingItemStacks.get(2);
-        if (ingredient.isEmpty()) return false;
+        if (ingredient.isEmpty()) return null;
         ItemStack extraIngredient = this.brewingItemStacks.get(1);
         int[] outputSlots = this.config.multiTaskBrewing ? OUTPUT_SLOTS_EXTENDED : OUTPUT_SLOTS;
         return VampirismApi.services().extendedBrewingRecipeRegistry().canBrew(this.level, this.brewingItemStacks, ingredient, extraIngredient, this.config, outputSlots);
