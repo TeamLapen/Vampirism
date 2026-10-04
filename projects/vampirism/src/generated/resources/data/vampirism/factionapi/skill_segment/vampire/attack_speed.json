@@ -1,9 +1,9 @@
 {
   "parents": [
-    "vampirism:vampire/advanced_biter"
+    "vampirism:vampire/water_resistance"
   ],
   "skills": [
-    "vampirism:hissing"
+    "vampirism:vampire_attack_speed"
   ],
   "tree": "vampirism:vampire/level"
 }

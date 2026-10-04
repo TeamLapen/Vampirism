@@ -1,0 +1,9 @@
+{
+  "parents": [
+    "vampirism:vampire/water_resistance"
+  ],
+  "skills": [
+    "vampirism:vampire_attack_damage"
+  ],
+  "tree": "vampirism:vampire/level"
+}

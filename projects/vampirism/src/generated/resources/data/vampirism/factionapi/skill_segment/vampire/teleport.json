@@ -1,6 +1,6 @@
 {
   "parents": [
-    "vampirism:vampire/fast_recovery_or_resurrection"
+    "vampirism:vampire/freeze"
   ],
   "skills": [
     "vampirism:teleport"

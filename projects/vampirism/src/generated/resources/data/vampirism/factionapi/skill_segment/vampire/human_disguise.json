@@ -1,6 +1,6 @@
 {
   "parents": [
-    "vampirism:vampire/frugal_vampire"
+    "vampirism:vampire/no_longer_fledgling"
   ],
   "skills": [
     "vampirism:vampire_disguise"

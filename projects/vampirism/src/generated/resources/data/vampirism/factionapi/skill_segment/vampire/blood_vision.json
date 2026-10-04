@@ -1,6 +1,6 @@
 {
   "parents": [
-    "vampirism:vampire/attack_or_movement_speed"
+    "vampirism:vampire/blood_charge"
   ],
   "skills": [
     "vampirism:blood_vision"

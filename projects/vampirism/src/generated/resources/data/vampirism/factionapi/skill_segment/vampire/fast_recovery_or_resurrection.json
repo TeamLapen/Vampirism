@@ -1,6 +1,6 @@
 {
   "parents": [
-    "vampirism:vampire/damage_or_jump"
+    "vampirism:vampire/human_disguise"
   ],
   "skills": [
     "vampirism:neonatal_decrease",

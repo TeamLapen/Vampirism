@@ -53,7 +53,7 @@ public class VampireSkills {
 
     public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> VAMPIRE_RAGE = SKILLS.registerSkill("vampire_rage", props -> new VampireSkill(props.cost(2).withDescription().actionSkill(VampireActions.VAMPIRE_RAGE)));
     public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> ADVANCED_BITER = SKILLS.registerSkill("advanced_biter", props -> new VampireSkill(props.cost(1).withDescription().onEnable(ModConsumer.ENABLE_VAMPIRE_ADVANCED_BITER).onDisable(ModConsumer.DISABLE_VAMPIRE_ADVANCED_BITER)));
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> SWORD_FINISHER = SKILLS.registerSkill("sword_finisher", props -> new VampireSkill(props.cost(2).withDescription(Component.translatable("skill.vampirism.sword_finisher.desc", ConfigComponent.calculateDouble(ModConfig.balance().vsSwordFinisherMaxHealth, 100, ConfigComponent.Operator.MULTIPLY)))));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> SWORD_FINISHER = SKILLS.registerSkill("sword_finisher", props -> new VampireSkill(props.cost(3).withDescription(Component.translatable("skill.vampirism.sword_finisher.desc", ConfigComponent.calculateDouble(ModConfig.balance().vsSwordFinisherMaxHealth, 100, ConfigComponent.Operator.MULTIPLY)))));
     public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> DARK_BLOOD_PROJECTILE = SKILLS.registerSkill("dark_blood_projectile", props -> new VampireSkill(props.cost(2).withDescription().actionSkill(VampireActions.DARK_BLOOD_PROJECTILE)));
     public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> BLOOD_CHARGE = SKILLS.registerSkill("blood_charge", props -> new VampireSkill(props.cost(1).withDescription()));
     public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> FREEZE = SKILLS.registerSkill("freeze", props -> new VampireSkill(props.cost(2).withDescription().actionSkill(VampireActions.FREEZE)));
@@ -67,13 +67,13 @@ public class VampireSkills {
             .attribute(Attributes.ATTACK_DAMAGE, () -> ModConfig.balance().vsSmallAttackDamageModifier.get(), AttributeModifier.Operation.ADD_VALUE)
             .attribute(Attributes.ATTACK_DAMAGE, () -> ModConfig.balance().vsSmallAttackDamageMultiplier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
     public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> VAMPIRE_JUMP = SKILLS.registerSkill("vampire_jump", props -> new VampireSkill(props.cost(2).actionSkill(VampireActions.JUMP_BOOST)));
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> NEONATAL_DECREASE = SKILLS.registerSkill("neonatal_decrease", props -> new VampireSkill(props.cost(2).withDescription().attribute(ModAttributes.NEONATAL_DURATION, () -> ModConfig.balance().vsNeonatalReduction.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> DBNO_DURATION = SKILLS.registerSkill("dbno_duration", props -> new VampireSkill(props.cost(2).withDescription().attribute(ModAttributes.DBNO_DURATION, () -> ModConfig.balance().vsDbnoReduction.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> NEONATAL_DECREASE = SKILLS.registerSkill("neonatal_decrease", props -> new VampireSkill(props.cost(1).withDescription().attribute(ModAttributes.NEONATAL_DURATION, () -> ModConfig.balance().vsNeonatalReduction.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> DBNO_DURATION = SKILLS.registerSkill("dbno_duration", props -> new VampireSkill(props.cost(1).withDescription().attribute(ModAttributes.DBNO_DURATION, () -> ModConfig.balance().vsDbnoReduction.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
     public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> TELEPORT = SKILLS.registerSkill("teleport", props -> new VampireSkill(props.cost(3).withDescription().actionSkill(VampireActions.TELEPORT)));
 
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> SUMMON_BATS = SKILLS.registerSkill("summon_bats", props -> new VampireSkill(props.cost(2).withDescription().actionSkill(VampireActions.SUMMON_BAT)));
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> LESS_SUNDAMAGE = SKILLS.registerSkill("less_sundamage", props -> new VampireSkill(props.cost(3).withDescription().attribute(ModAttributes.SUNDAMAGE, () -> ModConfig.balance().vsSundamageReduction1.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> WATER_RESISTANCE = SKILLS.registerSkill("water_resistance", props -> new VampireSkill(props.cost(2).withDescription().onEnable(ModConsumer.ENABLE_VAMPIRE_WATER_RESISTANCE).onDisable(ModConsumer.DISABLE_VAMPIRE_WATER_RESISTANCE)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> SUMMON_BATS = SKILLS.registerSkill("summon_bats", props -> new VampireSkill(props.cost(1).withDescription().actionSkill(VampireActions.SUMMON_BAT)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> LESS_SUNDAMAGE = SKILLS.registerSkill("less_sundamage", props -> new VampireSkill(props.cost(2).withDescription().attribute(ModAttributes.SUNDAMAGE, () -> ModConfig.balance().vsSundamageReduction1.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> WATER_RESISTANCE = SKILLS.registerSkill("water_resistance", props -> new VampireSkill(props.cost(1).withDescription().onEnable(ModConsumer.ENABLE_VAMPIRE_WATER_RESISTANCE).onDisable(ModConsumer.DISABLE_VAMPIRE_WATER_RESISTANCE)));
     public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> LESS_BLOOD_THIRST = SKILLS.registerSkill("less_blood_thirst", props -> new VampireSkill(props.cost(1).withDescription().attribute(ModAttributes.BLOOD_EXHAUSTION, () -> ModConfig.balance().vsBloodThirstReduction1.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
     public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> VAMPIRE_DISGUISE = SKILLS.registerSkill("vampire_disguise", props -> new VampireSkill(props.cost(1).withDescription().actionSkill(VampireActions.DISGUISE_VAMPIRE)));
     public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> HALF_INVULNERABLE = SKILLS.registerSkill("half_invulnerable", props -> new VampireSkill(props.cost(2).withDescription().actionSkill(VampireActions.HALF_INVULNERABLE)));
@@ -112,7 +112,12 @@ public class VampireSkills {
         public static final ResourceKey<ISkillSegment> KEY_FREEZE = segment("freeze");
 
         public static final ResourceKey<ISkillSegment> KEY_SUNSCREEN = segment("sunscreen");
-        public static final ResourceKey<ISkillSegment> KEY_ATTACK_OR_MOVEMENT_SPEED = segment("attack_or_movement_speed");
+        public static final ResourceKey<ISkillSegment> KEY_ATTACK_SPEED = segment("attack_speed");
+        public static final ResourceKey<ISkillSegment> KEY_DAMAGE = segment("damage");
+        public static final ResourceKey<ISkillSegment> KEY_MOVEMENT_SPEED = segment("movement_speed");
+        public static final ResourceKey<ISkillSegment> KEY_JUMP = segment("jump");
+        public static final ResourceKey<ISkillSegment> KEY_DARK_STALKER = segment("dark_stalker");
+        public static final ResourceKey<ISkillSegment> KEY_TOUGH_SKIN = segment("tough_skin");
         public static final ResourceKey<ISkillSegment> KEY_BLOOD_VISION = segment("blood_vision");
         public static final ResourceKey<ISkillSegment> KEY_GARLIC_BLOOD_VISION = segment("garlic_blood_vision");
         public static final ResourceKey<ISkillSegment> KEY_DAMAGE_OR_JUMP = segment("damage_or_jump");
@@ -121,11 +126,11 @@ public class VampireSkills {
 
         public static final ResourceKey<ISkillSegment> KEY_SUMMON_BATS = segment("summon_bats");
         public static final ResourceKey<ISkillSegment> KEY_HISSING = segment("hissing");
-        public static final ResourceKey<ISkillSegment> KEY_TOUGH_SKIN_OR_WATER_RESISTANCE = segment("tough_skin_or_water_resistance");
+        public static final ResourceKey<ISkillSegment> KEY_WATER_RESISTANCE = segment("water_resistance");
         public static final ResourceKey<ISkillSegment> KEY_FRUGAL_VAMPIRE = segment("frugal_vampire");
         public static final ResourceKey<ISkillSegment> KEY_HUMAN_DISGUISE = segment("human_disguise");
         public static final ResourceKey<ISkillSegment> KEY_DAMAGE_LIMITER = segment("damage_limiter");
-        public static final ResourceKey<ISkillSegment> KEY_INVISIBILITY_OR_DARK_STALKER = segment("invisibility_or_dark_stalker");
+        public static final ResourceKey<ISkillSegment> KEY_INVISIBILITY = segment("invisibility");
 
         // Lord
         public static final ResourceKey<ISkillSegment> KEY_LORD_ROOT = segment("lord_root");
@@ -159,69 +164,79 @@ public class VampireSkills {
             level(KEY_VAMPIRE_RAGE, VAMPIRE_RAGE)
                     .parents(KEY_NO_LONGER_FLEDGLING)
                     .register(context);
-            level(KEY_ADVANCED_BITER, ADVANCED_BITER)
+            level(KEY_FRUGAL_VAMPIRE, LESS_BLOOD_THIRST)
                     .parents(KEY_VAMPIRE_RAGE)
                     .register(context);
-            level(KEY_FINISHER, SWORD_FINISHER)
-                    .parents(KEY_ADVANCED_BITER)
-                    .register(context);
-            level(KEY_DARK_BLOOD_PROJECTILE, DARK_BLOOD_PROJECTILE)
-                    .parents(KEY_FINISHER)
-                    .register(context);
             level(KEY_BLOOD_CHARGE, BLOOD_CHARGE)
-                    .parents(KEY_DARK_BLOOD_PROJECTILE)
-                    .register(context);
-            level(KEY_FREEZE, FREEZE)
-                    .parents(KEY_BLOOD_CHARGE)
-                    .register(context);
-
-            level(KEY_SUNSCREEN, SUNSCREEN)
-                    .parents(KEY_NO_LONGER_FLEDGLING)
-                    .after(KEY_VAMPIRE_RAGE)
-                    .register(context);
-            level(KEY_ATTACK_OR_MOVEMENT_SPEED, VAMPIRE_ATTACK_SPEED, VAMPIRE_SPEED)
-                    .parents(KEY_SUNSCREEN)
+                    .parents(KEY_FRUGAL_VAMPIRE)
                     .register(context);
             level(KEY_BLOOD_VISION, BLOOD_VISION)
-                    .parents(KEY_ATTACK_OR_MOVEMENT_SPEED)
+                    .parents(KEY_BLOOD_CHARGE)
                     .register(context);
             level(KEY_GARLIC_BLOOD_VISION, BLOOD_VISION_GARLIC)
                     .parents(KEY_BLOOD_VISION)
                     .register(context);
-            level(KEY_DAMAGE_OR_JUMP, VAMPIRE_ATTACK_DAMAGE, VAMPIRE_JUMP)
-                    .parents(KEY_BLOOD_VISION)
-                    .after(KEY_GARLIC_BLOOD_VISION)
-                    .register(context);
-            level(KEY_FAST_RECOVERY_OR_RESURRECTION, NEONATAL_DECREASE, DBNO_DURATION)
-                    .parents(KEY_DAMAGE_OR_JUMP)
-                    .register(context);
-            level(KEY_TELEPORT, TELEPORT)
-                    .parents(KEY_FAST_RECOVERY_OR_RESURRECTION)
-                    .register(context);
-
-            level(KEY_SUMMON_BATS, SUMMON_BATS)
-                    .parents(KEY_NO_LONGER_FLEDGLING)
-                    .after(KEY_SUNSCREEN)
-                    .register(context);
-            level(KEY_HISSING, HISSING)
-                    .parents(KEY_SUMMON_BATS)
-                    .register(context);
-            level(KEY_TOUGH_SKIN_OR_WATER_RESISTANCE, LESS_SUNDAMAGE, WATER_RESISTANCE)
-                    .parents(KEY_SUMMON_BATS)
-                    .after(KEY_HISSING)
-                    .register(context);
-            level(KEY_FRUGAL_VAMPIRE, LESS_BLOOD_THIRST)
-                    .parents(KEY_TOUGH_SKIN_OR_WATER_RESISTANCE)
-                    .register(context);
-            level(KEY_HUMAN_DISGUISE, VAMPIRE_DISGUISE)
-                    .parents(KEY_FRUGAL_VAMPIRE)
-                    .register(context);
             level(KEY_DAMAGE_LIMITER, HALF_INVULNERABLE)
-                    .parents(KEY_HUMAN_DISGUISE)
+                    .parents(KEY_BLOOD_VISION)
                     .register(context);
-            level(KEY_INVISIBILITY_OR_DARK_STALKER, VAMPIRE_INVISIBILITY, DARK_STALKER)
+            level(KEY_FINISHER, SWORD_FINISHER)
                     .parents(KEY_DAMAGE_LIMITER)
                     .register(context);
+
+
+            level(KEY_ADVANCED_BITER, ADVANCED_BITER)
+                    .parents(KEY_NO_LONGER_FLEDGLING)
+                    .register(context);
+            level(KEY_HISSING, HISSING)
+                    .parents(KEY_ADVANCED_BITER)
+                    .register(context);
+            level(KEY_WATER_RESISTANCE, WATER_RESISTANCE)
+                    .parents(KEY_ADVANCED_BITER)
+                    .register(context);
+            level(KEY_ATTACK_SPEED, VAMPIRE_ATTACK_SPEED)
+                    .parents(KEY_WATER_RESISTANCE)
+                    .register(context);
+            level(KEY_DAMAGE, VAMPIRE_ATTACK_DAMAGE)
+                    .parents(KEY_WATER_RESISTANCE)
+                    .register(context);
+            level(KEY_TOUGH_SKIN, LESS_SUNDAMAGE)
+                    .parents(KEY_DAMAGE, KEY_ATTACK_SPEED)
+                    .register(context);
+            level(KEY_MOVEMENT_SPEED, VAMPIRE_SPEED)
+                    .parents(KEY_TOUGH_SKIN)
+                    .register(context);
+            level(KEY_JUMP, VAMPIRE_JUMP)
+                    .parents(KEY_TOUGH_SKIN)
+                    .register(context);
+            level(KEY_DARK_STALKER, DARK_STALKER)
+                    .parents(KEY_TOUGH_SKIN)
+                    .register(context);
+            level(KEY_INVISIBILITY, VAMPIRE_INVISIBILITY)
+                    .parents(KEY_DARK_STALKER, KEY_JUMP, KEY_MOVEMENT_SPEED)
+                    .register(context);
+
+            level(KEY_HUMAN_DISGUISE, VAMPIRE_DISGUISE)
+                    .parents(KEY_NO_LONGER_FLEDGLING)
+                    .register(context);
+            level(KEY_SUMMON_BATS, SUMMON_BATS)
+                    .parents(KEY_HUMAN_DISGUISE)
+                    .register(context);
+            level(KEY_SUNSCREEN, SUNSCREEN)
+                    .parents(KEY_SUMMON_BATS)
+                    .register(context);
+            level(KEY_DARK_BLOOD_PROJECTILE, DARK_BLOOD_PROJECTILE)
+                    .parents(KEY_SUNSCREEN)
+                    .register(context);
+            level(KEY_FREEZE, FREEZE)
+                    .parents(KEY_DARK_BLOOD_PROJECTILE)
+                    .register(context);
+            level(KEY_TELEPORT, TELEPORT)
+                    .parents(KEY_FREEZE)
+                    .register(context);
+            level(KEY_FAST_RECOVERY_OR_RESURRECTION, NEONATAL_DECREASE, DBNO_DURATION)
+                    .parents(KEY_HUMAN_DISGUISE)
+                    .register(context);
+
 
             lord(KEY_LORD_ROOT, LORD_ROOT)
                     .register(context);
