@@ -111,7 +111,7 @@
     "minecraft:villager": {
       "handler": {
         "type": "vampirism:special",
-        "converted_type": "vampirism:villager_converted"
+        "converted_type": "vampirism:converted_villager"
       }
     },
     "minecraft:wolf": {
