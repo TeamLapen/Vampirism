@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Range;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -25,7 +26,7 @@ import java.util.function.Supplier;
  */
 public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkill<T> {
 
-    private final Map<Holder<Attribute>, AttributeHolder> attributeModifierMap = new HashMap<>();
+    private final Map<Holder<Attribute>, List<AttributeHolder>> attributeModifierMap = new HashMap<>();
     @Range(from = 0, to = 9)
     private final int skillPointCost;
     private String translationId;
@@ -71,12 +72,12 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
 
 
     public @NotNull DefaultSkill<T> registerAttributeModifier(Holder<Attribute> attribute, double amount, AttributeModifier.@NotNull Operation operation) {
-        this.attributeModifierMap.put(attribute, new AttributeHolder(this, attribute, () -> amount, operation));
-        return this;
+        return registerAttributeModifier(attribute, () -> amount, operation);
     }
 
     public @NotNull DefaultSkill<T> registerAttributeModifier(Holder<Attribute> attribute, @NotNull Supplier<Double> amountSupplier, AttributeModifier.@NotNull Operation operation) {
-        this.attributeModifierMap.put(attribute, new AttributeHolder(this, attribute, amountSupplier, operation));
+        List<AttributeHolder> holders = this.attributeModifierMap.computeIfAbsent(attribute, a -> new ArrayList<>());
+        holders.add(new AttributeHolder(this, attribute, amountSupplier, operation, holders.size()));
         return this;
     }
 
@@ -105,12 +106,13 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
     }
 
     private void applyAttributesModifiersToEntity(@NotNull Player player) {
-        for (Map.Entry<Holder<Attribute>, AttributeHolder> entry : this.attributeModifierMap.entrySet()) {
+        for (Map.Entry<Holder<Attribute>, List<AttributeHolder>> entry : this.attributeModifierMap.entrySet()) {
             AttributeInstance instance = player.getAttribute(entry.getKey());
 
             if (instance != null) {
-                AttributeModifier attributeModifier = entry.getValue().create();
-                instance.addOrReplacePermanentModifier(attributeModifier);
+                for (AttributeHolder holder : entry.getValue()) {
+                    instance.addOrReplacePermanentModifier(holder.create());
+                }
             }
         }
     }
@@ -127,11 +129,13 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
     }
 
     private void removeAttributesModifiersFromEntity(@NotNull Player player) {
-        for (Map.Entry<Holder<Attribute>, AttributeHolder> entry : this.attributeModifierMap.entrySet()) {
+        for (Map.Entry<Holder<Attribute>, List<AttributeHolder>> entry : this.attributeModifierMap.entrySet()) {
             AttributeInstance attribute = player.getAttribute(entry.getKey());
 
             if (attribute != null) {
-                attribute.removeModifier(entry.getValue().getId());
+                for (AttributeHolder holder : entry.getValue()) {
+                    attribute.removeModifier(holder.getId());
+                }
             }
         }
     }
@@ -151,16 +155,22 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T>> implements ISkil
         public final @NotNull Supplier<Double> amountSupplier;
         public final AttributeModifier.@NotNull Operation operation;
         private final ISkill<?> skill;
+        private final int index;
 
-        private AttributeHolder(ISkill<?> skill, Holder<Attribute> attribute, @NotNull Supplier<Double> amountSupplier, AttributeModifier.@NotNull Operation operation) {
+        private AttributeHolder(ISkill<?> skill, Holder<Attribute> attribute, @NotNull Supplier<Double> amountSupplier, AttributeModifier.@NotNull Operation operation, int index) {
             this.attribute = attribute;
             this.amountSupplier = amountSupplier;
             this.operation = operation;
             this.skill = skill;
+            this.index = index;
         }
 
+        /**
+         * The first modifier per attribute uses the skill id, further ones on the same attribute get a suffix to avoid id collisions
+         */
         public ResourceLocation getId() {
-            return VampirismRegistries.SKILL.get().getKey(this.skill);
+            ResourceLocation id = VampirismRegistries.SKILL.get().getKey(this.skill);
+            return this.index == 0 || id == null ? id : id.withSuffix("_" + this.index);
         }
 
         public AttributeModifier create() {
