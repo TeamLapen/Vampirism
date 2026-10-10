@@ -9,6 +9,7 @@ import de.teamlapen.faction.api.registries.factions.DeferredFactionRegister;
 import de.teamlapen.faction.api.world.entities.minion.IMinionEntry;
 import de.teamlapen.faction.api.world.entities.minion.MinionAppearance;
 import de.teamlapen.faction.api.world.entities.minion.MinionEntryProperties;
+import de.teamlapen.faction.api.world.entities.minion.MinionStat;
 import de.teamlapen.faction.api.world.items.RefinementItems;
 import de.teamlapen.faction.common.factions.PlayableFaction;
 import de.teamlapen.faction.common.factions.minions.MinionData;
@@ -69,16 +70,16 @@ public class ModFactions {
             .withProvider((_,x) -> new MinionData(x))
             .withEntityType(ModEntities.VAMPIRE_MINION)
             .withFaction(ModFactions.VAMPIRE)
-            .withMinionStats(MinionData.HEALTH_STATS, MinionData.INVENTORY_STATS, MinionData.STRENGTH_STATS, MinionData.SPEED_STATS)
-            .withMinionAppearances(MinionAppearance.NAME_TYPE, MinionAppearance.SKIN_TYPE)
+            .withMinionStats(MinionStat.HEALTH_STATS, MinionStat.INVENTORY_STATS, MinionStat.STRENGTH_STATS, MinionStat.SPEED_STATS)
+            .withMinionAppearances(MinionAppearance.NAME_TYPE, MinionAppearance.SKIN_TYPE, MinionAppearance.MINION_SKIN)
             .withMaxLevel(5)));
 
     public static final DeferredHolder<IMinionEntry<?>, IMinionEntry<IHunterPlayer>> HUNTER_MINION = MINIONS.register(VampirismFactions.Keys.HUNTER.getPath(), () -> new MinionEntry<>(new MinionEntryProperties<IHunterPlayer>()
             .withProvider((_,x) -> new MinionData(x))
             .withEntityType(ModEntities.HUNTER_MINION)
             .withFaction(ModFactions.HUNTER)
-            .withMinionStats(MinionData.HEALTH_STATS, MinionData.INVENTORY_STATS, MinionData.STRENGTH_STATS, MinionData.SPEED_STATS)
-            .withMinionAppearances(MinionAppearance.NAME_TYPE, MinionAppearance.SKIN_TYPE)
+            .withMinionStats(MinionStat.HEALTH_STATS, MinionStat.INVENTORY_STATS, MinionStat.STRENGTH_STATS, MinionStat.SPEED_STATS)
+            .withMinionAppearances(MinionAppearance.NAME_TYPE, MinionAppearance.SKIN_TYPE, MinionAppearance.MINION_SKIN)
             .withMaxLevel(5)));
 
     static void register(IEventBus bus) {

@@ -19,6 +19,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Unit;
@@ -93,6 +94,12 @@ public class FactionDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> MINION_NAME = retrieveDataComponent(Keys.MINION_NAME);
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> MINION_USE_LORD_SKIN = retrieveDataComponent(Keys.MINION_USE_LORD_SKIN);
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> MINION_USE_MINION_SKIN = retrieveDataComponent(Keys.MINION_USE_MINION_SKIN);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MINION_HEALTH_LEVEL = retrieveDataComponent(Keys.MINION_HEALTH_LEVEL);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MINION_INVENTORY_LEVEL = retrieveDataComponent(Keys.MINION_INVENTORY_LEVEL);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MINION_SPEED_LEVEL = retrieveDataComponent(Keys.MINION_SPEED_LEVEL);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MINION_STRENGTH_LEVEL = retrieveDataComponent(Keys.MINION_STRENGTH_LEVEL);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MINION_RESOURCES_LEVEL = retrieveDataComponent(Keys.MINION_RESOURCES_LEVEL);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MINION_INVENTORY_SLOTS = retrieveDataComponent(Keys.MINION_INVENTORY_SLOTS);
 
 
     //</editor-fold>

@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IFactionEntity;
 import de.teamlapen.faction.api.factions.IFactionPredicate;
+import de.teamlapen.faction.api.world.entities.minion.MinionStat;
 import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
 import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
@@ -221,8 +222,8 @@ public class VampireMinionEntity extends MinionEntity implements IVampire {
     @Override
     public void updateAttributes() {
         float statsMultiplier = this.getMinionData().filter(MinionData::hasIncreasedStats).map(a -> 1.2f).orElse(1f);
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue((BalanceMobProps.mobProps.MINION_MAX_HEALTH + BalanceMobProps.mobProps.MINION_MAX_HEALTH_PL * getMinionData().map(MinionData.HEALTH_STATS::currentLevel).orElse(0)) * statsMultiplier);
-        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue((BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE + BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE_PL * getMinionData().map(MinionData.STRENGTH_STATS::currentLevel).orElse(0)) * statsMultiplier);
-        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue((BalanceMobProps.mobProps.VAMPIRE_SPEED + 0.05 * getMinionData().map(MinionData.SPEED_STATS::currentLevel).orElse(0)) * statsMultiplier);
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue((BalanceMobProps.mobProps.MINION_MAX_HEALTH + BalanceMobProps.mobProps.MINION_MAX_HEALTH_PL * getMinionData().map(MinionStat.HEALTH_STATS::currentLevel).orElse(0)) * statsMultiplier);
+        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue((BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE + BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE_PL * getMinionData().map(MinionStat.STRENGTH_STATS::currentLevel).orElse(0)) * statsMultiplier);
+        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue((BalanceMobProps.mobProps.VAMPIRE_SPEED + 0.05 * getMinionData().map(MinionStat.SPEED_STATS::currentLevel).orElse(0)) * statsMultiplier);
     }
 }
