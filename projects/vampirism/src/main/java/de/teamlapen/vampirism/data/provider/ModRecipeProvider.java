@@ -695,6 +695,13 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 vampireCloak(cloakItem, woolItem);
             }
         });
+        shaped(RecipeCategory.COMBAT, ModItems.RITUAL_KNIFE)
+                .pattern("X")
+                .pattern("Y")
+                .define('X', Items.IRON_INGOT)
+                .define('Y', Items.STICK)
+                .unlockedBy("has_ingor", has(Items.IRON_INGOT))
+                .save(output);
     }
 
     protected void vampireCloak(Item item, Item wool) {
