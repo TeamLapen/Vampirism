@@ -5,6 +5,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.MapCodec;
+import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.api.world.entities.ICustomizationOption;
 import de.teamlapen.faction.api.world.entities.minion.*;
@@ -152,7 +153,11 @@ public class MinionData extends SimpleMutableDataComponentMap implements IMinion
                 entity.getLordOpt().ifPresent(lord -> InventoryHelper.removeItemFromInventory(lord.asEntity().getInventory(), new ItemStack(FactionItems.OBLIVION_POTION.get())));
             }
         });
-        this.minionEntry.minionStats().forEach(x -> remove(x.getIdentifier().get()));
+        this.minionEntry.minionStats().forEach(x -> {
+            x.apply(0, entity, this); // let the stat revert its side effects (e.g. inventory slots)
+            remove(x.getIdentifier().get());
+        });
+        shrinkInventory(entity);
     }
 
     @MustBeInvokedByOverriders
@@ -188,32 +193,21 @@ public class MinionData extends SimpleMutableDataComponentMap implements IMinion
         return this.taskLocked = locked;
     }
 
-//    public void shrinkInventory(@NotNull MinionEntity entity) {
-//        if (!(entity.level() instanceof ServerLevel serverLevel)) return;
-//        Optional<MinionInventory> invOpt = entity.getMinionData().map(MinionData::getInventory);
-//        if (invOpt.isPresent()) {
-//            MinionInventory inv = invOpt.get();
-//            List<ItemStack> stacks = new ArrayList<>();
-//            for (int i = 6 + getDefaultInventorySize(); i < inv.getContainerSize(); ++i) {
-//                ItemStack stack = inv.removeItemNoUpdate(i);
-//                if (!stack.isEmpty()) {
-//                    stacks.add(stack);
-//                }
-//            }
-//            for (ItemStack stack : stacks) {
-//                if (!stack.isEmpty()) {
-//                    inv.addItemStack(stack);
-//                    if (!stack.isEmpty()) {
-//                        entity.getLordOpt().ifPresent(lord -> {
-//                            if (!lord.asEntity().addItem(stack)) {
-//                                entity.spawnAtLocation(serverLevel, stack);
-//                            }
-//                        });
-//                    }
-//                }
-//            }
-//        }
-//    }
+    /**
+     * Moves items from main inventory slots that are no longer available into free slots. Items that do not fit are given to the lord or dropped.
+     */
+    public void shrinkInventory(@NotNull MinionEntity entity) {
+        if (!(entity.level() instanceof ServerLevel serverLevel)) return;
+        for (ItemStack stack : this.inventory.removeUnavailableItems()) {
+            this.inventory.addItemStack(stack);
+            if (!stack.isEmpty()) {
+                Optional<Player> lord = entity.getLordOpt().map(ILordPlayer::asEntity);
+                if (lord.isEmpty() || !lord.get().addItem(stack)) {
+                    entity.spawnAtLocation(serverLevel, stack);
+                }
+            }
+        }
+    }
 
     public boolean switchTask(@Nullable Player player, @Nullable MinionEntity minion, @NotNull Holder<? extends IMinionTask<?>> task) {
         var result = task.value().activateTask(player, minion, this);
@@ -278,6 +272,8 @@ public class MinionData extends SimpleMutableDataComponentMap implements IMinion
     @Override
     protected void onPropertyChanged() {
         super.onPropertyChanged();
+        // inventory size is derived from the data components, so refresh it after load (server) and sync (client)
+        this.inventory.updateFromData(this);
     }
 
     public static void toCompound(MinionData data, ValueOutput output) {

@@ -34,8 +34,15 @@ import java.util.Optional;
 public class MinionContainer extends AbstractInventoryContainer {
 
     public static Optional<MinionContainer> create(int id, @NotNull Inventory playerInventory, @NotNull MinionEntity minionEntity, @NotNull ILordPlayer lord) {
+        return minionEntity.getInventory().flatMap(inv -> create(id, playerInventory, minionEntity, lord, inv.getAvailableSize()));
+    }
+
+    /**
+     * @param extraSlots the server side inventory size. On the client this has to be the value sent with the open packet, so the slot count always matches the server menu
+     */
+    public static Optional<MinionContainer> create(int id, @NotNull Inventory playerInventory, @NotNull MinionEntity minionEntity, @NotNull ILordPlayer lord, int extraSlots) {
         Optional<IMinionInventory> minionInv = minionEntity.getInventory();
-        return minionInv.map(inv -> new MinionContainer(id, playerInventory, lord, minionEntity, inv, inv.getAvailableSize(), createSelectors(minionEntity, inv.getAvailableSize())));
+        return minionInv.map(inv -> new MinionContainer(id, playerInventory, lord, minionEntity, inv, extraSlots, createSelectors(minionEntity, extraSlots)));
     }
 
     @NotNull
@@ -147,12 +154,13 @@ public class MinionContainer extends AbstractInventoryContainer {
         public MinionContainer create(int windowId, @NotNull Inventory inv, @Nullable RegistryFriendlyByteBuf data) {
             if (data == null) return null;
             int entityId = data.readVarInt(); //Anything read here has to be written to buffer in open method (in MinionEntity)
+            int extraSlots = data.readVarInt();
             @SuppressWarnings("ConstantValue") Entity e = inv.player.level() == null ? null : inv.player.level().getEntity(entityId);
             if (!(e instanceof MinionEntity minion)) {
                 throw new IllegalStateException("Cannot find related minion entity " + entityId);
             }
             ILordPlayer player = FactionPlayerHandler.get(inv.player).getPlayerLord().orElseThrow();
-            return MinionContainer.create(windowId, inv, minion, player).orElseThrow(() -> new IllegalStateException("Could not create container for minion " + minion.getId() + ". Data is not available"));
+            return MinionContainer.create(windowId, inv, minion, player, extraSlots).orElseThrow(() -> new IllegalStateException("Could not create container for minion " + minion.getId() + ". Data is not available"));
         }
     }
 

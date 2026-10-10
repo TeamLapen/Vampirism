@@ -532,7 +532,10 @@ public abstract class MinionEntity extends PathfinderMob implements ValueIOSeria
     protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (isLord(player)) {
             if (player instanceof ServerPlayer) {
-                player.openMenu(new SimpleMenuProvider((id, playerInventory, _) -> MinionContainer.create(id, playerInventory, this, getLord().orElseThrow()).orElse(null), Component.translatable("gui.factionapi.minion.name").append(this.getMinionData().map(MinionData::getName).orElse("Minion"))), buf -> buf.writeVarInt(this.getId()));
+                player.openMenu(new SimpleMenuProvider((id, playerInventory, _) -> MinionContainer.create(id, playerInventory, this, getLord().orElseThrow()).orElse(null), Component.translatable("gui.factionapi.minion.name").append(this.getMinionData().map(MinionData::getName).orElse("Minion"))), buf -> {
+                    buf.writeVarInt(this.getId());
+                    buf.writeVarInt(this.getInventory().map(IMinionInventory::getAvailableSize).orElse(9));
+                });
             }
             return InteractionResult.SUCCESS;
         }
