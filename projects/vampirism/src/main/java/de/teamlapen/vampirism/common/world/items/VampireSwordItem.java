@@ -65,7 +65,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IIt
     private final float trainedAttackSpeedIncrease;
 
     public VampireSwordItem(ToolMaterial material, IItemWithTier.Tier tier, int attackDamage, float trainSpeedIncrease, Item.Properties prop) {
-        super(material, attackDamage, material.speed(), FactionRestriction.builder(VampirismTags.Factions.IS_VAMPIRE).minLevel(getMinLevel(tier)).apply(prop).component(ModDataComponents.BLOOD_CHARGED, new BloodCharged(0)));
+        super(material, attackDamage, material.speed(), FactionRestriction.builder(VampirismTags.Factions.IS_VAMPIRE).minLevel(getMinLevel(tier)).apply(prop).component(ModDataComponents.BLOOD_CHARGED, new BloodCharged(0)), 0, false);
         this.tier = tier;
         this.trainedAttackSpeedIncrease = trainSpeedIncrease;
     }
@@ -73,12 +73,6 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IIt
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         tooltipComponents.accept(stack.getOrDefault(ModDataComponents.PURE_LEVEL, PureLevel.EMPTY).getPurityTooltip());
-        float charged = getChargePercentage(stack);
-        float trained = getTrained(stack, FactionsMod.proxy.getClientPlayer());
-        tooltipComponents.accept(Component.translatable("tooltip.vampirism.sword_charged").append(Component.literal(" " + ((int) Math.ceil(charged * 100f)) + "%")).withStyle(ChatFormatting.DARK_AQUA));
-        if (trained < 1) {
-            tooltipComponents.accept(Component.translatable("tooltip.vampirism.sword_trained").append(Component.literal(" " + ((int) Math.ceil(trained * 100f)) + "%")).withStyle(ChatFormatting.DARK_AQUA));
-        }
     }
 
     @Override
