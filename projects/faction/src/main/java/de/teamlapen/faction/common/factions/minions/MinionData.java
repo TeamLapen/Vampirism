@@ -6,19 +6,18 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.faction.api.util.FIdentifier;
-import de.teamlapen.faction.api.world.entities.minion.IMinionData;
-import de.teamlapen.faction.api.world.entities.minion.IMinionEntity;
-import de.teamlapen.faction.api.world.entities.minion.IMinionEntry;
+import de.teamlapen.faction.api.world.entities.ICustomizationOption;
+import de.teamlapen.faction.api.world.entities.minion.*;
 import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
 import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.core.FactionItems;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
 import de.teamlapen.faction.common.core.ModRegistries;
-import de.teamlapen.faction.api.world.entities.minion.MinionStat;
 import de.teamlapen.faction.common.world.entities.EntityProperties;
 import de.teamlapen.faction.common.world.entities.appearance.AppearanceKey;
 import de.teamlapen.faction.common.world.entities.appearance.AppearancePacket;
 import de.teamlapen.faction.common.world.entities.appearance.IAppearanceHolder;
+import de.teamlapen.faction.common.world.entities.customization.ICustomizable;
 import de.teamlapen.faction.common.world.inventory.InventoryHelper;
 import de.teamlapen.sync.SimpleMutableDataComponentMap;
 import net.minecraft.core.Holder;
@@ -47,11 +46,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class MinionData extends SimpleMutableDataComponentMap implements IMinionData, IAppearanceHolder, DataComponentMap {
-
-    public static final AppearanceKey<Integer> AppearanceType = AppearancePacket.register(FIdentifier.mod("type"), ByteBufCodecs.VAR_INT);
-    public static final AppearanceKey<Integer> SkinType = AppearancePacket.register(FIdentifier.mod("skin"), ByteBufCodecs.VAR_INT);
-    public static final AppearanceKey<String> NameType = AppearancePacket.register(FIdentifier.mod("name"), ByteBufCodecs.STRING_UTF8);
+public class MinionData extends SimpleMutableDataComponentMap implements IMinionData, DataComponentMap {
 
     public static final int MAX_NAME_LENGTH = 15;
     protected static final Logger LOGGER = LogManager.getLogger();
@@ -86,11 +81,6 @@ public class MinionData extends SimpleMutableDataComponentMap implements IMinion
 
     public int getMaxLevel() {
         return getOrDefault(FactionDataComponents.MINION_MAX_LEVEL, 0);
-    }
-
-    @Override
-    public <T> void setAppearanceData(AppearanceKey<T> key, T data) {
-
     }
 
     @Override
@@ -322,6 +312,11 @@ public class MinionData extends SimpleMutableDataComponentMap implements IMinion
             data.deserialize(input);
             return data;
         });
+    }
+
+    @Override
+    protected void onPropertyChanged() {
+        super.onPropertyChanged();
     }
 
     public static void toCompound(MinionData data, ValueOutput output) {

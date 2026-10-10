@@ -3,9 +3,11 @@ package de.teamlapen.faction.common.factions.minions;
 import de.teamlapen.faction.api.factions.IFactionExtensionGetter;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.util.FIdentifier;
+import de.teamlapen.faction.api.world.entities.ICustomizationOption;
 import de.teamlapen.faction.api.world.entities.minion.IMinionData;
 import de.teamlapen.faction.api.world.entities.minion.IMinionEntity;
 import de.teamlapen.faction.api.world.entities.minion.IMinionInventory;
+import de.teamlapen.faction.api.world.entities.minion.MinionAppearance;
 import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
 import de.teamlapen.faction.common.Permissions;
 import de.teamlapen.faction.common.components.FactionRestriction;
@@ -16,6 +18,8 @@ import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.world.attachments.LevelDamage;
 import de.teamlapen.faction.common.world.entities.EntitySyncHolder;
 import de.teamlapen.faction.common.world.entities.ForceLookEntityGoal;
+import de.teamlapen.faction.common.world.entities.customization.CustomizationData;
+import de.teamlapen.faction.common.world.entities.customization.ICustomizable;
 import de.teamlapen.faction.common.world.entities.goals.*;
 import de.teamlapen.faction.common.world.inventory.MinionContainer;
 import de.teamlapen.sync.PropertySync;
@@ -67,7 +71,7 @@ import org.jspecify.annotations.NonNull;
 import java.util.*;
 import java.util.function.Predicate;
 
-public abstract class MinionEntity extends PathfinderMob implements ValueIOSerializable, ForceLookEntityGoal.TaskOwner, IMinionEntity, IEntityWithComplexSpawn, EntitySyncHolder.ISyncHolder<MinionData> {
+public abstract class MinionEntity extends PathfinderMob implements ValueIOSerializable, ForceLookEntityGoal.TaskOwner, IMinionEntity, ICustomizable, IEntityWithComplexSpawn, EntitySyncHolder.ISyncHolder<MinionData> {
 
     protected static final EntityDataAccessor<Optional<UUID>> LORD_ID = SynchedEntityData.defineId(MinionEntity.class, FactionEntities.OPTIONAL_UUID.get());
     private final static Logger LOGGER = LogManager.getLogger();
@@ -153,6 +157,23 @@ public abstract class MinionEntity extends PathfinderMob implements ValueIOSeria
 
     public void updateAttributes() {
 
+    }
+
+    @Override
+    public boolean apply(@NonNull CustomizationData data) {
+        if (ICustomizable.super.apply(data)) {
+            sync();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public <T> boolean apply(@NonNull ICustomizationOption<T> options, @NonNull T value) {
+        if (options instanceof MinionAppearance<T> minionAppearance) {
+            return getData().map(minionData -> !Objects.equals(minionAppearance.setValue(this, minionData, value), value)).orElse(false);
+        }
+        return false;
     }
 
     @Override

@@ -32,7 +32,6 @@ public class ModPacketDispatcher {
         registrar.playToClient(ClientboundVelmorraCollapsePacket.TYPE, ClientboundVelmorraCollapsePacket.CODEC, (msg, context) -> ClientPayloadHandler.handleVelmorraCollapsePacket(msg, context));
 
         registrar.playToServer(ServerboundAppearancePacket.TYPE, ServerboundAppearancePacket.CODEC, (msg, context) -> ServerPayloadHandler.handleAppearancePacket(msg, context));
-        registrar.playToServer(ServerboundStartFeedingPacket.TYPE, ServerboundStartFeedingPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleStartFeedingPacket(msg, context));
         registrar.playToServer(ServerboundNameItemPacket.TYPE, ServerboundNameItemPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleNameItemPacket(msg, context));
         registrar.playToServer(ServerboundSelectAmmoTypePacket.TYPE, ServerboundSelectAmmoTypePacket.CODEC, (msg, context) -> ServerPayloadHandler.handleSelectAmmoTypePacket(msg, context));
         registrar.playToServer(ServerboundSetVampireBeaconPacket.TYPE, ServerboundSetVampireBeaconPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleSetVampireBeaconPacket(msg, context));

@@ -23,6 +23,7 @@ public class MinionEntryProperties<T extends IFactionPlayer<T>> {
     @Nullable
     private Holder<? extends IPlayableFaction<T>> faction;
     private final List<MinionStat> minionStats = new ArrayList<>();
+    private final List<MinionAppearance<?>> minionAppearances = new ArrayList<>();
 
     public MinionEntryProperties<T> withProvider(BiFunction<T, IMinionEntry<T>, IMinionData> dataProvider) {
         this.dataProvider = dataProvider;
@@ -44,6 +45,11 @@ public class MinionEntryProperties<T extends IFactionPlayer<T>> {
         return this;
     }
 
+    public MinionEntryProperties<T> withMinionAppearances(MinionAppearance<?>... minionAppearances) {
+        this.minionAppearances.addAll(Arrays.asList(minionAppearances));
+        return this;
+    }
+
     public BiFunction<T, IMinionEntry<T>, IMinionData> getDataProvider() {
         return Objects.requireNonNull(this.dataProvider);
     }
@@ -58,5 +64,8 @@ public class MinionEntryProperties<T extends IFactionPlayer<T>> {
 
     public List<MinionStat> getMinionStats() {
         return List.copyOf(this.minionStats);
+    }
+    public List<MinionAppearance<?>> getMinionAppearances() {
+        return List.copyOf(this.minionAppearances);
     }
 }

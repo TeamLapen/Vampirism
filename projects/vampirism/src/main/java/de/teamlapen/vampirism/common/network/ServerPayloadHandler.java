@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.common.network;
 
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.minions.MinionEntity;
+import de.teamlapen.faction.common.world.entities.customization.ICustomizable;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IDraculaPlayer;
 import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
 import de.teamlapen.vampirism.common.network.packets.server.*;
@@ -29,11 +30,6 @@ public class ServerPayloadHandler {
                 VampirePlayer vampirePlayer = VampirePlayer.get(player);
                 msg.data().data().forEach((k, v) -> vampirePlayer.setAppearanceData((de.teamlapen.faction.common.world.entities.appearance.AppearanceKey) k, v));
                 vampirePlayer.sync();
-            } else if (entity1 instanceof MinionEntity minion) {
-                minion.getMinionData().ifPresent(minionData -> {
-                    msg.data().data().forEach((k, v) -> minionData.setAppearanceData((de.teamlapen.faction.common.world.entities.appearance.AppearanceKey) k, v));
-                    minion.sync();
-                });
             }
         });
     }

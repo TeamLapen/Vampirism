@@ -1,4 +1,4 @@
-package de.teamlapen.faction.common.network.packets.server;
+package de.teamlapen.faction.common.network.packets.client;
 
 import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.actions.IAction;

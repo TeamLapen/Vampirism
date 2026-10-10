@@ -1,14 +1,15 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import de.teamlapen.faction.common.world.entities.appearance.AppearanceKey;
-import de.teamlapen.faction.common.world.entities.appearance.AppearancePacket;
+import de.teamlapen.faction.api.world.entities.minion.IMinionData;
+import de.teamlapen.faction.api.world.entities.minion.MinionAppearance;
+import de.teamlapen.faction.common.network.packets.server.ServerboundCustomizationPacket;
+import de.teamlapen.faction.common.world.entities.customization.CustomizationData;
 import de.teamlapen.gui.components.DropdownWidget;
 import de.teamlapen.faction.client.gui.screens.AppearanceScreen;
 import de.teamlapen.faction.client.gui.screens.ILastScreenProvider;
 import de.teamlapen.faction.common.factions.minions.MinionData;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.renderer.entities.HunterMinionRenderer;
-import de.teamlapen.vampirism.common.network.packets.server.ServerboundAppearancePacket;
 import de.teamlapen.vampirism.common.world.entity.minion.HunterMinionEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Checkbox;
@@ -16,10 +17,7 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.layouts.LayoutElement;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.IntStream;
 
 public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionEntity> {
@@ -32,8 +30,10 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
     private int normalSkinCount;
     private int minionSkinCount;
     private String minionName = "";
+    private final IMinionData data;
 
     public HunterMinionAppearanceScreen(HunterMinionEntity minion, ILastScreenProvider backScreen) {
+        this.data = minion.getData().orElseThrow();
         super(NAME, minion, backScreen);
     }
 
@@ -43,28 +43,30 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
         if (name.isEmpty()) {
             name = Component.translatable("gui.vampirism.minion_appearance.minion").toString() + entity.getMinionId().orElse(0);
         }
-        Map<AppearanceKey<?>, Object> map = new HashMap<>();
-        map.put(MinionData.NameType, name);
-        map.put(MinionData.SkinType, this.skinType);
-        map.put(MinionData.AppearanceType, (isMinionSpecificSkin ? 0b10 : 0b0) | (useLordSkin ? 0b1 : 0b0));
-        VampirismMod.proxy.sendToServer(new ServerboundAppearancePacket(this.entity.getId(), new AppearancePacket(map)));
+        VampirismMod.proxy.sendToServer(new ServerboundCustomizationPacket(this.entity.getId(), CustomizationData
+                .with(MinionAppearance.NAME_TYPE, name)
+                .with(MinionAppearance.SKIN_TYPE, this.skinType)
+                .with(MinionAppearance.MINION_SKIN,  this.isMinionSpecificSkin)
+                .with(MinionAppearance.LORD_SKIN, this.useLordSkin)));
         super.removed();
     }
 
     @Override
     protected void init() {
-        this.minionName = this.entity.getMinionData().map(MinionData::getName).orElse("");
         this.normalSkinCount = ((HunterMinionRenderer) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(this.entity)).getHunterTextureCount();
         this.minionSkinCount = ((HunterMinionRenderer) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(this.entity)).getMinionSpecificTextureCount(); //Can be 0
-        this.isMinionSpecificSkin = this.entity.hasMinionSpecificSkin();
-        this.skinType = this.entity.getHunterType();
+
+        this.minionName = MinionAppearance.NAME_TYPE.currentValue(this.entity, this.data);
+        this.isMinionSpecificSkin = MinionAppearance.MINION_SKIN.currentValue(this.entity, this.data);
+        this.skinType = MinionAppearance.SKIN_TYPE.currentValue(this.entity, this.data);
+        this.useLordSkin =MinionAppearance.LORD_SKIN.currentValue(this.entity, this.data);
+
         if (this.isMinionSpecificSkin && this.minionSkinCount > 0) {
             this.skinType = this.skinType % this.minionSkinCount;
         } else {
             this.skinType = this.skinType % this.normalSkinCount;
             this.isMinionSpecificSkin = false; //If this.isMinionSpecificSkin && this.minionSkinCount==0
         }
-        this.useLordSkin = this.entity.shouldRenderLordSkin();
 
         super.init();
     }
@@ -97,7 +99,7 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
 
         vertical.addChild(Checkbox.builder(Component.translatable("gui.vampirism.minion_appearance.use_lord_skin"), this.font).selected(useLordSkin).onValueChange((checkBox, selected) -> {
             useLordSkin = selected;
-            entity.setUseLordSkin(selected);
+            MinionAppearance.LORD_SKIN.setValue(entity, data, selected);
         }).build());
 
         return vertical;
@@ -105,21 +107,24 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
 
     private void onNameChanged(String newName) {
         this.minionName = newName;
-        this.entity.changeMinionName(this.minionName);
+        MinionAppearance.NAME_TYPE.setValue(this.entity, this.data, minionName);
     }
 
     private void previewSkin(int type, boolean hovered) {
         boolean minionSpecific = type >= normalSkinCount;
         if (hovered) {
-            this.entity.setHunterType(type, minionSpecific);
+            MinionAppearance.SKIN_TYPE.setValue(entity, data, type);
+            MinionAppearance.MINION_SKIN.setValue(entity, data, minionSpecific);
         } else {
-            if (this.entity.getHunterType() == type && this.entity.hasMinionSpecificSkin() == minionSpecific) {
-                this.entity.setHunterType(this.skinType, this.isMinionSpecificSkin);
+            if (MinionAppearance.SKIN_TYPE.currentValue(this.entity, this.data) == type && MinionAppearance.MINION_SKIN.currentValue(this.entity, this.data) == minionSpecific) {
+                MinionAppearance.SKIN_TYPE.setValue(this.entity, this.data, this.skinType);
+                MinionAppearance.MINION_SKIN.setValue(this.entity, this.data, this.isMinionSpecificSkin);
             }
         }
     }
     private void skin(int type) {
         boolean minionSpecific = type >= normalSkinCount;
-        this.entity.setHunterType(this.skinType = type, this.isMinionSpecificSkin = minionSpecific);
+        MinionAppearance.SKIN_TYPE.setValue(entity, data, this.skinType = type);
+        MinionAppearance.MINION_SKIN.setValue(entity, data, this.isMinionSpecificSkin = minionSpecific);
     }
 }

@@ -2,23 +2,15 @@ package de.teamlapen.faction.common.server.commands.minion;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import de.teamlapen.faction.api.FactionRegistries;
-import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
-import de.teamlapen.faction.api.factions.lord.IMinionEntryBuilder;
-import de.teamlapen.faction.api.world.entities.ICustomizationHolder;
-import de.teamlapen.faction.api.world.entities.minion.IMinionData;
-import de.teamlapen.faction.api.world.entities.minion.IMinionEntity;
 import de.teamlapen.faction.api.world.entities.minion.IMinionEntry;
-import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.minions.MinionData;
-import de.teamlapen.faction.common.factions.minions.MinionEntity;
 import de.teamlapen.faction.common.factions.minions.MinionWorldData;
 import de.teamlapen.faction.common.factions.minions.PlayerMinionController;
 import de.teamlapen.faction.common.server.commands.BasicCommand;
@@ -29,13 +21,9 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 
 
 public class MinionCommand extends BasicCommand {

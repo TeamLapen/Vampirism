@@ -5,7 +5,7 @@ import de.teamlapen.faction.client.FactionsClientMod;
 import de.teamlapen.faction.common.config.FactionConfig;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.network.packets.client.*;
-import de.teamlapen.faction.common.network.packets.server.ClientboundActionBindingPacket;
+import de.teamlapen.faction.common.network.packets.client.ClientboundActionBindingPacket;
 import de.teamlapen.faction.common.network.packets.server.ServerboundSelectMinionTaskPacket;
 import de.teamlapen.faction.common.world.IEventReceiver;
 import de.teamlapen.faction.common.world.inventory.FactionMenu;

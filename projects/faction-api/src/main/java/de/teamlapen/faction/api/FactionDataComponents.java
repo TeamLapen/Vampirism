@@ -87,6 +87,16 @@ public class FactionDataComponents {
 
     //</editor-fold>
 
+    //<editor-fold desc="Minion">
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MINION_SKIN = retrieveDataComponent(Keys.MINION_SKIN);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> MINION_NAME = retrieveDataComponent(Keys.MINION_NAME);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> MINION_USE_LORD_SKIN = retrieveDataComponent(Keys.MINION_USE_LORD_SKIN);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> MINION_USE_MINION_SKIN = retrieveDataComponent(Keys.MINION_USE_MINION_SKIN);
+
+
+    //</editor-fold>
+
     public static class Keys {
 
         public static final Identifier FACTION_COLOR = FIdentifier.mod("faction_color");
@@ -124,7 +134,9 @@ public class FactionDataComponents {
         public static final Identifier MINION_MAX_LEVEL = FIdentifier.mod("minion_max_level");
         public static final Identifier MINION_NAME = FIdentifier.mod("minion_name");
         public static final Identifier MINION_USE_LORD_SKIN = FIdentifier.mod("minion_use_lord_skin");
+        public static final Identifier MINION_USE_MINION_SKIN = FIdentifier.mod("minion_use_minion_skin");
         public static final Identifier MINION_HAS_INCREASED_STATS = FIdentifier.mod("minion_has_increased_stats");
+        public static final Identifier MINION_SKIN = FIdentifier.mod("minion_skin");
         public static final Identifier MINION_HEALTH_LEVEL = FIdentifier.mod("minion_health_level");
         public static final Identifier MINION_INVENTORY_LEVEL = FIdentifier.mod("minion_inventory_level");
         public static final Identifier MINION_SPEED_LEVEL = FIdentifier.mod("minion_speed_level");
