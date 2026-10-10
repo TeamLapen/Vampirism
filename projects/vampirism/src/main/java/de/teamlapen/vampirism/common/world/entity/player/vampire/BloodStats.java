@@ -13,6 +13,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodConstants;
 import net.minecraft.world.food.FoodData;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.level.gamerules.GameRules;
@@ -23,6 +24,9 @@ import org.jetbrains.annotations.Nullable;
  * Handles VP's blood stats. Very similar to {@link FoodData}
  */
 public class BloodStats extends PropertySync implements IBloodStats, BloodResourceHandler {
+    private static final int SATURATION_CAP_FACTOR = 4;
+    private static final float MAX_EXHAUSTION = 40F;
+
     private final VampirePlayer factionPlayer;
     private final Player player;
     private int maxBlood = 20;
@@ -97,11 +101,15 @@ public class BloodStats extends PropertySync implements IBloodStats, BloodResour
         addExhaustion(exhaustion);
         this.prevBloodLevel = bloodLevel;
         float bloodExhaustionGate = player.level().getBiome(player.blockPosition()).is(ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME) ? 6f : 4f;
-        if (this.bloodExhaustionLevel > bloodExhaustionGate) {
-            this.bloodExhaustionLevel -= bloodExhaustionGate;
-            if (bloodSaturationLevel > 0) {
+        if (bloodSaturationLevel > 0) {
+            float saturationGate = Math.min(bloodExhaustionGate * Math.max(1F, (float) player.getAttributeValue(ModAttributes.BLOOD_EXHAUSTION)), MAX_EXHAUSTION / 2F);
+            if (this.bloodExhaustionLevel > saturationGate) {
+                this.bloodExhaustionLevel -= saturationGate;
                 bloodSaturationLevel = Math.max(bloodSaturationLevel - 1F, 0F);
-            } else if (enumDifficulty != Difficulty.PEACEFUL || ModConfig.balance().vpBloodUsagePeaceful.get()) {
+            }
+        } else if (this.bloodExhaustionLevel > bloodExhaustionGate) {
+            this.bloodExhaustionLevel -= bloodExhaustionGate;
+            if (enumDifficulty != Difficulty.PEACEFUL || ModConfig.balance().vpBloodUsagePeaceful.get()) {
                 this.bloodLevel = Math.max(bloodLevel - 1, 0);
             }
         }
@@ -153,7 +161,7 @@ public class BloodStats extends PropertySync implements IBloodStats, BloodResour
     public int addBlood(int amount, float saturationModifier) {
         int add = Math.min(amount, maxBlood - bloodLevel);
         bloodLevel += add;
-        bloodSaturationLevel = Math.min(this.bloodSaturationLevel + (float) add * saturationModifier * 2.0F, (float) bloodLevel);
+        bloodSaturationLevel = Math.min(this.bloodSaturationLevel + FoodConstants.saturationByModifier(amount, saturationModifier), (float) (maxBlood * SATURATION_CAP_FACTOR));
         changed = true;
         return amount - add;
     }
@@ -174,11 +182,11 @@ public class BloodStats extends PropertySync implements IBloodStats, BloodResour
         if (!ignoreModifier) {
             amount *= (float) player.getAttributeValue(ModAttributes.BLOOD_EXHAUSTION);
         }
-        this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount, 40F);
+        this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount, MAX_EXHAUSTION);
     }
 
     public void eat(FoodProperties foodProperties) {
-        this.addBlood(foodProperties.nutrition(), foodProperties.saturation());
+        this.addBlood(foodProperties.nutrition(), IBloodStats.saturationModifier(foodProperties));
     }
 
     @Override

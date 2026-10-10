@@ -329,7 +329,9 @@ public class ModItemModelGenerators extends ItemModelGenerators {
                 ModItems.QUARREL_HEAVY,
                 ModItems.QUARREL_CLIP,
                 ModItems.HEAVY_QUARREL_CLIP,
-                ModItems.SOVEREIGN_BLOOD
+                ModItems.SOVEREIGN_BLOOD,
+                ModItems.GOLDEN_HEART,
+                ModItems.ENCHANTED_GOLDEN_HEART
                 ).map(DeferredItem::asItem);
     }
 

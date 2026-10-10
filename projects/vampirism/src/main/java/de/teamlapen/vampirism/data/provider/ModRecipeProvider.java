@@ -589,6 +589,14 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .requires(ModItems.OBI_BELT)
                 .unlockedBy("has_obi_belt", has(ModItems.OBI_BELT))
                 .save(output, modString("leather_from_obi_belt"));
+        shaped(RecipeCategory.FOOD, ModItems.GOLDEN_HEART)
+                .define('#', Items.GOLD_INGOT)
+                .define('X', ModItems.HUMAN_HEART.get())
+                .pattern("###")
+                .pattern("#X#")
+                .pattern("###")
+                .unlockedBy("has_gold_ingot", this.has(Items.GOLD_INGOT))
+                .save(this.output);
     }
 
     private void recipesToolsAndArmor() {
