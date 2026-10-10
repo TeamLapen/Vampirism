@@ -31,7 +31,7 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
     private boolean isMinionSpecificSkin;
     private int normalSkinCount;
     private int minionSkinCount;
-    private String minionName;
+    private String minionName = "";
 
     public HunterMinionAppearanceScreen(HunterMinionEntity minion, ILastScreenProvider backScreen) {
         super(NAME, minion, backScreen);
@@ -105,7 +105,7 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
 
     private void onNameChanged(String newName) {
         this.minionName = newName;
-        this.entity.changeMinionName(newName);
+        this.entity.changeMinionName(this.minionName);
     }
 
     private void previewSkin(int type, boolean hovered) {

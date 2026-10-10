@@ -16,7 +16,7 @@ public class FoodPropertiesMixin {
 
     @Inject(method = "onConsume", at = @At("RETURN"))
     private void affectMinion(Level level, LivingEntity user, ItemStack stack, Consumable consumable, CallbackInfo ci) {
-        if (user instanceof MinionEntity<?> minion) {
+        if (user instanceof MinionEntity minion) {
             minion.eat(level, stack, (FoodProperties) (Object) this);
         }
     }

@@ -31,7 +31,7 @@ public class RegUtil {
     }
 
     @SuppressWarnings("DataFlowIssue")
-    public static Identifier id(IMinionTask<?, ?> minionTask) {
+    public static Identifier id(IMinionTask<?> minionTask) {
         return ModRegistries.MINION_TASKS.getKey(minionTask);
     }
 

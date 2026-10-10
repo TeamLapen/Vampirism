@@ -5,7 +5,7 @@ import de.teamlapen.faction.api.world.entities.minion.IMinionData;
 import net.minecraft.core.Holder;
 import org.jetbrains.annotations.Nullable;
 
-public interface IFactionMinionTask<T extends IMinionTask.IMinionTaskState<Q>, Q extends IMinionData> extends IMinionTask<T, Q> {
+public interface IFactionMinionTask<T extends IMinionTask.IMinionTaskState> extends IMinionTask<T> {
 
     /**
      * @return The faction that is required to use this task. Null if no faction is required

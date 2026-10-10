@@ -33,7 +33,7 @@ public class FactionClientPayloadHandler {
     }
 
     public static void handleRequestMinionSelectPacket(ClientboundRequestMinionSelectPacket msg, IPayloadContext context) {
-        context.enqueueWork(() -> openScreen(new SelectionScreen(Component.translatable("gui.factionapi.select_minion"), msg.minions().stream().map(x -> IComponentWithAction.of(x.getSecond(), () -> {
+        context.enqueueWork(() -> openScreen(new SelectionScreen(Component.translatable("gui.factionapi.select_minion"), msg.minions().stream().map(x -> IComponentWithAction.of(Component.literal(x.getSecond()), () -> {
             FactionsMod.proxy.sendToServer(new ServerboundSelectMinionTaskPacket(x.getFirst(), ServerboundSelectMinionTaskPacket.RECALL));
         })).toList())));
     }

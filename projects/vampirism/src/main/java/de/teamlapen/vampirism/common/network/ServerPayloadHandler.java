@@ -29,7 +29,7 @@ public class ServerPayloadHandler {
                 VampirePlayer vampirePlayer = VampirePlayer.get(player);
                 msg.data().data().forEach((k, v) -> vampirePlayer.setAppearanceData((de.teamlapen.faction.common.world.entities.appearance.AppearanceKey) k, v));
                 vampirePlayer.sync();
-            } else if (entity1 instanceof MinionEntity<?> minion) {
+            } else if (entity1 instanceof MinionEntity minion) {
                 minion.getMinionData().ifPresent(minionData -> {
                     msg.data().data().forEach((k, v) -> minionData.setAppearanceData((de.teamlapen.faction.common.world.entities.appearance.AppearanceKey) k, v));
                     minion.sync();

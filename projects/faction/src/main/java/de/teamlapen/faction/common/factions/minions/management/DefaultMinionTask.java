@@ -18,7 +18,7 @@ import org.jspecify.annotations.NonNull;
 import java.util.Optional;
 
 
-public abstract class DefaultMinionTask<T extends IMinionTask.IMinionTaskState<Q>, Q extends IMinionData> implements IMinionTask<T, Q> {
+public abstract class DefaultMinionTask<T extends IMinionTask.IMinionTaskState> implements IMinionTask<T> {
 
     private final @Nullable Holder<? extends ISkill<?>> requiredSkill;
     @Nullable
@@ -34,7 +34,7 @@ public abstract class DefaultMinionTask<T extends IMinionTask.IMinionTaskState<Q
 
     @Nullable
     @Override
-    public T activateTask(@Nullable Player lord, @Nullable IMinionEntity minion, @NonNull Q data) {
+    public ActivateResult<T> activateTask(@Nullable Player lord, @Nullable IMinionEntity minion, @NonNull IMinionData data) {
         triggerAdvancements(lord);
         return null;
     }

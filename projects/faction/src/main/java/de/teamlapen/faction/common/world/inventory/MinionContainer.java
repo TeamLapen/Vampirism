@@ -2,6 +2,7 @@ package de.teamlapen.faction.common.world.inventory;
 
 import de.teamlapen.faction.FactionsMod;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
+import de.teamlapen.faction.api.world.entities.minion.IMinionData;
 import de.teamlapen.faction.api.world.entities.minion.IMinionInventory;
 import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
 import de.teamlapen.faction.common.core.FactionMenus;
@@ -12,6 +13,7 @@ import de.teamlapen.faction.common.network.packets.server.ServerboundSelectMinio
 import de.teamlapen.faction.common.network.packets.server.ServerboundToggleMinionTaskLock;
 import de.teamlapen.faction.common.util.RegUtil;
 import de.teamlapen.faction.common.world.inventory.base.AbstractInventoryContainer;
+import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
@@ -31,13 +33,13 @@ import java.util.Optional;
 
 public class MinionContainer extends AbstractInventoryContainer {
 
-    public static Optional<MinionContainer> create(int id, @NotNull Inventory playerInventory, @NotNull MinionEntity<?> minionEntity, @NotNull ILordPlayer lord) {
+    public static Optional<MinionContainer> create(int id, @NotNull Inventory playerInventory, @NotNull MinionEntity minionEntity, @NotNull ILordPlayer lord) {
         Optional<IMinionInventory> minionInv = minionEntity.getInventory();
         return minionInv.map(inv -> new MinionContainer(id, playerInventory, lord, minionEntity, inv, inv.getAvailableSize(), createSelectors(minionEntity, inv.getAvailableSize())));
     }
 
     @NotNull
-    private static List<SlotDefinition> createSelectors(@NotNull MinionEntity<?> minionEntity, int extraSlots) {
+    private static List<SlotDefinition> createSelectors(@NotNull MinionEntity minionEntity, int extraSlots) {
         SlotDefinition[] slots = new SlotDefinition[6 + extraSlots];
         slots[0] = new SlotDefinition(minionEntity.getEquipmentPredicate(EquipmentSlot.MAINHAND).and(stack -> stack.canEquip(EquipmentSlot.MAINHAND, minionEntity)), 7, 60, 1, null);
         slots[1] = new SlotDefinition(minionEntity.getEquipmentPredicate(EquipmentSlot.OFFHAND).and(stack -> stack.canEquip(EquipmentSlot.OFFHAND, minionEntity) || stack.getUseAnimation() == ItemUseAnimation.DRINK || stack.getUseAnimation() == ItemUseAnimation.EAT), 7, 78, 5, null);
@@ -54,25 +56,25 @@ public class MinionContainer extends AbstractInventoryContainer {
         return Arrays.asList(slots);
     }
 
-    private final @NotNull MinionEntity<?> minionEntity;
+    private final @NotNull MinionEntity minionEntity;
     @NotNull
-    private final IMinionTask<?, ?> @NotNull [] availableTasks;
+    private final IMinionTask<?> @NotNull [] availableTasks;
     @Nullable
-    private final IMinionTask<?, ?> previousTask;
+    private final Holder<? extends IMinionTask<?>> previousTask;
     private final boolean previousTaskLocked;
     private final int extraSlots;
     @Nullable
-    private IMinionTask<?, ?> taskToActivate;
+    private IMinionTask<?> taskToActivate;
     private boolean taskLocked;
 
-    public MinionContainer(int id, @NotNull Inventory playerInventory, @NotNull ILordPlayer lord, @NotNull MinionEntity<?> minionEntity, @NotNull Container inventory, int extraSlots, List<SlotDefinition> selectorInfos) {
+    public MinionContainer(int id, @NotNull Inventory playerInventory, @NotNull ILordPlayer lord, @NotNull MinionEntity minionEntity, @NotNull Container inventory, int extraSlots, List<SlotDefinition> selectorInfos) {
         super(FactionMenus.MINION.get(), id, playerInventory, ContainerLevelAccess.create(minionEntity.level(), minionEntity.blockPosition()),inventory, selectorInfos);
         this.minionEntity = minionEntity;
         this.extraSlots = extraSlots;
         this.availableTasks = this.minionEntity.getAvailableTasks().stream().filter(task -> task.isAvailable(lord)).toArray(IMinionTask[]::new);
         this.minionEntity.setInteractingPlayer(playerInventory.player);
         this.addPlayerInventorySlots(playerInventory, 27, 103);
-        this.previousTask = this.minionEntity.getCurrentTask().map(IMinionTask.IMinionTaskState::getTask).orElse(null);
+        this.previousTask = this.minionEntity.getCurrentTask().map(IMinionData.IActiveTask::task).orElse(null);
         this.previousTaskLocked = this.taskLocked = this.minionEntity.isTaskLocked();
 
     }
@@ -87,7 +89,7 @@ public class MinionContainer extends AbstractInventoryContainer {
     }
 
     @NotNull
-    public IMinionTask<?, ?>[] getAvailableTasks() {
+    public IMinionTask<?>[] getAvailableTasks() {
         return availableTasks;
     }
 
@@ -95,13 +97,9 @@ public class MinionContainer extends AbstractInventoryContainer {
         return extraSlots;
     }
 
-    public @NotNull Optional<IMinionTask<?, ?>> getPreviousTask() {
-        return Optional.ofNullable(previousTask);
-    }
-
     @NotNull
-    public IMinionTask<?, ?> getSelectedTask() {
-        return this.taskToActivate != null ? this.taskToActivate : (this.previousTask != null ? this.previousTask : FactionMinionTasks.STAY.get());
+    public IMinionTask<?> getSelectedTask() {
+        return this.taskToActivate != null ? this.taskToActivate : (this.previousTask != null ? this.previousTask.value() : FactionMinionTasks.STAY.get());
     }
 
     public boolean isTaskLocked() {
@@ -150,7 +148,7 @@ public class MinionContainer extends AbstractInventoryContainer {
             if (data == null) return null;
             int entityId = data.readVarInt(); //Anything read here has to be written to buffer in open method (in MinionEntity)
             @SuppressWarnings("ConstantValue") Entity e = inv.player.level() == null ? null : inv.player.level().getEntity(entityId);
-            if (!(e instanceof MinionEntity<?> minion)) {
+            if (!(e instanceof MinionEntity minion)) {
                 throw new IllegalStateException("Cannot find related minion entity " + entityId);
             }
             ILordPlayer player = FactionPlayerHandler.get(inv.player).getPlayerLord().orElseThrow();

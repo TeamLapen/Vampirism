@@ -2,6 +2,7 @@ package de.teamlapen.faction.common.factions.minions.management;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.faction.api.world.entities.minion.IMinionData;
 import de.teamlapen.faction.api.world.entities.minion.IMinionEntity;
 import de.teamlapen.faction.api.world.entities.minion.tasks.MinionTaskProperties;
 import de.teamlapen.faction.common.factions.minions.MinionData;
@@ -12,14 +13,14 @@ import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
 
-public class StayTask extends MinionTask<MinionData, StayTask.State> {
+public class StayTask extends MinionTask<StayTask.State> {
 
     public StayTask(MinionTaskProperties properties) {
         super(properties, State.CODEC);
     }
 
     @Override
-    public @NonNull ActivateResult<StayTask.@NonNull State> activateTask(@Nullable Player lord, @Nullable IMinionEntity minion, @NonNull MinionData inventory) {
+    public @NonNull ActivateResult<StayTask.@NonNull State> activateTask(@Nullable Player lord, @Nullable IMinionEntity minion, @NonNull IMinionData inventory) {
         this.triggerAdvancements(lord);
         BlockPos pos = minion != null ? minion.asEntity().blockPosition() : (lord != null ? lord.blockPosition() : null);
         return pos == null ? ActivateResult.failed() : new ActivateResult<>(new State(pos));

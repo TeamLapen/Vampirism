@@ -21,9 +21,9 @@ import java.util.function.Supplier;
 
 public class MinionTaskProperties {
 
-    private static final DependantName<IMinionTask<?,?>, String> NAME_ID = (id) -> Util.makeDescriptionId("task", id.identifier());
-    private DataComponentInitializers.Initializer<IMinionTask<?,?>> componentInitializer = (builder, context, id) -> {};
-    private @Nullable ResourceKey<IMinionTask<?,?>> id;
+    private static final DependantName<IMinionTask<?>, String> NAME_ID = (id) -> Util.makeDescriptionId("task", id.identifier());
+    private DataComponentInitializers.Initializer<IMinionTask<?>> componentInitializer = (builder, context, id) -> {};
+    private @Nullable ResourceKey<IMinionTask<?>> id;
 
     //<editor-fold desc="Components">
 
@@ -43,12 +43,12 @@ public class MinionTaskProperties {
 
     //<editor-fold desc="Value Getter">
 
-    public MinionTaskProperties setId(ResourceKey<IMinionTask<?,?>> id) {
+    public MinionTaskProperties setId(ResourceKey<IMinionTask<?>> id) {
         this.id = id;
         return this;
     }
 
-    public ResourceKey<IMinionTask<?,?>> taskIdOrThrow() {
+    public ResourceKey<IMinionTask<?>> taskIdOrThrow() {
         return Objects.requireNonNull(this.id, "MinionTask id not set");
     }
 
@@ -73,7 +73,7 @@ public class MinionTaskProperties {
 
     //<editor-fold desc="Finalizer">
 
-    public DataComponentInitializers.Initializer<IMinionTask<?,?>> finalizeInitializer(Component name) {
+    public DataComponentInitializers.Initializer<IMinionTask<?>> finalizeInitializer(Component name) {
         return this.componentInitializer
                 .andThen((builder, _, key) -> {
                     builder.set(FactionDataComponents.MINION_TASK_NAME, name);

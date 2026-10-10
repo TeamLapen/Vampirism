@@ -1,3 +1,4 @@
+/*
 package de.teamlapen.faction.common.factions.minions.management;
 
 import com.google.common.base.Suppliers;
@@ -53,9 +54,11 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
 
 
     private final Codec<Desc<Q>> descriptionCodec;
-    /**
+    */
+/**
      * @param faction If given, only available to this faction
-     */
+     *//*
+
     public CollectResourcesTask(Supplier<CollectResourcesTask<Q>> taskSupplier, @Nullable Holder<? extends IFaction<?>> faction, @NotNull Function<Q, Integer> coolDownSupplier, @NotNull Supplier<List<Weighted<ItemStack>>> resources, @NotNull Holder<? extends ISkill<?>> requiredSkill) {
         super(requiredSkill);
         this.descriptionCodec = Desc.createCodec(taskSupplier);
@@ -118,7 +121,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
         return this.faction;
     }
 
-    public static class Desc<Z extends MinionData> implements IMinionTaskState<Z> {
+    public static class Desc<Z extends MinionData> implements IMinionTaskState {
         private final CollectResourcesTask<Z> task;
         @Nullable
         private final UUID lordEntityID;
@@ -146,11 +149,6 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
         }
 
         @Override
-        public @NotNull IMinionTask<?, Z> getTask() {
-            return this.task;
-        }
-
-        @Override
         public void serialize(@NotNull ValueOutput output) {
             output.putInt("cooldown", this.coolDown);
             if (this.lordEntityID != null) {
@@ -159,3 +157,4 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
         }
     }
 }
+*/

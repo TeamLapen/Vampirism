@@ -64,7 +64,7 @@ public class ServerPayloadHandler {
                         if (controller.recallMinion(msg.minionID())) {
                             controller.createMinionEntityAtPlayer(msg.minionID(), context.player());
                         } else {
-                            context.player().sendOverlayMessage(Component.translatable("message.factionapi.minion.still_recovering", controller.contactMinionData(msg.minionID(), MinionData::getFormattedName).orElseGet(() -> Component.literal("1"))));
+                            context.player().sendOverlayMessage(Component.translatable("message.factionapi.minion.still_recovering", controller.contactMinionData(msg.minionID(), MinionData::getName).orElseGet(() -> "1")));
                         }
                     }
                 } else if (RESPAWN.equals(msg.taskID())) {
@@ -81,8 +81,7 @@ public class ServerPayloadHandler {
                     } else if (msg.minionID() < -1) {
                         LOGGER.error("Illegal minion id {}", msg.minionID());
                     } else {
-                        //noinspection unchecked
-                        controller.activateTask(msg.minionID(), (IMinionTask<?, MinionData>) task.get().value());
+                        controller.activateTask(msg.minionID(), task.get());
                     }
                 }
             });
@@ -209,7 +208,7 @@ public class ServerPayloadHandler {
         context.enqueueWork(() -> {
             Player player = context.player();
             Entity entity = player.level().getEntity(msg.entityId());
-            if (entity instanceof MinionEntity<?> minion) {
+            if (entity instanceof MinionEntity minion) {
                 if (minion.getMinionData().map(d -> d.upgradeStat(msg.stat(), minion)).orElse(false)) {
                     minion.sync();
                 }
@@ -221,7 +220,7 @@ public class ServerPayloadHandler {
         context.enqueueWork(() -> {
             Player player = context.player();
             Entity entity = player.level().getEntity(msg.entityId());
-            if (entity instanceof MinionEntity<?> minion) {
+            if (entity instanceof MinionEntity minion) {
                 minion.getMinionData().ifPresent(d -> {
                     d.resetStats(minion);
                     minion.sync();

@@ -9,10 +9,10 @@ import net.neoforged.neoforge.registries.callback.BakeCallback;
 import java.util.HashSet;
 import java.util.Set;
 
-public class MinionEntryCallbacks implements BakeCallback<IMinionEntry<?, ?>> {
+public class MinionEntryCallbacks implements BakeCallback<IMinionEntry<?>> {
 
     @Override
-    public void onBake(Registry<IMinionEntry<?, ?>> registry) {
+    public void onBake(Registry<IMinionEntry<?>> registry) {
         Set<Holder<? extends IPlayableFaction<?>>> existingFactions = new HashSet<>();
         registry.forEach(entry -> {
             if (!existingFactions.add(entry.faction())) {

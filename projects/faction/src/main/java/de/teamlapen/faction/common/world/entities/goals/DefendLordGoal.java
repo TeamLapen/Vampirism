@@ -13,12 +13,12 @@ import java.util.EnumSet;
 
 public class DefendLordGoal extends TargetGoal {
 
-    protected final @NotNull MinionEntity<?> entity;
+    protected final @NotNull MinionEntity entity;
     private final @NotNull TargetingConditions predicate;
     private final int maxStartDistSQ = 200;
     private final int maxStopDistSQ = 500;
 
-    public DefendLordGoal(@NotNull MinionEntity<?> mobIn) {
+    public DefendLordGoal(@NotNull MinionEntity mobIn) {
         super(mobIn, false, false);
         this.setFlags(EnumSet.of(Goal.Flag.TARGET));
         this.entity = mobIn;
@@ -28,12 +28,12 @@ public class DefendLordGoal extends TargetGoal {
 
     @Override
     public boolean canContinueToUse() {
-        return entity.getCurrentTask().map(d -> d.getTask() == FactionMinionTasks.PROTECT_LORD.get()).orElse(false) && super.canContinueToUse() && entity.getLordOpt().map(lp -> targetMob != null && lp.asEntity().distanceToSqr(targetMob) < maxStopDistSQ).orElse(true);
+        return entity.getCurrentTask().map(d -> d.task().value() == FactionMinionTasks.PROTECT_LORD.get()).orElse(false) && super.canContinueToUse() && entity.getLordOpt().map(lp -> targetMob != null && lp.asEntity().distanceToSqr(targetMob) < maxStopDistSQ).orElse(true);
     }
 
     @Override
     public boolean canUse() {
-        return entity.getCurrentTask().map(d -> d.getTask() == FactionMinionTasks.PROTECT_LORD.get()).orElse(false) && entity.getLordOpt().map(lp -> {
+        return entity.getCurrentTask().map(d -> d.task().value() == FactionMinionTasks.PROTECT_LORD.get()).orElse(false) && entity.getLordOpt().map(lp -> {
             LivingEntity attackTarget = lp.asEntity().getLastHurtMob();
             if (canAttack(attackTarget, predicate)) {
                 this.targetMob = attackTarget;

@@ -5,32 +5,33 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.MapCodec;
-import de.teamlapen.faction.api.FactionDataComponents;
 import de.teamlapen.faction.api.util.FIdentifier;
-import de.teamlapen.faction.api.util.SafeCast;
 import de.teamlapen.faction.api.world.entities.minion.IMinionData;
+import de.teamlapen.faction.api.world.entities.minion.IMinionEntity;
 import de.teamlapen.faction.api.world.entities.minion.IMinionEntry;
 import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
+import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.core.FactionItems;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
 import de.teamlapen.faction.common.core.ModRegistries;
-import de.teamlapen.faction.common.factions.minions.stats.MinionStat;
+import de.teamlapen.faction.api.world.entities.minion.MinionStat;
 import de.teamlapen.faction.common.world.entities.EntityProperties;
 import de.teamlapen.faction.common.world.entities.appearance.AppearanceKey;
 import de.teamlapen.faction.common.world.entities.appearance.AppearancePacket;
 import de.teamlapen.faction.common.world.entities.appearance.IAppearanceHolder;
 import de.teamlapen.faction.common.world.inventory.InventoryHelper;
-import de.teamlapen.sync.PropertySync;
 import de.teamlapen.sync.SimpleMutableDataComponentMap;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Unit;
 import net.minecraft.world.ItemStackWithSlot;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.ValueInput;
@@ -44,6 +45,7 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class MinionData extends SimpleMutableDataComponentMap implements IMinionData, IAppearanceHolder, DataComponentMap {
 
@@ -54,64 +56,41 @@ public class MinionData extends SimpleMutableDataComponentMap implements IMinion
     public static final int MAX_NAME_LENGTH = 15;
     protected static final Logger LOGGER = LogManager.getLogger();
 
-    @Nullable
-    public static <T extends MinionData> T fromNBT(ValueInput input) {
-        return input.read("data_type", Identifier.CODEC).map(ModRegistries.MINIONS::getValue).map(IMinionEntry::data).map(IMinionEntry.IMinionCreator::create).map(x -> {
-            try {
-                @SuppressWarnings("unchecked")
-                T t = (T) x;
-                t.deserialize(input);
-                return t;
-            } catch (ClassCastException ex) {
-                return null;
-            }
-        }).orElse(null);
-    }
-
     private final @NotNull MinionInventory inventory;
     private float health;
     private @NotNull CompoundTag entityCaps = new CompoundTag();
-    private MinionStat.StatCollection statCollection;
-
+    private final IMinionEntry<?> minionEntry;
 
     @NotNull
     private ActiveTask<?> activeTaskDesc;
     private boolean taskLocked;
 
-    protected MinionData(String name, int invSize) {
-        this.health = getMaxHealth();
-        this.inventory = new MinionInventory(invSize);
-        this.activeTaskDesc = ActiveTask.DEFAULT;
-        this.collectStats();
-    }
-
-    protected MinionData() {
+    public MinionData(IMinionEntry<?> entry) {
+        this.minionEntry = entry;
         this.inventory = new MinionInventory();
         this.activeTaskDesc = ActiveTask.DEFAULT;
-        this.collectStats();
+        this.health = getMaxHealth();
     }
 
-    private void collectStats() {
-        List<MinionStat<?>> stats = new ArrayList<>();
-        registerStats(stats::add);
-        this.statCollection = new MinionStat.StatCollection(this, stats);
-    }
-
+    @Override
     public int getLevel() {
         return getOrDefault(FactionDataComponents.MINION_LEVEL,0);
     }
 
-
-    protected int getMaxStatLevel() {
-        return 0;
+    public boolean setLevel(int level) {
+        int oldLevel = getLevel();
+        level = Math.clamp(level, 0, getMaxLevel());
+        set(FactionDataComponents.MINION_LEVEL, level);
+        return level > oldLevel;
     }
 
-    protected void registerStats(Consumer<MinionStat<?>> consumer) {
-
+    public int getMaxLevel() {
+        return getOrDefault(FactionDataComponents.MINION_MAX_LEVEL, 0);
     }
 
-    public int getStatLevel(Identifier identifier) {
-        return this.statCollection.getStatLevel(identifier);
+    @Override
+    public <T> void setAppearanceData(AppearanceKey<T> key, T data) {
+
     }
 
     @Override
@@ -120,11 +99,13 @@ public class MinionData extends SimpleMutableDataComponentMap implements IMinion
         return activeTaskDesc;
     }
 
-    public int getDefaultInventorySize() {
-        return 9;
+    public void setIncreasedStats(boolean hasIncreasedStats) {
+        set(FactionDataComponents.MINION_HAS_INCREASED_STATS, hasIncreasedStats);
     }
 
-    public abstract void setIncreasedStats(boolean hasIncreasedStats);
+    public boolean hasIncreasedStats() {
+        return has(FactionDataComponents.MINION_HAS_INCREASED_STATS);
+    }
 
     @Override
     public float getHealth() {
@@ -140,32 +121,27 @@ public class MinionData extends SimpleMutableDataComponentMap implements IMinion
         return inventory;
     }
 
-    public int getInventorySize() {
-        return getDefaultInventorySize();
-    }
-
     @Override
     public int getMaxHealth() {
         return (int) EntityProperties.MINION_MAX_HEALTH;
     }
 
     @Override
-    public @NotNull Component getName() {
-        return getOrDefault(FactionDataComponents.MINION_NAME, Component.literal("Minion"));
+    public @NotNull String getName() {
+        return getOrDefault(FactionDataComponents.MINION_NAME, "Minion");
     }
 
-    public void setName(Component name) {
+    public void setName(String name) {
         this.set(FactionDataComponents.MINION_NAME, name);
     }
 
-    public <T> void setAppearanceData(@NonNull AppearanceKey<T> id, @NonNull T data) {
-        if (id.equals(NameType)) {
-            setName((String) data);
-        }
+    public IMinionEntry<?> getMinionEntry() {
+        return minionEntry;
     }
 
+    @Override
     public boolean hasUsedSkillPoints() {
-        return this.statCollection.getLevels() > 0;
+        return this.minionEntry.minionStats().stream().mapToInt(x -> getOrDefault(x.getIdentifier(), 0)).sum() < getLevel();
     }
 
     public boolean isTaskLocked() {
@@ -180,13 +156,13 @@ public class MinionData extends SimpleMutableDataComponentMap implements IMinion
         this.entityCaps = caps;
     }
 
-    public void resetStats(@NotNull MinionEntity<?> entity) {
+    public void resetStats(@NotNull MinionEntity entity) {
         entity.getInventory().ifPresent(inv -> {
             if (!InventoryHelper.removeItemFromInventory(inv, new ItemStack(FactionItems.OBLIVION_POTION.get()))) {
                 entity.getLordOpt().ifPresent(lord -> InventoryHelper.removeItemFromInventory(lord.asEntity().getInventory(), new ItemStack(FactionItems.OBLIVION_POTION.get())));
             }
         });
-        this.statCollection.reset(entity, this);
+        this.minionEntry.minionStats().forEach(x -> remove(x.getIdentifier().get()));
     }
 
     @MustBeInvokedByOverriders
@@ -194,7 +170,6 @@ public class MinionData extends SimpleMutableDataComponentMap implements IMinion
     public void serialize(@NotNull ValueOutput output) {
         super.serialize(output);
         inventory.write(output.list("inv", ItemStackWithSlot.CODEC));
-        output.store("data_type", Identifier.CODEC, getDataType());
         output.store("caps", CompoundTag.CODEC, this.entityCaps);
     }
 
@@ -211,53 +186,50 @@ public class MinionData extends SimpleMutableDataComponentMap implements IMinion
     protected void registerProperties() {
         super.registerProperties();
         this.registerProperty(FIdentifier.mod("health")).simple(10, () -> this.health, h -> this.health = h);
-        //noinspection Convert2MethodRef
-        this.registerProperty(FIdentifier.mod("inventory_size")).simple(getDefaultInventorySize(), () -> this.inventory.getAvailableSize(), x -> this.inventory.setAvailableSize(x));
         this.registerProperty(FIdentifier.mod("task_locked")).simple(false, () -> this.taskLocked, l -> this.taskLocked = l);
         this.registerProperty(FIdentifier.mod("active_task")).simple(ActiveTask.CODEC).defaultValue(() -> ActiveTask.DEFAULT).provider(() -> this.activeTaskDesc).clientLoader(x -> {
             var old = this.activeTaskDesc;
             this.activeTaskDesc = x;
             return old.equals(x);
         }).register();
-        this.registerProperty(FIdentifier.mod("stats")).subProperty(() -> this.statCollection).register();
     }
 
     public boolean setTaskLocked(boolean locked) {
         return this.taskLocked = locked;
     }
 
-    public void shrinkInventory(@NotNull MinionEntity<?> entity) {
-        if (!(entity.level() instanceof ServerLevel serverLevel)) return;
-        Optional<MinionInventory> invOpt = entity.getMinionData().map(MinionData::getInventory);
-        if (invOpt.isPresent()) {
-            MinionInventory inv = invOpt.get();
-            List<ItemStack> stacks = new ArrayList<>();
-            for (int i = 6 + getDefaultInventorySize(); i < inv.getContainerSize(); ++i) {
-                ItemStack stack = inv.removeItemNoUpdate(i);
-                if (!stack.isEmpty()) {
-                    stacks.add(stack);
-                }
-            }
-            for (ItemStack stack : stacks) {
-                if (!stack.isEmpty()) {
-                    inv.addItemStack(stack);
-                    if (!stack.isEmpty()) {
-                        entity.getLordOpt().ifPresent(lord -> {
-                            if (!lord.asEntity().addItem(stack)) {
-                                entity.spawnAtLocation(serverLevel, stack);
-                            }
-                        });
-                    }
-                }
-            }
-        }
-    }
+//    public void shrinkInventory(@NotNull MinionEntity entity) {
+//        if (!(entity.level() instanceof ServerLevel serverLevel)) return;
+//        Optional<MinionInventory> invOpt = entity.getMinionData().map(MinionData::getInventory);
+//        if (invOpt.isPresent()) {
+//            MinionInventory inv = invOpt.get();
+//            List<ItemStack> stacks = new ArrayList<>();
+//            for (int i = 6 + getDefaultInventorySize(); i < inv.getContainerSize(); ++i) {
+//                ItemStack stack = inv.removeItemNoUpdate(i);
+//                if (!stack.isEmpty()) {
+//                    stacks.add(stack);
+//                }
+//            }
+//            for (ItemStack stack : stacks) {
+//                if (!stack.isEmpty()) {
+//                    inv.addItemStack(stack);
+//                    if (!stack.isEmpty()) {
+//                        entity.getLordOpt().ifPresent(lord -> {
+//                            if (!lord.asEntity().addItem(stack)) {
+//                                entity.spawnAtLocation(serverLevel, stack);
+//                            }
+//                        });
+//                    }
+//                }
+//            }
+//        }
+//    }
 
-    public boolean switchTask(@Nullable Player player, @Nullable MinionEntity<?> minion, @NotNull Holder<IMinionTask<?, ?>> task) {
+    public boolean switchTask(@Nullable Player player, @Nullable MinionEntity minion, @NotNull Holder<? extends IMinionTask<?>> task) {
         var result = task.value().activateTask(player, minion, this);
         if (result.successful()) {
-            this.activeTaskDesc.task().value().deactivateTask(this.activeTaskDesc.data());
-            this.activeTaskDesc = new ActiveTask<>(task, result.data());
+            ((IMinionTask)this.activeTaskDesc.task().value()).deactivateTask(this.activeTaskDesc.data());
+            this.activeTaskDesc = new ActiveTask(task, result.data());
             return true;
         } else if (player != null) {
             player.sendOverlayMessage(Component.translatable("message.factionapi.minion_task.could_not_activate"));
@@ -266,36 +238,94 @@ public class MinionData extends SimpleMutableDataComponentMap implements IMinion
     }
 
     public int getRemainingStatPoints() {
-        return Math.max(0, getLevel() - this.statCollection.getLevels());
+        return Math.max(0, getLevel() - this.minionEntry.minionStats().stream().mapToInt(x -> getOrDefault(x.getIdentifier(), 0)).sum());
     }
 
-    public boolean upgradeStat(@NotNull Identifier statId, @NotNull MinionEntity<?> entity) {
-        if (this.statCollection.getLevels() >= getLevel()) {
-            return false;
+    public boolean upgradeStat(@NotNull Holder<DataComponentType<?>> statId, @NotNull MinionEntity entity) {
+        MinionStat minionStat = this.minionEntry.minionStat(statId);
+        if (minionStat != null) {
+            int currentStat = getOrDefault(minionStat.getIdentifier(), 0);
+            int nextStat = Math.min(currentStat + 1, minionStat.getMaxLevel());
+            if (nextStat > minionStat.getMaxLevel()) {
+                set(minionStat.getIdentifier(), nextStat);
+                return true;
+            }
         }
-        return this.statCollection.upgrade(statId, entity, this);
+        return false;
     }
 
-    protected abstract Identifier getDataType();
+    public record ActiveTask<TState extends IMinionTask.IMinionTaskState>(Holder<? extends IMinionTask<TState>> task, TState data) implements IActiveTask<TState> {
 
-    public record ActiveTask<TState extends IMinionTask.IMinionTaskState>(Holder<? extends IMinionTask<?, TState>> task, TState data) implements IActiveTask<TState> {
-
-        public static final ActiveTask<?> DEFAULT = new ActiveTask<IMinionTask.IMinionTaskState>(FactionMinionTasks.NOTHING, IMinionTask.EmptyState.INSTANCE);
+        public static final ActiveTask<?> DEFAULT = new ActiveTask(FactionMinionTasks.NOTHING, IMinionTask.EmptyState.INSTANCE);
         public static final Codec<ActiveTask<?>> CODEC = ModRegistries.MINION_TASKS.holderByNameCodec().dispatch("task", ActiveTask::holder, ActiveTask::stateCodec);
 
         @SuppressWarnings("unchecked")
-        private Holder<IMinionTask<?, ?>> holder() {
-            return (Holder<IMinionTask<?, ?>>) this.task;
+        private Holder<IMinionTask<?>> holder() {
+            return (Holder<IMinionTask<?>>) (Object) this.task;
         }
 
         @SuppressWarnings({"unchecked", "rawtypes"})
-        private static MapCodec<ActiveTask<?>> stateCodec(Holder<IMinionTask<?, ?>> holder) {
-            Holder<IMinionTask<MinionData, IMinionTask.IMinionTaskState>> task = (Holder) holder;
+        private static MapCodec<ActiveTask<?>> stateCodec(Holder<IMinionTask<?>> holder) {
+            Holder<IMinionTask<IMinionTask.IMinionTaskState>> task = (Holder) holder;
             Codec<IMinionTask.IMinionTaskState> stateCodec = task.value().stateCodec();
             if (stateCodec == null) {
                 return MapCodec.unit(() -> new ActiveTask<>(task, null));
             }
             return stateCodec.fieldOf("state").xmap(state -> new ActiveTask<>(task, state), ActiveTask::data);
         }
+    }
+
+    public static final MinionStat HEALTH_STATS = new MinionStat(FactionDataComponents.MINION_HEALTH_LEVEL, 3, Component.translatable(Attributes.MAX_HEALTH.value().getDescriptionId())){
+        @Override
+        public String currentValue(IMinionEntity minion, IMinionData data) {
+            return String.format("%.1f", minion.asEntity().getAttribute(Attributes.MAX_HEALTH).getBaseValue());
+        }
+    };
+    public static final MinionStat STRENGTH_STATS = new MinionStat(FactionDataComponents.MINION_STRENGTH_LEVEL, 3, Component.translatable(Attributes.ATTACK_DAMAGE.value().getDescriptionId())){
+        @Override
+        public String currentValue(IMinionEntity minion, IMinionData data) {
+            return String.format("%.1f", minion.asEntity().getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue());
+        }
+    };
+    public static final MinionStat INVENTORY_STATS = new MinionStat(FactionDataComponents.MINION_INVENTORY_LEVEL, 2, Component.translatable("gui.vampirism.minion.stats.inventory_level")) {
+        @Override
+        public void apply(int level, IMinionEntity minion, IMinionData data) {
+            switch (level) {
+                case 1,2,3: data.set(FactionDataComponents.MINION_INVENTORY_SLOTS, level * 3);
+                default: data.remove(FactionDataComponents.MINION_INVENTORY_SLOTS.get());
+            }
+            data.getInventory().updateFromData(data);
+        }
+
+        @Override
+        public String currentValue(IMinionEntity minion, IMinionData data) {
+            return String.valueOf(data.getInventory().getContainerSize());
+        }
+    };
+    public static final MinionStat SPEED_STATS = new MinionStat(FactionDataComponents.MINION_SPEED_LEVEL, 3, Component.translatable(Attributes.MOVEMENT_SPEED.value().getDescriptionId())){
+        @Override
+        public String currentValue(IMinionEntity minion, IMinionData data) {
+            return String.format("%.1f", minion.asEntity().getAttribute(Attributes.MOVEMENT_SPEED).getBaseValue());
+        }
+    };
+    public static final MinionStat RESOURCES_STATS = new MinionStat(FactionDataComponents.MINION_RESOURCES_LEVEL, 2, Component.translatable("gui.vampirism.minion.stats.resource_level")) {
+        @Override
+        public String currentValue(IMinionEntity minion, IMinionData data) {
+            return String.format("%.1f", (Math.ceil((float) (currentLevel(data) + 1) / (MinionData.RESOURCES_STATS.getMaxLevel() + 1) * 100))) + "%";
+        }
+    };
+
+    public static Optional<MinionData> fromCompound(ValueInput input) {
+        Optional<IMinionEntry<?>> entry = input.read("entry", ModRegistries.MINIONS.byNameCodec());
+        return entry.map(x -> {
+            var data = new MinionData(x);
+            data.deserialize(input);
+            return data;
+        });
+    }
+
+    public static void toCompound(MinionData data, ValueOutput output) {
+        output.store("entry", ModRegistries.MINIONS.byNameCodec(), data.minionEntry);
+        data.serialize(output);
     }
 }

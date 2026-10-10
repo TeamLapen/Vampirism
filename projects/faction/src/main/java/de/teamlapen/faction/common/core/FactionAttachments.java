@@ -4,11 +4,15 @@ import de.teamlapen.faction.api.util.REFERENCE;
 import de.teamlapen.faction.api.world.entities.extensions.IEntity;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.lord.LordPlayer;
+import de.teamlapen.faction.common.factions.minions.MinionData;
+import de.teamlapen.faction.common.factions.minions.MinionEntity;
 import de.teamlapen.faction.common.factions.neutral.NeutralPlayer;
 import de.teamlapen.faction.common.factions.skills.RefinementHandler;
 import de.teamlapen.faction.common.factions.tasks.TaskManager;
 import de.teamlapen.faction.common.util.AttachmentSynchronization;
 import de.teamlapen.faction.common.world.attachments.LevelDamage;
+import de.teamlapen.faction.common.world.entities.EntitySyncHolder;
+import de.teamlapen.sync.PropertySync;
 import de.teamlapen.sync.api.IAttachmentSync;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
@@ -26,6 +30,7 @@ public class FactionAttachments {
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<TaskManager>> TASK_MANAGER = ATTACHMENT_TYPES.register(de.teamlapen.faction.api.FactionAttachments.Keys.TASK_MANAGER.getPath(), () -> AttachmentType.builder(new TaskManager.Factory()).serialize(new TaskManager.Serializer()).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<RefinementHandler>> REFINEMENT_HANDLER = ATTACHMENT_TYPES.register(de.teamlapen.faction.api.FactionAttachments.Keys.REFINEMENT_HANDLER.getPath(), () -> syncAttachment(new RefinementHandler.AttachmentOptions()).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<LordPlayer>> LORD_PLAYER = ATTACHMENT_TYPES.register(de.teamlapen.faction.api.FactionAttachments.Keys.LORD_PLAYER.getPath(), () -> syncAttachment(new LordPlayer.AttachmentOptions()).copyOnDeath().build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<EntitySyncHolder<MinionEntity, MinionData>>> MINION_DATA = ATTACHMENT_TYPES.register(de.teamlapen.faction.api.FactionAttachments.Keys.MINION_DATA.getPath(), () -> syncHolder(new EntitySyncHolder.Factory<>(MinionEntity.class)).build());
 
     static void register(IEventBus bus) {
         ATTACHMENT_TYPES.register(bus);
@@ -33,5 +38,9 @@ public class FactionAttachments {
 
     private static <T extends IAttachmentSync & IEntity, Z extends IAttachmentHolder> AttachmentType.Builder<T> syncAttachment(AttachmentSynchronization<T, Z> options) {
         return AttachmentType.builder(options).serialize(options).sync(options);
+    }
+
+    private static <TEntity extends EntitySyncHolder.ISyncHolder<TData>, TData extends PropertySync> AttachmentType.Builder<EntitySyncHolder<TEntity, TData>> syncHolder(EntitySyncHolder.Factory<TEntity, TData> options) {
+        return AttachmentType.builder(options).sync(options);
     }
 }

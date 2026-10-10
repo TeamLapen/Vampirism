@@ -3,6 +3,7 @@ package de.teamlapen.faction.common.factions.minions.management;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.faction.api.world.entities.minion.IMinionData;
 import de.teamlapen.faction.api.world.entities.minion.IMinionEntity;
 import de.teamlapen.faction.api.world.entities.minion.tasks.MinionTaskProperties;
 import de.teamlapen.faction.common.factions.minions.MinionData;
@@ -14,17 +15,17 @@ import org.jspecify.annotations.NonNull;
 import static de.teamlapen.faction.common.factions.minions.management.DefendAreaTask.State;
 
 
-public class DefendAreaTask extends MinionTask<MinionData, State> {
+public class DefendAreaTask extends MinionTask<State> {
 
     public DefendAreaTask(MinionTaskProperties properties) {
         super(properties, State.CODEC);
     }
 
     @Override
-    public @NonNull State activateTask(@Nullable Player lord, @Nullable IMinionEntity minion, @NonNull MinionData inventory) {
+    public @NonNull ActivateResult<State> activateTask(@Nullable Player lord, @Nullable IMinionEntity minion, @NonNull IMinionData inventory) {
         this.triggerAdvancements(lord);
         BlockPos pos = minion != null ? minion.asEntity().blockPosition() : (lord != null ? lord.blockPosition() : null);
-        return pos == null ? null : new State(pos, 10);
+        return pos == null ? ActivateResult.failed() : new ActivateResult<>(new State(pos, 10));
     }
 
 

@@ -13,22 +13,22 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 
-public class MoveToTaskCenterGoal extends MoveToPositionGoal<MinionEntity<?>> {
+public class MoveToTaskCenterGoal extends MoveToPositionGoal<MinionEntity> {
 
 
     private @Nullable BlockPos target;
 
 
-    public MoveToTaskCenterGoal(@NotNull MinionEntity<?> entity) {
+    public MoveToTaskCenterGoal(@NotNull MinionEntity entity) {
         super(entity, 1, 1, 10, true, false);
     }
 
     public @NotNull Optional<BlockPos> getTargetPos() {
         return entity.getCurrentTask().map(desc -> {
-            if (desc.getTask() == FactionMinionTasks.DEFEND_AREA.get()) {
-                return ((DefendAreaTask.State) desc).center();
-            } else if (desc.getTask() == FactionMinionTasks.STAY.get()) {
-                return ((StayTask.State) desc).position();
+            if (desc.task().value() == FactionMinionTasks.DEFEND_AREA.get()) {
+                return ((DefendAreaTask.State) desc.data()).center();
+            } else if (desc.task().value() == FactionMinionTasks.STAY.get()) {
+                return ((StayTask.State) desc.data()).position();
             }
             return null;
         });

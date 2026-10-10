@@ -7,6 +7,7 @@ import de.teamlapen.faction.api.world.ICaptureAttributes;
 import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
+import de.teamlapen.faction.common.factions.minions.MinionData;
 import de.teamlapen.faction.common.factions.minions.MinionWorldData;
 import de.teamlapen.faction.common.factions.minions.PlayerMinionController;
 import de.teamlapen.faction.common.util.SpawnUtil;
@@ -19,6 +20,7 @@ import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
 import de.teamlapen.vampirism.client.renderer.entities.state.AvatarLikeRenderState;
 import de.teamlapen.vampirism.common.config.BalanceMobProps;
 import de.teamlapen.vampirism.common.core.ModEntities;
+import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.util.HunterVillage;
 import de.teamlapen.vampirism.common.util.UtilLib;
@@ -154,7 +156,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         FactionPlayerHandler.get(player).getPlayerLord().filter(x -> x.getMaxMinions() > 0).filter(x -> IFaction.is(x.getFaction(), getFaction())).ifPresentOrElse(lord -> {
             MinionWorldData.getData(player.level()).map(w -> w.getOrCreateController(lord)).ifPresent(controller -> {
                 if (controller.hasFreeMinionSlot()) {
-                    HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData(lord, this);
+                    MinionData data = new MinionData(ModFactions.HUNTER_MINION.get());
                     var output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, registryAccess());
                     this.serializeAttachments(output);
                     data.updateEntityCaps(output.buildResult());
@@ -168,7 +170,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                     minion.claimMinionSlot(id, controller);
                     minion.copyPosition(this);
                     minion.markAsConverted();
-                    controller.activateTask(0, FactionMinionTasks.STAY.get());
+                    controller.activateTask(0, FactionMinionTasks.STAY);
                     SpawnUtil.replaceEntity(this, minion);
                 } else {
                     LOGGER.warn("No free slot");

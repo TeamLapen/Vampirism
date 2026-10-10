@@ -232,7 +232,7 @@ public class ModEntityEventHandler {
                     event.setResultStack(new ItemStack(Items.GLASS_BOTTLE));
                     return;
                 }
-                ((MinionEntity<?>) event.getEntity()).getInventory().ifPresent(inv -> inv.addItemStack(new ItemStack(Items.GLASS_BOTTLE)));
+                ((MinionEntity) event.getEntity()).getInventory().ifPresent(inv -> inv.addItemStack(new ItemStack(Items.GLASS_BOTTLE)));
             }
         }
     }

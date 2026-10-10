@@ -1,7 +1,9 @@
 package de.teamlapen.faction.common.factions.minions;
 
 import com.google.common.collect.ImmutableList;
+import de.teamlapen.faction.api.world.entities.minion.IMinionData;
 import de.teamlapen.faction.api.world.entities.minion.IMinionInventory;
+import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.world.inventory.InventoryHelper;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.ItemStackWithSlot;
@@ -64,10 +66,10 @@ public class MinionInventory implements IMinionInventory {
         return availableSize;
     }
 
-    public @NotNull MinionInventory setAvailableSize(int newSize) {
-        assert newSize == 9 || newSize == 12 || newSize == 15;
-        this.availableSize = newSize;
-        return this;
+    public void updateFromData(IMinionData data) {
+        var size = 9;
+        size += data.getOrDefault(FactionDataComponents.MINION_INVENTORY_SLOTS, 0);
+        this.availableSize = size;
     }
 
     @Override

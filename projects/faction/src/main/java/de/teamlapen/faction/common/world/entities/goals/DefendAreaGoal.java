@@ -17,7 +17,7 @@ import java.util.EnumSet;
 
 public class DefendAreaGoal extends TargetGoal {
 
-    private final @NotNull MinionEntity<?> entity;
+    private final @NotNull MinionEntity entity;
     private final @NotNull TargetingConditions predicate;
     /**
      * Cache bb as long as {@link DefendAreaGoal#center} is unmodified
@@ -25,7 +25,7 @@ public class DefendAreaGoal extends TargetGoal {
     private AABB bb;
     private BlockPos center;
 
-    public DefendAreaGoal(@NotNull MinionEntity<?> entity) {
+    public DefendAreaGoal(@NotNull MinionEntity entity) {
         super(entity, false);
         this.entity = entity;
         this.setFlags(EnumSet.of(Goal.Flag.TARGET));
@@ -34,15 +34,15 @@ public class DefendAreaGoal extends TargetGoal {
 
     @Override
     public boolean canContinueToUse() {
-        return entity.getCurrentTask().filter(task -> task.getTask() == FactionMinionTasks.DEFEND_AREA.get()).isPresent() && super.canContinueToUse();
+        return entity.getCurrentTask().filter(task -> task.task().value() == FactionMinionTasks.DEFEND_AREA.get()).isPresent() && super.canContinueToUse();
     }
 
     @Override
     public boolean canUse() {
-        return entity.getCurrentTask().filter(task -> task.getTask() == FactionMinionTasks.DEFEND_AREA.get() && ((DefendAreaTask.State) task).center() != null).map(task -> {
-                    BlockPos newCenter = ((DefendAreaTask.State) task).center();
+        return entity.getCurrentTask().filter(task -> task.task().value() == FactionMinionTasks.DEFEND_AREA.get() && ((DefendAreaTask.State) task.data()).center() != null).map(task -> {
+                    BlockPos newCenter = ((DefendAreaTask.State) task.data()).center();
                     if (bb == null || center == null || !center.equals(newCenter)) {
-                        this.bb = new AABB(newCenter).inflate(((DefendAreaTask.State) task).distance());
+                        this.bb = new AABB(newCenter).inflate(((DefendAreaTask.State) task.data()).distance());
                         this.center = newCenter;
                     }
 

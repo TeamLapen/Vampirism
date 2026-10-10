@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.renderer.entities;
 
+import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.vampirism.client.models.entities.ClothedModel;
 import de.teamlapen.vampirism.client.renderer.entities.state.MinionRenderState;
 import de.teamlapen.vampirism.common.world.entity.minion.VampireMinionEntity;
@@ -68,7 +69,7 @@ public class VampireMinionRenderer extends DualSplitBipedRenderer<VampireMinionE
     @Override
     public void extractRenderState(VampireMinionEntity entity, MinionRenderState state, float p_363123_) {
         super.extractRenderState(entity, state, p_363123_);
-        if (entity.getMinionData().filter(VampireMinionEntity.VampireMinionData::isUsingLordSkin).isPresent()) {
+        if (entity.getMinionData().filter(x -> x.has(FactionDataComponents.MINION_USE_LORD_SKIN)).isPresent()) {
             //noinspection DataFlowIssue
             state.lordSkin = entity.getLordID().map(x -> Minecraft.getInstance().getConnection().getPlayerInfo(x)).map(PlayerInfo::getSkin).orElse(null);
         }

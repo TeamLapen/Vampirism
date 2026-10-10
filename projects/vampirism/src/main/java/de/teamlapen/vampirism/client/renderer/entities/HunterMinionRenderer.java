@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.renderer.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.vampirism.client.models.entities.ClothedModel;
 import de.teamlapen.vampirism.client.renderer.entities.state.MinionRenderState;
 import de.teamlapen.vampirism.common.world.entity.minion.HunterMinionEntity;
@@ -89,7 +90,7 @@ public class HunterMinionRenderer extends DualSplitBipedRenderer<HunterMinionEnt
     @Override
     public void extractRenderState(HunterMinionEntity entity, MinionRenderState state, float p_363123_) {
         super.extractRenderState(entity, state, p_363123_);
-        if (entity.getMinionData().filter(HunterMinionEntity.HunterMinionData::isUsingLordSkin).isPresent()) {
+        if (entity.getMinionData().filter(e -> e.has(FactionDataComponents.MINION_USE_LORD_SKIN)).isPresent()) {
             //noinspection DataFlowIssue
             state.lordSkin = entity.getLordID().map(x -> Minecraft.getInstance().getConnection().getPlayerInfo(x)).map(PlayerInfo::getSkin).orElse(null);
         }

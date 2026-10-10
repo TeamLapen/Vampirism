@@ -23,7 +23,7 @@ import java.util.function.Supplier;
  * For each class there is a {@link de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask.IMinionTaskState} that holds the state of the task per minion during runtime and can be serialized to NBT.
  * Minions only hold their respective {@link de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask.IMinionTaskState} which also includes a reference to the task instance it belongs to
  */
-public interface IMinionTask<Q extends IMinionData, T extends IMinionTask.IMinionTaskState> {
+public interface IMinionTask<T extends IMinionTask.IMinionTaskState> {
 
     /**
      * Called when a new task should be started
@@ -33,7 +33,7 @@ public interface IMinionTask<Q extends IMinionData, T extends IMinionTask.IMinio
      * @param data   The minion data. Do not store
      * @return Either a new {@link de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask.IMinionTaskState} that holds potentially relevant information or null if it was not possible to activate the task (e.g. because the player has to be loaded)
      */
-    ActivateResult<T> activateTask(@Nullable Player lord, @Nullable IMinionEntity minion, Q data);
+    ActivateResult<T> activateTask(@Nullable Player lord, @Nullable IMinionEntity minion, IMinionData data);
 
     /**
      * Called before another task is activated
@@ -65,7 +65,7 @@ public interface IMinionTask<Q extends IMinionData, T extends IMinionTask.IMinio
      * @param minionGetter Getter for the minion entity. Only use if necessary as it's a costly operation. Optional can be empty if there is an issue.
      * @param minionData   The minion data.
      */
-    void tickActive(T desc, Supplier<Optional<IMinionEntity>> minionGetter, Q minionData);
+    void tickActive(T desc, Supplier<Optional<IMinionEntity>> minionGetter, IMinionData minionData);
 
     /**
      * Tick the task if the minion isn't loaded
@@ -75,7 +75,7 @@ public interface IMinionTask<Q extends IMinionData, T extends IMinionTask.IMinio
      * @param desc       Task description
      * @param minionData The minion data
      */
-    void tickBackground(T desc, Q minionData);
+    void tickBackground(T desc, IMinionData minionData);
 
 
     /**

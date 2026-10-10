@@ -4,14 +4,12 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
-import de.teamlapen.faction.api.FactionDataComponents;
 import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.util.FIdentifier;
-import de.teamlapen.faction.api.world.entities.minion.tasks.IFactionMinionTask;
 import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
-import de.teamlapen.faction.api.world.entities.minion.tasks.INoGlobalCommandTask;
 import de.teamlapen.faction.client.gui.screens.SelectMinionTaskRadialScreen;
+import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.faction.common.util.ModCodecs;
 import net.minecraft.core.Holder;
@@ -53,7 +51,7 @@ public class MinionTaskOrder extends PreferenceValue<Map<Holder<? extends IFacti
     }
 
     public List<SelectMinionTaskRadialScreen.Entry> allowedValues(Holder<? extends IFaction<?>> faction) {
-        Registry<IMinionTask<?, ?>> registry = registryAccess.lookupOrThrow(FactionRegistries.Keys.MINION_TASK);
+        Registry<IMinionTask<?>> registry = registryAccess.lookupOrThrow(FactionRegistries.Keys.MINION_TASK);
         return Stream.concat(registry.listElements()
                                 .filter(x -> x.components().has(FactionDataComponents.MINION_TASK_GLOBAL_COMMAND))
                                 .filter(x -> IFaction.is(faction, x.value().allowedFactions()))
@@ -87,11 +85,11 @@ public class MinionTaskOrder extends PreferenceValue<Map<Holder<? extends IFacti
     private static class EntryCodec implements Codec<SelectMinionTaskRadialScreen.Entry> {
 
         public static final Codec<SelectMinionTaskRadialScreen.Entry> CODEC = new EntryCodec();
-        private static final Codec<Holder<IMinionTask<?, ?>>> ID_CODEC = ModRegistries.MINION_TASKS.holderByNameCodec();
+        private static final Codec<Holder<IMinionTask<?>>> ID_CODEC = ModRegistries.MINION_TASKS.holderByNameCodec();
 
         @Override
         public <T> DataResult<Pair<SelectMinionTaskRadialScreen.Entry, T>> decode(DynamicOps<T> ops, T input) {
-            DataResult<Pair<Holder<IMinionTask<?, ?>>, T>> decode = ID_CODEC.decode(ops, input);
+            DataResult<Pair<Holder<IMinionTask<?>>, T>> decode = ID_CODEC.decode(ops, input);
             if (decode.isError()) {
                 var ide = Identifier.CODEC.decode(ops, input);
                 if (ide.error().isPresent()) {

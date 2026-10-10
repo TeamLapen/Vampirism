@@ -1,19 +1,17 @@
 package de.teamlapen.sync;
 
 import com.google.common.collect.Iterators;
-import com.mojang.serialization.Codec;
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.common.util.collections.CollectionUtil;
 import de.teamlapen.sync.api.ISyncable;
+import de.teamlapen.sync.api.MutableDataComponentMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
-import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMaps;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.TypedDataComponent;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.util.Unit;
 import net.neoforged.neoforge.common.CommonHooks;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jspecify.annotations.Nullable;
@@ -31,7 +29,7 @@ import java.util.stream.Collectors;
  * Unlike {@link net.minecraft.core.component.PatchedDataComponentMap}, values are not diffed against a prototype,
  * so a component is simply either present or absent.
  */
-public class SimpleMutableDataComponentMap extends PropertySync implements DataComponentMap {
+public class SimpleMutableDataComponentMap extends PropertySync implements MutableDataComponentMap {
 
     private Reference2ObjectArrayMap<DataComponentType<?>, Object> map = new Reference2ObjectArrayMap<>();
     @Nullable
@@ -85,21 +83,34 @@ public class SimpleMutableDataComponentMap extends PropertySync implements DataC
     }
 
     @SuppressWarnings("UnstableApiUsage")
+    @Override
     public <T> @Nullable T set(DataComponentType<T> type, @Nullable T value) {
         CommonHooks.validateComponent(value);
         //noinspection unchecked
         return (T) (value == null ? this.map.remove(type) : this.map.put(type, value));
     }
 
+    @Override
     public <T> @Nullable T set(Supplier<DataComponentType<T>> type, @Nullable T value) {
         return set(type.get(), value);
     }
 
+    @Override
+    public void set(Supplier<DataComponentType<Unit>> type, boolean value) {
+        if (value) {
+            set(type, Unit.INSTANCE);
+        } else {
+            remove(type.get());
+        }
+    }
+
+    @Override
     public <T> @Nullable T remove(DataComponentType<? extends T> type) {
         //noinspection unchecked
         return (T) this.map.remove(type);
     }
 
+    @Override
     public <T> @Nullable T remove(Supplier<DataComponentType<? extends T>> type) {
         return remove(type.get());
     }

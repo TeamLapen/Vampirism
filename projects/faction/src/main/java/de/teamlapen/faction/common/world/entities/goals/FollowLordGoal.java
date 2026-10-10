@@ -11,24 +11,24 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 
-public class FollowLordGoal extends MoveToPositionGoal<MinionEntity<?>> {
+public class FollowLordGoal extends MoveToPositionGoal<MinionEntity> {
 
 
     private @Nullable ILordPlayer lord;
 
 
-    public FollowLordGoal(@NotNull MinionEntity<?> entity, double followSpeedIn) {
+    public FollowLordGoal(@NotNull MinionEntity entity, double followSpeedIn) {
         super(entity, followSpeedIn, 5, 15, true, true);
     }
 
     @Override
     public boolean canContinueToUse() {
-        return super.canContinueToUse() && this.entity.getCurrentTask().filter(task -> task.getTask() == FactionMinionTasks.FOLLOW_LORD.get() || task.getTask() == FactionMinionTasks.PROTECT_LORD.get()).isPresent();
+        return super.canContinueToUse() && this.entity.getCurrentTask().filter(task -> task.task().value() == FactionMinionTasks.FOLLOW_LORD.get() || task.task().value() == FactionMinionTasks.PROTECT_LORD.get()).isPresent();
     }
 
     @Override
     public boolean canUse() {
-        if (this.entity.getCurrentTask().filter(task -> task.getTask() == FactionMinionTasks.FOLLOW_LORD.get() || task.getTask() == FactionMinionTasks.PROTECT_LORD.get()).isEmpty()) {
+        if (this.entity.getCurrentTask().filter(task -> task.task().value() == FactionMinionTasks.FOLLOW_LORD.get() || task.task().value() == FactionMinionTasks.PROTECT_LORD.get()).isEmpty()) {
             return false;
         }
         Optional<ILordPlayer> lord = this.entity.getLordOpt();

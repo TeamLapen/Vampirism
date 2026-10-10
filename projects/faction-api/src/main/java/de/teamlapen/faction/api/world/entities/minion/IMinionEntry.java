@@ -5,37 +5,25 @@ import de.teamlapen.faction.api.factions.lord.IMinionEntryBuilder;
 import de.teamlapen.faction.api.world.entities.ICustomizationHolder;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.world.entity.EntityType;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Supplier;
 
-public interface IMinionEntry<T extends IFactionPlayer<T>, Z extends IMinionData> {
+public interface IMinionEntry<T extends IFactionPlayer<T>> {
 
-    /**
-     * @return a supplier to create a fresh {@link IMinionData}
-     */
-    IMinionCreator<T, Z> data();
+    IMinionData createData(T factionPlayer, IMinionEntry<T> entry);
 
-    /**
-     * @return The entity type of the minion
-     */
-    Supplier<EntityType<? extends IMinionEntity>> type();
+    Holder<EntityType<? extends IMinionEntity>> type();
 
-    /**
-     * @return The faction this minion belongs to
-     */
     Holder<? extends IPlayableFaction<T>> faction();
 
-    /**
-     * @return The command arguments for this minion used by the MinionCommand to create a minion using commands
-     */
-    List<IMinionEntryBuilder.IMinionCommandBuilder.ICommandArgument<Z, ?>> commandArguments();
 
-    interface IMinionCreator<T extends IFactionPlayer<T>, Z extends IMinionData> {
+    List<MinionStat> minionStats();
 
-        Z create(T player, ICustomizationHolder customizationHolder);
+    @Nullable
+    MinionStat minionStat(Holder<DataComponentType<?>> type);
 
-        Z create();
-    }
 }

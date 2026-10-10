@@ -3,11 +3,13 @@ package de.teamlapen.faction.common.factions.minions;
 import de.teamlapen.faction.api.factions.IFactionExtensionGetter;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.util.FIdentifier;
+import de.teamlapen.faction.api.world.entities.minion.IMinionData;
 import de.teamlapen.faction.api.world.entities.minion.IMinionEntity;
 import de.teamlapen.faction.api.world.entities.minion.IMinionInventory;
 import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
 import de.teamlapen.faction.common.Permissions;
 import de.teamlapen.faction.common.components.FactionRestriction;
+import de.teamlapen.faction.common.core.FactionAttachments;
 import de.teamlapen.faction.common.core.FactionEntities;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
@@ -53,6 +55,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.PlayerTeam;
+import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
 import org.apache.logging.log4j.LogManager;
@@ -64,7 +67,7 @@ import org.jspecify.annotations.NonNull;
 import java.util.*;
 import java.util.function.Predicate;
 
-public abstract class MinionEntity<T extends MinionData> extends PathfinderMob implements ValueIOSerializable, ForceLookEntityGoal.TaskOwner, IMinionEntity, IEntityWithComplexSpawn, EntitySyncHolder.ISyncHolder<T> {
+public abstract class MinionEntity extends PathfinderMob implements ValueIOSerializable, ForceLookEntityGoal.TaskOwner, IMinionEntity, IEntityWithComplexSpawn, EntitySyncHolder.ISyncHolder<MinionData> {
 
     protected static final EntityDataAccessor<Optional<UUID>> LORD_ID = SynchedEntityData.defineId(MinionEntity.class, FactionEntities.OPTIONAL_UUID.get());
     private final static Logger LOGGER = LogManager.getLogger();
@@ -86,7 +89,7 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
     /**
      * Only valid and nonnull if playerMinionController !=null
      */
-    protected @Nullable T minionData;
+    protected @Nullable MinionData minionData;
     /**
      * Only valid if playerMinionController !=null
      */
@@ -112,7 +115,7 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
         this.softAttackPredicate = attackPredicate;
         this.hardAttackPredicate = livingEntity -> {
             boolean flag1 = getLordOpt().map(ILordPlayer::asEntity).filter(entity -> entity == livingEntity).isPresent(); //Don't attack lord
-            boolean flag2 = livingEntity instanceof MinionEntity && ((MinionEntity<?>) livingEntity).getLordID().filter(id -> getLordID().map(id2 -> id == id2).orElse(false)).isPresent(); //Don't attack other minions of lord
+            boolean flag2 = livingEntity instanceof MinionEntity && ((MinionEntity) livingEntity).getLordID().filter(id -> getLordID().map(id2 -> id == id2).orElse(false)).isPresent(); //Don't attack other minions of lord
             boolean flag3 = livingEntity instanceof Player otherPlayer && getLordOpt().map(ILordPlayer::asEntity).map(player -> !player.canHarmPlayer(otherPlayer)).orElse(!Permissions.isPvpEnabled(otherPlayer));
             return !flag1 && !flag2 && !flag3;
         };
@@ -124,17 +127,22 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
     }
 
     @Override
+    public AttachmentType<?> getDataAttachmentType() {
+        return FactionAttachments.MINION_DATA.get();
+    }
+
+    @Override
     public PropertySync getSyncData() {
         return this.property;
     }
 
     @Override
-    public void setData(Optional<T> t) {
+    public void setData(Optional<MinionData> t) {
         this.minionData = t.orElse(null);
     }
 
     @Override
-    public Optional<T> getData() {
+    public Optional<MinionData> getData() {
         return Optional.ofNullable(this.minionData);
     }
 
@@ -169,9 +177,9 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
     }
 
     public void changeMinionName(String name) {
-        if (minionData != null) {
+        if (this.minionData != null) {
             this.minionData.setName(name);
-            super.setCustomName(this.minionData.getFormattedName());
+            super.setCustomName(Component.literal(this.minionData.getName()));
         }
     }
 
@@ -251,10 +259,10 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
         return onlyShould ? this.hardAttackPredicate.and(this.softAttackPredicate) : this.hardAttackPredicate;
     }
 
-    public abstract List<IMinionTask<?, ?>> getAvailableTasks();
+    public abstract List<IMinionTask<?>> getAvailableTasks();
 
     @Override
-    public @NotNull Optional<IMinionTask.IMinionTaskState<?>> getCurrentTask() {
+    public @NotNull Optional<IMinionData.IActiveTask<?>> getCurrentTask() {
         return minionData != null ? Optional.of(minionData.getActiveTask()) : Optional.empty();
     }
 
@@ -280,7 +288,7 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
         return getLord();
     }
 
-    public @NotNull Optional<T> getMinionData() {
+    public @NotNull Optional<MinionData> getMinionData() {
         return Optional.ofNullable(minionData);
     }
 
@@ -499,7 +507,7 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
      * {@link MinionEntity#minionData} is already set
      * Can be called client and server side
      */
-    protected void onMinionDataReceived(@NotNull T data) {
+    protected void onMinionDataReceived(@NotNull MinionData data) {
         var input = TagValueInput.create(ProblemReporter.DISCARDING, registryAccess(), data.getEntityCaps());
         this.deserializeAttachments(input);
     }
@@ -509,7 +517,7 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
     protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (isLord(player)) {
             if (player instanceof ServerPlayer) {
-                player.openMenu(new SimpleMenuProvider((id, playerInventory, _) -> MinionContainer.create(id, playerInventory, this, getLord().orElseThrow()).orElse(null), Component.translatable("gui.factionapi.minion.name").append(this.getMinionData().map(MinionData::getFormattedName).orElse(Component.literal("Minion")))), buf -> buf.writeVarInt(this.getId()));
+                player.openMenu(new SimpleMenuProvider((id, playerInventory, _) -> MinionContainer.create(id, playerInventory, this, getLord().orElseThrow()).orElse(null), Component.translatable("gui.factionapi.minion.name").append(this.getMinionData().map(MinionData::getName).orElse("Minion"))), buf -> buf.writeVarInt(this.getId()));
             }
             return InteractionResult.SUCCESS;
         }
@@ -530,7 +538,7 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
         this.goalSelector.addGoal(10, new RandomLookAroundGoal(this) {
             @Override
             public boolean canUse() {
-                return super.canUse() && MinionEntity.this.getCurrentTask().filter(t -> t.getTask() == FactionMinionTasks.STAY.get()).isEmpty();
+                return super.canUse() && MinionEntity.this.getCurrentTask().filter(t -> t.task().value() == FactionMinionTasks.STAY.get()).isEmpty();
             }
         });
 
@@ -557,10 +565,10 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
         }
     }
 
-    public final void handleLoadedMinionData(@NotNull T data) {
+    public final void handleLoadedMinionData(@NotNull MinionData data) {
         this.updateAttributes();
         super.setHealth(data.getHealth());
-        super.setCustomName(data.getFormattedName());
+        super.setCustomName(Component.literal(data.getName()));
         try {
             this.onMinionDataReceived(data);
         } catch (ClassCastException e) {
@@ -590,23 +598,20 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
             this.checkoutMinionData(registryAccess());
         }
         if (this.minionData != null) {
-            this.minionData.serialize(output.child("data"));
+            MinionData.toCompound(this.minionData, output.child("data"));
             output.putInt("minion_id", minionId);
         }
     }
 
     @Override
     public void deserialize(@NotNull ValueInput input) {
-        input.child("data").ifPresent(data -> {
-            T minionData = MinionData.<T>fromNBT(data);
-            if (minionData == null) {
-                LOGGER.warn("Failed to find correct minion data");
-            } else {
-                this.minionData = minionData;
-                this.onMinionDataReceived(minionData);
+        input.child("data").ifPresent(valueInput -> {
+            MinionData.fromCompound(valueInput).ifPresentOrElse(data -> {
+                this.minionData = data;
+                this.onMinionDataReceived(data);
                 this.minionId = input.getInt("minion_id").orElseThrow();
-                super.setCustomName(minionData.getFormattedName());
-            }
+                super.setCustomName(Component.literal(data.getName()));
+            }, () -> LOGGER.warn("Failed to find correct minion data"));
         });
     }
 

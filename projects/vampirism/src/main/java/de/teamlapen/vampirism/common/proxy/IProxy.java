@@ -65,7 +65,7 @@ public interface IProxy {
     default void displayVampireMinionAppearanceScreen(VampireMinionEntity entity) {
     }
 
-    default void displayVampireMinionStatsaScreen(VampireMinionEntity entity) {
+    default void displayVampireMinionStatsScreen(VampireMinionEntity entity) {
     }
 
     default void displayHunterMinionAppearanceScreen(HunterMinionEntity entity) {

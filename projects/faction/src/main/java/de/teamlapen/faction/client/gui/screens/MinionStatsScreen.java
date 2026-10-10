@@ -2,12 +2,13 @@ package de.teamlapen.faction.client.gui.screens;
 
 import de.teamlapen.faction.FactionsMod;
 import de.teamlapen.faction.api.util.FIdentifier;
+import de.teamlapen.faction.api.world.entities.minion.IMinionData;
 import de.teamlapen.faction.client.IMinecraftAccessor;
 import de.teamlapen.faction.client.gui.screens.taskboard.SeparatorWidget;
 import de.teamlapen.faction.common.core.FactionItems;
 import de.teamlapen.faction.common.factions.minions.MinionData;
 import de.teamlapen.faction.common.factions.minions.MinionEntity;
-import de.teamlapen.faction.common.factions.minions.stats.MinionStat;
+import de.teamlapen.faction.api.world.entities.minion.MinionStat;
 import de.teamlapen.faction.common.network.packets.server.ServerboundResetMinionStatPacket;
 import de.teamlapen.faction.common.network.packets.server.ServerboundUpgradeMinionStatPacket;
 import de.teamlapen.faction.common.world.inventory.InventoryHelper;
@@ -15,10 +16,12 @@ import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.layouts.FrameLayout;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -26,10 +29,9 @@ import org.jetbrains.annotations.UnknownNullability;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 
-public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEntity<T>> extends Screen implements IMinecraftAccessor {
+public class MinionStatsScreen<Q extends MinionEntity> extends Screen implements IMinecraftAccessor {
 
     private static final Identifier BACKGROUND = FIdentifier.mod("background/default");
     protected static final WidgetSprites RESET = new WidgetSprites(FIdentifier.mod("widget/reset"), FIdentifier.mod("widget/reset_disabled"), FIdentifier.mod("widget/reset_highlighted"));
@@ -39,7 +41,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
     @Nullable
     protected final ILastScreenProvider backScreen;
     private Button reset;
-    protected T minionData;
+    protected IMinionData minionData;
 
     private final GridLayout layout = new GridLayout();
     @UnknownNullability
@@ -50,7 +52,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
     private StringWidget skillPointWidget;
     private final List<StatRow> statRows = new ArrayList<>();
 
-    protected MinionStatsScreen(Q entity, @Nullable ILastScreenProvider backScreen) {
+    public MinionStatsScreen(Q entity, @Nullable ILastScreenProvider backScreen) {
         super(Component.translatable("gui.factionapi.minion.stats"));
         this.entity = entity;
         this.minionData = entity.getMinionData().orElseThrow();
@@ -59,13 +61,23 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
     }
 
 
-    protected abstract void initStatRows();
+    protected void initStatRows() {
+        for (MinionStat minionStat : this.minionData.getMinionEntry().minionStats()) {
+            addStatRow(minionStat);
+        }
+    }
 
-    protected abstract int getRemainingStatPoints();
+    protected int getRemainingStatPoints() {
+        return this.minionData.getRemainingStatPoints();
+    }
 
-    protected abstract int getLevel();
+    protected int getLevel() {
+        return this.minionData.getLevel();
+    }
 
-    protected abstract int getMaxLevel();
+    protected int getMaxLevel() {
+        return this.minionData.getMaxLevel();
+    }
 
     protected void updateStats() {
         this.statRows.forEach(row -> row.update(this.entity, this.minionData));
@@ -78,7 +90,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
         updateStats();
     }
 
-    protected void addStatRow(MinionStat<T> stat) {
+    protected void addStatRow(MinionStat stat) {
         this.statRows.add(new StatRow(this.entity, this.minionData, stat));
     }
 
@@ -179,20 +191,20 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
 
         private final Component name;
         @NotNull
-        private final MinionStat<?> stat;
+        private final MinionStat stat;
         private final int totalLevels;
         private String value = "";
         private int currentLevel;
         @Nullable
         private Runnable onChange;
 
-        public StatRow(MinionEntity<?> entity, MinionData data, MinionStat<?> stat) {
+        public StatRow(MinionEntity entity, IMinionData data, MinionStat stat) {
             this.totalLevels = stat.getMaxLevel();
             this.name = stat.getDescription();
             this.stat = stat;
         }
 
-        public Identifier id() {
+        public DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> id() {
             return this.stat.getIdentifier();
         }
 
@@ -204,7 +216,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
             this.onChange = onChange;
         }
 
-        public void update(MinionEntity<?> entity, MinionData data) {
+        public void update(MinionEntity entity, IMinionData data) {
             this.value = this.stat.currentValue(entity, data);
             this.currentLevel = this.stat.currentLevel(data);
             if (onChange != null) {

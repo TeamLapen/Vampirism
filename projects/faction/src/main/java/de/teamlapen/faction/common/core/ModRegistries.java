@@ -28,7 +28,7 @@ import net.neoforged.neoforge.registries.RegistryBuilder;
 public class ModRegistries {
     public static final Registry<ISkill<?>> SKILLS = new RegistryBuilder<>(FactionRegistries.Keys.SKILL).sync(true).withIntrusiveHolders().create();
     public static final Registry<IAction<?>> ACTIONS = new RegistryBuilder<>(FactionRegistries.Keys.ACTION).sync(true).create();
-    public static final Registry<IMinionTask<?, ?>> MINION_TASKS = new RegistryBuilder<>(FactionRegistries.Keys.MINION_TASK).sync(true).create();
+    public static final Registry<IMinionTask<?>> MINION_TASKS = new RegistryBuilder<>(FactionRegistries.Keys.MINION_TASK).sync(true).withIntrusiveHolders().create();
     public static final Registry<IRefinement> REFINEMENTS = new RegistryBuilder<>(FactionRegistries.Keys.REFINEMENT).sync(true).create();
     public static final Registry<IRefinementSet> REFINEMENT_SETS = new RegistryBuilder<>(FactionRegistries.Keys.REFINEMENT_SET).sync(true).create();
     public static final Registry<FactionPlayerConsumer> FACTION_PLAYER_CONSUMERS = new RegistryBuilder<>(FactionRegistries.Keys.FACTION_PLAYER_CONSUMER).sync(true).create();
@@ -43,7 +43,7 @@ public class ModRegistries {
     public static final Registry<IFactionFoodBehavior> FOOD_BEHAVIOURS = new RegistryBuilder<>(FactionRegistries.Keys.FOOD_BEHAVIOUR).create();
 
     public static final Registry<IFaction<?>> FACTIONS = new RegistryBuilder<>(FactionRegistries.Keys.FACTION).sync(true).defaultKey(Factions.Keys.NEUTRAL).withIntrusiveHolders().create();
-    public static final Registry<IMinionEntry<?, ?>> MINIONS = new RegistryBuilder<>(FactionRegistries.Keys.MINION).callback(new MinionEntryCallbacks()).sync(true).create();
+    public static final Registry<IMinionEntry<?>> MINIONS = new RegistryBuilder<>(FactionRegistries.Keys.MINION).callback(new MinionEntryCallbacks()).sync(true).create();
 
     public static final RegistrySetBuilder DATA_BUILDER = new RegistrySetBuilder()
             .add(FactionRegistries.Keys.TASK, FactionTasks::createTasks)

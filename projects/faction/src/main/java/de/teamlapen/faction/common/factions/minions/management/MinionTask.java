@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.faction.api.FactionDataComponents;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.factions.skills.ISkill;
@@ -12,10 +11,13 @@ import de.teamlapen.faction.api.factions.skills.ISkillHandler;
 import de.teamlapen.faction.api.tags.FactionTags;
 import de.teamlapen.faction.api.world.entities.minion.IMinionData;
 import de.teamlapen.faction.api.world.entities.minion.IMinionEntity;
+import de.teamlapen.faction.api.world.entities.minion.MinionStat;
 import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
 import de.teamlapen.faction.api.world.entities.minion.tasks.MinionTaskProperties;
 import de.teamlapen.faction.common.core.FactionAdvancements;
+import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.core.ModRegistries;
+import de.teamlapen.faction.common.factions.minions.MinionData;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.network.chat.Component;
@@ -30,13 +32,13 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public class MinionTask<TData extends IMinionData, TState extends IMinionTask.IMinionTaskState> implements IMinionTask<TData, TState> {
+public class MinionTask<TState extends IMinionTask.IMinionTaskState> implements IMinionTask<TState> {
 
     private final String nameId;
     private final Codec<TState> stateCodec;
     @Nullable
     private final TState emptyState;
-    private final Holder.Reference<IMinionTask<?,?>> builtInRegistryHolder;
+    private final Holder.Reference<IMinionTask<?>> builtInRegistryHolder;
 
     public MinionTask(MinionTaskProperties properties, @NotNull TState emptyState) {
         this.nameId = properties.effectiveNameId();
@@ -85,7 +87,7 @@ public class MinionTask<TData extends IMinionData, TState extends IMinionTask.IM
 
     @NotNull
     @Override
-    public ActivateResult<TState> activateTask(@Nullable Player lord, @Nullable IMinionEntity minion, TData data) {
+    public ActivateResult<TState> activateTask(@Nullable Player lord, @Nullable IMinionEntity minion, IMinionData data) {
         return new ActivateResult<>(this.emptyState);
     }
 
@@ -95,12 +97,12 @@ public class MinionTask<TData extends IMinionData, TState extends IMinionTask.IM
     }
 
     @Override
-    public void tickActive(TState desc, Supplier<Optional<IMinionEntity>> minionGetter, TData minionData) {
+    public void tickActive(TState desc, Supplier<Optional<IMinionEntity>> minionGetter, IMinionData minionData) {
         this.tickBackground(desc, minionData);
     }
 
     @Override
-    public void tickBackground(TState desc, TData minionData) {
+    public void tickBackground(TState desc, IMinionData minionData) {
 
     }
 

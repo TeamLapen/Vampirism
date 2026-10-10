@@ -25,7 +25,7 @@ public class ModDamageSources {
         return new DamageSource(this.damageTypes.getOrThrow(key));
     }
 
-    public MinionDamageSource minion(MinionEntity<?> entity) {
+    public MinionDamageSource minion(MinionEntity entity) {
         return new MinionDamageSource(this.damageTypes.getOrThrow(FactionDamageTypes.MINION), entity);
     }
 

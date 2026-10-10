@@ -16,7 +16,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.function.*;
 
 @SuppressWarnings("unused")
-public class DeferredMinionTaskRegister extends DeferredRegister<IMinionTask<?, ?>> {
+public class DeferredMinionTaskRegister extends DeferredRegister<IMinionTask<?>> {
 
     protected DeferredMinionTaskRegister(String namespace) {
         super(FactionRegistries.Keys.MINION_TASK, namespace);
@@ -28,37 +28,37 @@ public class DeferredMinionTaskRegister extends DeferredRegister<IMinionTask<?, 
 
     @Deprecated
     @Override
-    public <I extends IMinionTask<?,?>> DeferredHolder<IMinionTask<?,?>, I> register(String name, Supplier<? extends I> sup) {
+    public <I extends IMinionTask<?>> DeferredHolder<IMinionTask<?>, I> register(String name, Supplier<? extends I> sup) {
         return super.register(name, sup);
     }
 
-    public <TData extends IMinionData, TState extends IMinionTask.IMinionTaskState, TTask extends IMinionTask<TData, TState>> DeferredMinionTask<TData, TState, TTask> registerTask(String name, Function<MinionTaskProperties, ? extends TTask> sup) {
+    public <TData extends IMinionData, TState extends IMinionTask.IMinionTaskState, TTask extends IMinionTask<TState>> DeferredMinionTask<TState, TTask> registerTask(String name, Function<MinionTaskProperties, ? extends TTask> sup) {
         return registerTask(name, sup, x -> x);
     }
 
     @SuppressWarnings({"unchecked", "RedundantCast"})
-    public <TData extends IMinionData, TState extends IMinionTask.IMinionTaskState, TTask extends IMinionTask<TData, TState>> DeferredMinionTask<TData, TState, TTask> registerTask(String name, Function<MinionTaskProperties, ? extends TTask> sup, UnaryOperator<MinionTaskProperties> properties) {
-        return (DeferredMinionTask<TData, TState, TTask>) (Object) super.register(name, key -> sup.apply(properties.apply(new MinionTaskProperties().setId(ResourceKey.create(FactionRegistries.Keys.MINION_TASK, key)))));
+    public <TState extends IMinionTask.IMinionTaskState, TTask extends IMinionTask<TState>> DeferredMinionTask<TState, TTask> registerTask(String name, Function<MinionTaskProperties, ? extends TTask> sup, UnaryOperator<MinionTaskProperties> properties) {
+        return (DeferredMinionTask<TState, TTask>) (Object) super.register(name, key -> sup.apply(properties.apply(new MinionTaskProperties().setId(ResourceKey.create(FactionRegistries.Keys.MINION_TASK, key)))));
     }
 
-    public <TData extends IMinionData, TTask extends IMinionTask<TData, IMinionTask.EmptyState>> DeferredMinionTask<TData, IMinionTask.EmptyState, TTask> registerTask(String name, BiFunction<MinionTaskProperties, IMinionTask.EmptyState, ? extends TTask> sup) {
+    public <TTask extends IMinionTask<IMinionTask.EmptyState>> DeferredMinionTask<IMinionTask.EmptyState, TTask> registerTask(String name, BiFunction<MinionTaskProperties, IMinionTask.EmptyState, ? extends TTask> sup) {
         return registerTask(name, sup, x -> x);
     }
 
     @SuppressWarnings({"unchecked", "RedundantCast"})
-    public <TData extends IMinionData, TTask extends IMinionTask<TData, IMinionTask.EmptyState>> DeferredMinionTask<TData, IMinionTask.EmptyState, TTask> registerTask(String name, BiFunction<MinionTaskProperties, IMinionTask.EmptyState, ? extends TTask> sup, UnaryOperator<MinionTaskProperties> properties) {
-        return (DeferredMinionTask<TData, IMinionTask.EmptyState, TTask>) (Object) super.register(name, key -> sup.apply(properties.apply(new MinionTaskProperties().setId(ResourceKey.create(FactionRegistries.Keys.MINION_TASK, key))), IMinionTask.EmptyState.INSTANCE));
+    public <TTask extends IMinionTask<IMinionTask.EmptyState>> DeferredMinionTask<IMinionTask.EmptyState, TTask> registerTask(String name, BiFunction<MinionTaskProperties, IMinionTask.EmptyState, ? extends TTask> sup, UnaryOperator<MinionTaskProperties> properties) {
+        return (DeferredMinionTask<IMinionTask.EmptyState, TTask>) (Object) super.register(name, key -> sup.apply(properties.apply(new MinionTaskProperties().setId(ResourceKey.create(FactionRegistries.Keys.MINION_TASK, key))), IMinionTask.EmptyState.INSTANCE));
     }
 
     @Override
     @Deprecated
-    public <I extends IMinionTask<?,?>> DeferredHolder<IMinionTask<?,?>, I> register(String name, Function<Identifier, ? extends I> func) {
+    public <I extends IMinionTask<?>> DeferredHolder<IMinionTask<?>, I> register(String name, Function<Identifier, ? extends I> func) {
         return super.register(name, func);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    protected <I extends IMinionTask<?, ?>> DeferredHolder<IMinionTask<?, ?>, I> createHolder(ResourceKey<? extends Registry<IMinionTask<?, ?>>> registryKey, Identifier key) {
-        return (DeferredHolder<IMinionTask<?,?>, I>) (Object) DeferredMinionTask.createTask(key);
+    protected <I extends IMinionTask<?>> DeferredHolder<IMinionTask<?>, I> createHolder(ResourceKey<? extends Registry<IMinionTask<?>>> registryKey, Identifier key) {
+        return (DeferredHolder<IMinionTask<?>, I>) (Object) DeferredMinionTask.createTask(key);
     }
 }

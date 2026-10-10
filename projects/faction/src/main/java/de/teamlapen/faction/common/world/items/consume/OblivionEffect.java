@@ -29,7 +29,7 @@ public class OblivionEffect implements ConsumeEffect {
         if (livingEntity instanceof Player player) {
             FactionPlayerHandler.get(player).getCurrentSkillPlayer().ifPresent(OblivionPotionItem::applyEffect);
         }
-        if (livingEntity instanceof MinionEntity<?> minion) {
+        if (livingEntity instanceof MinionEntity minion) {
             minion.getMinionData().ifPresent(d -> d.resetStats(minion));
         }
         return true;

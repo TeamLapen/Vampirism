@@ -93,7 +93,7 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
         FactionsMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.SHOW_MINION_CALL_SELECTION));
     }
 
-    private static void sendTask(Holder<IMinionTask<?, ?>> task) {
+    private static void sendTask(Holder<IMinionTask<?>> task) {
         FactionsMod.proxy.sendToServer(new ServerboundSelectMinionTaskPacket(-1, task.getKey().identifier()));
     }
 
@@ -103,13 +103,13 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
         private final Component text;
         private final Identifier loc;
         private final Runnable onSelected;
-        private final Holder<IMinionTask<?, ?>> task;
+        private final Holder<IMinionTask<?>> task;
 
-        public Entry(@NotNull Holder<IMinionTask<?, ?>> task) {
+        public Entry(@NotNull Holder<IMinionTask<?>> task) {
             this(task.getKey().identifier(), task.value().getName(), task.getKey().identifier().withPath(path -> "textures/minion_tasks/" + path + ".png"), (() -> sendTask(task)), task);
         }
 
-        public Entry(@NotNull Identifier id, @NotNull Component text, @NotNull Identifier icon, @NotNull Runnable onSelected, @Nullable Holder<IMinionTask<?, ?>> task) {
+        public Entry(@NotNull Identifier id, @NotNull Component text, @NotNull Identifier icon, @NotNull Runnable onSelected, @Nullable Holder<IMinionTask<?>> task) {
             this.id = id;
             this.text = text;
             this.loc = icon;
@@ -137,7 +137,7 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
         }
 
         @Nullable
-        public Holder<IMinionTask<?, ?>> getTask() {
+        public Holder<IMinionTask<?>> getTask() {
             return this.task;
         }
 

@@ -13,13 +13,13 @@ public class FactionMinionTasks {
 
     public static final DeferredMinionTaskRegister MINION_TASKS = DeferredMinionTaskRegister.create(REFERENCE.MOD_ID);
 
-    public static final DeferredMinionTask<MinionData, IMinionTask.EmptyState, MinionTask<MinionData, IMinionTask.EmptyState>> NOTHING = MINION_TASKS.registerTask("nothing", MinionTask::new);
+    public static final DeferredMinionTask<IMinionTask.EmptyState, MinionTask<IMinionTask.EmptyState>> NOTHING = MINION_TASKS.registerTask("nothing", MinionTask::new);
 
-    public static final DeferredMinionTask<MinionData, StayTask.State, StayTask> STAY = MINION_TASKS.registerTask("stay", StayTask::new, MinionTaskProperties::markGlobal);
-    public static final DeferredMinionTask<MinionData, DefendAreaTask.State, DefendAreaTask> DEFEND_AREA = MINION_TASKS.registerTask("defend_area", DefendAreaTask::new, MinionTaskProperties::markGlobal);
+    public static final DeferredMinionTask<StayTask.State, StayTask> STAY = MINION_TASKS.registerTask("stay", StayTask::new, MinionTaskProperties::markGlobal);
+    public static final DeferredMinionTask<DefendAreaTask.State, DefendAreaTask> DEFEND_AREA = MINION_TASKS.registerTask("defend_area", DefendAreaTask::new, MinionTaskProperties::markGlobal);
 
-    public static final DeferredMinionTask<MinionData, MinionTask.EmptyState, MinionTask<MinionData, MinionTask.EmptyState>> FOLLOW_LORD = MINION_TASKS.registerTask("follow_lord", MinionTask::new, MinionTaskProperties::markGlobal);
-    public static final DeferredMinionTask<MinionData, MinionTask.EmptyState, MinionTask<MinionData, MinionTask.EmptyState>> PROTECT_LORD = MINION_TASKS.registerTask("protect_lord", MinionTask::new, MinionTaskProperties::markGlobal);
+    public static final DeferredMinionTask<MinionTask.EmptyState, MinionTask<MinionTask.EmptyState>> FOLLOW_LORD = MINION_TASKS.registerTask("follow_lord", MinionTask::new, MinionTaskProperties::markGlobal);
+    public static final DeferredMinionTask<MinionTask.EmptyState, MinionTask<MinionTask.EmptyState>> PROTECT_LORD = MINION_TASKS.registerTask("protect_lord", MinionTask::new, MinionTaskProperties::markGlobal);
 
     public static void register(IEventBus bus) {
         MINION_TASKS.register(bus);
