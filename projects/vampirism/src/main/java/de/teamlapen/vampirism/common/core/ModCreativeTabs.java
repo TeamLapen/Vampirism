@@ -94,6 +94,13 @@ public class ModCreativeTabs {
 
             add(RITUAL_KNIFE);
             add(new ItemStack(RITUAL_KNIFE, 1, DataComponentPatch.builder().set(ModDataComponents.CHARGED_RITUAL_KNIFE.get(), true).build()));
+
+            addItemGen(BLOOD_INFUSED_RAW_IRON);
+            addItemGen(BLOOD_INFUSED_RAW_GOLD);
+            addItemGen(BLOOD_INFUSED_IRON_INGOT);
+            addItemGen(BLOOD_INFUSED_GOLD_INGOT);
+            addItemGen(BLOOD_INFUSED_DIAMOND);
+            addItemGen(BLOOD_INFUSED_NETHERITE_INGOT);
         }
 
         private void addBlocks() {
@@ -242,12 +249,6 @@ public class ModCreativeTabs {
             addArmor();
 
             addItemGen(BLOOD_BOTTLE);
-            addItemGen(BLOOD_INFUSED_RAW_IRON);
-            addItemGen(BLOOD_INFUSED_RAW_GOLD);
-            addItemGen(BLOOD_INFUSED_IRON_INGOT);
-            addItemGen(BLOOD_INFUSED_GOLD_INGOT);
-            addItemGen(BLOOD_INFUSED_DIAMOND);
-            addItemGen(BLOOD_INFUSED_NETHERITE_INGOT);
 
             add(PURE_BLOOD_0);
             add(PURE_BLOOD_1);
@@ -265,8 +266,6 @@ public class ModCreativeTabs {
             add(FABRIC_FILTER);
             add(FEEDING_ADAPTER);
             add(CHALICE);
-
-            VampirismRegistries.OIL.get().listElements().filter(s -> !s.is(ModOils.EMPTY)).map(s -> ItemDataUtils.createOil(OIL_BOTTLE.get(), s)).forEach(this::add);
         }
 
         private void addWeapons() {
@@ -310,6 +309,8 @@ public class ModCreativeTabs {
             add(BLOOD_GRINDER);
             add(BLOOD_SIEVE);
             add(INFUSER);
+
+            ColorListsUtil.COFFINS.forEach(d -> add(d.get()));
         }
     }
 
@@ -421,12 +422,12 @@ public class ModCreativeTabs {
             add(HUNTER_MINION_UPGRADE_SPECIAL);
 
             add(ALCHEMICAL_FIRE);
+
+            VampirismRegistries.OIL.get().listElements().filter(s -> !s.is(ModOils.EMPTY)).map(s -> ItemDataUtils.createOil(OIL_BOTTLE.get(), s)).forEach(this::add);
         }
 
         private void addBlocks() {
             addFunctionalBlocks();
-
-            ColorListsUtil.COFFINS.forEach(d -> add(d.get()));
         }
 
         private void addFunctionalBlocks() {
