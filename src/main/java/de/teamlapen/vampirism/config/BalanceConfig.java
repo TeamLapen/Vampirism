@@ -110,7 +110,6 @@ public class BalanceConfig {
     public final ModConfigSpec.IntValue vsJumpBoost;
     public final ModConfigSpec.DoubleValue vsSpeedBoost;
     public final ModConfigSpec.IntValue vsBloodVisionDistanceSq;
-    public final ModConfigSpec.DoubleValue vsSmallAttackDamageModifier;
     public final ModConfigSpec.DoubleValue vsSmallAttackDamageMultiplier;
     public final ModConfigSpec.DoubleValue vsSmallAttackSpeedModifier;
     public final ModConfigSpec.DoubleValue vsNeonatalReduction;
@@ -338,7 +337,6 @@ public class BalanceConfig {
         vsJumpBoost = builder.comment("Similar to potion effect amplifier (and -1 is normal)").defineInRange("jumpBoost", 1, -1, 5);
         vsSpeedBoost = builder.comment("Max speed is multiplied with (value+1)").defineInRange("speedBoost", 0.15, 0, 3);
         vsBloodVisionDistanceSq = builder.comment("Squared blood vision distance").defineInRange("bloodVisionDistanceSq", 1600, 5, Integer.MAX_VALUE);
-        vsSmallAttackDamageModifier = builder.comment("Damage added to base damage").defineInRange("smallAttackDamageModifier", 1d, 0, 10d);
         vsSmallAttackDamageMultiplier = builder.comment("Damage to multiply as total (value + 1)").defineInRange("smallAttackDamageMultiplier", 0.1f,0,1);
         vsSmallAttackSpeedModifier = builder.comment("Basic skill - Weapon cooldown = 1/(oldvalue*(1+modifier))").defineInRange("smallAttackSpeedModifier", 0.15, 0, 3);
         vsNeonatalReduction = builder.comment("Reduced percentage of the neonatal effect").defineInRange("neonatalReduction", 0.5, 0, 1024);

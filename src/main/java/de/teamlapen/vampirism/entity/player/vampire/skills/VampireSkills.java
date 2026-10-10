@@ -87,7 +87,6 @@ public class VampireSkills {
     //Config null, so cannot get method ref
     @SuppressWarnings({"Convert2MethodRef", "FunctionalExpressionCanBeFolded"})
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> VAMPIRE_ATTACK_DAMAGE = SKILLS.register("vampire_attack_damage", () -> new VampirismSkill.SimpleVampireSkill(2, false)
-            .registerAttributeModifier(Attributes.ATTACK_DAMAGE, () -> VampirismConfig.BALANCE.vsSmallAttackDamageModifier.get(), AttributeModifier.Operation.ADD_VALUE)
             .registerAttributeModifier(Attributes.ATTACK_DAMAGE, () -> VampirismConfig.BALANCE.vsSmallAttackDamageMultiplier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
 
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> NEONATAL_DECREASE = SKILLS.register("neonatal_decrease", () -> new VampirismSkill.SimpleVampireSkill(2, true).registerAttributeModifier(ModAttributes.NEONATAL_DURATION, () -> VampirismConfig.BALANCE.vsNeonatalReduction.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
