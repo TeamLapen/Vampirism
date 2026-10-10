@@ -131,7 +131,6 @@ public class FactionDataComponents {
         public static final Identifier MINION_TASK_STATE_CODEC = FIdentifier.mod("minion_task_state_codec");
 
         public static final Identifier MINION_LEVEL = FIdentifier.mod("minion_level");
-        public static final Identifier MINION_MAX_LEVEL = FIdentifier.mod("minion_max_level");
         public static final Identifier MINION_NAME = FIdentifier.mod("minion_name");
         public static final Identifier MINION_USE_LORD_SKIN = FIdentifier.mod("minion_use_lord_skin");
         public static final Identifier MINION_USE_MINION_SKIN = FIdentifier.mod("minion_use_minion_skin");

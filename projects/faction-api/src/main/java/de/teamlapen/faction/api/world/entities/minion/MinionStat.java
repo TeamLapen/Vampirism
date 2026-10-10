@@ -30,7 +30,7 @@ public abstract class MinionStat  {
     }
 
     public void apply(int level, IMinionEntity minion, IMinionData data) {
-
+        data.set(identifier, level);
     }
 
     public int currentLevel(IMinionData minion) {

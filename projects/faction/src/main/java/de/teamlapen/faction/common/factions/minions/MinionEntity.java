@@ -162,6 +162,8 @@ public abstract class MinionEntity extends PathfinderMob implements ValueIOSeria
     @Override
     public boolean apply(@NonNull CustomizationData data) {
         if (ICustomizable.super.apply(data)) {
+            // setCustomName is a NOP for minions, so refresh the vanilla custom name from the minion data
+            getData().ifPresent(minionData -> super.setCustomName(Component.literal(minionData.getName())));
             sync();
             return true;
         }
@@ -194,13 +196,6 @@ public abstract class MinionEntity extends PathfinderMob implements ValueIOSeria
         if (!this.level().isClientSide() && !this.isValid() && this.isAlive()) {
             LOGGER.warn("Minion without lord.");
             this.discard();
-        }
-    }
-
-    public void changeMinionName(String name) {
-        if (this.minionData != null) {
-            this.minionData.setName(name);
-            super.setCustomName(Component.literal(this.minionData.getName()));
         }
     }
 
@@ -463,8 +458,6 @@ public abstract class MinionEntity extends PathfinderMob implements ValueIOSeria
         }
     }
 
-    public abstract boolean shouldRenderLordSkin();
-
     @Override
     public boolean shouldShowName() {
         return true;
@@ -531,6 +524,7 @@ public abstract class MinionEntity extends PathfinderMob implements ValueIOSeria
     protected void onMinionDataReceived(@NotNull MinionData data) {
         var input = TagValueInput.create(ProblemReporter.DISCARDING, registryAccess(), data.getEntityCaps());
         this.deserializeAttachments(input);
+        updateAttributes();
     }
 
     @NotNull

@@ -80,7 +80,7 @@ public class MinionData extends SimpleMutableDataComponentMap implements IMinion
     }
 
     public int getMaxLevel() {
-        return getOrDefault(FactionDataComponents.MINION_MAX_LEVEL, 0);
+        return this.minionEntry.maxLevel();
     }
 
     @Override
@@ -236,7 +236,8 @@ public class MinionData extends SimpleMutableDataComponentMap implements IMinion
         if (minionStat != null) {
             int currentStat = getOrDefault(minionStat.getIdentifier(), 0);
             int nextStat = Math.min(currentStat + 1, minionStat.getMaxLevel());
-            if (nextStat > minionStat.getMaxLevel()) {
+            if (nextStat <= minionStat.getMaxLevel()) {
+                minionStat.apply(nextStat, entity, this);
                 set(minionStat.getIdentifier(), nextStat);
                 return true;
             }
@@ -280,9 +281,10 @@ public class MinionData extends SimpleMutableDataComponentMap implements IMinion
     public static final MinionStat INVENTORY_STATS = new MinionStat(FactionDataComponents.MINION_INVENTORY_LEVEL, 2, Component.translatable("gui.vampirism.minion.stats.inventory_level")) {
         @Override
         public void apply(int level, IMinionEntity minion, IMinionData data) {
+            super.apply(level, minion, data);
             switch (level) {
-                case 1,2,3: data.set(FactionDataComponents.MINION_INVENTORY_SLOTS, level * 3);
-                default: data.remove(FactionDataComponents.MINION_INVENTORY_SLOTS.get());
+                case 1,2,3 -> data.set(FactionDataComponents.MINION_INVENTORY_SLOTS, level * 3);
+                default -> data.remove(FactionDataComponents.MINION_INVENTORY_SLOTS.get());
             }
             data.getInventory().updateFromData(data);
         }

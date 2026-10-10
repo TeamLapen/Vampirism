@@ -24,6 +24,7 @@ public class MinionEntryProperties<T extends IFactionPlayer<T>> {
     private Holder<? extends IPlayableFaction<T>> faction;
     private final List<MinionStat> minionStats = new ArrayList<>();
     private final List<MinionAppearance<?>> minionAppearances = new ArrayList<>();
+    private int maxLevel = 1;
 
     public MinionEntryProperties<T> withProvider(BiFunction<T, IMinionEntry<T>, IMinionData> dataProvider) {
         this.dataProvider = dataProvider;
@@ -50,6 +51,11 @@ public class MinionEntryProperties<T extends IFactionPlayer<T>> {
         return this;
     }
 
+    public MinionEntryProperties<T> withMaxLevel(int maxLevel) {
+        this.maxLevel = maxLevel;
+        return this;
+    }
+
     public BiFunction<T, IMinionEntry<T>, IMinionData> getDataProvider() {
         return Objects.requireNonNull(this.dataProvider);
     }
@@ -67,5 +73,8 @@ public class MinionEntryProperties<T extends IFactionPlayer<T>> {
     }
     public List<MinionAppearance<?>> getMinionAppearances() {
         return List.copyOf(this.minionAppearances);
+    }
+    public int getMaxLevel() {
+        return this.maxLevel;
     }
 }

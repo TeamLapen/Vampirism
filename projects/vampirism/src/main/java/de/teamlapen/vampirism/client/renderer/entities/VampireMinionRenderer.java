@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.renderer.entities;
 
+import de.teamlapen.faction.api.world.entities.minion.MinionAppearance;
 import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.vampirism.client.models.entities.ClothedModel;
 import de.teamlapen.vampirism.client.renderer.entities.state.MinionRenderState;
@@ -69,11 +70,12 @@ public class VampireMinionRenderer extends DualSplitBipedRenderer<VampireMinionE
     @Override
     public void extractRenderState(VampireMinionEntity entity, MinionRenderState state, float p_363123_) {
         super.extractRenderState(entity, state, p_363123_);
-        if (entity.getMinionData().filter(x -> x.has(FactionDataComponents.MINION_USE_LORD_SKIN)).isPresent()) {
+        if (MinionAppearance.LORD_SKIN.currentValue(entity, entity.getData())) {
             //noinspection DataFlowIssue
             state.lordSkin = entity.getLordID().map(x -> Minecraft.getInstance().getConnection().getPlayerInfo(x)).map(PlayerInfo::getSkin).orElse(null);
         }
-        state.skin = (entity.hasMinionSpecificSkin() && this.minionSpecificTextures.length > 0) ? minionSpecificTextures[entity.getVampireType() % minionSpecificTextures.length] : textures[entity.getVampireType() % textures.length];
+        int type = MinionAppearance.SKIN_TYPE.currentValue(entity, entity.getData());
+        state.skin = (MinionAppearance.MINION_SKIN.currentValue(entity, entity.getData())  && this.minionSpecificTextures.length > 0) ? minionSpecificTextures[type % minionSpecificTextures.length] : textures[type % textures.length];
     }
 
 }

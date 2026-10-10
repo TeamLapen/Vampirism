@@ -70,14 +70,16 @@ public class ModFactions {
             .withEntityType(ModEntities.VAMPIRE_MINION)
             .withFaction(ModFactions.VAMPIRE)
             .withMinionStats(MinionData.HEALTH_STATS, MinionData.INVENTORY_STATS, MinionData.STRENGTH_STATS, MinionData.SPEED_STATS)
-            .withMinionAppearances(MinionAppearance.NAME_TYPE, MinionAppearance.SKIN_TYPE)));
+            .withMinionAppearances(MinionAppearance.NAME_TYPE, MinionAppearance.SKIN_TYPE)
+            .withMaxLevel(5)));
 
     public static final DeferredHolder<IMinionEntry<?>, IMinionEntry<IHunterPlayer>> HUNTER_MINION = MINIONS.register(VampirismFactions.Keys.HUNTER.getPath(), () -> new MinionEntry<>(new MinionEntryProperties<IHunterPlayer>()
             .withProvider((_,x) -> new MinionData(x))
             .withEntityType(ModEntities.HUNTER_MINION)
             .withFaction(ModFactions.HUNTER)
             .withMinionStats(MinionData.HEALTH_STATS, MinionData.INVENTORY_STATS, MinionData.STRENGTH_STATS, MinionData.SPEED_STATS)
-            .withMinionAppearances(MinionAppearance.NAME_TYPE, MinionAppearance.SKIN_TYPE)));
+            .withMinionAppearances(MinionAppearance.NAME_TYPE, MinionAppearance.SKIN_TYPE)
+            .withMaxLevel(5)));
 
     static void register(IEventBus bus) {
         FACTIONS.register(bus);

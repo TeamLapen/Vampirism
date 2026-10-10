@@ -17,6 +17,7 @@ public interface IMinionEntry<T extends IFactionPlayer<T>> {
 
     Holder<? extends IPlayableFaction<T>> faction();
 
+    int maxLevel();
 
     List<MinionStat> minionStats();
 

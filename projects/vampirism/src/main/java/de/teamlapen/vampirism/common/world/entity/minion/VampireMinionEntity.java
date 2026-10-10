@@ -90,17 +90,6 @@ public class VampireMinionEntity extends MinionEntity implements IVampire {
         return Lists.newArrayList(FactionMinionTasks.FOLLOW_LORD.get(), FactionMinionTasks.STAY.get(), FactionMinionTasks.DEFEND_AREA.get(), FactionMinionTasks.PROTECT_LORD.get());
     }
 
-    public int getVampireType() {
-        return this.getMinionData().map(d -> d.get(ModDataComponents.MINION_SKIN_TYPE)).map(t -> Math.max(0, t)).orElse(0);
-    }
-
-    /**
-     * @return Whether the selected skin is from the minion specific pool or a generic vampire skin
-     */
-    public boolean hasMinionSpecificSkin() {
-        return this.getMinionData().map(d -> d.has(ModDataComponents.MINION_SPECIFIC_SKIN)).orElse(false);
-    }
-
     @NotNull
     @Override
     public EnumStrength isGettingGarlicDamage(LevelAccessor iWorld, boolean forceRefresh) {
@@ -161,21 +150,6 @@ public class VampireMinionEntity extends MinionEntity implements IVampire {
         VampirismMod.proxy.displayVampireMinionStatsScreen(this);
     }
 
-    public void setUseLordSkin(boolean useLordSkin) {
-        this.getMinionData().ifPresent(d -> d.set(ModDataComponents.MINION_USE_LORD_SKIN, useLordSkin));
-    }
-
-    public void setVampireType(int type, boolean minionSkin) {
-        getMinionData().ifPresent(d -> {
-            d.set(ModDataComponents.MINION_SKIN_TYPE, type);
-            d.set(ModDataComponents.MINION_SPECIFIC_SKIN, minionSkin);
-        });
-    }
-
-    public boolean shouldRenderLordSkin() {
-        return this.getMinionData().map(d -> d.has(ModDataComponents.MINION_USE_LORD_SKIN)).orElse(false);
-    }
-
     @Override
     public boolean useBlood(int amt, boolean allowPartial) {
         return false;
@@ -234,12 +208,6 @@ public class VampireMinionEntity extends MinionEntity implements IVampire {
             }
         }
         return super.mobInteract(player, hand);
-    }
-
-    @Override
-    protected void onMinionDataReceived(@NotNull MinionData data) {
-        super.onMinionDataReceived(data);
-        updateAttributes();
     }
 
     @Override

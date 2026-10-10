@@ -19,6 +19,7 @@ public class MinionEntry<T extends IFactionPlayer<T>> implements IMinionEntry<T>
     private final Holder<? extends IPlayableFaction<T>> faction;
     private final List<MinionStat> minionStats;
     private final List<MinionAppearance<?>> minionAppearances;
+    private final int maxLevel;
 
     public MinionEntry(MinionEntryProperties<T> properties) {
         this.dataProvider = properties.getDataProvider();
@@ -26,6 +27,7 @@ public class MinionEntry<T extends IFactionPlayer<T>> implements IMinionEntry<T>
         this.faction = properties.getFaction();
         this.minionStats = properties.getMinionStats();
         this.minionAppearances = properties.getMinionAppearances();
+        this.maxLevel = properties.getMaxLevel();
     }
 
     @Override
@@ -51,6 +53,11 @@ public class MinionEntry<T extends IFactionPlayer<T>> implements IMinionEntry<T>
     @Override
     public List<MinionAppearance<?>> appearances() {
         return this.minionAppearances;
+    }
+
+    @Override
+    public int maxLevel() {
+        return this.maxLevel;
     }
 
     @Override

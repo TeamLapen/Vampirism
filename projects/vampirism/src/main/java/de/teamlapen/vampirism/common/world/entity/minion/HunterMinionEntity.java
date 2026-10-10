@@ -78,17 +78,6 @@ public class HunterMinionEntity extends MinionEntity implements IHunter, IVampir
         return Lists.newArrayList(FactionMinionTasks.FOLLOW_LORD.get(), FactionMinionTasks.DEFEND_AREA.get(), FactionMinionTasks.STAY.get(), FactionMinionTasks.PROTECT_LORD.get());
     }
 
-    public int getHunterType() {
-        return this.getMinionData().map(d -> d.getOrDefault(ModDataComponents.MINION_SKIN_TYPE, 0)).map(t -> Math.max(0, t)).orElse(0);
-    }
-
-    /**
-     * @return Whether the selected skin is from the minion specific pool or a generic vampire skin
-     */
-    public boolean hasMinionSpecificSkin() {
-        return this.getMinionData().map(d -> d.has(ModDataComponents.HUNTER_MINION_MINION_SKIN)).orElse(false);
-    }
-
     @Override
     public void openAppearanceScreen() {
         VampirismMod.proxy.displayHunterMinionAppearanceScreen(this);
@@ -97,21 +86,6 @@ public class HunterMinionEntity extends MinionEntity implements IHunter, IVampir
     @Override
     public void openStatsScreen() {
         VampirismMod.proxy.displayHunterMinionStatsScreen(this);
-    }
-
-    public void setHunterType(int type, boolean minionSkin) {
-        getMinionData().ifPresent(d -> {
-            d.set(ModDataComponents.MINION_SKIN_TYPE, type);
-            d.set(ModDataComponents.HUNTER_MINION_MINION_SKIN, minionSkin);
-        });
-    }
-
-    public void setUseLordSkin(boolean useLordSkin) {
-        this.getMinionData().ifPresent(d -> d.set(ModDataComponents.MINION_USE_LORD_SKIN, useLordSkin));
-    }
-
-    public boolean shouldRenderLordSkin() {
-        return this.getMinionData().map(d -> d.has(ModDataComponents.MINION_USE_LORD_SKIN)).orElse(false);
     }
 
     @Override
@@ -128,13 +102,6 @@ public class HunterMinionEntity extends MinionEntity implements IHunter, IVampir
         builder.define(RAISED_ARM, false);
         builder.define(IS_CHARGING_CROSSBOW, false);
 
-    }
-
-    @Override
-    protected void onMinionDataReceived(@NotNull MinionData data) {
-        super.onMinionDataReceived(data);
-        this.updateAttackGoal();
-        this.updateAttributes();
     }
 
     @NotNull
@@ -162,9 +129,6 @@ public class HunterMinionEntity extends MinionEntity implements IHunter, IVampir
         super.registerGoals();
         this.goalSelector.addGoal(1, new RangedHunterCrossbowAttackGoal<>(this, 0.8, 60));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, false));
-    }
-
-    private void updateAttackGoal() {
     }
 
     @Override
