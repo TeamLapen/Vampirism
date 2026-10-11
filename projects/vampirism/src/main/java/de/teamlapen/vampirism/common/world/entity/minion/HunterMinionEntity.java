@@ -75,11 +75,6 @@ public class HunterMinionEntity extends MinionEntity implements IHunter, IVampir
     }
 
     @Override
-    public @NotNull List<IMinionTask<?>> getAvailableTasks() {
-        return Lists.newArrayList(FactionMinionTasks.FOLLOW_LORD.get(), FactionMinionTasks.DEFEND_AREA.get(), FactionMinionTasks.STAY.get(), FactionMinionTasks.PROTECT_LORD.get());
-    }
-
-    @Override
     public void openAppearanceScreen() {
         VampirismMod.proxy.displayHunterMinionAppearanceScreen(this);
     }

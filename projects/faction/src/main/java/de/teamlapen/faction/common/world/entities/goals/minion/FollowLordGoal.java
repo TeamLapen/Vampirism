@@ -1,8 +1,9 @@
-package de.teamlapen.faction.common.world.entities.goals;
+package de.teamlapen.faction.common.world.entities.goals.minion;
 
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
 import de.teamlapen.faction.common.factions.minions.MinionEntity;
+import de.teamlapen.faction.common.world.entities.goals.MoveToPositionGoal;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;

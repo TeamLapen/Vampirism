@@ -65,20 +65,20 @@ public class MinionContainer extends AbstractInventoryContainer {
 
     private final @NotNull MinionEntity minionEntity;
     @NotNull
-    private final IMinionTask<?> @NotNull [] availableTasks;
+    private final List<Holder<? extends IMinionTask<?>>> availableTasks;
     @Nullable
     private final Holder<? extends IMinionTask<?>> previousTask;
     private final boolean previousTaskLocked;
     private final int extraSlots;
     @Nullable
-    private IMinionTask<?> taskToActivate;
+    private Holder<? extends IMinionTask<?>> taskToActivate;
     private boolean taskLocked;
 
     public MinionContainer(int id, @NotNull Inventory playerInventory, @NotNull ILordPlayer lord, @NotNull MinionEntity minionEntity, @NotNull Container inventory, int extraSlots, List<SlotDefinition> selectorInfos) {
         super(FactionMenus.MINION.get(), id, playerInventory, ContainerLevelAccess.create(minionEntity.level(), minionEntity.blockPosition()),inventory, selectorInfos);
         this.minionEntity = minionEntity;
         this.extraSlots = extraSlots;
-        this.availableTasks = this.minionEntity.getAvailableTasks().stream().filter(task -> task.isAvailable(lord)).toArray(IMinionTask[]::new);
+        this.availableTasks = this.minionEntity.getAvailableTasks();
         this.minionEntity.setInteractingPlayer(playerInventory.player);
         this.addPlayerInventorySlots(playerInventory, 27, 103);
         this.previousTask = this.minionEntity.getCurrentTask().map(IMinionData.IActiveTask::task).orElse(null);
@@ -96,7 +96,7 @@ public class MinionContainer extends AbstractInventoryContainer {
     }
 
     @NotNull
-    public IMinionTask<?>[] getAvailableTasks() {
+    public List<Holder<? extends IMinionTask<?>>> getAvailableTasks() {
         return availableTasks;
     }
 
@@ -105,8 +105,8 @@ public class MinionContainer extends AbstractInventoryContainer {
     }
 
     @NotNull
-    public IMinionTask<?> getSelectedTask() {
-        return this.taskToActivate != null ? this.taskToActivate : (this.previousTask != null ? this.previousTask.value() : FactionMinionTasks.STAY.get());
+    public Holder<? extends IMinionTask<?>> getSelectedTask() {
+        return this.taskToActivate != null ? this.taskToActivate : (this.previousTask != null ? this.previousTask : FactionMinionTasks.STAY);
     }
 
     public boolean isTaskLocked() {
@@ -131,10 +131,10 @@ public class MinionContainer extends AbstractInventoryContainer {
     }
 
     public void setTaskToActivate(int id) {
-        assert id >= 0 && id < availableTasks.length;
+        assert id >= 0 && id < availableTasks.size();
         //noinspection ConstantValue
-        if (id >= 0 && id < availableTasks.length) {
-            this.taskToActivate = availableTasks[id];
+        if (id >= 0 && id < availableTasks.size()) {
+            this.taskToActivate = availableTasks.get(id);
         }
     }
 

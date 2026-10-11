@@ -84,7 +84,7 @@ public class FactionDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Component>> MINION_TASK_NAME = retrieveDataComponent(Keys.MINION_TASK_NAME);
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<TagKey<IFaction<?>>>> MINION_TASK_FACTIONS = retrieveDataComponent(Keys.MINION_TASK_FACTIONS);
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Holder<? extends ISkill<?>>>> MINION_TASK_SKILL_REQUIREMENT = retrieveDataComponent(Keys.MINION_TASK_SKILL_REQUIREMENT);
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> MINION_TASK_GLOBAL_COMMAND = retrieveDataComponent(Keys.MINION_TASK_SKILL_REQUIREMENT);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> MINION_TASK_GLOBAL_COMMAND = retrieveDataComponent(Keys.MINION_TASK_GLOBAL_COMMAND);
 
     //</editor-fold>
 

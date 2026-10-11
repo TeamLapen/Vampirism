@@ -1,4 +1,4 @@
-package de.teamlapen.faction.common.world.entities.goals;
+package de.teamlapen.faction.common.world.entities.goals.minion;
 
 import de.teamlapen.faction.common.core.FactionMinionTasks;
 import de.teamlapen.faction.common.factions.minions.MinionEntity;

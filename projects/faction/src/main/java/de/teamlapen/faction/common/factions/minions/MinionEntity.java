@@ -1,5 +1,6 @@
 package de.teamlapen.faction.common.factions.minions;
 
+import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IFactionExtensionGetter;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.util.FIdentifier;
@@ -14,6 +15,7 @@ import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.faction.common.core.FactionAttachments;
 import de.teamlapen.faction.common.core.FactionEntities;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
+import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.world.attachments.LevelDamage;
 import de.teamlapen.faction.common.world.entities.EntitySyncHolder;
@@ -21,9 +23,13 @@ import de.teamlapen.faction.common.world.entities.ForceLookEntityGoal;
 import de.teamlapen.faction.common.world.entities.customization.CustomizationData;
 import de.teamlapen.faction.common.world.entities.customization.ICustomizable;
 import de.teamlapen.faction.common.world.entities.goals.*;
+import de.teamlapen.faction.common.world.entities.goals.minion.DefendAreaGoal;
+import de.teamlapen.faction.common.world.entities.goals.minion.DefendLordGoal;
+import de.teamlapen.faction.common.world.entities.goals.minion.FollowLordGoal;
 import de.teamlapen.faction.common.world.inventory.MinionContainer;
 import de.teamlapen.sync.PropertySync;
 import de.teamlapen.sync.api.ISyncable;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponents;
@@ -70,6 +76,7 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public abstract class MinionEntity extends PathfinderMob implements ValueIOSerializable, ForceLookEntityGoal.TaskOwner, IMinionEntity, ICustomizable, IEntityWithComplexSpawn, EntitySyncHolder.ISyncHolder<MinionData> {
 
@@ -275,7 +282,11 @@ public abstract class MinionEntity extends PathfinderMob implements ValueIOSeria
         return onlyShould ? this.hardAttackPredicate.and(this.softAttackPredicate) : this.hardAttackPredicate;
     }
 
-    public abstract List<IMinionTask<?>> getAvailableTasks();
+    public List<Holder<? extends IMinionTask<?>>> getAvailableTasks() {
+        return getLord().map(lord -> ((Stream<Holder<? extends IMinionTask<?>>>) (Object) ModRegistries.MINION_TASKS.listElements()).filter(x -> IFaction.is(getFaction(), x.value().allowedFactions())).filter(x -> x.value().isAvailable(lord)).toList())
+                .or(() -> getMinionData().map(x -> x.getActiveTask().task()).map(List::of)).orElseGet(() -> List.of(FactionMinionTasks.NOTHING));
+
+    }
 
     @Override
     public @NotNull Optional<IMinionData.IActiveTask<?>> getCurrentTask() {

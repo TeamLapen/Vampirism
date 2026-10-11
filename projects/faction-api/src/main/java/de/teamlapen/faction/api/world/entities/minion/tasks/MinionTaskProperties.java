@@ -21,7 +21,7 @@ import java.util.function.Supplier;
 
 public class MinionTaskProperties {
 
-    private static final DependantName<IMinionTask<?>, String> NAME_ID = (id) -> Util.makeDescriptionId("task", id.identifier());
+    private static final DependantName<IMinionTask<?>, String> NAME_ID = (id) -> Util.makeDescriptionId("minion_task", id.identifier());
     private DataComponentInitializers.Initializer<IMinionTask<?>> componentInitializer = (builder, context, id) -> {};
     private @Nullable ResourceKey<IMinionTask<?>> id;
 

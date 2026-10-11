@@ -86,11 +86,6 @@ public class VampireMinionEntity extends MinionEntity implements IVampire {
         this.heal(event.getAmount() / 3f); //blood bottle = 900 amt = 9 amt = 2.5 health
     }
 
-    @Override
-    public @NotNull List<IMinionTask<?>> getAvailableTasks() {
-        return Lists.newArrayList(FactionMinionTasks.FOLLOW_LORD.get(), FactionMinionTasks.STAY.get(), FactionMinionTasks.DEFEND_AREA.get(), FactionMinionTasks.PROTECT_LORD.get());
-    }
-
     @NotNull
     @Override
     public EnumStrength isGettingGarlicDamage(LevelAccessor iWorld, boolean forceRefresh) {

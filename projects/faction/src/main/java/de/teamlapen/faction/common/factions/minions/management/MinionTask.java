@@ -20,7 +20,9 @@ import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.faction.common.factions.minions.MinionData;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Player;
@@ -41,17 +43,20 @@ public class MinionTask<TState extends IMinionTask.IMinionTaskState> implements 
     private final Holder.Reference<IMinionTask<?>> builtInRegistryHolder;
 
     public MinionTask(MinionTaskProperties properties, @NotNull TState emptyState) {
-        this.nameId = properties.effectiveNameId();
-        this.stateCodec = MapCodec.unitCodec(emptyState);
-        this.emptyState = emptyState;
-        this.builtInRegistryHolder = ModRegistries.MINION_TASKS.createIntrusiveHolder(this);
+        this(properties, MapCodec.unitCodec(emptyState), emptyState);
     }
 
     protected MinionTask(MinionTaskProperties properties, Codec<TState> stateCodec) {
+        this(properties, stateCodec, null);
+    }
+
+    protected MinionTask(MinionTaskProperties properties, Codec<TState> stateCodec, @Nullable TState emptyState) {
         this.nameId = properties.effectiveNameId();
         this.stateCodec = stateCodec;
         this.builtInRegistryHolder = ModRegistries.MINION_TASKS.createIntrusiveHolder(this);
-        this.emptyState = null;
+        this.emptyState = emptyState;
+
+        BuiltInRegistries.DATA_COMPONENT_INITIALIZERS.add(properties.taskIdOrThrow(), properties.finalizeInitializer(Component.translatable(properties.effectiveNameId())));
     }
 
     public DataComponentMap components() {
@@ -65,7 +70,7 @@ public class MinionTask<TState extends IMinionTask.IMinionTaskState> implements 
 
     @Override
     public Component getName() {
-        return this.components().getOrDefault(FactionDataComponents.SKILL_NAME, Component.empty());
+        return this.components().getOrDefault(FactionDataComponents.MINION_TASK_NAME, Component.empty());
     }
 
     @Override
