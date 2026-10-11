@@ -4,7 +4,7 @@ import de.teamlapen.faction.FactionsMod;
 import de.teamlapen.faction.api.factions.actions.IAction;
 import de.teamlapen.faction.api.factions.actions.IActionHandler;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
-import de.teamlapen.faction.client.config.preferences.UserPreferences;
+import de.teamlapen.faction.api.util.SafeCast;
 import de.teamlapen.faction.client.gui.GuiRenderer;
 import de.teamlapen.faction.client.gui.radialmenu.IRadialMenuSlot;
 import de.teamlapen.faction.client.gui.radialmenu.RadialMenu;
@@ -60,10 +60,8 @@ public class SelectActionRadialScreen<T extends ISkillPlayer<T>> extends DualSwi
     }
 
     private static RadialMenu<Holder<? extends IAction<?>>> getRadialMenu(List<Holder<? extends IAction<?>>> actions) {
-        List<IRadialMenuSlot<Holder<? extends IAction<?>>>> parts = actions.stream().map(a -> (IRadialMenuSlot<Holder<? extends IAction<?>>>) (Object) new RadialMenuSlot<>(a.value().getName(), a, Collections.emptyList())).toList();
-        return new RadialMenu<>((i) -> {
-            FactionsMod.proxy.sendToServer(ServerboundToggleActionPacket.createFromRaytrace(parts.get(i).primarySlotIcon(), Minecraft.getInstance().hitResult));
-        }, parts, SelectActionRadialScreen::drawActionPart);
+        List<IRadialMenuSlot<Holder<? extends IAction<?>>>> parts = actions.stream().map(a -> SafeCast.<IRadialMenuSlot<Holder<? extends IAction<?>>>>cast(new RadialMenuSlot<>(a, a.value().getName()))).toList();
+        return new RadialMenu<>(parts, SelectActionRadialScreen::drawActionPart, SelectActionRadialScreen::selectAction);
     }
 
     private static void drawActionPart(Holder<? extends IAction<?>> action, GuiGraphicsExtractor graphics, int posX, int posY, int size, boolean transparent) {
@@ -71,10 +69,14 @@ public class SelectActionRadialScreen<T extends ISkillPlayer<T>> extends DualSwi
         GuiRenderer.blit(graphics, texture, posX, posY, 16, 16, 16, 16);
     }
 
+    private static void selectAction(Holder<? extends IAction<?>> action) {
+        FactionsMod.proxy.sendToServer(ServerboundToggleActionPacket.createFromRaytrace(action, Minecraft.getInstance().hitResult));
+    }
+
     @Override
     public void drawSlice(IRadialMenuSlot<Holder<? extends IAction<?>>> slot, boolean highlighted, GuiGraphicsExtractor buffer, float x, float y, float z, float radiusIn, float radiusOut, float startAngle, float endAngle, int r, int g, int b, int a) {
         @SuppressWarnings("unchecked")
-        Holder<? extends IAction<T>> iActionHolder = (Holder<? extends IAction<T>>) (Object) slot.primarySlotIcon();
+        Holder<? extends IAction<T>> iActionHolder = (Holder<? extends IAction<T>>) (Object) slot.item();
         float actionPercentage = actionHandler.getPercentageForAction(iActionHolder);
         if (ActionHelper.checkActionDisableEffect(player) || !this.player.getActionHandler().checkDefaultToggleConditions(iActionHolder).successful()) {
             actionPercentage = -1;

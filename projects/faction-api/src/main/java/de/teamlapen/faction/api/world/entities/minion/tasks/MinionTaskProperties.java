@@ -39,6 +39,21 @@ public class MinionTaskProperties {
         return component(FactionDataComponents.MINION_TASK_GLOBAL_COMMAND, Unit.INSTANCE);
     }
 
+    /**
+     * Groups the task into the given category in selection menus
+     */
+    public MinionTaskProperties category(Holder<IMinionTaskCategory> category) {
+        return component(FactionDataComponents.MINION_TASK_CATEGORY, category);
+    }
+
+    /**
+     * Groups the task into the given category and makes it the task that is activated when the category itself is selected.
+     * At most one task per category and faction should be the default.
+     */
+    public MinionTaskProperties categoryDefault(Holder<IMinionTaskCategory> category) {
+        return category(category).component(FactionDataComponents.MINION_TASK_CATEGORY_DEFAULT, Unit.INSTANCE);
+    }
+
     //</editor-fold>
 
     //<editor-fold desc="Value Getter">

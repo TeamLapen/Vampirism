@@ -77,6 +77,11 @@ public abstract class GuiRadialMenu<T> extends Screen implements IMinecraftAcces
      * Zero-Based index into the secondary items of {@link #selectedItem} or -1 if the primary item is selected
      */
     protected int selectedSecondaryItem;
+    /**
+     * Zero-Based index of the slot the mouse currently points at, regardless of the distance to the center.
+     * Only this slot reveals its secondary items.
+     */
+    protected int hoveredItem = -1;
 
 
     public GuiRadialMenu(RadialMenu<T> radialMenu) {
@@ -126,6 +131,15 @@ public abstract class GuiRadialMenu<T> extends Screen implements IMinecraftAcces
         return Mth.clamp(segment, 0, segments - 1);
     }
 
+    /**
+     * The secondary items of a slot are only revealed while the mouse points at that slot
+     *
+     * @param slot Zero-based slot index
+     */
+    protected boolean showSecondaryItems(int slot) {
+        return slot == this.hoveredItem;
+    }
+
     private static int secondaryCount(IRadialMenuSlot<?> slot) {
         List<?> secondarySlotIcons = slot.secondaryItems();
         return secondarySlotIcons == null ? 0 : secondarySlotIcons.size();
@@ -169,13 +183,14 @@ public abstract class GuiRadialMenu<T> extends Screen implements IMinecraftAcces
         if (!closing) {
             selectedItem = -1;
             selectedSecondaryItem = -1;
+            hoveredItem = -1;
             int hoveredSlot = getSegmentAt(mouseAngle, getSliceStartAngle(0, numberOfSlices), sliceWidth, numberOfSlices);
             int secondaryCount = secondaryCount(radialMenuSlots.get(hoveredSlot));
             if (secondaryCount > 0 && isMouseOverSecondaryItems(mouseDistanceToCenterOfScreen, secondaryRadiusIn, secondaryRadiusOut)) {
-                selectedItem = hoveredSlot;
+                hoveredItem = selectedItem = hoveredSlot;
                 selectedSecondaryItem = getSegmentAt(mouseAngle, getSliceStartAngle(hoveredSlot, numberOfSlices), sliceWidth / secondaryCount, secondaryCount);
             } else if (isMouseOverMenuItems(mouseDistanceToCenterOfScreen, radiusIn, radiusOut)) {
-                selectedItem = hoveredSlot;
+                hoveredItem = selectedItem = hoveredSlot;
             }
         }
 
@@ -188,7 +203,7 @@ public abstract class GuiRadialMenu<T> extends Screen implements IMinecraftAcces
                 drawSlice(slot, false, graphics, centerOfScreenX, centerOfScreenY, 10, radiusIn, radiusOut, sliceStart, sliceStart + sliceWidth, 0, 0, 0, 64);
             }
 
-            int secondaryCount = secondaryCount(slot);
+            int secondaryCount = showSecondaryItems(i) ? secondaryCount(slot) : 0;
             float secondaryWidth = sliceWidth / Math.max(1, secondaryCount);
             for (int j = 0; j < secondaryCount; j++) {
                 float secondaryStart = sliceStart + j * secondaryWidth;
@@ -202,7 +217,7 @@ public abstract class GuiRadialMenu<T> extends Screen implements IMinecraftAcces
 
         if (selectedItem != -1) {
             IRadialMenuSlot<T> slot = radialMenuSlots.get(selectedItem);
-            Component component = selectedSecondaryItem == -1 ? slot.slotName() : slot.secondaryItems().get(selectedSecondaryItem).name();
+            Component component = selectedSecondaryItem == -1 ? slot.description() : slot.secondaryItems().get(selectedSecondaryItem).name();
             graphics.centeredText(font, component.copy(), width / 2, (height - font.lineHeight) / 2, -1);
         }
 
@@ -214,13 +229,13 @@ public abstract class GuiRadialMenu<T> extends Screen implements IMinecraftAcces
             float posY = centerOfScreenY - 8 + itemRadius * (float) Math.sin(angle);
 
             IRadialMenuSlot<T> slot = radialMenuSlots.get(i);
-            T primarySlotIcon = slot.primarySlotIcon();
+            T primarySlotIcon = slot.item();
             if (primarySlotIcon != null) {
                 radialMenu.drawIcon(primarySlotIcon, graphics, (int) posX, (int) posY, 16);
             }
             drawSliceName(graphics, String.valueOf(i + 1), stack, (int) posX, (int) posY);
 
-            int secondaryCount = secondaryCount(slot);
+            int secondaryCount = showSecondaryItems(i) ? secondaryCount(slot) : 0;
             float secondaryWidth = sliceWidth / Math.max(1, secondaryCount);
             for (int j = 0; j < secondaryCount; j++) {
                 T secondarySlotIcon = slot.secondaryItems().get(j).item();

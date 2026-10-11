@@ -30,6 +30,8 @@ package de.teamlapen.faction.client.gui.radialmenu;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 
-public interface DrawCallback<T> {
+@FunctionalInterface
+public interface IEntryDrawable<T> {
+
     void accept(T objectToBeDrawn, GuiGraphicsExtractor graphics, int positionX, int positionY, int size, boolean renderTransparent);
 }

@@ -22,8 +22,8 @@ public class NoItemRadialMenuSlot<T> implements IRadialMenuSlot<ItemWrapper<T>> 
     }
 
     @Override
-    public Component slotName() {
-        return primarySlotIcon().getOptional().map(this.slotNameFunction).map(x -> {
+    public Component description() {
+        return item().getOptional().map(this.slotNameFunction).map(x -> {
             if (!primarySlotIcon.getOptional().map(isEnabled).orElse(true)) {
                 x.withStyle(ChatFormatting.RED);
             }
@@ -32,7 +32,7 @@ public class NoItemRadialMenuSlot<T> implements IRadialMenuSlot<ItemWrapper<T>> 
     }
 
     @Override
-    public ItemWrapper<T> primarySlotIcon() {
+    public ItemWrapper<T> item() {
         return this.primarySlotIcon;
     }
 

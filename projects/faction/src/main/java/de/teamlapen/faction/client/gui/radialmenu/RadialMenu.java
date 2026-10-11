@@ -31,29 +31,12 @@ package de.teamlapen.faction.client.gui.radialmenu;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 import java.util.List;
-import java.util.function.IntConsumer;
+import java.util.function.Consumer;
 
 public class RadialMenu<T> {
-    private final SlotSelectionCallback selectionCallback;
+    private final ISlotSelectionCallback<T> selectionCallback;
     private final List<IRadialMenuSlot<T>> radialMenuSlots;
-    private final DrawCallback<T> drawCallback;
-
-    /**
-     * Radial menu configuration that only handles the selection of primary slots.
-     * Selecting a secondary item of a slot is ignored.
-     *
-     * @param setSelectedSlot Provide a callback that sets the selected Slot to the provided integer.
-     *                        REMEMBER to also handle the Serverside tag-setting!
-     * @param drawCallback    Provide a callback that handles the drawing of the radial menu Icons.
-     *                        YOU are responsible to provide a method that handles the objects provided in your RadialMenuSlots
-     */
-    public RadialMenu(IntConsumer setSelectedSlot, List<IRadialMenuSlot<T>> radialMenuSlots, DrawCallback<T> drawCallback) {
-        this((slot, secondarySlot) -> {
-            if (secondarySlot == -1) {
-                setSelectedSlot.accept(slot);
-            }
-        }, radialMenuSlots, drawCallback);
-    }
+    private final IEntryDrawable<T> drawCallback;
 
     /**
      * Radial menu configuration that handles the selection of primary slots and their secondary items.
@@ -63,37 +46,34 @@ public class RadialMenu<T> {
      * @param drawCallback      Provide a callback that handles the drawing of the radial menu Icons.
      *                          YOU are responsible to provide a method that handles the objects provided in your RadialMenuSlots
      */
-    public RadialMenu(SlotSelectionCallback selectionCallback, List<IRadialMenuSlot<T>> radialMenuSlots, DrawCallback<T> drawCallback) {
+    public RadialMenu(List<IRadialMenuSlot<T>> radialMenuSlots, IEntryDrawable<T> drawCallback, ISlotSelectionCallback<T> selectionCallback) {
         this.selectionCallback = selectionCallback;
         this.radialMenuSlots = radialMenuSlots;
         this.drawCallback = drawCallback;
     }
 
-    public List<IRadialMenuSlot<T>> getRadialMenuSlots() {
-        return radialMenuSlots;
+    public RadialMenu(List<IRadialMenuSlot<T>> radialMenuSlots, IEntryDrawable<T> drawCallback, Consumer<T> selectionCallback) {
+        this(radialMenuSlots, drawCallback, (a, _) -> selectionCallback.accept(a));
     }
 
-    public void setCurrentSlot(int slot) {
-        setCurrentSlot(slot, -1);
+    public List<IRadialMenuSlot<T>> getRadialMenuSlots() {
+        return this.radialMenuSlots;
     }
 
     /**
      * @param secondarySlot index into {@link IRadialMenuSlot#secondaryItems()} or {@code -1} for the primary item
      */
-    public void setCurrentSlot(int slot, int secondarySlot) {
-        selectionCallback.accept(slot, secondarySlot);
+    protected void setCurrentSlot(int slot, int secondarySlot) {
+        var slotItem = this.radialMenuSlots.get(slot);
+        var secondarySlotItem = secondarySlot >= 0 ? slotItem.secondaryItems().get(secondarySlot).item() : null;
+
+        var selectedItem = secondarySlotItem == null ? slotItem.item() : secondarySlotItem;
+
+        this.selectionCallback.accept(selectedItem, selectedItem == slotItem.item() ? null : slotItem.item());
     }
 
     public void drawIcon(T objectToBeDrawn, GuiGraphicsExtractor graphics, int positionX, int positionY, int size) {
         this.drawCallback.accept(objectToBeDrawn, graphics, positionX, positionY, size, false);
     }
 
-    @FunctionalInterface
-    public interface SlotSelectionCallback {
-        /**
-         * @param slot          the selected slot
-         * @param secondarySlot index into {@link IRadialMenuSlot#secondaryItems()} or {@code -1} if the primary item was selected
-         */
-        void accept(int slot, int secondarySlot);
-    }
 }

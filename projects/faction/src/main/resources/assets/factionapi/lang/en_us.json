@@ -49,6 +49,10 @@
   "minion_task.factionapi.call_single": "Call single",
   "minion_task.factionapi.call_all": "Call all",
   "minion_task.factionapi.respawn": "Respawn dead",
+  "minion_task_category.factionapi.collect_resources": "Collect resources",
+  "minion_task_category.factionapi.defend": "Defend",
+  "minion_task_category.factionapi.movement": "Movement",
+  "minion_task_category.factionapi.recall": "Recall",
 
   "task_reward.factionapi.lord_level": "Lord Level %s",
 

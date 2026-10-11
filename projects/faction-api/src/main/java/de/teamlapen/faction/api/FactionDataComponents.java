@@ -10,6 +10,7 @@ import de.teamlapen.faction.api.factions.village.TotemPair;
 import de.teamlapen.faction.api.factions.village.VillageBanner;
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
+import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTaskCategory;
 import de.teamlapen.faction.api.world.entities.player.FactionPlayerConsumer;
 import de.teamlapen.faction.api.world.items.RefinementItems;
 import de.teamlapen.faction.api.world.items.components.IEffectiveRefinementSet;
@@ -85,6 +86,8 @@ public class FactionDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<TagKey<IFaction<?>>>> MINION_TASK_FACTIONS = retrieveDataComponent(Keys.MINION_TASK_FACTIONS);
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Holder<? extends ISkill<?>>>> MINION_TASK_SKILL_REQUIREMENT = retrieveDataComponent(Keys.MINION_TASK_SKILL_REQUIREMENT);
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> MINION_TASK_GLOBAL_COMMAND = retrieveDataComponent(Keys.MINION_TASK_GLOBAL_COMMAND);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Holder<IMinionTaskCategory>>> MINION_TASK_CATEGORY = retrieveDataComponent(Keys.MINION_TASK_CATEGORY);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> MINION_TASK_CATEGORY_DEFAULT = retrieveDataComponent(Keys.MINION_TASK_CATEGORY_DEFAULT);
 
     //</editor-fold>
 
@@ -135,6 +138,8 @@ public class FactionDataComponents {
         public static final Identifier MINION_TASK_FACTIONS = FIdentifier.mod("minion_task_factions");
         public static final Identifier MINION_TASK_SKILL_REQUIREMENT = FIdentifier.mod("minion_task_skill_requirement");
         public static final Identifier MINION_TASK_GLOBAL_COMMAND = FIdentifier.mod("minion_task_global_command");
+        public static final Identifier MINION_TASK_CATEGORY = FIdentifier.mod("minion_task_category");
+        public static final Identifier MINION_TASK_CATEGORY_DEFAULT = FIdentifier.mod("minion_task_category_default");
         public static final Identifier MINION_TASK_STATE_CODEC = FIdentifier.mod("minion_task_state_codec");
 
         public static final Identifier MINION_LEVEL = FIdentifier.mod("minion_level");

@@ -12,6 +12,7 @@ import de.teamlapen.faction.api.factions.village.TotemPair;
 import de.teamlapen.faction.api.factions.village.VillageBanner;
 import de.teamlapen.faction.api.util.REFERENCE;
 import de.teamlapen.faction.api.util.SafeCast;
+import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTaskCategory;
 import de.teamlapen.faction.api.world.entities.player.FactionPlayerConsumer;
 import de.teamlapen.faction.api.world.items.RefinementItems;
 import de.teamlapen.faction.common.components.EffectiveRefinementSet;
@@ -83,6 +84,8 @@ public class FactionDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<TagKey<IFaction<?>>>> MINION_TASK_FACTIONS = ITEM_DATA_COMPONENTS.registerComponentType(Keys.MINION_TASK_FACTIONS.getPath(), builder -> builder.networkSynchronized(TagKey.streamCodec(FactionRegistries.Keys.FACTION)));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Holder<? extends ISkill<?>>>> MINION_TASK_SKILL_REQUIREMENT = ITEM_DATA_COMPONENTS.registerComponentType(Keys.MINION_TASK_SKILL_REQUIREMENT.getPath(), builder -> builder.networkSynchronized(SafeCast.cast(ByteBufCodecs.holderRegistry(FactionRegistries.Keys.SKILL))));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> MINION_TASK_GLOBAL_COMMAND = ITEM_DATA_COMPONENTS.registerComponentType(Keys.MINION_TASK_GLOBAL_COMMAND.getPath(), builder -> builder.networkSynchronized(Unit.STREAM_CODEC));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Holder<IMinionTaskCategory>>> MINION_TASK_CATEGORY = ITEM_DATA_COMPONENTS.registerComponentType(Keys.MINION_TASK_CATEGORY.getPath(), builder -> builder.networkSynchronized(ByteBufCodecs.holderRegistry(FactionRegistries.Keys.MINION_TASK_CATEGORY)));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> MINION_TASK_CATEGORY_DEFAULT = ITEM_DATA_COMPONENTS.registerComponentType(Keys.MINION_TASK_CATEGORY_DEFAULT.getPath(), builder -> builder.networkSynchronized(Unit.STREAM_CODEC));
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MINION_LEVEL = ITEM_DATA_COMPONENTS.registerComponentType(Keys.MINION_LEVEL.getPath(), builder -> builder.networkSynchronized(ByteBufCodecs.VAR_INT).persistent(Codec.INT));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> MINION_NAME = ITEM_DATA_COMPONENTS.registerComponentType(Keys.MINION_NAME.getPath(), builder -> builder.networkSynchronized(ByteBufCodecs.STRING_UTF8).persistent(Codec.STRING));
