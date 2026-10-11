@@ -234,7 +234,9 @@ public class DropdownWidget<TData> extends AbstractWidget implements IRenderLast
 
             if (mouseX >= this.getX() && mouseX < this.getX() + this.getWidth()
                     && mouseY >= listY && mouseY < listY + listHeight) {
-                scrollOffset = Math.max(0, Math.min(entries.size() - maxVisibleItems, scrollOffset - (int) scrollY));
+                // scroll at least one entry per event, fractional deltas (e.g. touchpads) would otherwise truncate to 0
+                int delta = (int) Math.signum(scrollY) * Math.max(1, (int) Math.abs(scrollY));
+                scrollOffset = Math.max(0, Math.min(entries.size() - maxVisibleItems, scrollOffset - delta));
                 return true;
             }
         }

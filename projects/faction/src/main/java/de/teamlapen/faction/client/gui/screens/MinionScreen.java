@@ -44,6 +44,15 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
     }
 
     @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        // AbstractContainerScreen does not forward scroll events to child widgets
+        if (this.taskList.mouseScrolled(mouseX, mouseY, scrollX, scrollY)) {
+            return true;
+        }
+        return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
+    }
+
+    @Override
     public void extractContents(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
         super.extractContents(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
         for (Renderable renderable : this.renderables) {
