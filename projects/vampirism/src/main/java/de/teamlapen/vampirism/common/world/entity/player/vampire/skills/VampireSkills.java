@@ -133,6 +133,7 @@ public class VampireSkills {
         public static final ResourceKey<ISkillSegment> KEY_LORD_MOVEMENT_OR_ATTACK_SPEED = segment("lord_movement_or_attack_speed");
         public static final ResourceKey<ISkillSegment> KEY_BLOOD_COLLECTION = segment("blood_collection");
         public static final ResourceKey<ISkillSegment> KEY_MINION_RECOVERY = segment("minion_recovery");
+        public static final ResourceKey<ISkillSegment> KEY_RESOURCE_DIVERSITY = segment("resource_diversity");
 
         // Dracula
         public static final ResourceKey<ISkillSegment> KEY_DRACULA_ROOT = segment("dracula_root");
@@ -239,6 +240,9 @@ public class VampireSkills {
             lord(KEY_MINION_RECOVERY, FactionSkills.MINION_RECOVERY)
                     .parents(KEY_LORD_ROOT)
                     .after(KEY_BLOOD_COLLECTION)
+                    .register(context);
+            lord(KEY_RESOURCE_DIVERSITY, FactionSkills.RESOURCE_DIVERSITY)
+                    .parents(KEY_BLOOD_COLLECTION)
                     .register(context);
 
             dracula(KEY_DRACULA_ROOT, DRACULA_ROOT)

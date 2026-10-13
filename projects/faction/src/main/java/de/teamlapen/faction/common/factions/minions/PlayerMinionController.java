@@ -524,13 +524,16 @@ public class PlayerMinionController implements ValueIOSerializable {
 
     }
 
-    @SuppressWarnings("unchecked")
     private <Q extends IMinionTask.IMinionTaskState> void tickTask(@NotNull IMinionData.IActiveTask<Q> task, @NotNull MinionInfo info) {
+        IMinionTask<Q> minionTask = task.task().value();
         if (info.isActive()) {
-            task.task().value().tickActive((Q) task.data(), () -> getMinionEntity(info).map(m -> m), info.data);
+            minionTask.tickActive(task.data(), () -> getMinionEntity(info).map(m -> m), info.data);
         } else {
-            task.task().value().tickBackground((Q) task.data(), info.data);
-
+            minionTask.tickBackground(task.data(), info.data);
+        }
+        if (minionTask.isFinished(task.data())) {
+            getLordPlayer().ifPresent(player -> player.sendSystemMessage(minionTask.getFinishedMessage(task.data(), info.data)));
+            activateTask(info, FactionMinionTasks.FOLLOW_LORD);
         }
     }
 

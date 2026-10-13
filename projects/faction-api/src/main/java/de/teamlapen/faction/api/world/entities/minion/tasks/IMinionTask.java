@@ -77,6 +77,27 @@ public interface IMinionTask<T extends IMinionTask.IMinionTaskState> {
      */
     void tickBackground(T desc, IMinionData minionData);
 
+    /**
+     * Checked after each tick. A finished task is stopped, the minion switches to following its lord and the lord is informed with {@link #getFinishedMessage(IMinionTaskState, IMinionData)}.
+     * <p>
+     * Server side only
+     *
+     * @param desc Task description
+     * @return Whether the task is finished
+     */
+    default boolean isFinished(T desc) {
+        return false;
+    }
+
+    /**
+     * @param desc       Task description
+     * @param minionData The minion data
+     * @return The message sent to the lord when the task is finished
+     */
+    default Component getFinishedMessage(T desc, IMinionData minionData) {
+        return Component.translatable("dialogue.factionapi.minion.task_finished", minionData.getName(), getName());
+    }
+
 
     /**
      * Hold minion specific state for a task

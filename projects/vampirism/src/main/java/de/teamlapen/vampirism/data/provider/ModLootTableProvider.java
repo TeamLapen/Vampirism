@@ -1,9 +1,11 @@
 package de.teamlapen.vampirism.data.provider;
 
+import de.teamlapen.faction.common.core.FactionLootContextParamSets;
 import de.teamlapen.vampirism.common.core.ModLootTables;
 import de.teamlapen.vampirism.data.provider.loot.ModBlockLootTableProvider;
 import de.teamlapen.vampirism.data.provider.loot.ModChestLootTableProvider;
 import de.teamlapen.vampirism.data.provider.loot.ModEntityLootTableProvider;
+import de.teamlapen.vampirism.data.provider.loot.ModMinionTaskLootTableProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
@@ -19,7 +21,8 @@ public class ModLootTableProvider {
                 List.of(
                         new LootTableProvider.SubProviderEntry(ModEntityLootTableProvider::new, LootContextParamSets.ENTITY),
                         new LootTableProvider.SubProviderEntry(ModChestLootTableProvider::new, LootContextParamSets.CHEST),
-                        new LootTableProvider.SubProviderEntry(ModBlockLootTableProvider::new, LootContextParamSets.BLOCK)),
+                        new LootTableProvider.SubProviderEntry(ModBlockLootTableProvider::new, LootContextParamSets.BLOCK),
+                        new LootTableProvider.SubProviderEntry(ModMinionTaskLootTableProvider::new, FactionLootContextParamSets.MINION_COLLECT)),
                 lookupProviderFuture);
     }
 }

@@ -346,11 +346,11 @@ public class ModAdvancementProvider extends AdvancementProvider {
                     .parent(root)
                     .addCriterion("level", LordCriterionTrigger.TriggerInstance.lord(null, 1))
                     .save(consumer, REFERENCE.MODID + ":minion/become_lord");
-//            AdvancementHolder collect_blood = Advancement.Builder.advancement()
-//                    .display(new DisplayInfo(ItemDataUtils.createFilledBloodBottle(), Component.translatable("advancement.vampirism.collect_blood"), Component.translatable("advancement.vampirism.collect_blood.desc"), Optional.empty(), AdvancementType.TASK, true, true, false))
-//                    .parent(become_lord)
-//                    .addCriterion("task", MinionTaskCriterionTrigger.TriggerInstance.tasks(MinionTasks.COLLECT_BLOOD.get()))
-//                    .save(consumer, REFERENCE.MODID + ":minion/collect_blood");
+            AdvancementHolder collect_blood = Advancement.Builder.advancement()
+                    .display(new DisplayInfo(ItemDataUtils.createFilledBloodBottle(), Component.translatable("advancement.vampirism.collect_blood"), Component.translatable("advancement.vampirism.collect_blood.desc"), Optional.empty(), AdvancementType.TASK, true, true, false))
+                    .parent(become_lord)
+                    .addCriterion("task", MinionTaskCriterionTrigger.TriggerInstance.tasks(MinionTasks.COLLECT_BLOOD.get()))
+                    .save(consumer, REFERENCE.MODID + ":minion/collect_blood");
 //            AdvancementHolder collect_hunter_items = Advancement.Builder.advancement()
 //                    .display(Items.BUNDLE, Component.translatable("advancement.vampirism.collect_hunter_items"), Component.translatable("advancement.vampirism.collect_hunter_items.desc"), null, AdvancementType.TASK, true, true, false)
 //                    .parent(become_lord)

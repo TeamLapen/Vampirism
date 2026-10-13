@@ -78,7 +78,7 @@ public class ModFactions {
             .withProvider((_,x) -> new MinionData(x))
             .withEntityType(ModEntities.HUNTER_MINION)
             .withFaction(ModFactions.HUNTER)
-            .withMinionStats(MinionStat.HEALTH_STATS, MinionStat.INVENTORY_STATS, MinionStat.STRENGTH_STATS, MinionStat.SPEED_STATS)
+            .withMinionStats(MinionStat.HEALTH_STATS, MinionStat.INVENTORY_STATS, MinionStat.STRENGTH_STATS, MinionStat.SPEED_STATS, MinionStat.RESOURCES_STATS)
             .withMinionAppearances(MinionAppearance.NAME_TYPE, MinionAppearance.SKIN_TYPE, MinionAppearance.MINION_SKIN)
             .withMaxLevel(5)));
 
