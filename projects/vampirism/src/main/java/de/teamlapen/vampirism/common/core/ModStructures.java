@@ -23,6 +23,7 @@ import de.teamlapen.vampirism.common.world.structures.placement.SingleOccurrence
 import de.teamlapen.vampirism.common.world.structures.templatesystem.BiomeTopBlockProcessor;
 import de.teamlapen.vampirism.common.world.structures.templatesystem.RandomBlockStateRule;
 import de.teamlapen.vampirism.common.world.structures.templatesystem.RandomCandleLitProcessor;
+import de.teamlapen.vampirism.common.world.structures.templatesystem.BlockAttachedEntityProcessor;
 import de.teamlapen.vampirism.common.world.structures.templatesystem.RandomStructureProcessor;
 import de.teamlapen.vampirism.common.world.structures.vampirealtar.VampireAltarPieces;
 import de.teamlapen.vampirism.common.world.structures.vampirealtar.VampireAltarStructure;
@@ -90,6 +91,7 @@ public class ModStructures {
     public static final DeferredHolder<StructureProcessorType<?>, StructureProcessorType<RandomStructureProcessor>> RANDOM_SELECTOR = STRUCTURE_PROCESSOR_TYPES.register("random_selector", () -> () -> RandomStructureProcessor.CODEC);
     public static final DeferredHolder<StructureProcessorType<?>, StructureProcessorType<BiomeTopBlockProcessor>> BIOME_BASED = STRUCTURE_PROCESSOR_TYPES.register("biome_based", () -> () -> BiomeTopBlockProcessor.CODEC);
     public static final DeferredHolder<StructureProcessorType<?>, StructureProcessorType<RandomCandleLitProcessor>> RANDOM_CANDLE_LIT = STRUCTURE_PROCESSOR_TYPES.register("random_candle_lit", () -> () -> RandomCandleLitProcessor.CODEC);
+    public static final DeferredHolder<StructureProcessorType<?>, StructureProcessorType<BlockAttachedEntityProcessor>> BLOCK_ATTACHED_ENTITY = STRUCTURE_PROCESSOR_TYPES.register("block_attached_entity", () -> () -> BlockAttachedEntityProcessor.CODEC);
 
     public static final ResourceKey<Structure> HUNTER_CAMP = ResourceKey.create(Registries.STRUCTURE, VIdentifier.mod("hunter_camp"));
     public static final ResourceKey<Structure> VAMPIRE_HUT = ResourceKey.create(Registries.STRUCTURE, VIdentifier.mod("vampire_hut"));

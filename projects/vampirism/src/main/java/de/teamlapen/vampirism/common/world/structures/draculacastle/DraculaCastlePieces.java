@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.common.core.ModAttachments;
 import de.teamlapen.vampirism.common.core.ModLootTables;
 import de.teamlapen.vampirism.common.core.ModStructures;
 import de.teamlapen.vampirism.common.world.entity.dracula.DraculaFightData;
+import de.teamlapen.vampirism.common.world.structures.templatesystem.BlockAttachedEntityProcessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -91,6 +92,7 @@ public class DraculaCastlePieces {
                     .setRotation(Rotation.NONE)
                     .setMirror(Mirror.NONE)
                     .addProcessor(BlockIgnoreProcessor.STRUCTURE_BLOCK)
+                    .addProcessor(BlockAttachedEntityProcessor.INSTANCE)
                     .setLiquidSettings(LiquidSettings.IGNORE_WATERLOGGING)
                     ;
         }
