@@ -1,5 +1,6 @@
 package de.teamlapen.faction.common.core;
 
+import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.registries.minion_tasks.DeferredMinionTask;
 import de.teamlapen.faction.api.registries.minion_tasks.DeferredMinionTaskRegister;
 import de.teamlapen.faction.api.util.REFERENCE;
@@ -12,7 +13,12 @@ public class FactionMinionTasks {
 
     public static final DeferredMinionTaskRegister MINION_TASKS = DeferredMinionTaskRegister.create(REFERENCE.MOD_ID);
 
-    public static final DeferredMinionTask<IMinionTask.EmptyState, MinionTask<IMinionTask.EmptyState>> NOTHING = MINION_TASKS.registerTask("nothing", MinionTask::new);
+    public static final DeferredMinionTask<IMinionTask.EmptyState, MinionTask<IMinionTask.EmptyState>> NOTHING = MINION_TASKS.registerTask("nothing", (p, s) -> new MinionTask<>(p, s) {
+        @Override
+        public boolean isAvailable(ILordPlayer player) {
+            return false; // only used as the default state, can not be selected
+        }
+    });
 
     public static final DeferredMinionTask<StayTask.State, StayTask> STAY = MINION_TASKS.registerTask("stay", StayTask::new, p -> p.markGlobal().category(FactionMinionTaskCategories.MOVEMENT));
     public static final DeferredMinionTask<DefendAreaTask.State, DefendAreaTask> DEFEND_AREA = MINION_TASKS.registerTask("defend_area", DefendAreaTask::new, p -> p.markGlobal().category(FactionMinionTaskCategories.DEFEND));

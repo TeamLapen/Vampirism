@@ -132,7 +132,11 @@ public class MinionData extends SimpleMutableDataComponentMap implements IMinion
 
     @Override
     public boolean hasUsedSkillPoints() {
-        return this.minionEntry.minionStats().stream().mapToInt(x -> getOrDefault(x.getIdentifier(), 0)).sum() < getLevel();
+        return getUsedStatPoints() > 0;
+    }
+
+    private int getUsedStatPoints() {
+        return this.minionEntry.minionStats().stream().mapToInt(x -> getOrDefault(x.getIdentifier(), 0)).sum();
     }
 
     public boolean isTaskLocked() {
@@ -158,6 +162,7 @@ public class MinionData extends SimpleMutableDataComponentMap implements IMinion
             remove(x.getIdentifier().get());
         });
         shrinkInventory(entity);
+        entity.updateAttributes();
     }
 
     @MustBeInvokedByOverriders
@@ -222,21 +227,21 @@ public class MinionData extends SimpleMutableDataComponentMap implements IMinion
     }
 
     public int getRemainingStatPoints() {
-        return Math.max(0, getLevel() - this.minionEntry.minionStats().stream().mapToInt(x -> getOrDefault(x.getIdentifier(), 0)).sum());
+        return Math.max(0, getLevel() - getUsedStatPoints());
     }
 
     public boolean upgradeStat(@NotNull Holder<DataComponentType<?>> statId, @NotNull MinionEntity entity) {
         MinionStat minionStat = this.minionEntry.minionStat(statId);
-        if (minionStat != null) {
-            int currentStat = getOrDefault(minionStat.getIdentifier(), 0);
-            int nextStat = Math.min(currentStat + 1, minionStat.getMaxLevel());
-            if (nextStat <= minionStat.getMaxLevel()) {
-                minionStat.apply(nextStat, entity, this);
-                set(minionStat.getIdentifier(), nextStat);
-                return true;
-            }
+        if (minionStat == null || getRemainingStatPoints() <= 0) {
+            return false;
         }
-        return false;
+        int currentStat = getOrDefault(minionStat.getIdentifier(), 0);
+        if (currentStat >= minionStat.getMaxLevel()) {
+            return false;
+        }
+        minionStat.apply(currentStat + 1, entity, this);
+        entity.updateAttributes();
+        return true;
     }
 
     public record ActiveTask<TState extends IMinionTask.IMinionTaskState>(Holder<? extends IMinionTask<TState>> task, TState data) implements IActiveTask<TState> {

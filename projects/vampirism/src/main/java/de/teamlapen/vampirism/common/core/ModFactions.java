@@ -6,10 +6,13 @@ import de.teamlapen.faction.api.event.AddFactionTagEvent;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.faction.api.registries.factions.DeferredFaction;
 import de.teamlapen.faction.api.registries.factions.DeferredFactionRegister;
+import de.teamlapen.faction.api.factions.skills.ISkill;
+import de.teamlapen.faction.api.factions.skills.ISkillHandler;
 import de.teamlapen.faction.api.world.entities.minion.IMinionEntry;
 import de.teamlapen.faction.api.world.entities.minion.MinionAppearance;
 import de.teamlapen.faction.api.world.entities.minion.MinionEntryProperties;
 import de.teamlapen.faction.api.world.entities.minion.MinionStat;
+import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.api.world.items.RefinementItems;
 import de.teamlapen.faction.common.factions.PlayableFaction;
 import de.teamlapen.faction.common.factions.minions.MinionData;
@@ -27,7 +30,10 @@ import de.teamlapen.vampirism.common.tags.*;
 import de.teamlapen.vampirism.common.util.HunterVillage;
 import de.teamlapen.vampirism.common.util.LordTitles;
 import de.teamlapen.vampirism.common.util.VampireVillage;
+import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.skills.VampireSkills;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -67,20 +73,26 @@ public class ModFactions {
                     .totem(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER, ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED)));
 
     public static final DeferredHolder<IMinionEntry<?>, IMinionEntry<IVampirePlayer>> VAMPIRE_MINION = MINIONS.register(VampirismFactions.Keys.VAMPIRE.getPath(), () -> new MinionEntry<>(new MinionEntryProperties<IVampirePlayer>()
-            .withProvider((_,x) -> new MinionData(x))
+            .withProvider((player, entry) -> createMinionData(player, entry, VampireSkills.MINION_STATS_INCREASE))
             .withEntityType(ModEntities.VAMPIRE_MINION)
             .withFaction(ModFactions.VAMPIRE)
             .withMinionStats(MinionStat.HEALTH_STATS, MinionStat.INVENTORY_STATS, MinionStat.STRENGTH_STATS, MinionStat.SPEED_STATS)
             .withMinionAppearances(MinionAppearance.NAME_TYPE, MinionAppearance.SKIN_TYPE, MinionAppearance.MINION_SKIN)
-            .withMaxLevel(5)));
+            .withMaxLevel(6)));
 
     public static final DeferredHolder<IMinionEntry<?>, IMinionEntry<IHunterPlayer>> HUNTER_MINION = MINIONS.register(VampirismFactions.Keys.HUNTER.getPath(), () -> new MinionEntry<>(new MinionEntryProperties<IHunterPlayer>()
-            .withProvider((_,x) -> new MinionData(x))
+            .withProvider((player, entry) -> createMinionData(player, entry, HunterSkills.MINION_STATS_INCREASE))
             .withEntityType(ModEntities.HUNTER_MINION)
             .withFaction(ModFactions.HUNTER)
             .withMinionStats(MinionStat.HEALTH_STATS, MinionStat.INVENTORY_STATS, MinionStat.STRENGTH_STATS, MinionStat.SPEED_STATS, MinionStat.RESOURCES_STATS)
             .withMinionAppearances(MinionAppearance.NAME_TYPE, MinionAppearance.SKIN_TYPE, MinionAppearance.MINION_SKIN)
-            .withMaxLevel(5)));
+            .withMaxLevel(6)));
+
+    private static MinionData createMinionData(IFactionPlayer<?> player, IMinionEntry<?> entry, Holder<? extends ISkill<?>> statsIncreaseSkill) {
+        MinionData data = new MinionData(entry);
+        data.setIncreasedStats(ISkillHandler.isSkillEnabled(player.asEntity(), statsIncreaseSkill));
+        return data;
+    }
 
     static void register(IEventBus bus) {
         FACTIONS.register(bus);

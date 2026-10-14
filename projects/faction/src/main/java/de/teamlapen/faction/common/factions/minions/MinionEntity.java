@@ -180,6 +180,9 @@ public abstract class MinionEntity extends PathfinderMob implements ValueIOSeria
     @Override
     public <T> boolean apply(@NonNull ICustomizationOption<T> options, @NonNull T value) {
         if (options instanceof MinionAppearance<T> minionAppearance) {
+            if (minionAppearance == MinionAppearance.NAME_TYPE && ((String) value).length() > MinionData.MAX_NAME_LENGTH) {
+                return false;
+            }
             return getData().map(minionData -> !Objects.equals(minionAppearance.setValue(this, minionData, value), value)).orElse(false);
         }
         return false;
@@ -519,7 +522,7 @@ public abstract class MinionEntity extends PathfinderMob implements ValueIOSeria
         this.doHurtEquipment(damageSource, damage, EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD);
     }
 
-    protected boolean isLord(@NotNull Player p) {
+    public boolean isLord(@NotNull Player p) {
         return this.getLordID().map(id -> id.equals(p.getUUID())).orElse(false);
     }
 

@@ -29,6 +29,7 @@ import de.teamlapen.vampirism.common.world.entity.ai.goals.*;
 import de.teamlapen.vampirism.common.world.entity.ai.navigation.HunterPathNavigation;
 import de.teamlapen.vampirism.common.world.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterLeveling;
+import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.world.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.common.world.inventory.HunterBasicMenu;
@@ -156,7 +157,8 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         FactionPlayerHandler.get(player).getPlayerLord().filter(x -> x.getMaxMinions() > 0).filter(x -> IFaction.is(x.getFaction(), getFaction())).ifPresentOrElse(lord -> {
             MinionWorldData.getData(player.level()).map(w -> w.getOrCreateController(lord)).ifPresent(controller -> {
                 if (controller.hasFreeMinionSlot()) {
-                    MinionData data = new MinionData(ModFactions.HUNTER_MINION.get());
+                    MinionData data = (MinionData) ModFactions.HUNTER_MINION.get().createData(HunterPlayer.get(player), ModFactions.HUNTER_MINION.get());
+                    data.set(FactionDataComponents.MINION_SKIN, getEntityTextureType());
                     var output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, registryAccess());
                     this.serializeAttachments(output);
                     data.updateEntityCaps(output.buildResult());

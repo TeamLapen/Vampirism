@@ -192,8 +192,7 @@ public class VampireMinionEntity extends MinionEntity implements IVampire {
             ItemStack heldItem = player.getItemInHand(hand);
             if (heldItem.getItem() instanceof MinionUpgradeItem && IFaction.is(((MinionUpgradeItem) heldItem.getItem()).getFaction(), this.getFaction())) {
                 if (this.minionData.getLevel() + 1 >= ((MinionUpgradeItem) heldItem.getItem()).getMinLevel() && this.minionData.getLevel() + 1 <= ((MinionUpgradeItem) heldItem.getItem()).getMaxLevel()) {
-                    this.minionData.setLevel(this.minionData.getLevel() + 1);
-                    if (!player.getAbilities().instabuild) heldItem.shrink(1);
+                    if (this.minionData.setLevel(this.minionData.getLevel() + 1) && !player.getAbilities().instabuild) heldItem.shrink(1);
                     player.sendOverlayMessage(Component.translatable("dialogue.vampirism.vampire_minion.upgrade"));
                     sync();
                 } else {

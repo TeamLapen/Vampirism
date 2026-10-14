@@ -3,6 +3,7 @@ package de.teamlapen.faction.common.world.entities.customization;
 import de.teamlapen.faction.api.util.SafeCast;
 import de.teamlapen.faction.api.world.entities.ICustomizationOption;
 import de.teamlapen.faction.api.world.entities.minion.MinionAppearance;
+import io.netty.handler.codec.DecoderException;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
@@ -40,6 +41,9 @@ public record CustomizationData(Map<Identifier, Object> data) {
             for (int i = 0; i < count; i++) {
                 Identifier identifier = registryFriendlyByteBuf.readIdentifier();
                 ICustomizationOption<?> iCustomizationOption = options.get(identifier);
+                if (iCustomizationOption == null) {
+                    throw new DecoderException("Unknown customization option " + identifier);
+                }
                 Object decode = iCustomizationOption.codec().decode(registryFriendlyByteBuf);
                 data.put(identifier, decode);
             }

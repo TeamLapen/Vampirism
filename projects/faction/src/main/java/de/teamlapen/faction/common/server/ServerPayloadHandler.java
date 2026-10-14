@@ -21,7 +21,6 @@ import de.teamlapen.faction.common.factions.skills.SkillTreeGraphs;
 import de.teamlapen.faction.common.factions.tasks.TaskManager;
 import de.teamlapen.faction.common.network.packets.client.ClientboundRequestMinionSelectPacket;
 import de.teamlapen.faction.common.network.packets.server.*;
-import de.teamlapen.faction.common.world.entities.customization.ICustomizable;
 import de.teamlapen.faction.common.world.inventory.InventoryHelper;
 import de.teamlapen.faction.common.world.items.OblivionPotionItem;
 import net.minecraft.core.Holder;
@@ -209,7 +208,7 @@ public class ServerPayloadHandler {
         context.enqueueWork(() -> {
             Player player = context.player();
             Entity entity = player.level().getEntity(msg.entityId());
-            if (entity instanceof MinionEntity minion) {
+            if (entity instanceof MinionEntity minion && minion.isLord(player)) {
                 if (minion.getMinionData().map(d -> d.upgradeStat(msg.stat(), minion)).orElse(false)) {
                     minion.sync();
                 }
@@ -221,7 +220,7 @@ public class ServerPayloadHandler {
         context.enqueueWork(() -> {
             Player player = context.player();
             Entity entity = player.level().getEntity(msg.entityId());
-            if (entity instanceof MinionEntity minion) {
+            if (entity instanceof MinionEntity minion && minion.isLord(player)) {
                 minion.getMinionData().ifPresent(d -> {
                     d.resetStats(minion);
                     minion.sync();
@@ -232,9 +231,8 @@ public class ServerPayloadHandler {
 
     public static void handleCustomizationPacket(ServerboundCustomizationPacket msg, IPayloadContext context) {
         context.enqueueWork(() -> {
-            if (context.player().level().getEntity(msg.entityId()) instanceof ICustomizable c) {
-                c.apply(msg.data());
-
+            if (context.player().level().getEntity(msg.entityId()) instanceof MinionEntity minion && minion.isLord(context.player())) {
+                minion.apply(msg.data());
             }
         });
     }
