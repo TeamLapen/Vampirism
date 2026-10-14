@@ -1,5 +1,8 @@
 {
+  "faction.factionapi.neutral": "Trung lập",
+  "faction.factionapi.neutral.singular": "Con người",
   "block.factionapi.totem_top": "Đỉnh vật tổ ngôi làng dễ vỡ",
+  "item.factionapi.oblivion_potion": "Thuốc lãng quên",
   "effect.factionapi.oblivion": "Quên lãng",
   "minion_task.factionapi.follow_lord": "Đi theo",
   "minion_task.factionapi.nothing": "Không có gì",
