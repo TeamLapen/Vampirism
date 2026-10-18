@@ -1,13 +1,9 @@
 package de.teamlapen.faction.common.factions.minions;
 
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.util.FIdentifier;
-import de.teamlapen.faction.api.world.entities.ICustomizationOption;
 import de.teamlapen.faction.api.world.entities.minion.*;
 import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
 import de.teamlapen.faction.common.core.FactionDataComponents;
@@ -15,10 +11,6 @@ import de.teamlapen.faction.common.core.FactionItems;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
 import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.faction.common.world.entities.EntityProperties;
-import de.teamlapen.faction.common.world.entities.appearance.AppearanceKey;
-import de.teamlapen.faction.common.world.entities.appearance.AppearancePacket;
-import de.teamlapen.faction.common.world.entities.appearance.IAppearanceHolder;
-import de.teamlapen.faction.common.world.entities.customization.ICustomizable;
 import de.teamlapen.faction.common.world.inventory.InventoryHelper;
 import de.teamlapen.sync.SimpleMutableDataComponentMap;
 import net.minecraft.core.Holder;
@@ -26,12 +18,11 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Unit;
 import net.minecraft.world.ItemStackWithSlot;
-import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.ValueInput;
@@ -41,16 +32,14 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jspecify.annotations.NonNull;
 
 import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class MinionData extends SimpleMutableDataComponentMap implements IMinionData, DataComponentMap {
 
     public static final int MAX_NAME_LENGTH = 15;
     protected static final Logger LOGGER = LogManager.getLogger();
+    private static final Identifier STATS = FIdentifier.mod("minion_stats");
 
     private final @NotNull MinionInventory inventory;
     private float health;
@@ -196,6 +185,18 @@ public class MinionData extends SimpleMutableDataComponentMap implements IMinion
 
     public boolean setTaskLocked(boolean locked) {
         return this.taskLocked = locked;
+    }
+
+    protected void applyBaseStats(MinionEntity entity) {
+        var statModifier = hasIncreasedStats() ? 1.2f : 1;
+        for (MinionStat minionStat : this.minionEntry.minionStats()) {
+            if (minionStat instanceof MinionStat.AttributeBased attributeBased) {
+                AttributeInstance attribute = entity.getAttribute(attributeBased.getAttribute());
+                if (attribute != null) {
+                    attribute.addOrReplacePermanentModifier(new AttributeModifier(STATS, attributeBased.perLevelValue() * attributeBased.currentLevel(this) * statModifier, AttributeModifier.Operation.ADD_VALUE));
+                }
+            }
+        }
     }
 
     /**

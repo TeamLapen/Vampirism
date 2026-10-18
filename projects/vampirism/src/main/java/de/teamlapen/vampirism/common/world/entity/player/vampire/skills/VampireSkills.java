@@ -84,7 +84,7 @@ public class VampireSkills {
     public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> LORD_ROOT = SKILLS.registerSkill(ModFactions.VAMPIRE.getKey().identifier().withSuffix("_lord").getPath(), VampireLordSkill::new);
 
     public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> MINION_STATS_INCREASE = SKILLS.registerSkill("vampire_minion_stats_increase", props -> new VampireLordSkill(props.cost(3).withDescription().onEnable(FactionConsumer.ENABLE_MINION_INCREASED_STATS).onDisable(FactionConsumer.DISABLE_MINION_INCREASED_STATS)));
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> MINION_COLLECT = SKILLS.registerSkill("vampire_minion_collect", props -> new VampireLordSkill(props.cost(2).withDescription()));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> MINION_COLLECT_BLOOD = SKILLS.registerSkill("vampire_minion_collect_blood", props -> new VampireLordSkill(props.cost(1).withDescription()));
 
     public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> DRACULA_ROOT = SKILLS.registerSkill(ModFactions.VAMPIRE.getKey().identifier().withSuffix("_dracula").getPath(), props -> new DraculaSkill(props.withDescription()));
 
@@ -233,7 +233,7 @@ public class VampireSkills {
                     .parents(KEY_LORD_ROOT)
                     .after(KEY_BETTER_MINIONS)
                     .register(context);
-            lord(KEY_BLOOD_COLLECTION, MINION_COLLECT)
+            lord(KEY_BLOOD_COLLECTION, MINION_COLLECT_BLOOD)
                     .parents(KEY_LORD_ROOT)
                     .after(KEY_LORD_MOVEMENT_OR_ATTACK_SPEED)
                     .register(context);

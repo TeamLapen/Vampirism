@@ -356,5 +356,7 @@
   "factionapi.configuration.usePermissions": "Use Permissions",
   "factionapi.configuration.usePermissions.tooltip": "When enabled, uses the Forge permission system for certain actions. See the wiki for more information.",
   "factionapi.configuration.enableFactionLogging": "Enable Faction Logging",
-  "factionapi.configuration.enableFactionLogging.tooltip": "When enabled, writes a custom log file for specific faction actions. Only applies to dedicated servers. Requires a server restart."
+  "factionapi.configuration.enableFactionLogging.tooltip": "When enabled, writes a custom log file for specific faction actions. Only applies to dedicated servers. Requires a server restart.",
+
+  "attribute.factionapi.resource_efficiency": "Resource Efficiency"
 }

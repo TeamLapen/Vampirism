@@ -12,12 +12,10 @@ import de.teamlapen.faction.api.world.entities.minion.MinionAppearance;
 import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
 import de.teamlapen.faction.common.Permissions;
 import de.teamlapen.faction.common.components.FactionRestriction;
-import de.teamlapen.faction.common.core.FactionAttachments;
-import de.teamlapen.faction.common.core.FactionEntities;
-import de.teamlapen.faction.common.core.FactionMinionTasks;
-import de.teamlapen.faction.common.core.ModRegistries;
+import de.teamlapen.faction.common.core.*;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.world.attachments.LevelDamage;
+import de.teamlapen.faction.common.world.entities.EntityConstants;
 import de.teamlapen.faction.common.world.entities.EntitySyncHolder;
 import de.teamlapen.faction.common.world.entities.ForceLookEntityGoal;
 import de.teamlapen.faction.common.world.entities.customization.CustomizationData;
@@ -46,6 +44,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.OpenDoorGoal;
@@ -70,6 +69,7 @@ import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
@@ -81,6 +81,14 @@ import java.util.stream.Stream;
 public abstract class MinionEntity extends PathfinderMob implements ValueIOSerializable, ForceLookEntityGoal.TaskOwner, IMinionEntity, ICustomizable, IEntityWithComplexSpawn, EntitySyncHolder.ISyncHolder<MinionData> {
 
     protected static final EntityDataAccessor<Optional<UUID>> LORD_ID = SynchedEntityData.defineId(MinionEntity.class, FactionEntities.OPTIONAL_UUID.get());
+
+    public static AttributeSupplier.@NotNull Builder append(AttributeSupplier.Builder builder) {
+        return builder.add(FactionAttributes.RESOURCE_EFFICIENCY)
+                .add(Attributes.MAX_HEALTH, EntityConstants.MINION_MAX_HEALTH)
+                .add(Attributes.MOVEMENT_SPEED, EntityConstants.MINION_SPEED)
+                .add(Attributes.ATTACK_DAMAGE, EntityConstants.MINION_ATTACK_DAMAGE);
+    }
+
     private final static Logger LOGGER = LogManager.getLogger();
     private final static int CONVERT_DURATION = 20;
     /**
@@ -162,8 +170,9 @@ public abstract class MinionEntity extends PathfinderMob implements ValueIOSeria
         return this;
     }
 
+    @MustBeInvokedByOverriders
     public void updateAttributes() {
-
+        getData().ifPresent(data -> data.applyBaseStats(this));
     }
 
     @Override

@@ -10,14 +10,13 @@ import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
 import de.teamlapen.faction.common.factions.minions.MinionData;
 import de.teamlapen.faction.common.factions.minions.MinionEntity;
+import de.teamlapen.faction.common.world.entities.minion.MinionStats;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.world.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.world.entity.hunter.IVampirismCrossbowUser;
 import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
 import de.teamlapen.vampirism.common.config.BalanceMobProps;
-import de.teamlapen.vampirism.common.core.ModDataComponents;
-import de.teamlapen.vampirism.common.core.ModFactions;
-import de.teamlapen.vampirism.common.core.ModItems;
+import de.teamlapen.vampirism.common.core.*;
 import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import de.teamlapen.vampirism.common.world.entity.ai.goals.RangedHunterCrossbowAttackGoal;
 import de.teamlapen.vampirism.common.world.entity.hunter.BasicHunterEntity;
@@ -62,7 +61,7 @@ public class HunterMinionEntity extends MinionEntity implements IHunter, IVampir
 
 
     public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
-        return BasicHunterEntity.getAttributeBuilder();
+        return append(BasicHunterEntity.getAttributeBuilder());
     }
 
     public HunterMinionEntity(EntityType<? extends MinionEntity> type, Level world) {
@@ -124,14 +123,6 @@ public class HunterMinionEntity extends MinionEntity implements IHunter, IVampir
         super.registerGoals();
         this.goalSelector.addGoal(1, new RangedHunterCrossbowAttackGoal<>(this, 0.8, 60));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, false));
-    }
-
-    @Override
-    public void updateAttributes() {
-        float statsMultiplier = this.getMinionData().filter(MinionData::hasIncreasedStats).map(a -> 1.2f).orElse(1f);
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue((BalanceMobProps.mobProps.MINION_MAX_HEALTH + BalanceMobProps.mobProps.MINION_MAX_HEALTH_PL * getMinionData().map(MinionStat.HEALTH_STATS::currentLevel).orElse(0)) * statsMultiplier);
-        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue((BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE + BalanceMobProps.mobProps.MINION_ATTACK_DAMAGE_PL * getMinionData().map(MinionStat.STRENGTH_STATS::currentLevel).orElse(0)) * statsMultiplier);
-        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(BalanceMobProps.mobProps.VAMPIRE_HUNTER_SPEED * statsMultiplier);
     }
 
     @Override

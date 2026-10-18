@@ -9,6 +9,7 @@ import de.teamlapen.faction.api.world.entities.minion.tasks.MinionTaskProperties
 import de.teamlapen.faction.common.config.FactionConfig;
 import de.teamlapen.faction.common.core.FactionLootContextParamSets;
 import de.teamlapen.faction.common.core.FactionLootContextParams;
+import de.teamlapen.faction.common.world.entities.minion.MinionStats;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -109,8 +110,8 @@ public class CollectResourcesTask extends MinionTask<CollectResourcesTask.State>
      * The base cooldown is reduced by up to 40% depending on the minion's resource efficiency level
      */
     protected int getCooldown(IMinionData data) {
-        int level = MinionStat.RESOURCES_STATS.currentLevel(data);
-        return (int) (FactionConfig.server().minionResourceCooldown.get() * (1f - level / (float) MinionStat.RESOURCES_STATS.getMaxLevel() * 0.4f));
+        int level = MinionStats.RESOURCES_STATS.currentLevel(data);
+        return (int) (FactionConfig.server().minionResourceCooldown.get() * (1f - level / (float) MinionStats.RESOURCES_STATS.getMaxLevel() * 0.4f));
     }
 
     private void repairRandomEquipment(IMinionData data) {

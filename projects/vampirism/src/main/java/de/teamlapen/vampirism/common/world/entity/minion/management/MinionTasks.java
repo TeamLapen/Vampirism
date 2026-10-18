@@ -14,7 +14,7 @@ import net.neoforged.bus.api.IEventBus;
 public class MinionTasks {
     public static final DeferredMinionTaskRegister MINION_TASKS = DeferredMinionTaskRegister.create(REFERENCE.MODID);
 
-    public static final DeferredMinionTask<CollectResourcesTask.State, CollectResourcesTask> COLLECT_BLOOD = MINION_TASKS.registerTask("collect_blood", p -> new CollectResourcesTask(p, ModLootTables.MINION_COLLECT_BLOOD), p -> p.markGlobal().category(FactionMinionTaskCategories.COLLECT_RESOURCES).factions(VampirismTags.Factions.IS_VAMPIRE).requires(VampireSkills.MINION_COLLECT));
+    public static final DeferredMinionTask<CollectResourcesTask.State, CollectResourcesTask> COLLECT_BLOOD = MINION_TASKS.registerTask("collect_blood", p -> new CollectResourcesTask(p, ModLootTables.MINION_COLLECT_BLOOD), p -> p.markGlobal().category(FactionMinionTaskCategories.COLLECT_RESOURCES).factions(VampirismTags.Factions.IS_VAMPIRE).requires(VampireSkills.MINION_COLLECT_BLOOD));
 
     public static void register(IEventBus bus) {
         MINION_TASKS.register(bus);

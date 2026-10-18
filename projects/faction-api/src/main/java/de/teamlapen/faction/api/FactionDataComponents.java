@@ -1,6 +1,5 @@
 package de.teamlapen.faction.api;
 
-import com.mojang.serialization.Codec;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.actions.IAction;
 import de.teamlapen.faction.api.factions.lord.LordTitles;
@@ -9,7 +8,6 @@ import de.teamlapen.faction.api.factions.skills.SkillTreeRequirement;
 import de.teamlapen.faction.api.factions.village.TotemPair;
 import de.teamlapen.faction.api.factions.village.VillageBanner;
 import de.teamlapen.faction.api.util.FIdentifier;
-import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
 import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTaskCategory;
 import de.teamlapen.faction.api.world.entities.player.FactionPlayerConsumer;
 import de.teamlapen.faction.api.world.items.RefinementItems;
@@ -20,7 +18,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Unit;
@@ -97,12 +94,6 @@ public class FactionDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> MINION_NAME = retrieveDataComponent(Keys.MINION_NAME);
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> MINION_USE_LORD_SKIN = retrieveDataComponent(Keys.MINION_USE_LORD_SKIN);
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> MINION_USE_MINION_SKIN = retrieveDataComponent(Keys.MINION_USE_MINION_SKIN);
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MINION_HEALTH_LEVEL = retrieveDataComponent(Keys.MINION_HEALTH_LEVEL);
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MINION_INVENTORY_LEVEL = retrieveDataComponent(Keys.MINION_INVENTORY_LEVEL);
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MINION_SPEED_LEVEL = retrieveDataComponent(Keys.MINION_SPEED_LEVEL);
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MINION_STRENGTH_LEVEL = retrieveDataComponent(Keys.MINION_STRENGTH_LEVEL);
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MINION_RESOURCES_LEVEL = retrieveDataComponent(Keys.MINION_RESOURCES_LEVEL);
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MINION_INVENTORY_SLOTS = retrieveDataComponent(Keys.MINION_INVENTORY_SLOTS);
 
 
     //</editor-fold>
@@ -151,7 +142,7 @@ public class FactionDataComponents {
         public static final Identifier MINION_HEALTH_LEVEL = FIdentifier.mod("minion_health_level");
         public static final Identifier MINION_INVENTORY_LEVEL = FIdentifier.mod("minion_inventory_level");
         public static final Identifier MINION_SPEED_LEVEL = FIdentifier.mod("minion_speed_level");
-        public static final Identifier MINION_STRENGTH_LEVEL = FIdentifier.mod("minion_strength_level");
+        public static final Identifier MINION_ATTACK_DAMAGE_LEVEL = FIdentifier.mod("minion_attack_damage_level");
         public static final Identifier MINION_RESOURCES_LEVEL = FIdentifier.mod("minion_resources_level");
         public static final Identifier MINION_INVENTORY_SLOTS = FIdentifier.mod("minion_inventory_size");
 

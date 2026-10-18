@@ -11,13 +11,13 @@ import de.teamlapen.faction.api.factions.skills.ISkillHandler;
 import de.teamlapen.faction.api.world.entities.minion.IMinionEntry;
 import de.teamlapen.faction.api.world.entities.minion.MinionAppearance;
 import de.teamlapen.faction.api.world.entities.minion.MinionEntryProperties;
-import de.teamlapen.faction.api.world.entities.minion.MinionStat;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.api.world.items.RefinementItems;
 import de.teamlapen.faction.common.factions.PlayableFaction;
 import de.teamlapen.faction.common.factions.minions.MinionData;
 import de.teamlapen.faction.common.util.Color;
 import de.teamlapen.faction.common.world.entities.minion.MinionEntry;
+import de.teamlapen.faction.common.world.entities.minion.MinionStats;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismFactions;
 import de.teamlapen.vampirism.api.VampirismRegistries;
@@ -76,7 +76,7 @@ public class ModFactions {
             .withProvider((player, entry) -> createMinionData(player, entry, VampireSkills.MINION_STATS_INCREASE))
             .withEntityType(ModEntities.VAMPIRE_MINION)
             .withFaction(ModFactions.VAMPIRE)
-            .withMinionStats(MinionStat.HEALTH_STATS, MinionStat.INVENTORY_STATS, MinionStat.STRENGTH_STATS, MinionStat.SPEED_STATS)
+            .withMinionStats(MinionStats.HEALTH_STATS, MinionStats.INVENTORY_STATS, MinionStats.ATTACK_DAMAGE_STATS, MinionStats.SPEED_STATS)
             .withMinionAppearances(MinionAppearance.NAME_TYPE, MinionAppearance.SKIN_TYPE, MinionAppearance.MINION_SKIN)
             .withMaxLevel(6)));
 
@@ -84,7 +84,7 @@ public class ModFactions {
             .withProvider((player, entry) -> createMinionData(player, entry, HunterSkills.MINION_STATS_INCREASE))
             .withEntityType(ModEntities.HUNTER_MINION)
             .withFaction(ModFactions.HUNTER)
-            .withMinionStats(MinionStat.HEALTH_STATS, MinionStat.INVENTORY_STATS, MinionStat.STRENGTH_STATS, MinionStat.SPEED_STATS, MinionStat.RESOURCES_STATS)
+            .withMinionStats(MinionStats.HEALTH_STATS, MinionStats.INVENTORY_STATS, MinionStats.ATTACK_DAMAGE_STATS, MinionStats.SPEED_STATS, MinionStats.RESOURCES_STATS)
             .withMinionAppearances(MinionAppearance.NAME_TYPE, MinionAppearance.SKIN_TYPE, MinionAppearance.MINION_SKIN)
             .withMaxLevel(6)));
 
