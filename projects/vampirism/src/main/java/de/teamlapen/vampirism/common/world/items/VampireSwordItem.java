@@ -28,7 +28,13 @@ import de.teamlapen.vampirism.common.world.items.component.BloodCharged;
 import de.teamlapen.vampirism.common.world.items.component.PureLevel;
 import de.teamlapen.vampirism.common.world.items.component.SwordTraining;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -38,15 +44,25 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.world.item.component.Weapon;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,9 +81,37 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IIt
     private final float trainedAttackSpeedIncrease;
 
     public VampireSwordItem(ToolMaterial material, IItemWithTier.Tier tier, int attackDamage, float trainSpeedIncrease, Item.Properties prop) {
-        super(material, attackDamage, material.speed(), FactionRestriction.builder(VampirismTags.Factions.IS_VAMPIRE).minLevel(getMinLevel(tier)).apply(prop).component(ModDataComponents.BLOOD_CHARGED, new BloodCharged(0)), 0, false);
+        super(swordProperties(material, attackDamage, material.speed(), FactionRestriction.builder(VampirismTags.Factions.IS_VAMPIRE).minLevel(getMinLevel(tier)).apply(prop).component(ModDataComponents.BLOOD_CHARGED, new BloodCharged(0))));
         this.tier = tier;
         this.trainedAttackSpeedIncrease = trainSpeedIncrease;
+    }
+
+    /**
+     * Same as {@link ToolMaterial#applySwordProperties(Item.Properties, float, float)} but without durability and repair components
+     */
+    private static Item.Properties swordProperties(ToolMaterial material, float attackDamage, float attackSpeed, Item.Properties properties) {
+        HolderGetter<Block> registrationLookup = BuiltInRegistries.acquireBootstrapRegistrationLookup(BuiltInRegistries.BLOCK);
+        return properties
+                .stacksTo(1)
+                .enchantable(material.enchantmentValue())
+                .component(DataComponents.TOOL, new Tool(List.of(Tool.Rule.minesAndDrops(HolderSet.direct(Blocks.COBWEB.builtInRegistryHolder()), 15.0F), Tool.Rule.overrideSpeed(registrationLookup.getOrThrow(BlockTags.SWORD_INSTANTLY_MINES), Float.MAX_VALUE), Tool.Rule.overrideSpeed(registrationLookup.getOrThrow(BlockTags.SWORD_EFFICIENT), 1.5F)), 1.0F, 2, false))
+                .attributes(ItemAttributeModifiers.builder()
+                        .add(Attributes.ATTACK_DAMAGE, new AttributeModifier(Item.BASE_ATTACK_DAMAGE_ID, attackDamage + material.attackDamageBonus(), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
+                        .add(Attributes.ATTACK_SPEED, new AttributeModifier(Item.BASE_ATTACK_SPEED_ID, attackSpeed, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
+                        .build())
+                .component(DataComponents.WEAPON, new Weapon(0));
+    }
+
+    /**
+     * Vampire swords have no durability, so enchantments that only affect durability (e.g. unbreaking, mending) are not supported
+     */
+    @Override
+    public boolean supportsEnchantment(ItemStack stack, Holder<Enchantment> enchantment) {
+        DataComponentMap effects = enchantment.value().effects();
+        if (effects.has(EnchantmentEffectComponents.ITEM_DAMAGE) || effects.has(EnchantmentEffectComponents.REPAIR_WITH_XP)) {
+            return false;
+        }
+        return super.supportsEnchantment(stack, enchantment);
     }
 
     @Override
