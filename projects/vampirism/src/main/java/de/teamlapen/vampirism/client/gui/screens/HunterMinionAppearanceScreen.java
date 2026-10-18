@@ -41,7 +41,7 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
     public void removed() {
         String name = minionName;
         if (name.isEmpty()) {
-            name = Component.translatable("gui.vampirism.minion_appearance.minion").toString() + entity.getMinionId().orElse(0);
+            name = Component.translatable("gui.vampirism.minion_appearance.minion").getString() + entity.getMinionId().orElse(0);
         }
         VampirismMod.proxy.sendToServer(new ServerboundCustomizationPacket(this.entity.getId(), CustomizationData
                 .with(MinionAppearance.NAME_TYPE, name)

@@ -131,7 +131,6 @@ public class FactionDataComponents {
         public static final Identifier MINION_TASK_GLOBAL_COMMAND = FIdentifier.mod("minion_task_global_command");
         public static final Identifier MINION_TASK_CATEGORY = FIdentifier.mod("minion_task_category");
         public static final Identifier MINION_TASK_CATEGORY_DEFAULT = FIdentifier.mod("minion_task_category_default");
-        public static final Identifier MINION_TASK_STATE_CODEC = FIdentifier.mod("minion_task_state_codec");
 
         public static final Identifier MINION_LEVEL = FIdentifier.mod("minion_level");
         public static final Identifier MINION_NAME = FIdentifier.mod("minion_name");

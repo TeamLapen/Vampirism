@@ -48,9 +48,5 @@ public class VampirismDataComponents {
         public static final Identifier CONTAINED_PROJECTILES = VIdentifier.mod("contained_projectiles");
         public static final Identifier ENCHANTMENT_OVERRIDE = VIdentifier.mod("enchantment_override");
         public static final Identifier SHATTERED_ARMOR = VIdentifier.mod("shattered_armor");
-        public static final Identifier HUNTER_MINION_MINION_SKIN = VIdentifier.mod("hunter_minion_minion_skin");
-        public static final Identifier MINION_SKIN_TYPE = VIdentifier.mod("minion_skin_type");
-        public static final Identifier MINION_SPECIFIC_SKIN = VIdentifier.mod("minion_specific_skin");
-        public static final Identifier MINION_USE_LORD_SKIN = VIdentifier.mod("minion_use_lord_skin");
     }
 }

@@ -11,7 +11,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public class FactionAttributes {
     public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(Registries.ATTRIBUTE, REFERENCE.MOD_ID);
 
-    public static final DeferredHolder<Attribute, RangedAttribute> RESOURCE_EFFICIENCY = ATTRIBUTES.register("resource_efficiency", () -> (RangedAttribute) new RangedAttribute("attribute.vampirism.resource_efficiency", 0.3, 0.0, 1.0).setSyncable(true));
+    public static final DeferredHolder<Attribute, RangedAttribute> RESOURCE_EFFICIENCY = ATTRIBUTES.register("resource_efficiency", () -> (RangedAttribute) new RangedAttribute("attribute.factionapi.resource_efficiency", 0.3, 0.0, 1.0).setSyncable(true));
 
 
     static void register(IEventBus bus) {
