@@ -1,0 +1,28 @@
+{
+  "parent": "vampirism:minion/become_lord",
+  "criteria": {
+    "task": {
+      "conditions": {
+        "task": "factionapi:collect_resources"
+      },
+      "trigger": "factionapi:minion_action"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.vampirism.collect_hunter_items.desc"
+    },
+    "icon": {
+      "id": "minecraft:bundle"
+    },
+    "title": {
+      "translate": "advancement.vampirism.collect_hunter_items"
+    }
+  },
+  "requirements": [
+    [
+      "task"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -6,6 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
 import java.util.function.Supplier;
@@ -34,7 +35,10 @@ public abstract class MinionStat  {
         return identifier;
     }
 
-    public void apply(int level, IMinionEntity minion, IMinionData data) {
+    /**
+     * @param minion The minion entity or null if the minion is not loaded
+     */
+    public void apply(int level, @Nullable IMinionEntity minion, IMinionData data) {
         data.set(identifier, level);
     }
 

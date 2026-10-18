@@ -117,10 +117,4 @@ public class MinionTask<TState extends IMinionTask.IMinionTaskState> implements 
         return this.stateCodec;
     }
 
-    protected void triggerAdvancements(Player player) {
-        if (player instanceof ServerPlayer) {
-            FactionAdvancements.TRIGGER_MINION_ACTION.get().trigger(((ServerPlayer) player), this);
-        }
-    }
-
 }

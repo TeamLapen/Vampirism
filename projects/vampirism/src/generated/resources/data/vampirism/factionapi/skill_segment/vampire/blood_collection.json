@@ -7,7 +7,7 @@
     "segment": "vampirism:vampire/lord_movement_or_attack_speed"
   },
   "skills": [
-    "vampirism:vampire_minion_collect_blood"
+    "factionapi:minion_collect"
   ],
   "tree": "vampirism:vampire/lord"
 }

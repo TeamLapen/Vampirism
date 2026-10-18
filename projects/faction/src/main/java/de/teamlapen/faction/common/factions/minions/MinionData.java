@@ -3,14 +3,14 @@ package de.teamlapen.faction.common.factions.minions;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
+import de.teamlapen.faction.api.factions.tasks.Task;
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.api.world.entities.minion.*;
 import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
-import de.teamlapen.faction.common.core.FactionDataComponents;
-import de.teamlapen.faction.common.core.FactionItems;
-import de.teamlapen.faction.common.core.FactionMinionTasks;
-import de.teamlapen.faction.common.core.ModRegistries;
+import de.teamlapen.faction.common.core.*;
+import de.teamlapen.faction.common.factions.minions.management.MinionTask;
 import de.teamlapen.faction.common.world.entities.EntityProperties;
+import de.teamlapen.faction.common.world.entities.minion.MinionStats;
 import de.teamlapen.faction.common.world.inventory.InventoryHelper;
 import de.teamlapen.sync.SimpleMutableDataComponentMap;
 import net.minecraft.core.Holder;
@@ -20,6 +20,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.ItemStackWithSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -40,6 +41,16 @@ public class MinionData extends SimpleMutableDataComponentMap implements IMinion
     public static final int MAX_NAME_LENGTH = 15;
     protected static final Logger LOGGER = LogManager.getLogger();
     private static final Identifier STATS = FIdentifier.mod("minion_stats");
+    /**
+     * Maps the legacy stat ids to the current stats
+     */
+    private static final Map<String, MinionStat> LEGACY_STATS = Map.of(
+            "inventory", MinionStats.INVENTORY_STATS,
+            "health", MinionStats.HEALTH_STATS,
+            "strength", MinionStats.ATTACK_DAMAGE_STATS,
+            "speed", MinionStats.SPEED_STATS,
+            "resources", MinionStats.RESOURCES_STATS
+    );
 
     private final @NotNull MinionInventory inventory;
     private float health;
@@ -220,6 +231,9 @@ public class MinionData extends SimpleMutableDataComponentMap implements IMinion
         if (result.successful()) {
             ((IMinionTask)this.activeTaskDesc.task().value()).deactivateTask(this.activeTaskDesc.data());
             this.activeTaskDesc = new ActiveTask(task, result.data());
+            if (player instanceof ServerPlayer) {
+                FactionAdvancements.TRIGGER_MINION_ACTION.get().trigger(((ServerPlayer) player), task.value());
+            }
             return true;
         } else if (player != null) {
             player.sendOverlayMessage(Component.translatable("message.factionapi.minion_task.could_not_activate"));
@@ -268,12 +282,46 @@ public class MinionData extends SimpleMutableDataComponentMap implements IMinion
 
     public static Optional<MinionData> fromCompound(ValueInput input) {
         Optional<IMinionEntry<?>> entry = input.read("entry", ModRegistries.MINIONS.byNameCodec());
+        if (entry.isEmpty()) {
+            return fromLegacyCompound(input);
+        }
         return entry.map(x -> {
             var data = new MinionData(x);
             data.deserialize(input);
             return data;
         });
     }
+
+    /**
+     * Reads minion data that was saved before minion values were stored as data components.
+     * Back then the entry was stored as "data_type" and the minion specific values were plain properties, namespaced by the mod that registered the minion entry.
+     * The active task can not be converted and is reset.
+     */
+    private static Optional<MinionData> fromLegacyCompound(ValueInput input) {
+        return input.read("data_type", ModRegistries.MINIONS.byNameCodec()).map(entry -> {
+            var data = new MinionData(entry);
+            data.deserialize(input);
+
+            String prefix = Objects.requireNonNull(ModRegistries.MINIONS.getKey(entry)).getNamespace() + ":";
+            input.read(FIdentifier.mod("name").toString(), Codec.STRING).ifPresent(data::setName);
+            input.read(prefix + "level", Codec.INT).ifPresent(data::setLevel);
+            input.read(prefix + "type", Codec.INT).ifPresent(type -> data.set(FactionDataComponents.MINION_SKIN, Math.max(0, type)));
+            input.read(prefix + "use_lord_skin", Codec.BOOL).ifPresent(x -> data.set(FactionDataComponents.MINION_USE_LORD_SKIN, x));
+            input.read(prefix + "minion_skin", Codec.BOOL).ifPresent(x -> data.set(FactionDataComponents.MINION_USE_MINION_SKIN, x));
+            input.read(prefix + "has_increased_stats", Codec.BOOL).ifPresent(data::setIncreasedStats);
+
+            String statsKey = FIdentifier.mod("stats").toString();
+            input.childOrEmpty(statsKey).read(statsKey, Codec.unboundedMap(Identifier.CODEC, Codec.INT)).orElse(Map.of()).forEach((statId, level) -> {
+                MinionStat stat = LEGACY_STATS.get(statId.getPath());
+                if (stat != null && entry.minionStats().contains(stat)) {
+                    stat.apply(Math.clamp(level, 0, stat.getMaxLevel()), null, data);
+                }
+            });
+            LOGGER.info("Converted legacy minion data of {}", data.getName());
+            return data;
+        });
+    }
+
 
     @Override
     protected void onPropertyChanged() {

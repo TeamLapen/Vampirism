@@ -56,7 +56,6 @@ public class CollectResourcesTask extends MinionTask<CollectResourcesTask.State>
 
     @Override
     public @NonNull ActivateResult<State> activateTask(@Nullable Player lord, @Nullable IMinionEntity minion, @NonNull IMinionData data) {
-        this.triggerAdvancements(lord);
         if (minion != null) {
             minion.recallMinion();
         }

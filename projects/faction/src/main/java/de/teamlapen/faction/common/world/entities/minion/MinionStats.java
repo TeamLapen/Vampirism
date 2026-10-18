@@ -8,6 +8,7 @@ import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.world.entities.EntityConstants;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import org.jetbrains.annotations.Nullable;
 
 public class MinionStats {
 
@@ -17,7 +18,7 @@ public class MinionStats {
     public static final MinionStat RESOURCES_STATS = new MinionStat.AttributeBased(FactionDataComponents.MINION_RESOURCES_LEVEL, FactionAttributes.RESOURCE_EFFICIENCY, 2, () -> EntityConstants.MINION_RESOURCE_EFFICIENCY_PL);
     public static final MinionStat INVENTORY_STATS = new MinionStat(FactionDataComponents.MINION_INVENTORY_LEVEL, 2, Component.translatable("gui.factionapi.minion_stats.inventory_level")) {
         @Override
-        public void apply(int level, IMinionEntity minion, IMinionData data) {
+        public void apply(int level, @Nullable IMinionEntity minion, IMinionData data) {
             super.apply(level, minion, data);
             switch (level) {
                 case 1,2,3 -> data.set(FactionDataComponents.MINION_INVENTORY_SLOTS, level * 3);

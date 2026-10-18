@@ -21,7 +21,6 @@ public class StayTask extends MinionTask<StayTask.State> {
 
     @Override
     public @NonNull ActivateResult<StayTask.@NonNull State> activateTask(@Nullable Player lord, @Nullable IMinionEntity minion, @NonNull IMinionData inventory) {
-        this.triggerAdvancements(lord);
         BlockPos pos = minion != null ? minion.asEntity().blockPosition() : (lord != null ? lord.blockPosition() : null);
         return pos == null ? ActivateResult.failed() : new ActivateResult<>(new State(pos));
     }

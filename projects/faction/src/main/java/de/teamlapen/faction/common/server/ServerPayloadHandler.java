@@ -9,6 +9,7 @@ import de.teamlapen.faction.api.factions.skills.ISkillHandler;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
+import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.core.FactionItems;
 import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
@@ -80,6 +81,8 @@ public class ServerPayloadHandler {
                         LOGGER.error("Cannot find action to activate {}", msg.taskID());
                     } else if (msg.minionID() < -1) {
                         LOGGER.error("Illegal minion id {}", msg.minionID());
+                    } else if (!task.get().value().isAvailable(player) || (msg.minionID() == -1 && !task.get().components().has(FactionDataComponents.MINION_TASK_GLOBAL_COMMAND))) {
+                        LOGGER.warn("Player {} tried to activate unavailable minion task {}", context.player().getName().getString(), msg.taskID());
                     } else {
                         controller.activateTask(msg.minionID(), task.get());
                     }
