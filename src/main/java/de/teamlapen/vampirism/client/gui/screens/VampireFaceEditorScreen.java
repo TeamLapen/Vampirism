@@ -42,6 +42,7 @@ public class VampireFaceEditorScreen extends AppearanceScreen<Player> {
     private int faceGridX;
     private int faceGridY;
     private boolean showFacePositionHint = true;
+    private boolean draggingFaceFeature;
     private ExtendedButton modeButton;
     private ExtendedButton typeButton;
     private Checkbox glowingEyesButton;
@@ -116,6 +117,11 @@ public class VampireFaceEditorScreen extends AppearanceScreen<Player> {
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (button == 0 && this.draggingFaceFeature) {
+            this.showFacePositionHint = false;
+            this.positionFeatureAt(mouseX, mouseY);
+            return true;
+        }
         if (this.isTypeListVisible()) {
             HoverList<?> list = this.editingEyes ? this.eyeList : this.fangList;
             if (list.mouseDragged(mouseX, mouseY, button, dragX, dragY)) {
@@ -129,14 +135,21 @@ public class VampireFaceEditorScreen extends AppearanceScreen<Player> {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == 0 && mouseX >= this.faceGridX && mouseX < this.faceGridX + FACE_GRID_SIZE * FACE_PIXEL_SIZE
                 && mouseY >= this.faceGridY && mouseY < this.faceGridY + FACE_GRID_SIZE * FACE_PIXEL_SIZE) {
-            int x = (int) (mouseX - this.faceGridX) / FACE_PIXEL_SIZE;
-            int y = (int) (mouseY - this.faceGridY) / FACE_PIXEL_SIZE;
+            this.draggingFaceFeature = true;
             this.showFacePositionHint = false;
-            this.positionFeature(x, y);
+            this.positionFeatureAt(mouseX, mouseY);
             this.setTypeListVisibility(false);
             return true;
         }
         return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        if (button == 0) {
+            this.draggingFaceFeature = false;
+        }
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 
     @Override
@@ -289,6 +302,13 @@ public class VampireFaceEditorScreen extends AppearanceScreen<Player> {
             vampire.setFangPosition(this.fangX, this.fangY);
         }
         this.typeButton.setMessage(this.editingEyes ? this.eyeTypeLabel() : this.fangTypeLabel());
+    }
+
+    private void positionFeatureAt(double mouseX, double mouseY) {
+        int x = (int) Math.floor((mouseX - this.faceGridX) / FACE_PIXEL_SIZE);
+        int y = (int) Math.floor((mouseY - this.faceGridY) / FACE_PIXEL_SIZE);
+        this.positionFeature(Math.max(0, Math.min(FACE_GRID_SIZE - 1, x)),
+                Math.max(0, Math.min(FACE_GRID_SIZE - 1, y)));
     }
 
     @Nullable
