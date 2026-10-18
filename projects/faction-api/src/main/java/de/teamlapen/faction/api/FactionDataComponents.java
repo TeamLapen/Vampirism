@@ -77,7 +77,7 @@ public class FactionDataComponents {
 
     //</editor-fold>
 
-    //<editor-fold desc="MinionTasks>
+    //<editor-fold desc="MinionTasks">
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Component>> MINION_TASK_NAME = retrieveDataComponent(Keys.MINION_TASK_NAME);
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<TagKey<IFaction<?>>>> MINION_TASK_FACTIONS = retrieveDataComponent(Keys.MINION_TASK_FACTIONS);

@@ -70,7 +70,7 @@ public abstract class MinionStat  {
         @Override
         public String currentValue(IMinionEntity minion, IMinionData data) {
             AttributeInstance instance = minion.asEntity().getAttribute(this.attribute);
-            return String.format("%.1f", instance != null ? instance.getBaseValue() : 0);
+            return String.format("%.1f", instance != null ? instance.getValue() : 0);
         }
     }
 }

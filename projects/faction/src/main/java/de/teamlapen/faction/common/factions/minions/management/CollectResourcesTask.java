@@ -4,12 +4,12 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.faction.api.world.entities.minion.IMinionData;
 import de.teamlapen.faction.api.world.entities.minion.IMinionEntity;
-import de.teamlapen.faction.api.world.entities.minion.MinionStat;
 import de.teamlapen.faction.api.world.entities.minion.tasks.MinionTaskProperties;
 import de.teamlapen.faction.common.config.FactionConfig;
+import de.teamlapen.faction.common.core.FactionAttributes;
 import de.teamlapen.faction.common.core.FactionLootContextParamSets;
 import de.teamlapen.faction.common.core.FactionLootContextParams;
-import de.teamlapen.faction.common.world.entities.minion.MinionStats;
+import de.teamlapen.faction.common.factions.minions.MinionData;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -106,11 +106,11 @@ public class CollectResourcesTask extends MinionTask<CollectResourcesTask.State>
     }
 
     /**
-     * The base cooldown is reduced by up to 40% depending on the minion's resource efficiency level
+     * The base cooldown is reduced by the minion's {@link FactionAttributes#RESOURCE_EFFICIENCY}
      */
     protected int getCooldown(IMinionData data) {
-        int level = MinionStats.RESOURCES_STATS.currentLevel(data);
-        return (int) (FactionConfig.server().minionResourceCooldown.get() * (1f - level / (float) MinionStats.RESOURCES_STATS.getMaxLevel() * 0.4f));
+        double efficiency = data instanceof MinionData minionData ? minionData.getAttributeValue(FactionAttributes.RESOURCE_EFFICIENCY) : FactionAttributes.RESOURCE_EFFICIENCY.get().getDefaultValue();
+        return (int) (FactionConfig.server().minionResourceCooldown.get() * (1 - efficiency));
     }
 
     private void repairRandomEquipment(IMinionData data) {

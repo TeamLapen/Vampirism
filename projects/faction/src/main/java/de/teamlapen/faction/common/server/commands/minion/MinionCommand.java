@@ -2,6 +2,7 @@ package de.teamlapen.faction.common.server.commands.minion;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
@@ -9,6 +10,7 @@ import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.world.entities.minion.IMinionEntry;
+import de.teamlapen.faction.api.world.entities.minion.MinionAppearance;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.minions.MinionData;
 import de.teamlapen.faction.common.factions.minions.MinionWorldData;
@@ -24,6 +26,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.function.Consumer;
 
 
 public class MinionCommand extends BasicCommand {
@@ -61,16 +65,35 @@ public class MinionCommand extends BasicCommand {
             var minion = entry.value();
             var faction = minion.faction();
 
-            spawnNew.then(
-                    Commands.literal(faction.unwrapKey().orElseThrow().identifier().toString())
-                            .executes(context -> spawnNewMinion(context.getSource(), faction, entry)));
+            // the appearances of the entry are optional trailing arguments: create <faction> [appearance 1 [appearance 2 [...]]]
+            List<MinionAppearance<?>> appearances = minion.appearances();
+            ArgumentBuilder<CommandSourceStack, ?> arguments = null;
+            for (int i = appearances.size() - 1; i >= 0; i--) {
+                List<MinionAppearance<?>> givenAppearances = appearances.subList(0, i + 1);
+                ArgumentBuilder<CommandSourceStack, ?> argument = argument(appearances.get(i))
+                        .executes(context -> spawnNewMinion(context.getSource(), faction, entry, data -> givenAppearances.forEach(appearance -> appearance.applyCommandArgument(context, data))));
+                if (arguments != null) {
+                    argument.then(arguments);
+                }
+                arguments = argument;
+            }
 
+            LiteralArgumentBuilder<CommandSourceStack> factionLiteral = Commands.literal(faction.unwrapKey().orElseThrow().identifier().toString())
+                    .executes(context -> spawnNewMinion(context.getSource(), faction, entry, data -> {}));
+            if (arguments != null) {
+                factionLiteral.then(arguments);
+            }
+            spawnNew.then(factionLiteral);
         }
         return spawnNew;
     }
 
+    private static <T> RequiredArgumentBuilder<CommandSourceStack, T> argument(MinionAppearance<T> appearance) {
+        return Commands.argument(appearance.commandName(), appearance.argumentType());
+    }
+
     @SuppressWarnings("SameReturnValue")
-    private static int spawnNewMinion(CommandSourceStack ctx, Holder<? extends IPlayableFaction<?>> faction, Holder<IMinionEntry<?>> entry) throws CommandSyntaxException {
+    private static int spawnNewMinion(CommandSourceStack ctx, Holder<? extends IPlayableFaction<?>> faction, Holder<IMinionEntry<?>> entry, Consumer<MinionData> appearance) throws CommandSyntaxException {
         Player p = ctx.getPlayerOrException();
         FactionPlayerHandler handler = FactionPlayerHandler.get(p);
         if(!handler.isInFaction(faction)) {
@@ -87,6 +110,7 @@ public class MinionCommand extends BasicCommand {
         PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(fph);
         if (controller.hasFreeMinionSlot()) {
                 MinionData data = (MinionData) entry.value().createData(handler.factionPlayer(), (IMinionEntry) entry.value());
+                appearance.accept(data);
                 int id = controller.createNewMinionSlot(data, entry.value().type().value());
                 if (id < 0) {
                     throw ERROR_GETTING_SLOT.create();

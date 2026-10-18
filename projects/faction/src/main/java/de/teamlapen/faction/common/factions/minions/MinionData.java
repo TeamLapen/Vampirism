@@ -22,6 +22,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.ItemStackWithSlot;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
@@ -199,15 +200,34 @@ public class MinionData extends SimpleMutableDataComponentMap implements IMinion
     }
 
     protected void applyBaseStats(MinionEntity entity) {
-        var statModifier = hasIncreasedStats() ? 1.2f : 1;
         for (MinionStat minionStat : this.minionEntry.minionStats()) {
             if (minionStat instanceof MinionStat.AttributeBased attributeBased) {
                 AttributeInstance attribute = entity.getAttribute(attributeBased.getAttribute());
                 if (attribute != null) {
-                    attribute.addOrReplacePermanentModifier(new AttributeModifier(STATS, attributeBased.perLevelValue() * attributeBased.currentLevel(this) * statModifier, AttributeModifier.Operation.ADD_VALUE));
+                    attribute.addOrReplacePermanentModifier(new AttributeModifier(STATS, getStatBonus(attributeBased), AttributeModifier.Operation.ADD_VALUE));
                 }
             }
         }
+    }
+
+    private double getStatBonus(MinionStat.AttributeBased stat) {
+        return stat.perLevelValue() * stat.currentLevel(this) * (hasIncreasedStats() ? 1.2 : 1);
+    }
+
+    /**
+     * Calculates the value of an attribute without requiring the minion entity, e.g. for tasks that are ticked while the minion is not loaded.
+     * Assumes that the minion entity uses the default value of the attribute as base value.
+     *
+     * @return The default value of the attribute plus the bonus of all stats of this minion that modify the attribute
+     */
+    public double getAttributeValue(Holder<Attribute> attribute) {
+        double value = attribute.value().getDefaultValue();
+        for (MinionStat minionStat : this.minionEntry.minionStats()) {
+            if (minionStat instanceof MinionStat.AttributeBased attributeBased && attributeBased.getAttribute().value() == attribute.value()) {
+                value += getStatBonus(attributeBased);
+            }
+        }
+        return attribute.value().sanitizeValue(value);
     }
 
     /**

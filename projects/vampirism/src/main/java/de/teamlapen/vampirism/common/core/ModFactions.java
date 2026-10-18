@@ -77,7 +77,7 @@ public class ModFactions {
             .withEntityType(ModEntities.VAMPIRE_MINION)
             .withFaction(ModFactions.VAMPIRE)
             .withMinionStats(MinionStats.HEALTH_STATS, MinionStats.INVENTORY_STATS, MinionStats.ATTACK_DAMAGE_STATS, MinionStats.SPEED_STATS)
-            .withMinionAppearances(MinionAppearance.NAME_TYPE, MinionAppearance.SKIN_TYPE, MinionAppearance.MINION_SKIN)
+            .withMinionAppearances(MinionAppearance.NAME_TYPE, MinionAppearance.SKIN_TYPE, MinionAppearance.MINION_SKIN, MinionAppearance.LORD_SKIN)
             .withMaxLevel(6)));
 
     public static final DeferredHolder<IMinionEntry<?>, IMinionEntry<IHunterPlayer>> HUNTER_MINION = MINIONS.register(VampirismFactions.Keys.HUNTER.getPath(), () -> new MinionEntry<>(new MinionEntryProperties<IHunterPlayer>()
@@ -85,7 +85,7 @@ public class ModFactions {
             .withEntityType(ModEntities.HUNTER_MINION)
             .withFaction(ModFactions.HUNTER)
             .withMinionStats(MinionStats.HEALTH_STATS, MinionStats.INVENTORY_STATS, MinionStats.ATTACK_DAMAGE_STATS, MinionStats.SPEED_STATS, MinionStats.RESOURCES_STATS)
-            .withMinionAppearances(MinionAppearance.NAME_TYPE, MinionAppearance.SKIN_TYPE, MinionAppearance.MINION_SKIN)
+            .withMinionAppearances(MinionAppearance.NAME_TYPE, MinionAppearance.SKIN_TYPE, MinionAppearance.MINION_SKIN, MinionAppearance.LORD_SKIN)
             .withMaxLevel(6)));
 
     private static MinionData createMinionData(IFactionPlayer<?> player, IMinionEntry<?> entry, Holder<? extends ISkill<?>> statsIncreaseSkill) {
