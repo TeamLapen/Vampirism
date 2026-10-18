@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.common.core;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.common.world.fluids.BloodFluid;
+import de.teamlapen.vampirism.common.world.fluids.BloodFluidType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.Blocks;
@@ -21,9 +22,9 @@ public class ModFluids {
     public static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(Registries.FLUID, REFERENCE.MODID);
     public static final DeferredRegister<FluidType> FLUID_TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.FLUID_TYPES, REFERENCE.MODID);
 
-    public static final DeferredHolder<FluidType, FluidType> BLOOD_TYPE = FLUID_TYPES.register("blood", () -> new FluidType(FluidType.Properties.create()
+    public static final DeferredHolder<FluidType, FluidType> BLOOD_TYPE = FLUID_TYPES.register("blood", () -> new BloodFluidType(FluidType.Properties.create()
             .descriptionId(ModList.get().isLoaded(REFERENCE.INTEGRATIONS_MODID) ? "fluid.vampirism.blood.vampirism" : "fluid.vampirism.blood")
-            .motionScale(0.01D)
+            .motionScale(0.007D)
             .fallDistanceModifier(0.1F)
             .canHydrate(true)
             .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL)

@@ -67,7 +67,7 @@ import net.minecraft.world.entity.npc.villager.Villager;
 @ConvertedCreature(value = Donkey.class, renderer = FixedDonkeyRenderer.class, subclass = ConvertedDonkeyEntity.class, attributeMethod = "createBaseHorseAttributes")
 @ConvertedCreature(value = Mule.class, renderer = FixedMuleRenderer.class, subclass = ConvertedMuleEntity.class, attributeMethod = "createBaseHorseAttributes", spawnRulesFrom = "checkMobSpawnRules")
 @ConvertedCreature(value = Camel.class, renderer = CamelRenderer.class, subclass = ConvertedCamelEntity.class, attributeMethod = "createBaseHorseAttributes")
-@AdditionalConverter(vanilla = Villager.class, convertedField = "de.teamlapen.vampirism.common.core.ModEntities.VILLAGER_CONVERTED")
+@AdditionalConverter(vanilla = Villager.class, convertedField = "de.teamlapen.vampirism.common.core.ModEntities.CONVERTED_VILLAGER")
 public final class GenerateConvertedCreatures {
     private GenerateConvertedCreatures() {
     }

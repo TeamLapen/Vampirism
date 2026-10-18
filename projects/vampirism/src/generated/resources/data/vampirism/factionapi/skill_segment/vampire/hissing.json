@@ -1,6 +1,6 @@
 {
   "parents": [
-    "vampirism:vampire/summon_bats"
+    "vampirism:vampire/advanced_biter"
   ],
   "skills": [
     "vampirism:hissing"

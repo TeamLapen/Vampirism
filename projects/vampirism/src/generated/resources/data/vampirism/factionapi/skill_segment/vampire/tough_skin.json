@@ -1,0 +1,10 @@
+{
+  "parents": [
+    "vampirism:vampire/damage",
+    "vampirism:vampire/attack_speed"
+  ],
+  "skills": [
+    "vampirism:less_sundamage"
+  ],
+  "tree": "vampirism:vampire/level"
+}

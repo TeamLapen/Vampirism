@@ -7,6 +7,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.AnimationState;
 
 public class WingsModel extends Model<WingsModel.State> {
@@ -24,7 +25,6 @@ public class WingsModel extends Model<WingsModel.State> {
 
     private final KeyframeAnimation flyAnimation;
     private final KeyframeAnimation growAnimation;
-    private final KeyframeAnimation idleAnimation;
     private final KeyframeAnimation shrinkAnimation;
 
     public WingsModel(ModelPart root) {
@@ -37,7 +37,6 @@ public class WingsModel extends Model<WingsModel.State> {
 
         this.flyAnimation = SWING_ANIMATION.bake(root);
         this.growAnimation = GROW_ANIMATION.bake(root);
-        this.idleAnimation = IDLE_ANIMATION.bake(root);
         this.shrinkAnimation = SHRINK_ANIMATION.bake(root);
     }
 
@@ -269,11 +268,244 @@ public class WingsModel extends Model<WingsModel.State> {
 
         switch (renderState.wingsState) {
             case OPENING -> this.growAnimation.apply(renderState.growState, renderState.ageInTicks, IWingsEntity.GROW_SPEED);
-            case OPEN -> this.idleAnimation.apply(renderState.flyState, renderState.ageInTicks, 0.25f);
+            case OPEN -> animateIdle(renderState);
             case FLYING -> this.flyAnimation.apply(renderState.flyState, renderState.ageInTicks);
             case CLOSING -> this.shrinkAnimation.apply(renderState.growState, renderState.ageInTicks, IWingsEntity.GROW_SPEED);
         }
     }
+
+    //<editor-fold desc="Idle Animation">
+
+    /*
+     * Sign conventions (left wing, the right wing is mirrored):
+     * - yRot: positive swings the wing forward. The wings sit directly on the back, so the inner wing must never swing
+     *   forward past its rest pose, otherwise it clips into the body and arms.
+     * - zRot: negative raises the wing tips. Rolling stays in the plane of the back and can't clip.
+     * - The root must not pitch or yaw, as that would tilt half of the wings into the body. It only rolls and bobs.
+     */
+
+    private static final float IDLE_FADE_IN_SECONDS = 0.6f;
+    /**
+     * How far the inner wing may open past its rest pose (rest is -10°)
+     */
+    private static final float INNER_MAX_SPREAD = 5f;
+    /**
+     * Length of the idle choreography before it repeats
+     */
+    private static final float IDLE_LOOP_SECONDS = 48f;
+
+    private static final float BREATH_PERIOD = 5f;
+    private static final float BREATH_PERIOD_WATER = 7.5f;
+    private static final float BREATH_DEPTH_PERIOD = 17f;
+    private static final float BREATH_INNER = 5f;
+    private static final float BREATH_OUTER = 12f;
+    private static final float BREATH_LIFT = 3f;
+    private static final float BREATH_OUTER_LAG = 0.9f;
+    private static final float BREATH_RIGHT_PHASE = 0.35f;
+    private static final float FLUTTER_PERIOD = 1.7f;
+    private static final float FLUTTER_OUTER = 2f;
+
+    private static final float SWAY_ROLL = 1.5f;
+    private static final float SWAY_ROLL_PERIOD = 5.3f;
+    private static final float SWAY_ROLL_SLOW = 0.8f;
+    private static final float SWAY_ROLL_SLOW_PERIOD = 11.9f;
+
+    private static final float GESTURE_RIGHT_DELAY = 0.1f;
+
+    private static final float STRETCH_START = 6f;
+    private static final float STRETCH_DURATION = 2.4f;
+    private static final float STRETCH_OUTER = 30f;
+    private static final float STRETCH_LIFT = 14f;
+    private static final float STRETCH_SHAKE = 6f;
+
+    private static final float RUFFLE_START = 14f;
+    private static final float RUFFLE_DURATION = 0.9f;
+    private static final float RUFFLE_OUTER = 4f;
+    private static final float RUFFLE_LIFT = 1.5f;
+    private static final float RUFFLE_TUCK = 3f;
+
+    private static final float FOLD_START = 29f;
+    private static final float FOLD_DURATION = 5f;
+    private static final float FOLD_INNER = 20f;
+    private static final float FOLD_OUTER = 45f;
+    private static final float FOLD_LIFT = 4f;
+    private static final float FOLD_OVERSHOOT = 8f;
+
+    private static final float SIGH_START = 38f;
+    private static final float SIGH_DURATION = 3.5f;
+    private static final float SIGH_LIFT = 10f;
+    private static final float SIGH_DROOP = 7f;
+    private static final float SIGH_OUTER = 10f;
+    private static final float SIGH_OUTER_EXHALE = 5f;
+
+    private static final float FLICK_START = 44f;
+    private static final float FLICK_DURATION = 1.2f;
+    private static final float FLICK_OUTER = 18f;
+    private static final float FLICK_LIFT = 5f;
+
+    private static final float WALK_FOLD_INNER = 22f;
+    private static final float WALK_FOLD_OUTER = 30f;
+    private static final float WALK_FOLD_LIFT = 4f;
+    private static final float WALK_STEP_OUTER = 6f;
+    private static final float WALK_STEP_LIFT = 4f;
+    private static final float WALK_BOB = 0.6f;
+
+    private static final float CROUCH_INNER = 12f;
+    private static final float CROUCH_OUTER = 15f;
+    private static final float CROUCH_LIFT = 8f;
+    private static final float WATER_INNER = 25f;
+    private static final float WATER_OUTER = 40f;
+    private static final float HURT_INNER = 8f;
+    private static final float HURT_OUTER = 25f;
+
+    /**
+     * Procedural idle animation, layered on top of the rest pose.
+     * <p>
+     * Continuous breathing and sway, plus a {@link #IDLE_LOOP_SECONDS} long choreography of gestures
+     * (stretch, ruffle, fold &amp; settle, sigh, double flick) that are suppressed while moving.
+     * <p>
+     * Per side the wing is described by three values in degrees:
+     * <ul>
+     *     <li>inner spread: positive opens the inner wing (limited by {@link #INNER_MAX_SPREAD})</li>
+     *     <li>outer spread: positive unfurls the outer wing</li>
+     *     <li>lift: positive raises the wing tips</li>
+     * </ul>
+     */
+    private void animateIdle(State state) {
+        float seconds = state.ageInTicks / 20f;
+        float fadeIn = state.flyState.isStarted() ? smoothstep(state.flyState.getTimeInMillis(state.ageInTicks) / 1000f / IDLE_FADE_IN_SECONDS) : 1f;
+        float movement = Mth.clamp(state.walkAnimationSpeed, 0f, 1f);
+        float calm = 1f - 0.8f * movement;
+        float breathDepth = 0.75f + 0.25f * Mth.sin(seconds * Mth.TWO_PI / BREATH_DEPTH_PERIOD);
+        float breathAmp = calm * breathDepth * (state.isInWater ? 0.5f : 1f);
+        float gestureAmp = Math.max(0f, 1f - movement * 2f) * (state.isCrouching || state.isInWater ? 0f : 1f);
+        float step = Mth.cos(state.walkAnimationPos * 0.6662f);
+        float cycle = Mth.positiveModulo(seconds, IDLE_LOOP_SECONDS);
+
+        float rootRoll = (SWAY_ROLL * Mth.sin(seconds * Mth.TWO_PI / SWAY_ROLL_PERIOD) + SWAY_ROLL_SLOW * Mth.sin(seconds * Mth.TWO_PI / SWAY_ROLL_SLOW_PERIOD)) * calm;
+        this.wings.zRot += rootRoll * Mth.DEG_TO_RAD * fadeIn;
+        this.wings.y += WALK_BOB * Math.abs(step) * movement * fadeIn;
+
+        animateIdleSide(state, this.left_wing, this.outer_left_wing, 1f, 0f, 0f, seconds, cycle, movement, step, breathAmp, gestureAmp, fadeIn);
+        animateIdleSide(state, this.right_wing, this.outer_right_wing, -1f, BREATH_RIGHT_PHASE, GESTURE_RIGHT_DELAY, seconds, cycle, movement, -step, breathAmp, gestureAmp, fadeIn);
+    }
+
+    private static void animateIdleSide(State state, ModelPart inner, ModelPart outer, float side, float breathPhaseOffset, float gestureDelay, float seconds, float cycle, float movement, float step, float breathAmp, float gestureAmp, float fadeIn) {
+        float breathPeriod = state.isInWater ? BREATH_PERIOD_WATER : BREATH_PERIOD;
+        float breathPhase = seconds * Mth.TWO_PI / breathPeriod + breathPhaseOffset;
+        float innerSpread = BREATH_INNER * Mth.sin(breathPhase) * breathAmp;
+        // the outer wing trails behind the inner one so the motion ripples out to the tips
+        float outerSpread = BREATH_OUTER * Mth.sin(breathPhase - BREATH_OUTER_LAG) * breathAmp;
+        float lift = BREATH_LIFT * Mth.sin(breathPhase - BREATH_OUTER_LAG * 0.5f) * breathAmp;
+        outerSpread += FLUTTER_OUTER * Mth.sin(seconds * Mth.TWO_PI / FLUTTER_PERIOD + side * 1.3f) * breathAmp;
+
+        if (gestureAmp > 0) {
+            float t = cycle - gestureDelay;
+
+            // both wings reach up and unfurl, then shake out the tips
+            float stretch = progress(t, STRETCH_START, STRETCH_DURATION);
+            float stretchReach = bell(stretch / 0.6f) * gestureAmp;
+            outerSpread += STRETCH_OUTER * stretchReach + STRETCH_SHAKE * shake(stretch, 0.45f, 6) * gestureAmp;
+            lift += STRETCH_LIFT * stretchReach;
+
+            // quick tremor through the wings
+            float ruffle = progress(t, RUFFLE_START, RUFFLE_DURATION);
+            float ruffleAmp = bell(ruffle) * gestureAmp;
+            outerSpread += RUFFLE_OUTER * Mth.sin(ruffle * Mth.PI * 14 + side) * ruffleAmp;
+            lift += RUFFLE_LIFT * Mth.sin(ruffle * Mth.PI * 18) * ruffleAmp;
+            innerSpread -= RUFFLE_TUCK * ruffleAmp;
+
+            // fold in against the back, hold, then open again with a small overshoot
+            float fold = progress(t, FOLD_START, FOLD_DURATION);
+            float folded = plateau(fold, 0.25f, 0.6f) * gestureAmp;
+            innerSpread -= FOLD_INNER * folded;
+            outerSpread -= FOLD_OUTER * folded;
+            lift -= FOLD_LIFT * folded;
+            outerSpread += FOLD_OVERSHOOT * bell((fold - 0.75f) / 0.25f) * gestureAmp;
+
+            // raise and open, then slowly droop
+            float sigh = progress(t, SIGH_START, SIGH_DURATION);
+            float inhale = bell(sigh / 0.35f) * gestureAmp;
+            float exhale = bell((sigh - 0.3f) / 0.7f) * gestureAmp;
+            lift += SIGH_LIFT * inhale - SIGH_DROOP * exhale;
+            outerSpread += SIGH_OUTER * inhale - SIGH_OUTER_EXHALE * exhale;
+
+            // two sharp flicks of the tips
+            float flick = progress(t, FLICK_START, FLICK_DURATION);
+            float flicks = bell(flick / 0.4f) + bell((flick - 0.45f) / 0.4f);
+            flicks *= flicks * gestureAmp;
+            outerSpread += FLICK_OUTER * flicks;
+            lift += FLICK_LIFT * flicks;
+        }
+
+        // fold back while moving and flap slightly with each step
+        innerSpread -= WALK_FOLD_INNER * movement;
+        outerSpread -= WALK_FOLD_OUTER * movement;
+        lift -= WALK_FOLD_LIFT * movement;
+        outerSpread += WALK_STEP_OUTER * step * movement;
+        lift += WALK_STEP_LIFT * Math.max(0, step) * movement;
+
+        if (state.isCrouching) {
+            innerSpread -= CROUCH_INNER;
+            outerSpread -= CROUCH_OUTER;
+            lift -= CROUCH_LIFT;
+        }
+        if (state.isInWater) {
+            innerSpread -= WATER_INNER;
+            outerSpread -= WATER_OUTER;
+        }
+        if (state.hurt) {
+            innerSpread -= HURT_INNER;
+            outerSpread -= HURT_OUTER;
+        }
+
+        innerSpread = Math.min(innerSpread, INNER_MAX_SPREAD);
+
+        float scale = side * Mth.DEG_TO_RAD * fadeIn;
+        inner.yRot += innerSpread * scale;
+        inner.zRot -= lift * scale;
+        outer.yRot -= outerSpread * scale;
+    }
+
+    /**
+     * @return progress of a gesture in [0,1] while it plays, outside of that range otherwise
+     */
+    private static float progress(float time, float start, float duration) {
+        return (time - start) / duration;
+    }
+
+    /**
+     * Smooth 0 → 1 → 0 bump over [0,1], 0 outside
+     */
+    private static float bell(float x) {
+        if (x <= 0 || x >= 1) return 0;
+        float s = Mth.sin(x * Mth.PI);
+        return s * s;
+    }
+
+    /**
+     * Smooth rise over [0,rise], hold, smooth fall over [fallStart,1], 0 outside
+     */
+    private static float plateau(float x, float rise, float fallStart) {
+        if (x <= 0 || x >= 1) return 0;
+        return smoothstep(x / rise) * (1 - smoothstep((x - fallStart) / (1 - fallStart)));
+    }
+
+    /**
+     * Decaying oscillation over [from,1], 0 outside
+     */
+    private static float shake(float x, float from, float halfWaves) {
+        if (x <= from || x >= 1) return 0;
+        float q = (x - from) / (1 - from);
+        return Mth.sin(q * Mth.PI * halfWaves) * (1 - q) * (1 - q);
+    }
+
+    private static float smoothstep(float x) {
+        x = Mth.clamp(x, 0f, 1f);
+        return x * x * (3 - 2 * x);
+    }
+
+    //</editor-fold>
 
     //<editor-fold desc="Animation Definitions">
 
@@ -364,34 +596,6 @@ public class WingsModel extends Model<WingsModel.State> {
             ))
             .build();
 
-    public static final AnimationDefinition IDLE_ANIMATION = AnimationDefinition.Builder.withLength(4.0F).looping()
-            .addAnimation(WINGS, new AnimationChannel(AnimationChannel.Targets.SCALE,
-                    new Keyframe(0.0F, KeyframeAnimations.scaleVec(1.0F, 1.0F, 1.0F), AnimationChannel.Interpolations.CATMULLROM),
-                    new Keyframe(2.0F, KeyframeAnimations.scaleVec(1.05F, 1.05F, 1.05F), AnimationChannel.Interpolations.CATMULLROM),
-                    new Keyframe(4.0F, KeyframeAnimations.scaleVec(1.0F, 1.0F, 1.0F), AnimationChannel.Interpolations.CATMULLROM)
-            ))
-            .addAnimation(LEFT_WING, new AnimationChannel(AnimationChannel.Targets.ROTATION,
-                    new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
-                    new Keyframe(2.0F, KeyframeAnimations.degreeVec(0.0F, -12.0F, -1.0F), AnimationChannel.Interpolations.CATMULLROM),
-                    new Keyframe(4.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM)
-            ))
-            .addAnimation(OUTER_LEFT_WING, new AnimationChannel(AnimationChannel.Targets.ROTATION,
-                    new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
-                    new Keyframe(2.0F, KeyframeAnimations.degreeVec(0.0F, 24.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
-                    new Keyframe(4.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM)
-            ))
-            .addAnimation(RIGHT_WING, new AnimationChannel(AnimationChannel.Targets.ROTATION,
-                    new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
-                    new Keyframe(2.0F, KeyframeAnimations.degreeVec(0.0F, 12.0F, 2.0F), AnimationChannel.Interpolations.CATMULLROM),
-                    new Keyframe(4.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM)
-            ))
-            .addAnimation(OUTER_RIGHT_WING, new AnimationChannel(AnimationChannel.Targets.ROTATION,
-                    new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
-                    new Keyframe(2.0F, KeyframeAnimations.degreeVec(0.0F, -24.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
-                    new Keyframe(4.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM)
-            ))
-            .build();
-
     //</editor-fold>
 
     public static class State {
@@ -399,5 +603,10 @@ public class WingsModel extends Model<WingsModel.State> {
         public IWingsEntity.WingsState wingsState;
         public AnimationState flyState;
         public AnimationState growState;
+        public float walkAnimationPos;
+        public float walkAnimationSpeed;
+        public boolean isCrouching;
+        public boolean isInWater;
+        public boolean hurt;
     }
 }

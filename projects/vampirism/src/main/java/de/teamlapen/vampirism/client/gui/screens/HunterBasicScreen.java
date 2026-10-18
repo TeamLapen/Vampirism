@@ -12,7 +12,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -21,11 +21,12 @@ public class HunterBasicScreen extends ItemCombinerScreen<HunterBasicMenu> {
     private static final Identifier BACKGROUND = VIdentifier.mod("textures/gui/container/basic_hunter.png");
     private static final Identifier PURE_BLOOD_BOTTLE_SLOT_SPRITE = VIdentifier.mod("container/slot/pure_blood_bottle");
 
+    @Nullable
     private Button buttonLevelUp;
 
     private final CyclingSlotBackground bloodIcon = new CyclingSlotBackground(0);
 
-    public HunterBasicScreen(@NotNull HunterBasicMenu inventorySlotsIn, @NotNull Inventory playerInventory, @NotNull Component name) {
+    public HunterBasicScreen(HunterBasicMenu inventorySlotsIn, Inventory playerInventory, Component name) {
         super(inventorySlotsIn, playerInventory, name, BACKGROUND);
     }
 
@@ -36,6 +37,7 @@ public class HunterBasicScreen extends ItemCombinerScreen<HunterBasicMenu> {
             case WRONG_LEVEL -> Component.translatable("dialogue.vampirism.hunter.cannot_train_further");
             case NEED_BLOOD ->  Component.translatable("dialogue.vampirism.hunter.pay_vampire_blood", this.menu.requiredBloodBottles());
             case CAN_LEVEL_UP -> Component.translatable("dialogue.vampirism.hunter.will_train_you");
+            default -> Component.empty();
         };
 
         graphics.setTooltipForNextFrame(this.font, this.font.split(component, 120), xo + 45, yo + 23);
@@ -64,7 +66,9 @@ public class HunterBasicScreen extends ItemCombinerScreen<HunterBasicMenu> {
 
     @Override
     protected void containerTick() {
-        buttonLevelUp.active = this.menu.canLevelUp() == HunterBasicMenu.LevelingState.CAN_LEVEL_UP;
+        if (buttonLevelUp != null) {
+            buttonLevelUp.active = this.menu.canLevelUp() == HunterBasicMenu.LevelingState.CAN_LEVEL_UP;
+        }
         super.containerTick();
         this.bloodIcon.tick(List.of(PURE_BLOOD_BOTTLE_SLOT_SPRITE));
     }

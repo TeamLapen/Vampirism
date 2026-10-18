@@ -1,6 +1,6 @@
 {
   "parents": [
-    "vampirism:vampire/tough_skin_or_water_resistance"
+    "vampirism:vampire/vampire_rage"
   ],
   "skills": [
     "vampirism:less_blood_thirst"

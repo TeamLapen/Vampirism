@@ -113,7 +113,7 @@ public class ModEntityLootTableProvider extends EntityLootSubProvider {
                 DUMMY_CREATURE,
                 HUNTER_TRAINER,
                 VILLAGER_ANGRY,
-                VILLAGER_CONVERTED,
+                CONVERTED_VILLAGER,
                 TASK_MASTER_VAMPIRE,
                 TASK_MASTER_HUNTER,
                 VAMPIRE_MINION,

@@ -74,7 +74,7 @@ public class VillageEventHandler {
         if(event.getLevel() != null){
             if (IFaction.is(event.getFaction(), ModFactions.VAMPIRE)) {
                 if(event.getLevel().getRandom().nextBoolean()){
-                    var newVillager = ModEntities.VILLAGER_CONVERTED.get().create(event.getLevel(), EntitySpawnReason.EVENT);
+                    var newVillager = ModEntities.CONVERTED_VILLAGER.get().create(event.getLevel(), EntitySpawnReason.EVENT);
                     if(newVillager != null) {
                         event.setNewVillager(newVillager);
                     }

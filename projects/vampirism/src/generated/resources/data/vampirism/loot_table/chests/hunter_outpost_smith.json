@@ -56,20 +56,6 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:netherite_ingot"
-        },
-        {
-          "type": "minecraft:empty",
-          "weight": 19
-        }
-      ],
-      "rolls": 1.0
-    },
-    {
-      "bonus_rolls": 0.0,
-      "entries": [
-        {
-          "type": "minecraft:item",
           "name": "minecraft:lava_bucket",
           "weight": 10
         },

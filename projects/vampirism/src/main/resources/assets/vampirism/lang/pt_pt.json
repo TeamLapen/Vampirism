@@ -24,6 +24,7 @@
   "key.category.vampirism.main": "Vampirismo",
   "minion_task.vampirism.collect_blood": "Colheita de sangue",
   "gui.vampirism.revertback.head": "Voltar a ser humano",
+  "gui.vampirism.revertback.desc": "Vais perder os teus níveis e morrer",
   "gui.vampirism.coffin.stop_sleeping": "Deixar o caixão",
   "gui.vampirism.minion_appearance.minion": "Escravo",
   "message.vampirism.altar_inspiration.not_enough_blood": "Não há sangue suficiente no altar",

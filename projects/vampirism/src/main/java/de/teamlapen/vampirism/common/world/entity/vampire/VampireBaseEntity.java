@@ -142,13 +142,6 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
                 if (-worldIn.getPathfindingCostFromLightLevels(blockPosition()) < 0.0 && random.nextInt(5) != 0) {
                     return false;
                 }
-                if (this.level().isLoaded(blockPosition()) && worldIn instanceof ServerLevel) { //TODO check performance
-                    if (StructureUtil.getStructureStartAt(level(), blockPosition(), StructureTags.VILLAGE).isPresent()) {
-                        if (getRandom().nextInt(60) != 0) {
-                            return false;
-                        }
-                    }
-                }
                 if (spawnRestriction.level >= SpawnRestriction.SPECIAL.level) {
                     if (!getCanSpawnHereRestricted(worldIn)) {
                         return false;

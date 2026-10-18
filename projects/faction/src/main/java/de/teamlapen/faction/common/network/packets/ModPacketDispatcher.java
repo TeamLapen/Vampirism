@@ -11,11 +11,11 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 public class ModPacketDispatcher {
 
-    private static final String PROTOCOL_VERSION = Integer.toString(1);
+    private static final String PROTOCOL_VERSION = String.format("%s/%s", REFERENCE.MOD_ID, 1);
 
     @SubscribeEvent
     public void registerHandler(RegisterPayloadHandlersEvent event) {
-        registerPackets(event.registrar(REFERENCE.MOD_ID).versioned(PROTOCOL_VERSION));
+        registerPackets(event.registrar(PROTOCOL_VERSION));
     }
 
     @SuppressWarnings("Convert2MethodRef")

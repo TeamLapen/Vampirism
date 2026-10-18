@@ -97,6 +97,7 @@ public class ModRegistryManager {
     public void registerForgeEventHandler(IEventBus eventBus) {
         eventBus.addListener(ModCommands::registerCommands);
         eventBus.addListener(ModPotions::registerPotionMixes);
+        eventBus.addListener(ModDataPacks::datapackSync);
     }
 
     @SubscribeEvent

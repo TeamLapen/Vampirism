@@ -41,6 +41,7 @@ public class ModMemoryTypes {
     public static final DeferredHolder<MemoryModuleType<?>, MemoryModuleType<List<LivingEntity>>> NEAREST_ATTACKABLE = MEMORY_MODULES.register("nearest_attackable", () -> new MemoryModuleType<>(Optional.empty()));
     public static final DeferredHolder<MemoryModuleType<?>, MemoryModuleType<NearestVisibleLivingEntities>> NEAREST_VISIBLE_ATTACKABLE = MEMORY_MODULES.register("nearest_visible_attackable", () -> new MemoryModuleType<>(Optional.empty()));
     public static final DeferredHolder<MemoryModuleType<?>, MemoryModuleType<Unit>> KNOCKED_BACK = unit("dracula.knocked_back");
+    public static final DeferredHolder<MemoryModuleType<?>, MemoryModuleType<Set<UUID>>> AGGRESSORS = MEMORY_MODULES.register("dracula.aggressors", () -> new MemoryModuleType<>(Optional.of(ModCodecs.set(UUIDUtil.CODEC))));
     //<editor-fold desc="Action">
     public static final DeferredHolder<MemoryModuleType<?>, MemoryModuleType<Unit>> SUMMON_PROTECTOR_ACTIVE = unit("action.summon.active");
     public static final DeferredHolder<MemoryModuleType<?>, MemoryModuleType<Unit>> SUMMON_PROTECTOR_COOLDOWN = unit("action.summon.cooldown");

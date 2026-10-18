@@ -1,6 +1,6 @@
 {
   "parents": [
-    "vampirism:vampire/advanced_biter"
+    "vampirism:vampire/damage_limiter"
   ],
   "skills": [
     "vampirism:sword_finisher"

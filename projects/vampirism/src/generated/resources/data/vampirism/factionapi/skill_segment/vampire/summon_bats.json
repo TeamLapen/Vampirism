@@ -1,11 +1,7 @@
 {
   "parents": [
-    "vampirism:vampire/no_longer_fledgling"
+    "vampirism:vampire/human_disguise"
   ],
-  "placement": {
-    "type": "after",
-    "segment": "vampirism:vampire/sunscreen"
-  },
   "skills": [
     "vampirism:summon_bats"
   ],

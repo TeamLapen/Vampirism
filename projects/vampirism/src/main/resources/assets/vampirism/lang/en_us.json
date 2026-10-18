@@ -866,6 +866,7 @@
   "key.vampirism.suck_blood": "Suck Blood",
   "key.vampirism.toggle_vision": "Toggle Vampire Vision",
   "key.vampirism.select_ammo": "Select Quarrel Type",
+  "key.vampirism.toggle_wings": "Toggle Wings",
 
   "options.vampirism.sunBlindnessIntensity": "Sun Blindness Intensity",
 
@@ -1261,6 +1262,13 @@
   "tooltip.vampirism.alchemical_fire.desc1": "Does not spread",
   "tooltip.vampirism.alchemical_fire.desc2": "Burns indefinitely",
   "tooltip.vampirism.purity": "Purity: %s",
+  "tooltip.vampirism.blood_purity": "Blood Purity: %s",
+  "tooltip.vampirism.infused.level1": "I",
+  "tooltip.vampirism.infused.level2": "II",
+  "tooltip.vampirism.infused.level3": "III",
+  "tooltip.vampirism.infused.level4": "IV",
+  "tooltip.vampirism.infused.level5": "V",
+  "tooltip.vampirism.infused.level6": "VI",
   "tooltip.vampirism.more_damage_against": "Deals %1$s percent more damage against %2$s",
   "tooltip.vampirism.deadly_hunter_potion": "Deadly to all without garlic blood",
   "tooltip.vampirism.oil.weapon_effect_on_hit": "On Weapon With Effect On Hit:",
@@ -1854,5 +1862,12 @@
   "vampirism.configuration.lordAttackSpeedCooldown": "Lord Attack Speed Cooldown",
   "vampirism.configuration.lordAttackSpeedCooldown.tooltip": "Cooldown for the vampire lord attack speed action, in seconds.",
 
-  "credits.vampirism.translators": "No translators"
+  "credits.vampirism.translators": "No translators",
+
+  "pack.vampirism.undeadvampires": "Undead Vampires",
+  "pack.vampirism.undeadvampires.desc": "Make Vampires undead",
+  "pack.vampirism.2dtextures": "Vanilla style Vampirism",
+  "pack.vampirism.2dtextures.desc": "2d textures",
+  "pack.vampirism.modcompat": "Vampirism modcompat",
+  "pack.vampirism.modcompat.desc": "Compatibility pack for vampirism"
 }

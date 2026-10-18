@@ -1,9 +1,8 @@
 {
   "parents": [
-    "vampirism:vampire/sunscreen"
+    "vampirism:vampire/tough_skin"
   ],
   "skills": [
-    "vampirism:vampire_attack_speed",
     "vampirism:vampire_speed"
   ],
   "tree": "vampirism:vampire/level"

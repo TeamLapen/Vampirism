@@ -6,10 +6,10 @@ import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.common.config.FactionConfig;
 import de.teamlapen.faction.common.tags.FactionPoiTypeTags;
 import de.teamlapen.faction.common.world.blockentity.TotemBlockEntity;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.SectionPos;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
@@ -31,7 +31,6 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -235,22 +234,52 @@ public class TotemHelper {
      * @return a set of all related {@link PoiRecord} points
      */
     public static Set<PoiRecord> getVillagePointsOfInterest(ServerLevel world, BlockPos pos) {
-        PoiManager manager = world.getPoiManager();
+        int maxRadius = FactionConfig.server().villageMaximumTotemRadius.get();
+        // expanded points are seeds or closer than maxRadius, and their neighbours are at most NEIGHBOUR_RADIUS away, so a single query covers every reachable point
+        List<PoiRecord> candidates = world.getPoiManager().getInRange(type -> !type.is(FactionPoiTypeTags.HAS_FACTION), pos, Math.max(SEED_RADIUS, maxRadius) + NEIGHBOUR_RADIUS, PoiManager.Occupancy.ANY).toList();
+        if (candidates.isEmpty()) {
+            return Sets.newHashSet();
+        }
+
+        // bucket candidates into columns of NEIGHBOUR_RADIUS width, so neighbours are only searched in the 3x3 surrounding columns
+        Long2ObjectOpenHashMap<List<PoiRecord>> grid = new Long2ObjectOpenHashMap<>();
+        for (PoiRecord candidate : candidates) {
+            grid.computeIfAbsent(gridKey(candidate.getPos().getX(), candidate.getPos().getZ()), key -> new ArrayList<>()).add(candidate);
+        }
+
         Set<PoiRecord> finished = Sets.newHashSet();
-        Set<PoiRecord> points = manager.getInRange(type -> !type.is(FactionPoiTypeTags.HAS_FACTION), pos, 50, PoiManager.Occupancy.ANY).collect(Collectors.toSet());
-        while (!points.isEmpty()) {
-            List<Stream<PoiRecord>> list = points.stream().map(pointOfInterest -> manager.getInRange(type -> !type.is(FactionPoiTypeTags.HAS_FACTION), pointOfInterest.getPos(), 40, PoiManager.Occupancy.ANY)).toList();
-            points.clear();
-            list.forEach(stream -> stream.forEach(point -> {
-                if (!finished.contains(point)) {
-                    if (point.getPos().closerThan(pos, FactionConfig.server().villageMaximumTotemRadius.get())) {
-                        points.add(point);
+        ArrayDeque<PoiRecord> queue = new ArrayDeque<>();
+        for (PoiRecord candidate : candidates) {
+            if (candidate.getPos().distSqr(pos) <= SEED_RADIUS * SEED_RADIUS) {
+                // seeds are always expanded, even outside of maxRadius
+                finished.add(candidate);
+                queue.add(candidate);
+            }
+        }
+        while (!queue.isEmpty()) {
+            BlockPos current = queue.poll().getPos();
+            int cellX = Math.floorDiv(current.getX(), NEIGHBOUR_RADIUS);
+            int cellZ = Math.floorDiv(current.getZ(), NEIGHBOUR_RADIUS);
+            for (int dx = -1; dx <= 1; dx++) {
+                for (int dz = -1; dz <= 1; dz++) {
+                    List<PoiRecord> cell = grid.get(ChunkPos.pack(cellX + dx, cellZ + dz));
+                    if (cell == null) continue;
+                    for (PoiRecord point : cell) {
+                        if (point.getPos().distSqr(current) <= NEIGHBOUR_RADIUS * NEIGHBOUR_RADIUS && finished.add(point) && point.getPos().closerThan(pos, maxRadius)) {
+                            queue.add(point);
+                        }
                     }
                 }
-                finished.add(point);
-            }));
+            }
         }
         return finished;
+    }
+
+    private static final int SEED_RADIUS = 50;
+    private static final int NEIGHBOUR_RADIUS = 40;
+
+    private static long gridKey(int x, int z) {
+        return ChunkPos.pack(Math.floorDiv(x, NEIGHBOUR_RADIUS), Math.floorDiv(z, NEIGHBOUR_RADIUS));
     }
 
     /**
@@ -325,13 +354,18 @@ public class TotemHelper {
      * @return map containing village related data
      */
     public static Map<Integer, Integer> getVillageStats(Set<PoiRecord> pointOfInterests, Level world) {
-        Map<ResourceKey<PoiType>, Long> poiTCounts = pointOfInterests.stream().map(PoiRecord::getPoiType).flatMap(a -> BuiltInRegistries.POINT_OF_INTEREST_TYPE.getResourceKey(a.value()).stream()).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        int homes = 0;
+        for (PoiRecord poi : pointOfInterests) {
+            if (poi.getPoiType().is(net.minecraft.world.entity.ai.village.poi.PoiTypes.HOME)) {
+                homes++;
+            }
+        }
         AABB area = getAABBAroundPOIs(pointOfInterests);
-        return new HashMap<>() {{
-            put(1, poiTCounts.getOrDefault(net.minecraft.world.entity.ai.village.poi.PoiTypes.HOME, 0L).intValue());
-            put(2, ((int) poiTCounts.entrySet().stream().filter(entry -> entry.getKey() != net.minecraft.world.entity.ai.village.poi.PoiTypes.HOME).mapToLong(Entry::getValue).sum()));
-            put(4, area == null ? 0 : world.getEntitiesOfClass(Villager.class, area).size());
-        }};
+        Map<Integer, Integer> stats = new HashMap<>();
+        stats.put(1, homes);
+        stats.put(2, pointOfInterests.size() - homes);
+        stats.put(4, area == null ? 0 : world.getEntitiesOfClass(Villager.class, area).size());
+        return stats;
     }
 
 

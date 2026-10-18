@@ -42,6 +42,11 @@ public class WingsLayer<T extends LivingEntity, S extends LivingEntityRenderStat
         state.growState = renderState.getRenderDataOrThrow(ModEntityRenderStates.DRACULA_WINGS_GROW);
         state.flyState = renderState.getRenderDataOrThrow(ModEntityRenderStates.DRACULA_WINGS_FLY);
         state.ageInTicks = renderState.ageInTicks;
+        state.walkAnimationPos = renderState.walkAnimationPos;
+        state.walkAnimationSpeed = renderState.walkAnimationSpeed;
+        state.isCrouching = renderState.isDiscrete;
+        state.isInWater = renderState.isInWater;
+        state.hurt = renderState.hasRedOverlay;
 
         poseStack.pushPose();
         this.attachmentPointModifier.accept(renderState, poseStack);

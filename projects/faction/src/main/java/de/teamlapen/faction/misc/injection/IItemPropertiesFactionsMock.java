@@ -34,6 +34,11 @@ public interface IItemPropertiesFactionsMock extends IItemProperties {
     }
 
     @Override
+    default Item.Properties factions$description(Item item) {
+        throw new IllegalStateException("This class is only supported as injection class");
+    }
+
+    @Override
     default Item.Properties factions$withShiftDescription() {
         throw new IllegalStateException("This class is only supported as injection class");
     }
@@ -60,6 +65,11 @@ public interface IItemPropertiesFactionsMock extends IItemProperties {
 
     @Override
     default Item.Properties factions$addAttributes(ItemAttributeModifiers modifiers) {
+        throw new IllegalStateException("This class is only supported as injection class");
+    }
+
+    @Override
+    default Item.Properties factions$withShiftDescriptionWithId(String id) {
         throw new IllegalStateException("This class is only supported as injection class");
     }
 }

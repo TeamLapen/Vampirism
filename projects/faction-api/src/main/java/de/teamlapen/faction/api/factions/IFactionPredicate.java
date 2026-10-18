@@ -22,6 +22,15 @@ public interface IFactionPredicate extends Predicate<LivingEntity>, TargetingCon
         return FactionsApi.services().factionPredicates().builder();
     }
 
+    /**
+     * Creates a builder that additionally targets the default target entity types of the given faction
+     *
+     * @see Builder#defaultTargets()
+     */
+    static IFactionPredicate.Builder defaultTargets(Holder<? extends IFaction<?>> ownFaction) {
+        return builder(ownFaction).defaultTargets();
+    }
+
     default Predicate<Entity> forEntity() {
         return entity -> entity instanceof LivingEntity livingEntity && IFactionPredicate.this.test(livingEntity);
     }
@@ -55,6 +64,14 @@ public interface IFactionPredicate extends Predicate<LivingEntity>, TargetingCon
         Builder allowOwnFaction();
 
         /**
+         * Additionally target all entities whose type is in the default target tag of the own faction, regardless of their faction.
+         * <p>
+         * The tag is registered using {@link de.teamlapen.faction.api.event.AddFactionTagEvent.Builder#defaultTargets(net.minecraft.tags.TagKey)}.
+         * Has no effect if the builder has no own faction or the faction did not register a tag.
+         */
+        Builder defaultTargets();
+
+        /**
          * Target all creatures that have a faction other than NEUTRAL
          */
         Builder notNeutral();
@@ -70,7 +87,9 @@ public interface IFactionPredicate extends Predicate<LivingEntity>, TargetingCon
         Builder targetFaction(TagKey<IFaction<?>> targetFaction);
 
         /**
-         * Add a predicate to the faction predicate
+         * Set an additional non-faction condition the target must match.
+         * <p>
+         * Replaces the default {@link net.minecraft.world.entity.EntitySelector#NO_CREATIVE_OR_SPECTATOR}
          */
         Builder and(Predicate<Entity> other);
 

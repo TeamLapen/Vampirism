@@ -23,18 +23,14 @@ import de.teamlapen.vampirism.common.world.entity.vampire.*;
 import de.teamlapen.vampirism.misc.sit.SitEntity;
 import net.minecraft.advancements.criterion.EntitySubPredicate;
 import net.minecraft.core.Holder;
-import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.syncher.EntityDataSerializer;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.vehicle.boat.Boat;
 import net.minecraft.world.entity.vehicle.boat.ChestBoat;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.conditions.ICondition;
@@ -47,9 +43,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
@@ -86,7 +80,7 @@ public class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<DummyBittenAnimalEntity>> DUMMY_CREATURE = registerEntityType("dummy_creature", DummyBittenAnimalEntity::new, MobCategory.CREATURE);
     public static final DeferredHolder<EntityType<?>, EntityType<ConvertedCreatureEntity<?>>> CONVERTED_CREATURE = registerEntityType("converted_creature", ConvertedCreatureEntity::new, MobCategory.CREATURE , EntityType.Builder::noSummon);
     public static final DeferredHolder<EntityType<?>, EntityType<ConvertedCreatureEntity.IMob<?>>> CONVERTED_CREATURE_IMOB = registerEntityType("converted_creature_imob", ConvertedCreatureEntity.IMob::new, MobCategory.CREATURE, EntityType.Builder::noSummon);
-    public static final DeferredHolder<EntityType<?>, EntityType<ConvertedVillagerEntity>> VILLAGER_CONVERTED = registerEntityType("villager_converted", ConvertedVillagerEntity::new, VEnums.VAMPIRE_CATEGORY.getValue(), x -> x.sized(0.6F, 1.95F));
+    public static final DeferredHolder<EntityType<?>, EntityType<ConvertedVillagerEntity>> CONVERTED_VILLAGER = registerEntityType("converted_villager", ConvertedVillagerEntity::new, VEnums.VAMPIRE_CATEGORY.getValue(), x -> x.sized(0.6F, 1.95F));
 
     // Mother
     public static final DeferredHolder<EntityType<?>, EntityType<RemainsDefenderEntity>> REMAINS_DEFENDER = registerEntityType("remains_defender", RemainsDefenderEntity::new, MobCategory.MISC, x -> x.sized(0.3f, 0.3f).setTrackingRange(10).setUpdateInterval(20).noSummon());
@@ -151,7 +145,7 @@ public class ModEntities {
         event.register(VAMPIRE_BARON.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, VampireBaronEntity::spawnPredicateBaron, RegisterSpawnPlacementsEvent.Operation.OR);
         event.register(HUNTER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, HunterBaseEntity::spawnPredicateHunter, RegisterSpawnPlacementsEvent.Operation.OR);
         event.register(VILLAGER_ANGRY.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules, RegisterSpawnPlacementsEvent.Operation.OR);
-        event.register(VILLAGER_CONVERTED.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules, RegisterSpawnPlacementsEvent.Operation.OR);
+        event.register(CONVERTED_VILLAGER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mob::checkMobSpawnRules, RegisterSpawnPlacementsEvent.Operation.OR);
     }
 
     static void onRegisterEntityTypeAttributes(EntityAttributeCreationEvent event) {
@@ -171,7 +165,7 @@ public class ModEntities {
         event.put(VAMPIRE_IMOB.get(), BasicVampireEntity.getAttributeBuilder().build());
         event.put(VAMPIRE_BARON.get(), VampireBaronEntity.getAttributeBuilder().build());
         event.put(VILLAGER_ANGRY.get(), AggressiveVillagerEntity.getAttributeBuilder().build());
-        event.put(VILLAGER_CONVERTED.get(), ConvertedVillagerEntity.getAttributeBuilder().build());
+        event.put(CONVERTED_VILLAGER.get(), ConvertedVillagerEntity.getAttributeBuilder().build());
         event.put(HUNTER_MINION.get(), HunterMinionEntity.getAttributeBuilder().build());
         event.put(VAMPIRE_MINION.get(), VampireMinionEntity.getAttributeBuilder().build());
         event.put(TASK_MASTER_HUNTER.get(), HunterTaskMasterEntity.getAttributeBuilder().build());

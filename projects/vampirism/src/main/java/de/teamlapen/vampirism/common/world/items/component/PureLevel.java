@@ -57,10 +57,15 @@ public record PureLevel(int level) {
     }
 
     public MutableComponent getPurityTooltip() {
-        return formatByPurity(Component.translatable("tooltip.vampirism.purity", level() + 1));
+        return formatByPurity(Component.translatable("tooltip.vampirism.blood_purity", Component.translatable(asLatin(level() + 1))));
     }
 
     public MutableComponent formatByPurity(MutableComponent component) {
         return level == 5 ? component.withStyle(VEnums.SOVEREIGN_STYLE) : component.withStyle(ChatFormatting.DARK_RED);
+    }
+
+
+    private static String asLatin(int number) {
+        return "tooltip.vampirism.infused.level"+number;
     }
 }

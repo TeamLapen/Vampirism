@@ -892,7 +892,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             }
 
             //Update blood stats
-            if (getLevel() > 0 && !isDBNO()) {
+            if (getLevel() > 0 && !isDBNO() && !player.isSpectator()) {
                 this.bloodStats.onUpdate();
             }
 

@@ -7,6 +7,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IDraculaPlayer;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.util.Helper;
+import de.teamlapen.vampirism.data.ModDataPacks;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -68,6 +69,13 @@ public abstract class LivingEntityMixin extends Entity {
             return ItemStack.EMPTY;
         } else {
             return original.call(instance, equipmentSlot);
+        }
+    }
+
+    @Inject(method = "isInvertedHealAndHarm", at = @At(value = "RETURN"), cancellable = true)
+    private void changeUndeadPlayer(CallbackInfoReturnable<Boolean> cir){
+        if (!cir.getReturnValue() && ModDataPacks.isEnabled(ModDataPacks.UNDEAD_VAMPIRES) && Helper.isVampire(this)){
+            cir.setReturnValue(true);
         }
     }
 

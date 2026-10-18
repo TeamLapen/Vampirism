@@ -63,7 +63,6 @@ public class FactionCommands {
                 .then(SkillCommand.register(buildContext))
                 .then(VillageCommand.register(buildContext))
                 .then(MinionCommand.register(buildContext))
-                .then(ResetActionsCommand.register())
         ;
 
     }

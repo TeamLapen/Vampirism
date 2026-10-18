@@ -1,6 +1,6 @@
 {
   "parents": [
-    "vampirism:vampire/blood_charge"
+    "vampirism:vampire/dark_blood_projectile"
   ],
   "skills": [
     "vampirism:freeze"

@@ -13,8 +13,9 @@ import net.minecraft.world.item.ThrowablePotionItem;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.Level;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.StreamSupport;
@@ -36,17 +37,17 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
 
 
     @Override
-    public boolean brewPotions(Level level, @NotNull NonNullList<ItemStack> inputs, @NotNull ItemStack ingredient, @NotNull ItemStack extraIngredient, @NotNull IExtendedBrewingCapabilities capabilities, int @NotNull [] inputIndexes, boolean onlyExtended) {
+    public boolean brewPotions(Level level, NonNullList<ItemStack> inputs, ItemStack ingredient, ItemStack extraIngredient, IExtendedBrewingCapabilities capabilities, int[] inputIndexes, boolean onlyExtended) {
         boolean brewed = false;
         int useMain = 0;
         int useExtra = 0;
         for (int i : inputIndexes) {
-            Optional<Triple<ItemStack, Integer, Integer>> output = getOutput(level, inputs.get(i), ingredient, extraIngredient, capabilities, onlyExtended);
+            Optional<Pair<ItemStack, BrewingData>> output = getOutput(level, inputs.get(i), ingredient, extraIngredient, capabilities, onlyExtended);
             if (output.isPresent()) {
-                Triple<ItemStack, Integer, Integer> triple = output.get();
+                Pair<ItemStack, BrewingData> triple = output.get();
                 inputs.set(i, triple.getLeft());
-                useMain = Math.max(useMain, triple.getMiddle());
-                useExtra = Math.max(useExtra, triple.getRight());
+                useMain = Math.max(useMain, triple.getRight().reagent1Count());
+                useExtra = Math.max(useExtra, triple.getRight().reagent2Count());
                 brewed = true;
             }
         }
@@ -55,21 +56,23 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
         return brewed;
     }
 
+    @Nullable
     @Override
-    public boolean canBrew(Level level, @NotNull NonNullList<ItemStack> inputs, @NotNull ItemStack ingredient, @NotNull ItemStack extraIngredient, @NotNull IExtendedBrewingCapabilities capabilities, int @NotNull [] inputIndexes) {
-        if (ingredient.isEmpty()) return false;
+    public BrewingData canBrew(Level level, NonNullList<ItemStack> inputs, ItemStack ingredient, ItemStack extraIngredient, IExtendedBrewingCapabilities capabilities, int[] inputIndexes) {
+        if (ingredient.isEmpty()) return null;
 
         for (int i : inputIndexes) {
-            if (hasOutput(level, inputs.get(i), ingredient, extraIngredient, capabilities)) {
-                return true;
+            var output = getOutput(level, inputs.get(i), ingredient, extraIngredient, capabilities, false);
+            if (output.isPresent()) {
+                return output.map(Pair::getValue).orElse(null);
             }
         }
 
-        return false;
+        return null;
     }
 
     @Override
-    public @NotNull Optional<Triple<ItemStack, Integer, Integer>> getOutput(Level level, @NotNull ItemStack bottle, @NotNull ItemStack ingredient, @NotNull ItemStack extraIngredient, @NotNull IExtendedBrewingCapabilities capabilities, boolean onlyExtended) {
+    public Optional<Pair<ItemStack, BrewingData>> getOutput(Level level, ItemStack bottle, ItemStack ingredient, ItemStack extraIngredient, IExtendedBrewingCapabilities capabilities, boolean onlyExtended) {
         if (bottle.isEmpty() || bottle.getCount() != 1) return Optional.empty();
         if (ingredient.isEmpty()) return Optional.empty();
         PotionContents potion = bottle.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
@@ -90,26 +93,26 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
                     mix1.efficient ? (mix2.efficient ? 0 : -1) : (mix2.efficient ? 1 : 0)
             );
             ExtendedPotionMix mix = possibleResults.getFirst();
-            return Optional.of(Triple.of(ItemDataUtils.setPotion(new ItemStack(item), mix.output), mix.reagent1Count, mix.reagent2Count));
+            return Optional.of(Pair.of(ItemDataUtils.setPotion(new ItemStack(item), mix.output), new BrewingData(mix)));
 
         }
         ItemStack output = level.potionBrewing().mix(ingredient, bottle);
-        return output.isEmpty() || ItemStack.matches(output, bottle) ? Optional.empty() : Optional.of(Triple.of(output, 1, 0));
+        return output.isEmpty() || ItemStack.matches(output, bottle) ? Optional.empty() : Optional.of(Pair.of(output, new BrewingData(false,1, 0)));
     }
 
     @Override
-    public @NotNull List<ExtendedPotionMix> getPotionMixes() {
+    public List<ExtendedPotionMix> getPotionMixes() {
         return Collections.unmodifiableList(conversionMixes);
     }
 
 
     @Override
-    public boolean hasOutput(Level level, @NotNull ItemStack input, @NotNull ItemStack ingredient, @NotNull ItemStack extraIngredient, @NotNull IExtendedBrewingCapabilities capabilities) {
+    public boolean hasOutput(Level level, ItemStack input, ItemStack ingredient, ItemStack extraIngredient, IExtendedBrewingCapabilities capabilities) {
         return getOutput(level, input, ingredient, extraIngredient, capabilities, false).isPresent();
     }
 
     @Override
-    public boolean isValidExtraIngredient(@NotNull ItemStack stack) {
+    public boolean isValidExtraIngredient(ItemStack stack) {
         if (stack.isEmpty()) return false;
 
         for (ExtendedPotionMix mix : conversionMixes) {
@@ -121,7 +124,7 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
     }
 
     @Override
-    public boolean isValidIngredient(PotionBrewing registry, @NotNull ItemStack stack) {
+    public boolean isValidIngredient(PotionBrewing registry, ItemStack stack) {
         if (stack.isEmpty()) return false;
 
         for (ExtendedPotionMix mix : conversionMixes) {

@@ -1,0 +1,11 @@
+{
+  "parents": [
+    "vampirism:vampire/dark_stalker",
+    "vampirism:vampire/jump",
+    "vampirism:vampire/movement_speed"
+  ],
+  "skills": [
+    "vampirism:vampire_invisibility"
+  ],
+  "tree": "vampirism:vampire/level"
+}

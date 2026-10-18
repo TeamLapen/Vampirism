@@ -21,6 +21,7 @@ public interface IItemProperties {
     Item.Properties factions$restrictFaction(@NotNull Holder<? extends IFaction<?>> faction);
 
     Item.Properties factions$description(DependantName<Item, String> dependant);
+    Item.Properties factions$description(Item item);
 
     default Item.Properties factions$descriptionWithout(String regexPathReplace) {
         return factions$description(item -> Util.makeDescriptionId("item", item.identifier().withPath(item.identifier().getPath().replaceAll(regexPathReplace, ""))));
