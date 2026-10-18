@@ -24,7 +24,7 @@ public record ServerboundSelectMinionTaskPacket(int minionID, Identifier taskID)
     public final static Identifier RECALL = FIdentifier.mod("recall");
     public final static Identifier RESPAWN = FIdentifier.mod("respawn");
 
-    public static void printRecoveringMinions(@NotNull ServerPlayer player, @NotNull List<MutableComponent> recoveringMinions) {
+    public static void printRecoveringMinions(@NotNull ServerPlayer player, @NotNull List<Component> recoveringMinions) {
         if (recoveringMinions.size() == 1) {
             player.sendOverlayMessage(Component.translatable("message.factionapi.minion.still_recovering", recoveringMinions.getFirst()));
         } else if (recoveringMinions.size() > 1) {

@@ -7,6 +7,7 @@ import de.teamlapen.faction.api.world.ICaptureAttributes;
 import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
+import de.teamlapen.faction.common.factions.minions.MinionData;
 import de.teamlapen.faction.common.factions.minions.MinionWorldData;
 import de.teamlapen.faction.common.factions.minions.PlayerMinionController;
 import de.teamlapen.faction.common.util.SpawnUtil;
@@ -19,6 +20,7 @@ import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
 import de.teamlapen.vampirism.client.renderer.entities.state.AvatarLikeRenderState;
 import de.teamlapen.vampirism.common.config.BalanceMobProps;
 import de.teamlapen.vampirism.common.core.ModEntities;
+import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.util.HunterVillage;
 import de.teamlapen.vampirism.common.util.UtilLib;
@@ -27,6 +29,7 @@ import de.teamlapen.vampirism.common.world.entity.ai.goals.*;
 import de.teamlapen.vampirism.common.world.entity.ai.navigation.HunterPathNavigation;
 import de.teamlapen.vampirism.common.world.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterLeveling;
+import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.world.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.common.world.inventory.HunterBasicMenu;
@@ -154,7 +157,8 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         FactionPlayerHandler.get(player).getPlayerLord().filter(x -> x.getMaxMinions() > 0).filter(x -> IFaction.is(x.getFaction(), getFaction())).ifPresentOrElse(lord -> {
             MinionWorldData.getData(player.level()).map(w -> w.getOrCreateController(lord)).ifPresent(controller -> {
                 if (controller.hasFreeMinionSlot()) {
-                    HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData(lord, this);
+                    MinionData data = (MinionData) ModFactions.HUNTER_MINION.get().createData(HunterPlayer.get(player), ModFactions.HUNTER_MINION.get());
+                    data.set(FactionDataComponents.MINION_SKIN, getEntityTextureType());
                     var output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, registryAccess());
                     this.serializeAttachments(output);
                     data.updateEntityCaps(output.buildResult());
@@ -168,7 +172,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                     minion.claimMinionSlot(id, controller);
                     minion.copyPosition(this);
                     minion.markAsConverted();
-                    controller.activateTask(0, FactionMinionTasks.STAY.get());
+                    controller.activateTask(0, FactionMinionTasks.STAY);
                     SpawnUtil.replaceEntity(this, minion);
                 } else {
                     LOGGER.warn("No free slot");

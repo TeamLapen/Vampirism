@@ -15,6 +15,8 @@ public class FactionSkills {
 
 
     public static final DeferredSkill<?, ISkill<?>> MINION_RECOVERY = SKILLS.registerGenericSkill("minion_recovery", props -> new Skill<>(props.cost(2).tree(FactionSkillTreeTags.LORD).factions(FactionTags.HAS_LORD_SKILLS)));
+    public static final DeferredSkill<?, ISkill<?>> MINION_COLLECT = SKILLS.registerGenericSkill("minion_collect", props -> new Skill<>(props.cost(1).withDescription().tree(FactionSkillTreeTags.LORD).factions(FactionTags.HAS_LORD_SKILLS)));
+    public static final DeferredSkill<?, ISkill<?>> RESOURCE_DIVERSITY = SKILLS.registerGenericSkill("resource_diversity", props -> new Skill<>(props.cost(1).withDescription().tree(FactionSkillTreeTags.LORD).factions(FactionTags.HAS_LORD_SKILLS)));
 
 
     static void register(IEventBus bus) {

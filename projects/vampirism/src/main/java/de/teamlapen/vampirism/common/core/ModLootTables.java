@@ -37,6 +37,9 @@ public class ModLootTables {
     public static final ResourceKey<LootTable> DRACULA_CAVE_CHEST = register("chests/dracula_cave/chest");
     public static final ResourceKey<LootTable> DRACULA_CAVE_BARREL = register("chests/dracula_cave/barrel");
 
+    // Minion tasks
+    public static final ResourceKey<LootTable> MINION_COLLECT_BLOOD = register("minion_tasks/collect_blood");
+
     // Injects
     public static final ResourceKey<LootTable> INJECT_ABANDONED_MINESHAFT = register("chests/inject/abandoned_mineshaft");
     public static final ResourceKey<LootTable> INJECT_JUNGLE_TEMPLE = register("chests/inject/jungle_temple");

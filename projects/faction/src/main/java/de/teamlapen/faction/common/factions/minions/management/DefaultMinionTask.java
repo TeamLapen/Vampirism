@@ -1,11 +1,10 @@
 package de.teamlapen.faction.common.factions.minions.management;
 
-import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.world.entities.minion.IMinionData;
 import de.teamlapen.faction.api.world.entities.minion.IMinionEntity;
-import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
+import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
 import de.teamlapen.faction.common.core.FactionAdvancements;
 import de.teamlapen.faction.common.util.RegUtil;
 import net.minecraft.core.Holder;
@@ -19,7 +18,7 @@ import org.jspecify.annotations.NonNull;
 import java.util.Optional;
 
 
-public abstract class DefaultMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends IMinionData> implements IMinionTask<T, Q> {
+public abstract class DefaultMinionTask<T extends IMinionTask.IMinionTaskState> implements IMinionTask<T> {
 
     private final @Nullable Holder<? extends ISkill<?>> requiredSkill;
     @Nullable
@@ -35,13 +34,13 @@ public abstract class DefaultMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>
 
     @Nullable
     @Override
-    public T activateTask(@Nullable Player lord, @Nullable IMinionEntity minion, @NonNull Q data) {
+    public ActivateResult<T> activateTask(@Nullable Player lord, @Nullable IMinionEntity minion, @NonNull IMinionData data) {
         triggerAdvancements(lord);
         return null;
     }
 
     @Override
-    public @NotNull String getDescriptionId() {
+    public @NotNull String getNameId() {
         if (this.descriptionId == null) {
             this.descriptionId = Util.makeDescriptionId("minion_task", RegUtil.id(this));
         }

@@ -44,6 +44,15 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
     }
 
     @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        // AbstractContainerScreen does not forward scroll events to child widgets
+        if (this.taskList.mouseScrolled(mouseX, mouseY, scrollX, scrollY)) {
+            return true;
+        }
+        return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
+    }
+
+    @Override
     public void extractContents(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
         super.extractContents(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
         for (Renderable renderable : this.renderables) {
@@ -60,8 +69,8 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
         this.lockActionButton = this.addRenderableWidget(new LockIconButton(this.leftPos + 99, this.topPos + 19, this::toggleActionLock));
         this.statButton = this.addRenderableWidget(new ImageButton(this.leftPos + 6, this.topPos + 40, 18, 18, STATS_SPRITES, this::onStatsPressed));
         this.lockActionButton.setLocked(this.menu.isTaskLocked());
-        var availableTasks = List.of(menu.getAvailableTasks());
-        var taskNames = availableTasks.stream().map(x -> (Component) x.getName()).toList();
+        var availableTasks = menu.getAvailableTasks();
+        var taskNames = availableTasks.stream().map(x -> x.value().getName()).toList();
 
         this.taskList = this.addRenderableWidget(DropdownWidget.simple(this.leftPos + 120, this.topPos + 20).width(88).itemHeight(18).maxVisibleItems(4).onSelect(this::setActiveTask).simpleItems(taskNames).build().setSelectedIndex(availableTasks.indexOf(menu.getSelectedTask())));
     }

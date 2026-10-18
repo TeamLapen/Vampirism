@@ -9,7 +9,8 @@ import de.teamlapen.faction.api.factions.skills.*;
 import de.teamlapen.faction.api.factions.tasks.*;
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.api.world.entities.minion.IMinionEntry;
-import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
+import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
+import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTaskCategory;
 import de.teamlapen.faction.api.world.entities.player.FactionPlayerBooleanSupplier;
 import de.teamlapen.faction.api.world.entities.player.FactionPlayerConsumer;
 import de.teamlapen.faction.api.world.items.consume.IFactionFoodBehavior;
@@ -32,8 +33,9 @@ public class FactionRegistries {
     public static final Supplier<Registry<FactionPlayerConsumer>> FACTION_PLAYER_CONSUMER = retrieveRegistry(Keys.FACTION_PLAYER_CONSUMER);
     public static final Supplier<Registry<FactionPlayerBooleanSupplier>> FACTION_PLAYER_BOOLEAN_SUPPLIER = retrieveRegistry(Keys.FACTION_PLAYER_BOOLEAN_SUPPLIER);
 
-    public static final Supplier<Registry<IMinionEntry<?, ?>>> MINION = retrieveRegistry(Keys.MINION);
-    public static final Supplier<Registry<IMinionTask<?, ?>>> MINION_TASK = retrieveRegistry(Keys.MINION_TASK);
+    public static final Supplier<Registry<IMinionEntry<?>>> MINION = retrieveRegistry(Keys.MINION);
+    public static final Supplier<Registry<IMinionTask<?>>> MINION_TASK = retrieveRegistry(Keys.MINION_TASK);
+    public static final Supplier<Registry<IMinionTaskCategory>> MINION_TASK_CATEGORY = retrieveRegistry(Keys.MINION_TASK_CATEGORY);
 
     public static final Supplier<Registry<IRefinement>> REFINEMENT = retrieveRegistry(Keys.REFINEMENT);
     public static final Supplier<Registry<IRefinementSet>> REFINEMENT_SET = retrieveRegistry(Keys.REFINEMENT_SET);
@@ -54,8 +56,9 @@ public class FactionRegistries {
         public static final ResourceKey<Registry<FactionPlayerConsumer>> FACTION_PLAYER_CONSUMER = registryKey(FIdentifier.mod("faction_player_consumer"));
         public static final ResourceKey<Registry<FactionPlayerBooleanSupplier>> FACTION_PLAYER_BOOLEAN_SUPPLIER = registryKey(FIdentifier.mod("faction_player_boolean_supplier"));
 
-        public static final ResourceKey<Registry<IMinionEntry<?, ?>>> MINION = registryKey(FIdentifier.mod("minion"));
-        public static final ResourceKey<Registry<IMinionTask<?, ?>>> MINION_TASK = registryKey(FIdentifier.mod("miniontasks"));
+        public static final ResourceKey<Registry<IMinionEntry<?>>> MINION = registryKey(FIdentifier.mod("minion"));
+        public static final ResourceKey<Registry<IMinionTask<?>>> MINION_TASK = registryKey(FIdentifier.mod("miniontasks"));
+        public static final ResourceKey<Registry<IMinionTaskCategory>> MINION_TASK_CATEGORY = registryKey(FIdentifier.mod("miniontask_category"));
 
         public static final ResourceKey<Registry<IRefinement>> REFINEMENT = registryKey(FIdentifier.mod("refinement"));
         public static final ResourceKey<Registry<IRefinementSet>> REFINEMENT_SET = registryKey(FIdentifier.mod("refinement_set"));

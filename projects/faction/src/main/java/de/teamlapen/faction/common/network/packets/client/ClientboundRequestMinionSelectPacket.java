@@ -3,6 +3,7 @@ package de.teamlapen.faction.common.network.packets.client;
 import com.mojang.datafixers.util.Pair;
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
+import de.teamlapen.faction.common.factions.minions.MinionData;
 import de.teamlapen.faction.common.factions.minions.MinionWorldData;
 import de.teamlapen.faction.common.factions.minions.PlayerMinionController;
 import de.teamlapen.faction.common.network.packets.server.ServerboundSelectMinionTaskPacket;
@@ -23,7 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public record ClientboundRequestMinionSelectPacket(Action action, List<Pair<Integer, Component>> minions) implements CustomPacketPayload {
+public record ClientboundRequestMinionSelectPacket(Action action, List<Pair<Integer, String>> minions) implements CustomPacketPayload {
 
     /**
      * Create a minion selection request that can be sent to the client (player).
@@ -38,8 +39,8 @@ public record ClientboundRequestMinionSelectPacket(Action action, List<Pair<Inte
             PlayerMinionController controller = MinionWorldData.getData(player.level()).getOrCreateController(lord);
             Collection<Integer> ids = controller.getCallableMinions();
             if (!ids.isEmpty()) {
-                List<Pair<Integer, Component>> minions = new ArrayList<>(ids.size());
-                ids.forEach(id -> controller.contactMinionData(id, data -> data.getFormattedName().copy()).ifPresent(n -> minions.add(Pair.of(id, n))));
+                List<Pair<Integer, String>> minions = new ArrayList<>(ids.size());
+                ids.forEach(id -> controller.contactMinionData(id, MinionData::getName).ifPresent(n -> minions.add(Pair.of(id, n))));
                 return new ClientboundRequestMinionSelectPacket(action, minions);
             } else {
                 ServerboundSelectMinionTaskPacket.printRecoveringMinions(player, controller.getRecoveringMinionNames());
@@ -51,7 +52,7 @@ public record ClientboundRequestMinionSelectPacket(Action action, List<Pair<Inte
     public static final Type<ClientboundRequestMinionSelectPacket> TYPE = new Type<>(FIdentifier.mod("request_minion_select"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundRequestMinionSelectPacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.STRING_UTF8.map(Action::valueOf, Enum::name), ClientboundRequestMinionSelectPacket::action,
-            ModStreamCodecs.pair(ByteBufCodecs.VAR_INT, ComponentSerialization.STREAM_CODEC).apply(ByteBufCodecs.collection(i -> new ArrayList<>())), ClientboundRequestMinionSelectPacket::minions,
+            ModStreamCodecs.pair(ByteBufCodecs.VAR_INT, ByteBufCodecs.STRING_UTF8).apply(ByteBufCodecs.collection(i -> new ArrayList<>())), ClientboundRequestMinionSelectPacket::minions,
             ClientboundRequestMinionSelectPacket::new
     );
 

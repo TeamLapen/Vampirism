@@ -73,8 +73,8 @@ public class SelectAmmoScreen extends GuiRadialMenu<SelectAmmoScreen.AmmoType> {
     }
 
     private static RadialMenu<AmmoType> getRadialMenu(Collection<AmmoType> ammoTypes) {
-        List<IRadialMenuSlot<AmmoType>> parts = ammoTypes.stream().<IRadialMenuSlot<AmmoType>>map(a -> new RadialMenuSlot<>(a.getDisplayName(), a)).toList();
-        return new RadialMenu<>(i -> VampirismMod.proxy.sendToServer(ServerboundSelectAmmoTypePacket.of(parts.get(i).primarySlotIcon())), parts, SelectAmmoScreen::drawAmmoTypePart, 0);
+        List<IRadialMenuSlot<AmmoType>> parts = ammoTypes.stream().<IRadialMenuSlot<AmmoType>>map(a -> new RadialMenuSlot<>(a, a.getDisplayName())).toList();
+        return new RadialMenu<>(parts, SelectAmmoScreen::drawAmmoTypePart, SelectAmmoScreen::selectAmmoType);
     }
 
     private static void drawAmmoTypePart(AmmoType action, GuiGraphicsExtractor graphics, int posX, int posY, int size, boolean transparent) {
@@ -87,6 +87,10 @@ public class SelectAmmoScreen extends GuiRadialMenu<SelectAmmoScreen.AmmoType> {
         } else {
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, NO_RESTRICTION, posX, posY, 16, 16);
         }
+    }
+
+    private static void selectAmmoType(AmmoType ammoType) {
+        VampirismMod.proxy.sendToServer(ServerboundSelectAmmoTypePacket.of(ammoType));
     }
 
     @Override

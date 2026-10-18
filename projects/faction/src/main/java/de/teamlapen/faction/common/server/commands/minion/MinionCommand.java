@@ -2,23 +2,15 @@ package de.teamlapen.faction.common.server.commands.minion;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import de.teamlapen.faction.api.FactionRegistries;
-import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
-import de.teamlapen.faction.api.factions.lord.IMinionEntryBuilder;
-import de.teamlapen.faction.api.world.entities.ICustomizationHolder;
-import de.teamlapen.faction.api.world.entities.minion.IMinionData;
-import de.teamlapen.faction.api.world.entities.minion.IMinionEntity;
 import de.teamlapen.faction.api.world.entities.minion.IMinionEntry;
-import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.minions.MinionData;
-import de.teamlapen.faction.common.factions.minions.MinionEntity;
 import de.teamlapen.faction.common.factions.minions.MinionWorldData;
 import de.teamlapen.faction.common.factions.minions.PlayerMinionController;
 import de.teamlapen.faction.common.server.commands.BasicCommand;
@@ -29,13 +21,9 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 
 
 public class MinionCommand extends BasicCommand {
@@ -66,54 +54,27 @@ public class MinionCommand extends BasicCommand {
                                 .executes(context -> purge(context.getSource(), EntityArgument.getPlayer(context, "target")))));
     }
 
-    @SuppressWarnings("unchecked")
     public static ArgumentBuilder<CommandSourceStack, ?> registerNew(CommandBuildContext buildContext) {
         LiteralArgumentBuilder<CommandSourceStack> spawnNew = Commands.literal("create");
         var minionRegistry = buildContext.lookupOrThrow(FactionRegistries.Keys.MINION);
-        for (Holder<IMinionEntry<?, ?>> entry : minionRegistry.listElements().toList()) {
+        for (Holder<IMinionEntry<?>> entry : minionRegistry.listElements().toList()) {
             var minion = entry.value();
             var faction = minion.faction();
 
-            ArgumentBuilder<CommandSourceStack, ?> currentCommand = null;
-            List<? extends IMinionEntryBuilder.IMinionCommandBuilder.ICommandArgument<?, ?>> arguments = minion.commandArguments();
-
-            for (int i = arguments.size() - 1; i >= 0; i--) {
-                IMinionEntryBuilder.IMinionCommandBuilder.ICommandArgument<?, ?> argument = arguments.get(i);
-                int finalI = i;
-                var builder = Commands.argument(argument.name(), argument.type()).executes(context -> spawnNewMinionExtra(context, context.getSource(), faction, (IMinionEntry.IMinionCreator<?,MinionData>) minion.data(), minion.type(), (Collection<IMinionEntryBuilder.IMinionCommandBuilder.ICommandArgument<MinionData, ?>>) arguments.subList(0, finalI + 1), (Collection<IMinionEntryBuilder.IMinionCommandBuilder.ICommandArgument<MinionData, ?>>) arguments.subList(finalI + 1, arguments.size())));
-                if (currentCommand != null) {
-                    builder.then(currentCommand);
-                }
-                currentCommand = builder;
-            }
-            spawnNew.then(Commands.literal(entry.unwrapKey().orElseThrow().identifier().toString()).executes(context -> spawnNewMinionExtra(context, context.getSource(), faction, (IMinionEntry.IMinionCreator<?, MinionData>) minion.data(), minion.type(), List.of(), (Collection<IMinionEntryBuilder.IMinionCommandBuilder.ICommandArgument<MinionData, ?>>) arguments)).then(currentCommand));
+            spawnNew.then(
+                    Commands.literal(faction.unwrapKey().orElseThrow().identifier().toString())
+                            .executes(context -> spawnNewMinion(context.getSource(), faction, entry)));
 
         }
         return spawnNew;
     }
 
-    @SuppressWarnings("unchecked")
-    private static <T extends MinionData, Z extends IFactionPlayer<Z>> int spawnNewMinionExtra(CommandContext<CommandSourceStack> source, CommandSourceStack ctx, Holder<? extends IPlayableFaction<?>> faction, IMinionEntry.IMinionCreator<?, T> data, Supplier<EntityType<? extends IMinionEntity>> type, Collection<IMinionEntryBuilder.IMinionCommandBuilder.ICommandArgument<T, ?>> contextProvider, Collection<IMinionEntryBuilder.IMinionCommandBuilder.ICommandArgument<T, ?>> defaultProvider) throws CommandSyntaxException {
-        var player = ctx.getPlayerOrException();
-        FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-        //noinspection RedundantCast
-        Z iFactionPlayer = handler.factionPlayer((Holder<IFaction<Z>>) (Object)faction).orElseThrow(() -> new IllegalStateException("Wrong faction"));
-        T t = ((IMinionEntry.IMinionCreator<Z,T>)data).create(iFactionPlayer, ICustomizationHolder.NONE);
-        for (IMinionEntryBuilder.IMinionCommandBuilder.ICommandArgument<T, ?> tiCommandEntry : contextProvider) {
-            ((BiConsumer<T, Object>) tiCommandEntry.setter()).accept(t, tiCommandEntry.getter().apply(source, tiCommandEntry.name()));
-        }
-        for (IMinionEntryBuilder.IMinionCommandBuilder.ICommandArgument<T, ?> tiCommandEntry : defaultProvider) {
-            ((BiConsumer<T, Object>) tiCommandEntry.setter()).accept(t, tiCommandEntry.defaultValue());
-        }
-        return spawnNewMinion(ctx, faction, t, type.get());
-    }
-
     @SuppressWarnings("SameReturnValue")
-    private static <T extends IMinionData> int spawnNewMinion(CommandSourceStack ctx, Holder<? extends IPlayableFaction<?>> faction, T data, EntityType<? extends IMinionEntity> type) throws CommandSyntaxException {
+    private static int spawnNewMinion(CommandSourceStack ctx, Holder<? extends IPlayableFaction<?>> faction, Holder<IMinionEntry<?>> entry) throws CommandSyntaxException {
         Player p = ctx.getPlayerOrException();
         FactionPlayerHandler handler = FactionPlayerHandler.get(p);
         if(!handler.isInFaction(faction)) {
-            throw WRONG_FACTION.create(faction.value().getName());
+            throw WRONG_FACTION.create(faction.value().getName().getString());
         }
         var lordPlayer = handler.getPlayerLord();
 
@@ -125,9 +86,8 @@ public class MinionCommand extends BasicCommand {
 
         PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(fph);
         if (controller.hasFreeMinionSlot()) {
-
-                @SuppressWarnings("unchecked")
-                int id = controller.createNewMinionSlot((MinionData) data, (EntityType<? extends MinionEntity<?>>) type);
+                MinionData data = (MinionData) entry.value().createData(handler.factionPlayer(), (IMinionEntry) entry.value());
+                int id = controller.createNewMinionSlot(data, entry.value().type().value());
                 if (id < 0) {
                     throw ERROR_GETTING_SLOT.create();
                 }

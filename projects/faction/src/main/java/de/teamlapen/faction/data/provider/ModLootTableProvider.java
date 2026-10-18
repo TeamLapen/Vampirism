@@ -1,6 +1,8 @@
 package de.teamlapen.faction.data.provider;
 
+import de.teamlapen.faction.common.core.FactionLootContextParamSets;
 import de.teamlapen.faction.data.provider.loot.ModBlockLootTableProvider;
+import de.teamlapen.faction.data.provider.loot.ModMinionTaskLootTableProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
@@ -15,7 +17,8 @@ public class ModLootTableProvider {
     public static LootTableProvider getProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProviderFuture) {
         return new LootTableProvider(output, Set.of(),
                 List.of(
-                        new LootTableProvider.SubProviderEntry(ModBlockLootTableProvider::new, LootContextParamSets.BLOCK)),
+                        new LootTableProvider.SubProviderEntry(ModBlockLootTableProvider::new, LootContextParamSets.BLOCK),
+                        new LootTableProvider.SubProviderEntry(ModMinionTaskLootTableProvider::new, FactionLootContextParamSets.MINION_COLLECT)),
                 lookupProviderFuture);
     }
 }

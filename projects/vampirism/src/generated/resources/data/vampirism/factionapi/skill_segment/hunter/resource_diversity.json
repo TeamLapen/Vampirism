@@ -1,0 +1,9 @@
+{
+  "parents": [
+    "vampirism:hunter/supply_collection"
+  ],
+  "skills": [
+    "factionapi:resource_diversity"
+  ],
+  "tree": "vampirism:hunter/lord"
+}

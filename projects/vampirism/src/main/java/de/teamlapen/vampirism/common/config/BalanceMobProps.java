@@ -96,8 +96,5 @@ public class BalanceMobProps {
     public final double VAMPIRE_BARON_FIRE_VULNERABILITY = 3;
 
 
-    public final double MINION_MAX_HEALTH = 45;
-    public final double MINION_MAX_HEALTH_PL = 5;
-    public final double MINION_ATTACK_DAMAGE = 3;
-    public final double MINION_ATTACK_DAMAGE_PL = 1;
+
 }

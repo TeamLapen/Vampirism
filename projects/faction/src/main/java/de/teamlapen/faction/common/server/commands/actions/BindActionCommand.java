@@ -5,7 +5,7 @@ import com.mojang.brigadier.context.CommandContext;
 import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.actions.IAction;
 import de.teamlapen.faction.common.factions.actions.ActionKeys;
-import de.teamlapen.faction.common.network.packets.server.ClientboundActionBindingPacket;
+import de.teamlapen.faction.common.network.packets.client.ClientboundActionBindingPacket;
 import de.teamlapen.faction.common.server.commands.BasicCommand;
 import de.teamlapen.faction.common.server.commands.arguments.ActionArgument;
 import net.minecraft.commands.CommandBuildContext;
