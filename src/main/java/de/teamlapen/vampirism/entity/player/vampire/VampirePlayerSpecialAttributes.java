@@ -19,6 +19,10 @@ public class VampirePlayerSpecialAttributes {
     public boolean blood_vision_garlic;
     public int eyeType;
     public int fangType;
+    public int eyeX = -1;
+    public int eyeY = -1;
+    public int fangX = -1;
+    public int fangY = -1;
     public boolean glowingEyes;
     public boolean isDBNO;
 
