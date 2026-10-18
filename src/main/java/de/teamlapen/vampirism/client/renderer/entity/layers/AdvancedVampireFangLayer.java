@@ -15,7 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Render the eyes over the advanced vampire custom face
+ * Render the fangs over the advanced vampire custom face
  */
 public class AdvancedVampireFangLayer extends RenderLayer<AdvancedVampireEntity, HumanoidModel<AdvancedVampireEntity>> {
 
@@ -23,7 +23,7 @@ public class AdvancedVampireFangLayer extends RenderLayer<AdvancedVampireEntity,
 
     public AdvancedVampireFangLayer(@NotNull RenderLayerParent<AdvancedVampireEntity, HumanoidModel<AdvancedVampireEntity>> renderer) {
         super(renderer);
-        overlays = new ResourceLocation[REFERENCE.EYE_TYPE_COUNT];
+        overlays = new ResourceLocation[REFERENCE.FANG_TYPE_COUNT];
         for (int i = 0; i < overlays.length; i++) {
             overlays[i] = VResourceLocation.mod("textures/entity/vanilla/fangs" + (i) + ".png");
         }
@@ -33,9 +33,7 @@ public class AdvancedVampireFangLayer extends RenderLayer<AdvancedVampireEntity,
     @Override
     public void render(@NotNull PoseStack matrixStack, @NotNull MultiBufferSource iRenderTypeBuffer, int packetLightIn, @NotNull AdvancedVampireEntity advancedVampireEntity, float v, float v1, float v2, float v3, float v4, float v5) {
         int type = advancedVampireEntity.getFangType();
-        if (type < 0 || type >= overlays.length) {
-            type = 0;
-        }
+        if (type < 0 || type >= overlays.length) return;
         VertexConsumer builder = iRenderTypeBuffer.getBuffer(RenderType.entityCutoutNoCull(overlays[type]));
         boolean showModel = this.getParentModel().head.visible;
         this.getParentModel().head.visible = true;
