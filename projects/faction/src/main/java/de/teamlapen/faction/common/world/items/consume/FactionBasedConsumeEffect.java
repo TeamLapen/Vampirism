@@ -56,6 +56,15 @@ public record FactionBasedConsumeEffect(HolderSet<IFaction<?>> faction, List<Con
         return allExcept(faction, List.of(effect));
     }
 
+    @SuppressWarnings("unchecked")
+    public static FactionBasedConsumeEffect only(DeferredFaction<?, ?> faction, List<MobEffectInstance> effects) {
+        return new FactionBasedConsumeEffect(HolderSet.direct((Holder<IFaction<?>>) faction), new ApplyStatusEffectsConsumeEffect(effects));
+    }
+
+    public static FactionBasedConsumeEffect only(DeferredFaction<?, ?>  faction, MobEffectInstance effect) {
+        return only(faction, List.of(effect));
+    }
+
     @Override
     public Type<? extends ConsumeEffect> getType() {
         return FactionItems.FACTION_BASED.get();
