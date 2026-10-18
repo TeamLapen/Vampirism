@@ -62,8 +62,8 @@ public class ServerPayloadHandler {
     public void handleAppearancePacket(ServerboundAppearancePacket msg, IPayloadContext context) {
         context.enqueueWork(() -> {
             Entity entity1 = context.player().level().getEntity(msg.entityId());
-            if (entity1 instanceof Player player) {
-                VampirePlayer.get(player).setSkinData(msg.data());
+            if (entity1 == context.player()) {
+                VampirePlayer.get(context.player()).setSkinData(msg.data());
             } else if (entity1 instanceof MinionEntity<?> minion) {
                 minion.getMinionData().ifPresent(minionData -> minionData.handleMinionAppearanceConfig(msg.name(), msg.data()));
                 HelperLib.sync(minion);
