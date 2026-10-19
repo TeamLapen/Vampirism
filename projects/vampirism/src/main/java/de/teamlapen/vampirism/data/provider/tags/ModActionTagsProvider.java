@@ -34,8 +34,8 @@ public class ModActionTagsProvider extends KeyTagProvider<IAction<?>> {
         tag(ModActionTags.DISABLE_BY_ULTIMATE_HOLY_WATER).add((ResourceKey) VampireActions.HALF_INVULNERABLE.getKey(), (ResourceKey) VampireActions.VAMPIRE_RAGE.getKey());
 
         tag(FactionActionTags.SHOW_COOLDOWN_IN_HUD)
-                .add((ResourceKey) HunterActions.AWARENESS_HUNTER.getKey())
-                .add(HunterActions.POTION_RESISTANCE_HUNTER.getKey())
+                .add((ResourceKey) HunterActions.SIXTH_SENSE.getKey())
+                .add(HunterActions.POTION_RESISTANCE.getKey())
                 .add(VampireActions.DARK_BLOOD_PROJECTILE.getKey())
                 .add(VampireActions.DARK_STALKER.getKey())
                 .add(VampireActions.DISGUISE_VAMPIRE.getKey())
@@ -51,9 +51,9 @@ public class ModActionTagsProvider extends KeyTagProvider<IAction<?>> {
                 ;
 
         tag(FactionActionTags.SHOW_DURATION_IN_HUD)
-                .add((ResourceKey) HunterActions.AWARENESS_HUNTER.getKey())
-                .add(HunterActions.POTION_RESISTANCE_HUNTER.getKey())
-                .add(HunterActions.DISGUISE_HUNTER.getKey())
+                .add((ResourceKey) HunterActions.CAMOUFLAGE.getKey())
+                .add(HunterActions.SIXTH_SENSE.getKey())
+                .add(HunterActions.POTION_RESISTANCE.getKey())
                 .add(VampireActions.BAT.getKey())
                 .add(VampireActions.DARK_STALKER.getKey())
                 .add(VampireActions.DISGUISE_VAMPIRE.getKey())

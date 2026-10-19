@@ -41,7 +41,7 @@ public class MinecraftMixin {
 
     @ModifyExpressionValue(method = "shouldEntityAppearGlowing(Lnet/minecraft/world/entity/Entity;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;isCurrentlyGlowing()Z"))
     private boolean vampireGlowing(boolean original, Entity entity) {
-//        if(player != null && Helper.isHunter(player) && HunterPlayer.get(player).getActionHandler().isActionActive(HunterActions.AWARENESS_HUNTER.get())) {
+//        if(player != null && Helper.isHunter(player) && HunterPlayer.get(player).getActionHandler().isActionActive(HunterActions.SIXTH_SENSE.get())) {
 //            if (Helper.isVampire(entity) && entity.distanceToSqr(player) < 256) {
 //                return false;
 //            }

@@ -33,7 +33,7 @@ public class StakeItem extends VampirismSwordItem {
     public static boolean canKillInstantly(LivingEntity target, LivingEntity attacker) {
         boolean instaKillLowHealth = false;
         if (attacker instanceof Player player && attacker.isAlive()) {
-            instaKillLowHealth = FactionPlayerHandler.get(player).getCurrentSkillPlayer().filter(ac -> IFaction.is(ModFactions.HUNTER, ac.getFaction())).map(s -> s.getSkillHandler().isSkillEnabled(HunterSkills.STAKE1)).orElse(false);
+            instaKillLowHealth = FactionPlayerHandler.get(player).getCurrentSkillPlayer().filter(ac -> IFaction.is(ModFactions.HUNTER, ac.getFaction())).map(s -> s.getSkillHandler().isSkillEnabled(HunterSkills.HOW_TO_USE_STAKE)).orElse(false);
         } else if (attacker instanceof IAdvancedHunter) {
             instaKillLowHealth = true;// make more out of this
         }

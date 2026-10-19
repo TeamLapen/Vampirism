@@ -3,7 +3,7 @@
     "vampirism:hunter/lord_root"
   ],
   "skills": [
-    "vampirism:hunter_minion_stats_increase"
+    "vampirism:better_minions"
   ],
   "tree": "vampirism:hunter/lord"
 }

@@ -38,13 +38,13 @@ public class BalanceConfig {
     public final ModConfigSpec.IntValue garlicDiffuserStartupTime;
 
     // Hunter Actions
-    public final ModConfigSpec.BooleanValue haDisguiseEnabled;
-    public final ModConfigSpec.DoubleValue haDisguiseVisibilityMod;
-    public final ModConfigSpec.IntValue haDisguiseInvisibleSQ;
-    public final ModConfigSpec.BooleanValue haAwarenessEnabled;
-    public final ModConfigSpec.IntValue haAwarenessDuration;
-    public final ModConfigSpec.IntValue haAwarenessCooldown;
-    public final ModConfigSpec.IntValue haAwarenessRadius;
+    public final ModConfigSpec.BooleanValue haCamouflageEnabled;
+    public final ModConfigSpec.DoubleValue haCamouflageVisibilityMod;
+    public final ModConfigSpec.IntValue haCamouflageInvisibleSQ;
+    public final ModConfigSpec.BooleanValue haSixthSenseEnabled;
+    public final ModConfigSpec.IntValue haSixthSenseDuration;
+    public final ModConfigSpec.IntValue haSixthSenseCooldown;
+    public final ModConfigSpec.IntValue haSixthSenseRadius;
     public final ModConfigSpec.BooleanValue haPotionResistanceEnabled;
     public final ModConfigSpec.IntValue haPotionResistanceDuration;
     public final ModConfigSpec.IntValue haPotionResistanceCooldown;
@@ -269,27 +269,27 @@ public class BalanceConfig {
 
         builder.category("hunterActions", "ha");
 
-        haDisguiseEnabled = builder
-                .comment("When enabled, hunters can use the disguise action.")
-                .define("disguiseEnabled", true);
-        haDisguiseVisibilityMod = builder
-                .comment("Multiplier applied to mob detection radius while a hunter is disguised.")
-                .defineInRange("disguiseVisibilityMod", 0.2D, 0, 1);
-        haDisguiseInvisibleSQ = builder
-                .comment("Squared distance within which a disguised hunter is completely invisible to mobs.")
-                .defineInRange("disguiseInvisibleSQ", 256, 1, Integer.MAX_VALUE);
-        haAwarenessEnabled = builder
-                .comment("When enabled, hunters can use the vampire awareness action.")
-                .define("awarenessEnabled", true);
-        haAwarenessDuration = builder
-                .comment("Duration of the vampire awareness action, in ticks.")
-                .defineInRange("awarenessDuration", 300, 1, Integer.MAX_VALUE);
-        haAwarenessCooldown = builder
-                .comment("Cooldown for the vampire awareness action, in ticks.")
-                .defineInRange("awarenessCooldown", 900, 1, Integer.MAX_VALUE);
-        haAwarenessRadius = builder
-                .comment("Radius in blocks within which vampires are detected by the awareness action.")
-                .defineInRange("awarenessRadius", 25, 0, 50);
+        haCamouflageEnabled = builder
+                .comment("When enabled, hunters can use the camouflage action.")
+                .define("camouflageEnabled", true);
+        haCamouflageVisibilityMod = builder
+                .comment("Multiplier applied to mob detection radius while a hunter is in camouflage.")
+                .defineInRange("camouflageVisibilityMod", 0.2D, 0, 1);
+        haCamouflageInvisibleSQ = builder
+                .comment("Squared distance within which a hunter in camouflage is completely invisible to mobs.")
+                .defineInRange("camouflageInvisibleSQ", 256, 1, Integer.MAX_VALUE);
+        haSixthSenseEnabled = builder
+                .comment("When enabled, hunters can use the sixth sense action.")
+                .define("sixthSenseEnabled", true);
+        haSixthSenseDuration = builder
+                .comment("Duration of the sixth sense action, in ticks.")
+                .defineInRange("sixthSenseDuration", 300, 1, Integer.MAX_VALUE);
+        haSixthSenseCooldown = builder
+                .comment("Cooldown for the sixth sense action, in ticks.")
+                .defineInRange("sixthSenseCooldown", 900, 1, Integer.MAX_VALUE);
+        haSixthSenseRadius = builder
+                .comment("Radius in blocks within which vampires are detected by the sixth sense action.")
+                .defineInRange("sixthSenseRadius", 25, 0, 50);
         haPotionResistanceEnabled = builder
                 .comment("When enabled, hunters can use the potion resistance action.")
                 .define("potionResistanceEnabled", true);

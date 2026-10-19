@@ -7,7 +7,7 @@
     "segment": "vampirism:hunter/near_breach_reforging"
   },
   "skills": [
-    "vampirism:hunter_attack_speed"
+    "vampirism:attack_heavy_as_mountain"
   ],
   "tree": "vampirism:hunter/level"
 }

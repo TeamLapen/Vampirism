@@ -3,7 +3,7 @@
     "vampirism:hunter/better_minions"
   ],
   "skills": [
-    "vampirism:minion_tech_crossbows"
+    "vampirism:minion_technology"
   ],
   "tree": "vampirism:hunter/lord"
 }

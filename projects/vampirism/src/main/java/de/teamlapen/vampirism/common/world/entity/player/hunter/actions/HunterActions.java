@@ -14,9 +14,9 @@ import org.jetbrains.annotations.ApiStatus;
 public class HunterActions {
     public static final DeferredActionRegister<IHunterPlayer> ACTIONS = DeferredActionRegister.create(REFERENCE.MODID);
 
-    public static final DeferredAction<IHunterPlayer, ILastingAction<IHunterPlayer>, AwarenessHunterAction> AWARENESS_HUNTER = ACTIONS.registerAction("awareness_hunter", AwarenessHunterAction::new);
-    public static final DeferredAction<IHunterPlayer, ILastingAction<IHunterPlayer>, DisguiseHunterAction> DISGUISE_HUNTER = ACTIONS.registerAction("disguise_hunter", DisguiseHunterAction::new);
-    public static final DeferredAction<IHunterPlayer, ILastingAction<IHunterPlayer>, PotionResistanceHunterAction> POTION_RESISTANCE_HUNTER = ACTIONS.registerAction("potion_resistance_hunter", PotionResistanceHunterAction::new);
+    public static final DeferredAction<IHunterPlayer, ILastingAction<IHunterPlayer>, CamouflageAction> CAMOUFLAGE = ACTIONS.registerAction("camouflage", CamouflageAction::new);
+    public static final DeferredAction<IHunterPlayer, ILastingAction<IHunterPlayer>, SixthSenseAction> SIXTH_SENSE = ACTIONS.registerAction("sixth_sense", SixthSenseAction::new);
+    public static final DeferredAction<IHunterPlayer, ILastingAction<IHunterPlayer>, PotionResistanceAction> POTION_RESISTANCE = ACTIONS.registerAction("potion_resistance", PotionResistanceAction::new);
 
     @ApiStatus.Internal
     public static void register(IEventBus bus) {

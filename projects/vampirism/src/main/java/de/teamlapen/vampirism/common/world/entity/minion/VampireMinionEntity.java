@@ -341,7 +341,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         public VampireMinionData(ILordPlayer player, ICustomizationHolder customizationHolder) {
-            boolean skillEnabled = ISkillHandler.isSkillEnabled(player.asEntity(), HunterSkills.MINION_STATS_INCREASE);
+            boolean skillEnabled = ISkillHandler.isSkillEnabled(player.asEntity(), HunterSkills.BETTER_MINIONS);
             this("Minion", customizationHolder.getEntityTextureType(),false, skillEnabled);
         }
 

@@ -1,10 +1,10 @@
 {
   "parents": [
-    "vampirism:hunter/disguise"
+    "vampirism:hunter/camouflage"
   ],
   "placement": {
     "type": "after",
-    "segment": "vampirism:hunter/basic_alchemy"
+    "segment": "vampirism:hunter/apprentice_alchemy"
   },
   "skills": [
     "vampirism:multitask_brewing"

@@ -1,9 +1,9 @@
 {
   "parents": [
-    "vampirism:hunter/basic_alchemy"
+    "vampirism:hunter/level_root"
   ],
   "skills": [
-    "vampirism:garlic_diffuser"
+    "vampirism:how_to_use_stake"
   ],
   "tree": "vampirism:hunter/level"
 }

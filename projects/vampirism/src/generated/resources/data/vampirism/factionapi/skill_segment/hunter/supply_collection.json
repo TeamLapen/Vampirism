@@ -7,7 +7,7 @@
     "segment": "vampirism:hunter/lord_movement_or_attack_speed"
   },
   "skills": [
-    "vampirism:hunter_minion_collect"
+    "vampirism:supply_collection"
   ],
   "tree": "vampirism:hunter/lord"
 }

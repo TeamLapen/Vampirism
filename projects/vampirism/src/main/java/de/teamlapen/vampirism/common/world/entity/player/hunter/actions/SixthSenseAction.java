@@ -24,32 +24,32 @@ import java.util.Comparator;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-public class AwarenessHunterAction extends DefaultHunterAction implements ILastingAction<IHunterPlayer> {
+public class SixthSenseAction extends DefaultHunterAction implements ILastingAction<IHunterPlayer> {
 
     private final Predicate<Entity> vampirePredicate = IFactionPredicate.builder(ModFactions.HUNTER).targetFaction(VampirismTags.Factions.IS_VAMPIRE).ignoreDisguise().build().forEntity();
 
-    public AwarenessHunterAction() {
+    public SixthSenseAction() {
         super();
     }
 
     @Override
     public IActionResult canBeUsedBy(IHunterPlayer player) {
-        return IActionResult.otherAction(player.getActionHandler(), HunterActions.DISGUISE_HUNTER);
+        return IActionResult.otherAction(player.getActionHandler(), HunterActions.CAMOUFLAGE);
     }
 
     @Override
     public int getCooldown(IHunterPlayer player) {
-        return ModConfig.balance().haAwarenessCooldown.get();
+        return ModConfig.balance().haSixthSenseCooldown.get();
     }
 
     @Override
     public int getDuration(IHunterPlayer player) {
-        return ModConfig.balance().haAwarenessDuration.get();
+        return ModConfig.balance().haSixthSenseDuration.get();
     }
 
     @Override
     public boolean isEnabled() {
-        return ModConfig.balance().haAwarenessEnabled.get();
+        return ModConfig.balance().haSixthSenseEnabled.get();
     }
 
     @Override
@@ -78,7 +78,7 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
             double dist = nearbyVampire(player);
             double p = 0;
             if (dist != Double.MAX_VALUE) {
-                p = 1f - (dist / (float) ModConfig.balance().haAwarenessRadius.get());
+                p = 1f - (dist / (float) ModConfig.balance().haSixthSenseRadius.get());
             }
             ((HunterPlayer) player).getSpecialAttributes().nearbyVampire(p);
         }
@@ -86,7 +86,7 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
     }
 
     private double nearbyVampire(IHunterPlayer hunter) {
-        int r = ModConfig.balance().haAwarenessRadius.get();
+        int r = ModConfig.balance().haSixthSenseRadius.get();
         Player player = hunter.asEntity();
         var area = new AABB(player.getX() - r, player.getY() - r + 1, player.getZ() - r, player.getX() + r, player.getY() + r + 1, player.getZ() + r);
         return player.level().getEntities(player, area, vampirePredicate).stream().map(x -> x.distanceTo(player)).sorted().findFirst().orElse(Float.MAX_VALUE);

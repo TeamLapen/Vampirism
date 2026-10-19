@@ -1,9 +1,9 @@
 {
   "parents": [
-    "vampirism:hunter/hunter_awareness"
+    "vampirism:hunter/how_to_use_stake"
   ],
   "skills": [
-    "vampirism:ultimate_crucifix"
+    "vampirism:camouflage"
   ],
   "tree": "vampirism:hunter/level"
 }

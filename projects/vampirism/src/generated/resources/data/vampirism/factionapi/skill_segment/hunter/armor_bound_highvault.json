@@ -1,0 +1,14 @@
+{
+  "parents": [
+    "vampirism:hunter/attack_heavy_as_mountain",
+    "vampirism:hunter/attack_swift_as_wind"
+  ],
+  "placement": {
+    "type": "after",
+    "segment": "vampirism:hunter/armor_bound_swiftness"
+  },
+  "skills": [
+    "vampirism:armor_bound_highvault"
+  ],
+  "tree": "vampirism:hunter/level"
+}

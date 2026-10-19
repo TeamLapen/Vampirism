@@ -1,0 +1,13 @@
+{
+  "parents": [
+    "vampirism:hunter/basic_technology"
+  ],
+  "placement": {
+    "type": "after",
+    "segment": "vampirism:hunter/attack_heavy_as_mountain"
+  },
+  "skills": [
+    "vampirism:attack_swift_as_wind"
+  ],
+  "tree": "vampirism:hunter/level"
+}

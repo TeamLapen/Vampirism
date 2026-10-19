@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.world.entity.player.hunter;
 
 import de.teamlapen.faction.common.sounds.ISoundReference;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
-import de.teamlapen.vampirism.common.world.entity.player.hunter.actions.DisguiseHunterAction;
+import de.teamlapen.vampirism.common.world.entity.player.hunter.actions.CamouflageAction;
 import de.teamlapen.vampirism.common.world.items.HunterCoatItem;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,8 +18,8 @@ public class HunterSkillProperties {
      */
     @Nullable
     public IItemWithTier.Tier fullHunterCoat;
-    private boolean concealed = false;
-    private int concealmentTicks = 0;
+    private boolean inCamouflage = false;
+    private int camouflageTicks = 0;
     private double vampireDistanceRel = 0;
 
     /**
@@ -28,21 +28,26 @@ public class HunterSkillProperties {
     @Nullable
     public ISoundReference blessingSoundReference;
 
-    public void activateConcealment() {
-        this.concealed = true;
-        this.concealmentTicks = 1;
+    public void activateCamouflage() {
+        this.inCamouflage = true;
+        this.camouflageTicks = 1;
     }
 
-    public float getConcealmentProgress() {
-        return Math.clamp(this.concealmentTicks / (float) DisguiseHunterAction.FADE_TICKS, 0F, 1F);
+    public float getCamouflageProgress() {
+        return Math.clamp(this.camouflageTicks / (float) CamouflageAction.FADE_TICKS, 0F, 1F);
     }
 
-    public void increaseConcealmentTicks() {
-        this.concealmentTicks++;
+    public void increaseCamouflageTicks() {
+        this.camouflageTicks++;
     }
 
-    public boolean isConcealed() {
-        return this.concealed;
+    public boolean isInCamouflage() {
+        return this.inCamouflage;
+    }
+
+    public void resetCamouflage() {
+        this.camouflageTicks = 0;
+        this.inCamouflage = false;
     }
 
     public boolean isVampireNearby() {
@@ -55,10 +60,5 @@ public class HunterSkillProperties {
 
     public float getVampireNearbyProgress() {
         return (float) vampireDistanceRel;
-    }
-
-    public void resetConcealment() {
-        this.concealmentTicks = 0;
-        this.concealed = false;
     }
 }

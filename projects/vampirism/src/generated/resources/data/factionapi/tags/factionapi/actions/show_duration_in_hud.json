@@ -1,8 +1,8 @@
 {
   "values": [
-    "vampirism:awareness_hunter",
-    "vampirism:potion_resistance_hunter",
-    "vampirism:disguise_hunter",
+    "vampirism:camouflage",
+    "vampirism:sixth_sense",
+    "vampirism:potion_resistance",
     "vampirism:bat",
     "vampirism:dark_stalker",
     "vampirism:disguise_vampire",

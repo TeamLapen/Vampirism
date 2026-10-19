@@ -1,9 +1,9 @@
 {
   "parents": [
-    "vampirism:hunter/actually_use_axe"
+    "vampirism:hunter/crucifixion"
   ],
   "skills": [
-    "vampirism:stake2"
+    "vampirism:crucifix_repelling"
   ],
   "tree": "vampirism:hunter/level"
 }

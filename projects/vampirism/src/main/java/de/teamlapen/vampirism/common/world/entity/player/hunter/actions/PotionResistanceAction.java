@@ -13,7 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import java.util.Collection;
 
 
-public class PotionResistanceHunterAction extends DefaultHunterAction implements ILastingAction<IHunterPlayer> {
+public class PotionResistanceAction extends DefaultHunterAction implements ILastingAction<IHunterPlayer> {
 
     public static boolean shouldRemove(Holder<MobEffect> effect) {
         return effect.is(ModEffectTags.HUNTER_POTION_RESISTANCE);
