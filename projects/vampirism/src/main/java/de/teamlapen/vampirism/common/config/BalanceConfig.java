@@ -70,7 +70,7 @@ public class BalanceConfig {
     public final ModConfigSpec.DoubleValue vsBloodThirstReduction1;
     public final ModConfigSpec.DoubleValue vsSwordFinisherMaxHealth;
     public final ModConfigSpec.BooleanValue vsSwordFinisherOnPlayer;
-    public final ModConfigSpec.IntValue vsJumpBoost;
+    public final ModConfigSpec.IntValue vsFelineLeapBoost;
     public final ModConfigSpec.DoubleValue vsSpeedBoost;
     public final ModConfigSpec.IntValue vsBloodVisionDistanceSq;
     public final ModConfigSpec.DoubleValue vsSmallAttackDamageModifier;
@@ -131,9 +131,9 @@ public class BalanceConfig {
     public final ModConfigSpec.IntValue vaVampireRageMinDuration;
     public final ModConfigSpec.IntValue vaVampireRageDurationIncrease;
     public final ModConfigSpec.BooleanValue vaVampireRageEnabled;
-    public final ModConfigSpec.IntValue vaSunscreenCooldown;
-    public final ModConfigSpec.IntValue vaSunscreenDuration;
-    public final ModConfigSpec.BooleanValue vaSunscreenEnabled;
+    public final ModConfigSpec.IntValue vaSunProtectionCooldown;
+    public final ModConfigSpec.IntValue vaSunProtectionDuration;
+    public final ModConfigSpec.BooleanValue vaSunProtectionEnabled;
     public final ModConfigSpec.IntValue vaBatFormCooldown;
     public final ModConfigSpec.IntValue vaBatFormDuration;
     public final ModConfigSpec.BooleanValue vaBatFormEnabled;
@@ -157,9 +157,9 @@ public class BalanceConfig {
     public final ModConfigSpec.BooleanValue vaDamageLimiterEnabled;
     public final ModConfigSpec.BooleanValue vaHissingEnabled;
     public final ModConfigSpec.IntValue vaHissingCooldown;
-    public final ModConfigSpec.BooleanValue vaJumpBoostEnabled;
-    public final ModConfigSpec.IntValue vaJumpBoostCooldown;
-    public final ModConfigSpec.IntValue vaJumpBoostDuration;
+    public final ModConfigSpec.BooleanValue vaToggleHighJumpEnabled;
+    public final ModConfigSpec.IntValue vaToggleHighJumpCooldown;
+    public final ModConfigSpec.IntValue vaToggleHighJumpDuration;
     public final ModConfigSpec.BooleanValue vaDarkStalkerEnabled;
     public final ModConfigSpec.IntValue vaDarkStalkerCooldown;
     public final ModConfigSpec.IntValue vaDarkStalkerDuration;
@@ -182,7 +182,7 @@ public class BalanceConfig {
     public final ModConfigSpec.DoubleValue vrDarkBloodProjectileDamageMod;
     public final ModConfigSpec.DoubleValue vrDarkBloodProjectileAOECooldownMod;
     public final ModConfigSpec.IntValue vrDarkBloodProjectileAOERange;
-    public final ModConfigSpec.DoubleValue vrSunscreenDurationMod;
+    public final ModConfigSpec.DoubleValue vrSunProtectionDurationMod;
     public final ModConfigSpec.IntValue vrRageFuryDurationBonus;
     public final ModConfigSpec.DoubleValue vrTeleportDistanceMod;
     public final ModConfigSpec.DoubleValue vrTeleportCooldownMod;
@@ -356,9 +356,9 @@ public class BalanceConfig {
         vsSwordFinisherOnPlayer = builder
                 .comment("If the sword finisher works on players")
                 .define("swordFinisherOnPlayer", true);
-        vsJumpBoost = builder
-                .comment("Jump boost level granted by the vampire jump skill. Equivalent to the potion effect amplifier, where -1 is no boost.")
-                .defineInRange("jumpBoost", 1, -1, 5);
+        vsFelineLeapBoost = builder
+                .comment("Jump boost level granted by the feline leap skill. Equivalent to the potion effect amplifier, where -1 is no boost.")
+                .defineInRange("felineLeapBoost", 1, -1, 5);
         vsSpeedBoost = builder
                 .comment("Maximum speed boost granted by the vampire speed skill. Final max speed = base * (1 + value).")
                 .defineInRange("speedBoost", 0.15, 0, 3);
@@ -533,15 +533,15 @@ public class BalanceConfig {
         vaVampireRageDurationIncrease = builder
                 .comment("Duration added to the vampire rage action per vampire level, in seconds.")
                 .defineInRange("vampireRageDurationIncrease", 5, 0, 1000);
-        vaSunscreenEnabled = builder
-                .comment("When enabled, vampires can use the sunscreen action.")
-                .define("sunscreenEnabled", true);
-        vaSunscreenCooldown = builder
-                .comment("Cooldown for the vampire sunscreen action, in seconds.")
-                .defineInRange("sunscreenCooldown", 500, 0, 1000);
-        vaSunscreenDuration = builder
-                .comment("Duration of the vampire sunscreen action, in seconds.")
-                .defineInRange("sunscreenDuration", 40, 1, Integer.MAX_VALUE);
+        vaSunProtectionEnabled = builder
+                .comment("When enabled, vampires can use the sun protection action.")
+                .define("sunProtectionEnabled", true);
+        vaSunProtectionCooldown = builder
+                .comment("Cooldown for the vampire sun protection action, in seconds.")
+                .defineInRange("sunProtectionCooldown", 500, 0, 1000);
+        vaSunProtectionDuration = builder
+                .comment("Duration of the vampire sun protection action, in seconds.")
+                .defineInRange("sunProtectionDuration", 40, 1, Integer.MAX_VALUE);
         vaBatFormEnabled = builder
                 .comment("When enabled, vampires can transform into a bat.")
                 .define("batFormEnabled", true);
@@ -611,14 +611,14 @@ public class BalanceConfig {
         vaHissingCooldown = builder
                 .comment("Cooldown for the vampire hissing action, in seconds.")
                 .defineInRange("hissingCooldown", 60, 0, 10000);
-        vaJumpBoostEnabled = builder
-                .define("jumpBoostEnabled", true);
-        vaJumpBoostCooldown = builder
+        vaToggleHighJumpEnabled = builder
+                .define("toggleHighJumpEnabled", true);
+        vaToggleHighJumpCooldown = builder
                 .comment("In seconds")
-                .defineInRange("jumpBoostCooldown", 0, 0, 10000);
-        vaJumpBoostDuration = builder
+                .defineInRange("toggleHighJumpCooldown", 0, 0, 10000);
+        vaToggleHighJumpDuration = builder
                 .comment("In seconds")
-                .defineInRange("jumpBoostDuration", Integer.MAX_VALUE, 10, Integer.MAX_VALUE);
+                .defineInRange("toggleHighJumpDuration", Integer.MAX_VALUE, 10, Integer.MAX_VALUE);
         vaDarkStalkerEnabled = builder
                 .comment("When enabled, vampires can use the dark stalker action.")
                 .define("darkStalkerEnabled", true);
@@ -679,9 +679,9 @@ public class BalanceConfig {
         vrDarkBloodProjectileAOERange = builder
                 .comment("Squared radius of the dark blood projectile AOE effect with the AOE refinement.")
                 .defineInRange("darkBloodProjectileAOERange", 16, 0, Integer.MAX_VALUE);
-        vrSunscreenDurationMod = builder
-                .comment("Multiplier applied to sunscreen action duration with the sunscreen refinement.")
-                .defineInRange("sunscreenDurationMod", 1.5D, 1, Double.MAX_VALUE);
+        vrSunProtectionDurationMod = builder
+                .comment("Multiplier applied to sun protection action duration with the sunscreen refinement.")
+                .defineInRange("sunProtectionDurationMod", 1.5D, 1, Double.MAX_VALUE);
         vrRageFuryDurationBonus = builder
                 .comment("Duration added to the rage action per kill while the fury refinement is active, in seconds.")
                 .defineInRange("rageFuryDurationBonus", 5, 0, Integer.MAX_VALUE);

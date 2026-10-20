@@ -1,7 +1,7 @@
 {
   "parents": [
-    "vampirism:vampire/permanent_attack_damage_boost",
-    "vampirism:vampire/permanent_attack_speed_boost"
+    "vampirism:vampire/art_of_the_cut",
+    "vampirism:vampire/art_of_the_draw"
   ],
   "skills": [
     "vampirism:blood_charge"

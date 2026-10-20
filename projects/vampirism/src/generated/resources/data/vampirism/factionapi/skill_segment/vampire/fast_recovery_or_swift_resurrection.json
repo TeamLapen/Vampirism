@@ -1,7 +1,7 @@
 {
   "parents": [
     "vampirism:vampire/tough_skin",
-    "vampirism:vampire/water_resistance"
+    "vampirism:vampire/liquid_blood"
   ],
   "skills": [
     "vampirism:fast_recovery",

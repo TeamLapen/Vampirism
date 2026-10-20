@@ -3,8 +3,8 @@
     "vampirism:vampire/no_longer_fledgling"
   ],
   "skills": [
-    "vampirism:permanent_speed_boost",
-    "vampirism:permanent_jump_boost"
+    "vampirism:fleet_of_foot",
+    "vampirism:feline_leap"
   ],
   "tree": "vampirism:vampire/level"
 }

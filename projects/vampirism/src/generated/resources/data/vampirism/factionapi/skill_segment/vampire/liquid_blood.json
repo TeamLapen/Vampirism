@@ -1,13 +1,13 @@
 {
   "parents": [
-    "vampirism:vampire/permanent_speed_or_jump_boost"
+    "vampirism:vampire/fleet_of_foot_or_feline_leap"
   ],
   "placement": {
     "type": "after",
     "segment": "vampirism:vampire/tough_skin"
   },
   "skills": [
-    "vampirism:water_resistance"
+    "vampirism:liquid_blood"
   ],
   "tree": "vampirism:vampire/level"
 }

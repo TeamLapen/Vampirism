@@ -7,7 +7,7 @@
     "segment": "vampirism:vampire/teleport"
   },
   "skills": [
-    "vampirism:sunscreen"
+    "vampirism:sun_protection"
   ],
   "tree": "vampirism:vampire/level"
 }

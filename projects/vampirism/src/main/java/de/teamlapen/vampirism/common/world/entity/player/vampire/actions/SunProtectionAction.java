@@ -7,10 +7,9 @@ import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModRefinements;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class SunscreenAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
+public class SunProtectionAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
     @Override
     public IActionResult activateServer(@NotNull IVampirePlayer vampire, ActivationContext context) {
@@ -20,22 +19,22 @@ public class SunscreenAction extends DefaultVampireAction implements ILastingAct
 
     @Override
     public int getCooldown(IVampirePlayer player) {
-        return ModConfig.balance().vaSunscreenCooldown.get() * 20;
+        return ModConfig.balance().vaSunProtectionCooldown.get() * 20;
     }
 
 
     @Override
     public int getDuration(@NotNull IVampirePlayer player) {
-        int duration = 20 * (ModConfig.balance().vaSunscreenDuration.get());
+        int duration = 20 * (ModConfig.balance().vaSunProtectionDuration.get());
         if (player.getRefinementHandler().isRefinementEquipped(ModRefinements.SUN_SCREEN)) {
-            duration *= ModConfig.balance().vrSunscreenDurationMod.get();
+            duration *= ModConfig.balance().vrSunProtectionDurationMod.get();
         }
         return duration;
     }
 
     @Override
     public boolean isEnabled() {
-        return ModConfig.balance().vaSunscreenEnabled.get();
+        return ModConfig.balance().vaSunProtectionEnabled.get();
     }
 
     @Override

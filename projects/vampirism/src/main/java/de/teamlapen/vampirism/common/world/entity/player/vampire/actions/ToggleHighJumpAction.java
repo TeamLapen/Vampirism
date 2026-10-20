@@ -7,11 +7,11 @@ import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import net.minecraft.util.Mth;
 
-public class JumpBoostAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
+public class ToggleHighJumpAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
     @Override
     public boolean isEnabled() {
-        return ModConfig.balance().vaJumpBoostEnabled.get();
+        return ModConfig.balance().vaToggleHighJumpEnabled.get();
     }
 
     @Override
@@ -22,10 +22,10 @@ public class JumpBoostAction extends DefaultVampireAction implements ILastingAct
 
     @Override
     public int getDuration(IVampirePlayer player) {
-        return Mth.clamp(ModConfig.balance().vaJumpBoostDuration.get(), 10, Integer.MAX_VALUE / 20 - 1) * 20;
+        return Mth.clamp(ModConfig.balance().vaToggleHighJumpDuration.get(), 10, Integer.MAX_VALUE / 20 - 1) * 20;
     }
     private void applyEffect(IVampirePlayer vampire) {
-        ((VampirePlayer) vampire).getSkillProperties().setJumpBoost(ModConfig.balance().vsJumpBoost.get() + 1);
+        ((VampirePlayer) vampire).getSkillProperties().setJumpBoost(ModConfig.balance().vsFelineLeapBoost.get() + 1);
     }
 
     @Override
@@ -45,6 +45,6 @@ public class JumpBoostAction extends DefaultVampireAction implements ILastingAct
 
     @Override
     public int getCooldown(IVampirePlayer player) {
-        return ModConfig.balance().vaJumpBoostCooldown.get() * 20 + 1;
+        return ModConfig.balance().vaToggleHighJumpCooldown.get() * 20 + 1;
     }
 }

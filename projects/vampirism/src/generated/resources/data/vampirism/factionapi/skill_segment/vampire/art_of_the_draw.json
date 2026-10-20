@@ -4,10 +4,10 @@
   ],
   "placement": {
     "type": "after",
-    "segment": "vampirism:vampire/permanent_attack_damage_boost"
+    "segment": "vampirism:vampire/art_of_the_cut"
   },
   "skills": [
-    "vampirism:permanent_attack_speed_boost"
+    "vampirism:art_of_the_draw"
   ],
   "tree": "vampirism:vampire/level"
 }

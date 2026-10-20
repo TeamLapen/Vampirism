@@ -30,7 +30,7 @@ public class ModActionTagsProvider extends KeyTagProvider<IAction<?>> {
         tag(ModActionTags.DISABLE_BY_ENHANCED_HOLY_WATER).addTag(ModActionTags.DISABLE_BY_NORMAL_HOLY_WATER);
 
         tag(ModActionTags.DISABLE_BY_NORMAL_HOLY_WATER).add((ResourceKey) VampireActions.DISGUISE.getKey(), (ResourceKey) VampireActions.INVISIBILITY.getKey());
-        tag(ModActionTags.DISABLE_BY_ENHANCED_HOLY_WATER).add((ResourceKey) VampireActions.BAT_FORM.getKey(), (ResourceKey) VampireActions.REGENERATION.getKey(), (ResourceKey) VampireActions.SUNSCREEN.getKey());
+        tag(ModActionTags.DISABLE_BY_ENHANCED_HOLY_WATER).add((ResourceKey) VampireActions.BAT_FORM.getKey(), (ResourceKey) VampireActions.REGENERATION.getKey(), (ResourceKey) VampireActions.SUN_PROTECTION.getKey());
         tag(ModActionTags.DISABLE_BY_ULTIMATE_HOLY_WATER).add((ResourceKey) VampireActions.DAMAGE_LIMITER.getKey(), (ResourceKey) VampireActions.VAMPIRE_RAGE.getKey());
 
         tag(FactionActionTags.SHOW_COOLDOWN_IN_HUD)
@@ -46,7 +46,7 @@ public class ModActionTagsProvider extends KeyTagProvider<IAction<?>> {
                 .add(VampireActions.VAMPIRE_RAGE.getKey())
                 .add(VampireActions.REGENERATION.getKey())
                 .add(VampireActions.SUMMON_BATS.getKey())
-                .add(VampireActions.SUNSCREEN.getKey())
+                .add(VampireActions.SUN_PROTECTION.getKey())
                 .add(VampireActions.TELEPORT.getKey())
                 ;
 
@@ -60,7 +60,7 @@ public class ModActionTagsProvider extends KeyTagProvider<IAction<?>> {
                 .add(VampireActions.DAMAGE_LIMITER.getKey())
                 .add(VampireActions.VAMPIRE_RAGE.getKey())
                 .add(VampireActions.REGENERATION.getKey())
-                .add(VampireActions.SUNSCREEN.getKey())
+                .add(VampireActions.SUN_PROTECTION.getKey())
                 ;
         tag(ModActionTags.VAMPIRE_FORM_ACTIONS)
                 .add((ResourceKey) VampireActions.BAT_FORM.getKey())
