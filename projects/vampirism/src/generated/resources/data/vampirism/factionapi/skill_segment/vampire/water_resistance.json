@@ -1,7 +1,11 @@
 {
   "parents": [
-    "vampirism:vampire/advanced_biter"
+    "vampirism:vampire/movement_speed_or_jump"
   ],
+  "placement": {
+    "type": "after",
+    "segment": "vampirism:vampire/tough_skin"
+  },
   "skills": [
     "vampirism:water_resistance"
   ],

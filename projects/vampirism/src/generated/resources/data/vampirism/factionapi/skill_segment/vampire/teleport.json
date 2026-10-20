@@ -1,6 +1,6 @@
 {
   "parents": [
-    "vampirism:vampire/freeze"
+    "vampirism:vampire/damage_limiter"
   ],
   "skills": [
     "vampirism:teleport"

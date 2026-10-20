@@ -2,6 +2,10 @@
   "parents": [
     "vampirism:vampire/no_longer_fledgling"
   ],
+  "placement": {
+    "type": "after",
+    "segment": "vampirism:vampire/summon_bats"
+  },
   "skills": [
     "vampirism:vampire_rage"
   ],

@@ -1,7 +1,11 @@
 {
   "parents": [
-    "vampirism:vampire/human_disguise"
+    "vampirism:vampire/no_longer_fledgling"
   ],
+  "placement": {
+    "type": "after",
+    "segment": "vampirism:vampire/movement_speed_or_jump"
+  },
   "skills": [
     "vampirism:summon_bats"
   ],

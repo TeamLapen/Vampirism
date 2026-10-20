@@ -1,6 +1,7 @@
 {
   "parents": [
-    "vampirism:vampire/frugal_vampire"
+    "vampirism:vampire/damage",
+    "vampirism:vampire/attack_speed"
   ],
   "skills": [
     "vampirism:blood_charge"

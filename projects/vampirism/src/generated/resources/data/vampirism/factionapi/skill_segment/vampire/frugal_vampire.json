@@ -1,6 +1,6 @@
 {
   "parents": [
-    "vampirism:vampire/vampire_rage"
+    "vampirism:vampire/advanced_biter"
   ],
   "skills": [
     "vampirism:less_blood_thirst"

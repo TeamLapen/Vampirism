@@ -1,7 +1,6 @@
 {
   "parents": [
-    "vampirism:vampire/damage",
-    "vampirism:vampire/attack_speed"
+    "vampirism:vampire/movement_speed_or_jump"
   ],
   "skills": [
     "vampirism:less_sundamage"

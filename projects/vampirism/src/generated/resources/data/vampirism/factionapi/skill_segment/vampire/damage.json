@@ -1,6 +1,6 @@
 {
   "parents": [
-    "vampirism:vampire/water_resistance"
+    "vampirism:vampire/vampire_rage"
   ],
   "skills": [
     "vampirism:vampire_attack_damage"

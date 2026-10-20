@@ -1,7 +1,11 @@
 {
   "parents": [
-    "vampirism:vampire/blood_charge"
+    "vampirism:vampire/advanced_biter"
   ],
+  "placement": {
+    "type": "after",
+    "segment": "vampirism:vampire/frugal_vampire"
+  },
   "skills": [
     "vampirism:blood_vision"
   ],

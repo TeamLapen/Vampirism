@@ -1,7 +1,11 @@
 {
   "parents": [
-    "vampirism:vampire/sunscreen"
+    "vampirism:vampire/blood_charge"
   ],
+  "placement": {
+    "type": "after",
+    "segment": "vampirism:vampire/finisher"
+  },
   "skills": [
     "vampirism:dark_blood_projectile"
   ],

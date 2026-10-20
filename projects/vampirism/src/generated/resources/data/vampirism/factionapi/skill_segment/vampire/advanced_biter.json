@@ -1,6 +1,6 @@
 {
   "parents": [
-    "vampirism:vampire/no_longer_fledgling"
+    "vampirism:vampire/human_disguise"
   ],
   "skills": [
     "vampirism:advanced_biter"

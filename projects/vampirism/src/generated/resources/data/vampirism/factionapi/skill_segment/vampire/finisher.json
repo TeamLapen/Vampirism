@@ -1,6 +1,6 @@
 {
   "parents": [
-    "vampirism:vampire/damage_limiter"
+    "vampirism:vampire/blood_charge"
   ],
   "skills": [
     "vampirism:sword_finisher"

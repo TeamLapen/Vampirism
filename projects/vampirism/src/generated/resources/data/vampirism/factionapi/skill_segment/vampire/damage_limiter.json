@@ -1,6 +1,6 @@
 {
   "parents": [
-    "vampirism:vampire/blood_vision"
+    "vampirism:vampire/fast_recovery_or_resurrection"
   ],
   "skills": [
     "vampirism:half_invulnerable"

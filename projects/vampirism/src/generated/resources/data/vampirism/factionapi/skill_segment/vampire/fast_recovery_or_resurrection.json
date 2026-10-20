@@ -1,6 +1,7 @@
 {
   "parents": [
-    "vampirism:vampire/human_disguise"
+    "vampirism:vampire/tough_skin",
+    "vampirism:vampire/water_resistance"
   ],
   "skills": [
     "vampirism:neonatal_decrease",

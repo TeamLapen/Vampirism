@@ -1,7 +1,11 @@
 {
   "parents": [
-    "vampirism:vampire/water_resistance"
+    "vampirism:vampire/vampire_rage"
   ],
+  "placement": {
+    "type": "after",
+    "segment": "vampirism:vampire/damage"
+  },
   "skills": [
     "vampirism:vampire_attack_speed"
   ],

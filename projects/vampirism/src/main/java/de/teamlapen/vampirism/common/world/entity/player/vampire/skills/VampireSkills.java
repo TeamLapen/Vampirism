@@ -114,9 +114,9 @@ public class VampireSkills {
         public static final ResourceKey<ISkillSegment> KEY_SUNSCREEN = segment("sunscreen");
         public static final ResourceKey<ISkillSegment> KEY_ATTACK_SPEED = segment("attack_speed");
         public static final ResourceKey<ISkillSegment> KEY_DAMAGE = segment("damage");
-        public static final ResourceKey<ISkillSegment> KEY_MOVEMENT_SPEED = segment("movement_speed");
-        public static final ResourceKey<ISkillSegment> KEY_JUMP = segment("jump");
+        public static final ResourceKey<ISkillSegment> KEY_MOVEMENT_SPEED_OR_JUMP = segment("movement_speed_or_jump");
         public static final ResourceKey<ISkillSegment> KEY_DARK_STALKER = segment("dark_stalker");
+        public static final ResourceKey<ISkillSegment> KEY_INVISIBILITY = segment("invisibility");
         public static final ResourceKey<ISkillSegment> KEY_TOUGH_SKIN = segment("tough_skin");
         public static final ResourceKey<ISkillSegment> KEY_BLOOD_VISION = segment("blood_vision");
         public static final ResourceKey<ISkillSegment> KEY_GARLIC_BLOOD_VISION = segment("garlic_blood_vision");
@@ -130,7 +130,6 @@ public class VampireSkills {
         public static final ResourceKey<ISkillSegment> KEY_FRUGAL_VAMPIRE = segment("frugal_vampire");
         public static final ResourceKey<ISkillSegment> KEY_HUMAN_DISGUISE = segment("human_disguise");
         public static final ResourceKey<ISkillSegment> KEY_DAMAGE_LIMITER = segment("damage_limiter");
-        public static final ResourceKey<ISkillSegment> KEY_INVISIBILITY = segment("invisibility");
 
         // Lord
         public static final ResourceKey<ISkillSegment> KEY_LORD_ROOT = segment("lord_root");
@@ -161,80 +160,85 @@ public class VampireSkills {
                     .parents(KEY_REGENERATION)
                     .register(context);
 
-            level(KEY_VAMPIRE_RAGE, VAMPIRE_RAGE)
+            level(KEY_MOVEMENT_SPEED_OR_JUMP, VAMPIRE_SPEED, VAMPIRE_JUMP)
                     .parents(KEY_NO_LONGER_FLEDGLING)
                     .register(context);
-            level(KEY_FRUGAL_VAMPIRE, LESS_BLOOD_THIRST)
-                    .parents(KEY_VAMPIRE_RAGE)
+            level(KEY_TOUGH_SKIN, LESS_SUNDAMAGE)
+                    .parents(KEY_MOVEMENT_SPEED_OR_JUMP)
                     .register(context);
-            level(KEY_BLOOD_CHARGE, BLOOD_CHARGE)
-                    .parents(KEY_FRUGAL_VAMPIRE)
+            level(KEY_WATER_RESISTANCE, WATER_RESISTANCE)
+                    .parents(KEY_MOVEMENT_SPEED_OR_JUMP)
+                    .after(KEY_TOUGH_SKIN)
+                    .register(context);
+            level(KEY_FAST_RECOVERY_OR_RESURRECTION, NEONATAL_DECREASE, DBNO_DURATION)
+                    .parents(KEY_TOUGH_SKIN, KEY_WATER_RESISTANCE)
+                    .register(context);
+            level(KEY_DAMAGE_LIMITER, HALF_INVULNERABLE)
+                    .parents(KEY_FAST_RECOVERY_OR_RESURRECTION)
+                    .register(context);
+            level(KEY_TELEPORT, TELEPORT)
+                    .parents(KEY_DAMAGE_LIMITER)
+                    .register(context);
+            level(KEY_SUNSCREEN, SUNSCREEN)
+                    .parents(KEY_DAMAGE_LIMITER)
+                    .after(KEY_TELEPORT)
+                    .register(context);
+
+            level(KEY_SUMMON_BATS, SUMMON_BATS)
+                    .parents(KEY_NO_LONGER_FLEDGLING)
+                    .after(KEY_MOVEMENT_SPEED_OR_JUMP)
+                    .register(context);
+            level(KEY_HUMAN_DISGUISE, VAMPIRE_DISGUISE)
+                    .parents(KEY_SUMMON_BATS)
+                    .register(context);
+            level(KEY_ADVANCED_BITER, ADVANCED_BITER)
+                    .parents(KEY_HUMAN_DISGUISE)
+                    .register(context);
+            level(KEY_FRUGAL_VAMPIRE, LESS_BLOOD_THIRST)
+                    .parents(KEY_ADVANCED_BITER)
                     .register(context);
             level(KEY_BLOOD_VISION, BLOOD_VISION)
-                    .parents(KEY_BLOOD_CHARGE)
+                    .parents(KEY_ADVANCED_BITER)
+                    .after(KEY_FRUGAL_VAMPIRE)
+                    .register(context);
+            level(KEY_HISSING, HISSING)
+                    .parents(KEY_BLOOD_VISION)
                     .register(context);
             level(KEY_GARLIC_BLOOD_VISION, BLOOD_VISION_GARLIC)
                     .parents(KEY_BLOOD_VISION)
-                    .register(context);
-            level(KEY_DAMAGE_LIMITER, HALF_INVULNERABLE)
-                    .parents(KEY_BLOOD_VISION)
-                    .register(context);
-            level(KEY_FINISHER, SWORD_FINISHER)
-                    .parents(KEY_DAMAGE_LIMITER)
-                    .register(context);
-
-
-            level(KEY_ADVANCED_BITER, ADVANCED_BITER)
-                    .parents(KEY_NO_LONGER_FLEDGLING)
-                    .register(context);
-            level(KEY_HISSING, HISSING)
-                    .parents(KEY_ADVANCED_BITER)
-                    .register(context);
-            level(KEY_WATER_RESISTANCE, WATER_RESISTANCE)
-                    .parents(KEY_ADVANCED_BITER)
-                    .register(context);
-            level(KEY_ATTACK_SPEED, VAMPIRE_ATTACK_SPEED)
-                    .parents(KEY_WATER_RESISTANCE)
-                    .register(context);
-            level(KEY_DAMAGE, VAMPIRE_ATTACK_DAMAGE)
-                    .parents(KEY_WATER_RESISTANCE)
-                    .register(context);
-            level(KEY_TOUGH_SKIN, LESS_SUNDAMAGE)
-                    .parents(KEY_DAMAGE, KEY_ATTACK_SPEED)
-                    .register(context);
-            level(KEY_MOVEMENT_SPEED, VAMPIRE_SPEED)
-                    .parents(KEY_TOUGH_SKIN)
-                    .register(context);
-            level(KEY_JUMP, VAMPIRE_JUMP)
-                    .parents(KEY_TOUGH_SKIN)
+                    .after(KEY_HISSING)
                     .register(context);
             level(KEY_DARK_STALKER, DARK_STALKER)
-                    .parents(KEY_TOUGH_SKIN)
+                    .parents(KEY_HISSING)
                     .register(context);
             level(KEY_INVISIBILITY, VAMPIRE_INVISIBILITY)
-                    .parents(KEY_DARK_STALKER, KEY_JUMP, KEY_MOVEMENT_SPEED)
+                    .parents(KEY_HISSING)
+                    .after(KEY_DARK_STALKER)
                     .register(context);
 
-            level(KEY_HUMAN_DISGUISE, VAMPIRE_DISGUISE)
+            level(KEY_VAMPIRE_RAGE, VAMPIRE_RAGE)
                     .parents(KEY_NO_LONGER_FLEDGLING)
+                    .after(KEY_SUMMON_BATS)
                     .register(context);
-            level(KEY_SUMMON_BATS, SUMMON_BATS)
-                    .parents(KEY_HUMAN_DISGUISE)
+            level(KEY_DAMAGE, VAMPIRE_ATTACK_DAMAGE)
+                    .parents(KEY_VAMPIRE_RAGE)
                     .register(context);
-            level(KEY_SUNSCREEN, SUNSCREEN)
-                    .parents(KEY_SUMMON_BATS)
+            level(KEY_ATTACK_SPEED, VAMPIRE_ATTACK_SPEED)
+                    .parents(KEY_VAMPIRE_RAGE)
+                    .after(KEY_DAMAGE)
+                    .register(context);
+            level(KEY_BLOOD_CHARGE, BLOOD_CHARGE)
+                    .parents(KEY_DAMAGE, KEY_ATTACK_SPEED)
+                    .register(context);
+            level(KEY_FINISHER, SWORD_FINISHER)
+                    .parents(KEY_BLOOD_CHARGE)
                     .register(context);
             level(KEY_DARK_BLOOD_PROJECTILE, DARK_BLOOD_PROJECTILE)
-                    .parents(KEY_SUNSCREEN)
+                    .parents(KEY_BLOOD_CHARGE)
+                    .after(KEY_FINISHER)
                     .register(context);
             level(KEY_FREEZE, FREEZE)
                     .parents(KEY_DARK_BLOOD_PROJECTILE)
-                    .register(context);
-            level(KEY_TELEPORT, TELEPORT)
-                    .parents(KEY_FREEZE)
-                    .register(context);
-            level(KEY_FAST_RECOVERY_OR_RESURRECTION, NEONATAL_DECREASE, DBNO_DURATION)
-                    .parents(KEY_HUMAN_DISGUISE)
                     .register(context);
 
 
