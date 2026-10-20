@@ -1,8 +1,8 @@
 {
   "values": [
     "#vampirism:disabled_holy_water/weak",
-    "vampirism:bat",
-    "vampirism:regen",
+    "vampirism:bat_form",
+    "vampirism:regeneration",
     "vampirism:sunscreen"
   ]
 }

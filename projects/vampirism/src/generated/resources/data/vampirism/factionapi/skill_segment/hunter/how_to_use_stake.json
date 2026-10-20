@@ -1,6 +1,6 @@
 {
   "parents": [
-    "vampirism:hunter/level_root"
+    "vampirism:hunter/hunter_root"
   ],
   "skills": [
     "vampirism:how_to_use_stake"

@@ -1,6 +1,6 @@
 {
   "parents": [
-    "vampirism:hunter/lord_root"
+    "vampirism:hunter/hunter_lord_root"
   ],
   "placement": {
     "type": "after",

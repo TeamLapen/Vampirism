@@ -3,7 +3,7 @@
     "vampirism:vampire/blood_charge"
   ],
   "skills": [
-    "vampirism:sword_finisher"
+    "vampirism:finisher"
   ],
   "tree": "vampirism:vampire/level"
 }

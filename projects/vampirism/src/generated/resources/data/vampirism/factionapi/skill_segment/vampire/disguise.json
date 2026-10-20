@@ -3,7 +3,7 @@
     "vampirism:vampire/summon_bats"
   ],
   "skills": [
-    "vampirism:vampire_disguise"
+    "vampirism:disguise"
   ],
   "tree": "vampirism:vampire/level"
 }

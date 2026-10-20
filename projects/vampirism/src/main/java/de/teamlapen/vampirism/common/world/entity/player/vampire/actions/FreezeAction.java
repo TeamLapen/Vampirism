@@ -23,9 +23,9 @@ import java.util.List;
 /**
  * Freeze Skill
  */
-public class FreezeVampireAction extends DefaultVampireAction {
+public class FreezeAction extends DefaultVampireAction {
 
-    public FreezeVampireAction() {
+    public FreezeAction() {
         super();
     }
 

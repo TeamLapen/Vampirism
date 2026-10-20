@@ -308,7 +308,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         }
 
         public HunterMinionData(ILordPlayer player, ICustomizationHolder customizationHolder) {
-            boolean skillEnabled = ISkillHandler.isSkillEnabled(player.asEntity(), HunterSkills.BETTER_MINIONS);
+            boolean skillEnabled = ISkillHandler.isSkillEnabled(player.asEntity(), HunterSkills.HUNTER_BETTER_MINIONS);
             this("Minion", customizationHolder.getEntityTextureType(), false, skillEnabled);
         }
 

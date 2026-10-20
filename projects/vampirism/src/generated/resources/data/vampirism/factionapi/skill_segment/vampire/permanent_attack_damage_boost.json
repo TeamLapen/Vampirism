@@ -3,7 +3,7 @@
     "vampirism:vampire/vampire_rage"
   ],
   "skills": [
-    "vampirism:vampire_attack_damage"
+    "vampirism:permanent_attack_damage_boost"
   ],
   "tree": "vampirism:vampire/level"
 }

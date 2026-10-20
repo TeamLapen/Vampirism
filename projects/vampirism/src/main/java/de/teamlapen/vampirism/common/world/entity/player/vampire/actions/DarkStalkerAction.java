@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class DarkStalker extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
+public class DarkStalkerAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
     @Override
     public boolean isEnabled() {
         return ModConfig.balance().vaDarkStalkerEnabled.get();

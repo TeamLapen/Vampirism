@@ -1,6 +1,6 @@
 {
   "parents": [
-    "vampirism:hunter/better_minions"
+    "vampirism:hunter/hunter_better_minions"
   ],
   "skills": [
     "vampirism:minion_technology"

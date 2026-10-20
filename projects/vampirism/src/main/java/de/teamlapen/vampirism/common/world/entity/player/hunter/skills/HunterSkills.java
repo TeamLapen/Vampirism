@@ -83,7 +83,7 @@ public class HunterSkills {
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> CONCENTRATED_DURABLE_BREWING = SKILLS.registerSkill("concentrated_durable_brewing", props -> new HunterSkill(props.cost(2).withDescription()));
 
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> HUNTER_LORD_ROOT = SKILLS.registerSkill("hunter_lord_root", props -> new HunterSkill(props.tree(FactionSkillTreeTags.LORD)));
-    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> BETTER_MINIONS = SKILLS.registerSkill("better_minions", props -> new HunterSkill(props.cost(3).withDescription().tree(FactionSkillTreeTags.LORD).onEnable(FactionConsumer.ENABLE_MINION_INCREASED_STATS).onDisable(FactionConsumer.DISABLE_MINION_INCREASED_STATS)));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> HUNTER_BETTER_MINIONS = SKILLS.registerSkill("hunter_better_minions", props -> new HunterSkill(props.cost(3).withDescription().tree(FactionSkillTreeTags.LORD).onEnable(FactionConsumer.ENABLE_MINION_INCREASED_STATS).onDisable(FactionConsumer.DISABLE_MINION_INCREASED_STATS)));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> MINION_TECHNOLOGY = SKILLS.registerSkill("minion_technology", props -> new HunterSkill(props.cost(1).withDescription().tree(FactionSkillTreeTags.LORD)));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> SUPPLY_COLLECTION = SKILLS.registerSkill("supply_collection", props -> new HunterSkill(props.cost(2).withDescription().tree(FactionSkillTreeTags.LORD)));
 
@@ -100,7 +100,7 @@ public class HunterSkills {
     public static class Segments {
 
         // Level
-        public static final ResourceKey<ISkillSegment> KEY_LEVEL_ROOT = segment("level_root");
+        public static final ResourceKey<ISkillSegment> KEY_HUNTER_ROOT = segment("hunter_root");
         public static final ResourceKey<ISkillSegment> KEY_HOW_TO_USE_STAKE = segment("how_to_use_stake");
         public static final ResourceKey<ISkillSegment> KEY_CAMOUFLAGE = segment("camouflage");
 
@@ -135,8 +135,8 @@ public class HunterSkills {
         public static final ResourceKey<ISkillSegment> KEY_CONCENTRATED_DURABLE_BREWING = segment("concentrated_durable_brewing");
 
         // Lord
-        public static final ResourceKey<ISkillSegment> KEY_LORD_ROOT = segment("lord_root");
-        public static final ResourceKey<ISkillSegment> KEY_BETTER_MINIONS = segment("better_minions");
+        public static final ResourceKey<ISkillSegment> KEY_HUNTER_LORD_ROOT = segment("hunter_lord_root");
+        public static final ResourceKey<ISkillSegment> KEY_HUNTER_BETTER_MINIONS = segment("hunter_better_minions");
         public static final ResourceKey<ISkillSegment> KEY_MINION_TECHNOLOGY = segment("minion_technology");
         public static final ResourceKey<ISkillSegment> KEY_LORD_MOVEMENT_OR_ATTACK_SPEED = segment("lord_movement_or_attack_speed");
         public static final ResourceKey<ISkillSegment> KEY_SUPPLY_COLLECTION = segment("supply_collection");
@@ -152,10 +152,10 @@ public class HunterSkills {
         }
 
         public static void createSkillSegments(BootstrapContext<ISkillSegment> context) {
-            level(KEY_LEVEL_ROOT, HUNTER_ROOT)
+            level(KEY_HUNTER_ROOT, HUNTER_ROOT)
                     .register(context);
             level(KEY_HOW_TO_USE_STAKE, HOW_TO_USE_STAKE)
-                    .parents(KEY_LEVEL_ROOT)
+                    .parents(KEY_HUNTER_ROOT)
                     .register(context);
             level(KEY_CAMOUFLAGE, CAMOUFLAGE)
                     .parents(KEY_HOW_TO_USE_STAKE)
@@ -254,24 +254,24 @@ public class HunterSkills {
                     .parents(KEY_POTION_RESISTANCE)
                     .register(context);
 
-            lord(KEY_LORD_ROOT, HUNTER_LORD_ROOT)
+            lord(KEY_HUNTER_LORD_ROOT, HUNTER_LORD_ROOT)
                     .register(context);
-            lord(KEY_BETTER_MINIONS, BETTER_MINIONS)
-                    .parents(KEY_LORD_ROOT)
+            lord(KEY_HUNTER_BETTER_MINIONS, HUNTER_BETTER_MINIONS)
+                    .parents(KEY_HUNTER_LORD_ROOT)
                     .register(context);
             lord(KEY_MINION_TECHNOLOGY, MINION_TECHNOLOGY)
-                    .parents(KEY_BETTER_MINIONS)
+                    .parents(KEY_HUNTER_BETTER_MINIONS)
                     .register(context);
             lord(KEY_LORD_MOVEMENT_OR_ATTACK_SPEED, LordSkills.LORD_SPEED, LordSkills.LORD_ATTACK_SPEED)
-                    .parents(KEY_LORD_ROOT)
-                    .after(KEY_BETTER_MINIONS)
+                    .parents(KEY_HUNTER_LORD_ROOT)
+                    .after(KEY_HUNTER_BETTER_MINIONS)
                     .register(context);
             lord(KEY_SUPPLY_COLLECTION, SUPPLY_COLLECTION)
-                    .parents(KEY_LORD_ROOT)
+                    .parents(KEY_HUNTER_LORD_ROOT)
                     .after(KEY_LORD_MOVEMENT_OR_ATTACK_SPEED)
                     .register(context);
             lord(KEY_MINION_RECOVERY, FactionSkills.MINION_RECOVERY)
-                    .parents(KEY_LORD_ROOT)
+                    .parents(KEY_HUNTER_LORD_ROOT)
                     .after(KEY_SUPPLY_COLLECTION)
                     .register(context);
 

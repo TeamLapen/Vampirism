@@ -29,23 +29,23 @@ public class ModActionTagsProvider extends KeyTagProvider<IAction<?>> {
         tag(ModActionTags.DISABLE_BY_ULTIMATE_HOLY_WATER).addTags(ModActionTags.DISABLE_BY_ENHANCED_HOLY_WATER, ModActionTags.DISABLE_BY_NORMAL_HOLY_WATER);
         tag(ModActionTags.DISABLE_BY_ENHANCED_HOLY_WATER).addTag(ModActionTags.DISABLE_BY_NORMAL_HOLY_WATER);
 
-        tag(ModActionTags.DISABLE_BY_NORMAL_HOLY_WATER).add((ResourceKey) VampireActions.DISGUISE_VAMPIRE.getKey(), (ResourceKey) VampireActions.VAMPIRE_INVISIBILITY.getKey());
-        tag(ModActionTags.DISABLE_BY_ENHANCED_HOLY_WATER).add((ResourceKey) VampireActions.BAT.getKey(), (ResourceKey) VampireActions.REGEN.getKey(), (ResourceKey) VampireActions.SUNSCREEN.getKey());
-        tag(ModActionTags.DISABLE_BY_ULTIMATE_HOLY_WATER).add((ResourceKey) VampireActions.HALF_INVULNERABLE.getKey(), (ResourceKey) VampireActions.VAMPIRE_RAGE.getKey());
+        tag(ModActionTags.DISABLE_BY_NORMAL_HOLY_WATER).add((ResourceKey) VampireActions.DISGUISE.getKey(), (ResourceKey) VampireActions.INVISIBILITY.getKey());
+        tag(ModActionTags.DISABLE_BY_ENHANCED_HOLY_WATER).add((ResourceKey) VampireActions.BAT_FORM.getKey(), (ResourceKey) VampireActions.REGENERATION.getKey(), (ResourceKey) VampireActions.SUNSCREEN.getKey());
+        tag(ModActionTags.DISABLE_BY_ULTIMATE_HOLY_WATER).add((ResourceKey) VampireActions.DAMAGE_LIMITER.getKey(), (ResourceKey) VampireActions.VAMPIRE_RAGE.getKey());
 
         tag(FactionActionTags.SHOW_COOLDOWN_IN_HUD)
                 .add((ResourceKey) HunterActions.SIXTH_SENSE.getKey())
                 .add(HunterActions.POTION_RESISTANCE.getKey())
                 .add(VampireActions.DARK_BLOOD_PROJECTILE.getKey())
                 .add(VampireActions.DARK_STALKER.getKey())
-                .add(VampireActions.DISGUISE_VAMPIRE.getKey())
+                .add(VampireActions.DISGUISE.getKey())
                 .add(VampireActions.FREEZE.getKey())
-                .add(VampireActions.HALF_INVULNERABLE.getKey())
+                .add(VampireActions.DAMAGE_LIMITER.getKey())
                 .add(VampireActions.HISSING.getKey())
-                .add(VampireActions.VAMPIRE_INVISIBILITY.getKey())
+                .add(VampireActions.INVISIBILITY.getKey())
                 .add(VampireActions.VAMPIRE_RAGE.getKey())
-                .add(VampireActions.REGEN.getKey())
-                .add(VampireActions.SUMMON_BAT.getKey())
+                .add(VampireActions.REGENERATION.getKey())
+                .add(VampireActions.SUMMON_BATS.getKey())
                 .add(VampireActions.SUNSCREEN.getKey())
                 .add(VampireActions.TELEPORT.getKey())
                 ;
@@ -54,17 +54,17 @@ public class ModActionTagsProvider extends KeyTagProvider<IAction<?>> {
                 .add((ResourceKey) HunterActions.CAMOUFLAGE.getKey())
                 .add(HunterActions.SIXTH_SENSE.getKey())
                 .add(HunterActions.POTION_RESISTANCE.getKey())
-                .add(VampireActions.BAT.getKey())
+                .add(VampireActions.BAT_FORM.getKey())
                 .add(VampireActions.DARK_STALKER.getKey())
-                .add(VampireActions.DISGUISE_VAMPIRE.getKey())
-                .add(VampireActions.HALF_INVULNERABLE.getKey())
+                .add(VampireActions.DISGUISE.getKey())
+                .add(VampireActions.DAMAGE_LIMITER.getKey())
                 .add(VampireActions.VAMPIRE_RAGE.getKey())
-                .add(VampireActions.REGEN.getKey())
+                .add(VampireActions.REGENERATION.getKey())
                 .add(VampireActions.SUNSCREEN.getKey())
                 ;
         tag(ModActionTags.VAMPIRE_FORM_ACTIONS)
-                .add((ResourceKey) VampireActions.BAT.getKey())
-                .add(VampireActions.MIST_FORM.getKey())
+                .add((ResourceKey) VampireActions.BAT_FORM.getKey())
+                .add(VampireActions.MIST.getKey())
                 ;
     }
 }

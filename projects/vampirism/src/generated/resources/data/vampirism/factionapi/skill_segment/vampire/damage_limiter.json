@@ -1,9 +1,9 @@
 {
   "parents": [
-    "vampirism:vampire/fast_recovery_or_resurrection"
+    "vampirism:vampire/fast_recovery_or_swift_resurrection"
   ],
   "skills": [
-    "vampirism:half_invulnerable"
+    "vampirism:damage_limiter"
   ],
   "tree": "vampirism:vampire/level"
 }

@@ -7,7 +7,7 @@
     "segment": "vampirism:vampire/hissing"
   },
   "skills": [
-    "vampirism:blood_vision_garlic"
+    "vampirism:garlic_blood_vision"
   ],
   "tree": "vampirism:vampire/level"
 }

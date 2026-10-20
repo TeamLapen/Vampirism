@@ -1,6 +1,6 @@
 {
   "parents": [
-    "vampirism:vampire/level_root"
+    "vampirism:vampire/vampire_root"
   ],
   "skills": [
     "vampirism:night_vision"

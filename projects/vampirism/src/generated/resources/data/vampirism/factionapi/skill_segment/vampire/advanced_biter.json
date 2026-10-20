@@ -1,6 +1,6 @@
 {
   "parents": [
-    "vampirism:vampire/human_disguise"
+    "vampirism:vampire/disguise"
   ],
   "skills": [
     "vampirism:advanced_biter"

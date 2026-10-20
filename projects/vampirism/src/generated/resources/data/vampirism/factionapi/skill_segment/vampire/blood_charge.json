@@ -1,7 +1,7 @@
 {
   "parents": [
-    "vampirism:vampire/damage",
-    "vampirism:vampire/attack_speed"
+    "vampirism:vampire/permanent_attack_damage_boost",
+    "vampirism:vampire/permanent_attack_speed_boost"
   ],
   "skills": [
     "vampirism:blood_charge"

@@ -4,8 +4,8 @@
     "vampirism:vampire/water_resistance"
   ],
   "skills": [
-    "vampirism:neonatal_decrease",
-    "vampirism:dbno_duration"
+    "vampirism:fast_recovery",
+    "vampirism:swift_resurrection"
   ],
   "tree": "vampirism:vampire/level"
 }

@@ -10,9 +10,9 @@ import net.minecraft.world.entity.player.Player;
 /**
  * Disguise skill
  */
-public class DisguiseVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
+public class DisguiseAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
-    public DisguiseVampireAction() {
+    public DisguiseAction() {
         super();
     }
 

@@ -4,13 +4,14 @@ import de.teamlapen.faction.api.factions.actions.IActionResult;
 import de.teamlapen.faction.api.factions.actions.ILastingAction;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.common.config.ModConfig;
-import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModRefinements;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class SunscreenVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
+
+public class RegenerationAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
     @Override
     public IActionResult activateServer(@NotNull IVampirePlayer vampire, ActivationContext context) {
@@ -20,49 +21,43 @@ public class SunscreenVampireAction extends DefaultVampireAction implements ILas
 
     @Override
     public int getCooldown(IVampirePlayer player) {
-        return ModConfig.balance().vaSunscreenCooldown.get() * 20;
-    }
-
-
-    @Override
-    public int getDuration(@NotNull IVampirePlayer player) {
-        int duration = 20 * (ModConfig.balance().vaSunscreenDuration.get());
-        if (player.getRefinementHandler().isRefinementEquipped(ModRefinements.SUN_SCREEN)) {
-            duration *= ModConfig.balance().vrSunscreenDurationMod.get();
-        }
-        return duration;
+        return ModConfig.balance().vaRegenerationCooldown.get() * 20;
     }
 
     @Override
     public boolean isEnabled() {
-        return ModConfig.balance().vaSunscreenEnabled.get();
+        return ModConfig.balance().vaRegenerationEnabled.get();
     }
 
     @Override
-    public void onActivatedClient(IVampirePlayer vampire) {
+    public int getDuration(IVampirePlayer player) {
+        return ModConfig.balance().vaRegenerationDuration.get() * 20;
+    }
+
+    @Override
+    public void onActivatedClient(IVampirePlayer player) {
 
     }
 
     @Override
-    public void onDeactivated(@NotNull IVampirePlayer vampire) {
-        removePotionEffect(vampire, ModEffects.SUNSCREEN);
+    public void onDeactivated(IVampirePlayer player) {
+        removePotionEffect(player, MobEffects.REGENERATION);
     }
 
     @Override
-    public void onReActivatedServer(IVampirePlayer vampire) {
+    public void onReActivatedServer(IVampirePlayer player) {
 
     }
 
     @Override
     public boolean onUpdate(IVampirePlayer vampire) {
-        if (!vampire.isRemote() && vampire.asEntity().tickCount % 20 == 0) {
+        if (!vampire.isRemote() && vampire.asEntity().tickCount % 50 == 0) {
             applyEffect(vampire);
         }
-
         return false;
     }
 
     protected void applyEffect(IVampirePlayer vampire) {
-        addEffectInstance(vampire, new MobEffectInstance(ModEffects.SUNSCREEN, 22, 3, false, false));
+        addEffectInstance(vampire, new MobEffectInstance(MobEffects.REGENERATION, 52, vampire.getRefinementHandler().isRefinementEquipped(ModRefinements.REGENERATION) ? 1 : 0, false, false));
     }
 }

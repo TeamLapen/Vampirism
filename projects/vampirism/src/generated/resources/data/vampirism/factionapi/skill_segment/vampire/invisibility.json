@@ -7,7 +7,7 @@
     "segment": "vampirism:vampire/dark_stalker"
   },
   "skills": [
-    "vampirism:vampire_invisibility"
+    "vampirism:invisibility"
   ],
   "tree": "vampirism:vampire/level"
 }

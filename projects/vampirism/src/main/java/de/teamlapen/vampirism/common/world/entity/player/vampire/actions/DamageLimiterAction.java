@@ -10,25 +10,25 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class HalfInvulnerableAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
+public class DamageLimiterAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
-    public HalfInvulnerableAction() {
+    public DamageLimiterAction() {
         super();
     }
 
     @Override
     public int getCooldown(IVampirePlayer player) {
-        return 20 * (ModConfig.balance().vaHalfInvulnerableCooldown.get());
+        return 20 * (ModConfig.balance().vaDamageLimiterCooldown.get());
     }
 
     @Override
     public int getDuration(IVampirePlayer player) {
-        return 20 * (ModConfig.balance().vaHalfInvulnerableDuration.get());
+        return 20 * (ModConfig.balance().vaDamageLimiterDuration.get());
     }
 
     @Override
     public boolean isEnabled() {
-        return ModConfig.balance().vaHalfInvulnerableEnabled.get();
+        return ModConfig.balance().vaDamageLimiterEnabled.get();
     }
 
     @Override

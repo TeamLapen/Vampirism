@@ -29,7 +29,7 @@ import net.neoforged.neoforge.common.NeoForgeMod;
 import java.util.Objects;
 
 
-public class BatVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
+public class BatFormAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
     public final static float BAT_EYE_HEIGHT = 0.85F * 0.6f;
     public static final EntityDimensions BAT_SIZE = EntityDimensions.fixed(0.6f, 0.8f).withEyeHeight(BAT_EYE_HEIGHT);
@@ -37,7 +37,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     private static final float PLAYER_WIDTH = 0.6F;
     private static final float PLAYER_HEIGHT = 1.8F;
 
-    public BatVampireAction() {
+    public BatFormAction() {
         super();
     }
 
@@ -74,17 +74,17 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
     @Override
     public int getCooldown(IVampirePlayer player) {
-        return ModConfig.balance().vaBatCooldown.get() * 20 + 1;
+        return ModConfig.balance().vaBatFormCooldown.get() * 20 + 1;
     }
 
     @Override
     public int getDuration(IVampirePlayer player) {
-        return Mth.clamp(ModConfig.balance().vaBatDuration.get(), 10, Integer.MAX_VALUE / 20 - 1) * 20;
+        return Mth.clamp(ModConfig.balance().vaBatFormDuration.get(), 10, Integer.MAX_VALUE / 20 - 1) * 20;
     }
 
     @Override
     public boolean isEnabled() {
-        return ModConfig.balance().vaBatEnabled.get();
+        return ModConfig.balance().vaBatFormEnabled.get();
     }
 
     @Override
@@ -136,7 +136,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
                 player.sendSystemMessage(Component.translatable("message.vampirism.action.bat.cant_fly_dimension"));
                 return true;
             } else {
-                float exhaustion = ModConfig.balance().vaBatExhaustion.get().floatValue();
+                float exhaustion = ModConfig.balance().vaBatFormExhaustion.get().floatValue();
                 if (exhaustion > 0) vampire.addExhaustion(exhaustion);
                 return player.isInWater();
             }
@@ -170,7 +170,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
                 fly.addPermanentModifier(new AttributeModifier(key, 1, AttributeModifier.Operation.ADD_VALUE));
             }
 
-            setFlightSpeed(player, ModConfig.balance().vaBatFlightSpeed.get().floatValue());
+            setFlightSpeed(player, ModConfig.balance().vaBatFormFlightSpeed.get().floatValue());
         } else {
             Objects.requireNonNull(player.getAttribute(Attributes.ARMOR)).removeModifier(key);
             Objects.requireNonNull(player.getAttribute(Attributes.ARMOR_TOUGHNESS)).removeModifier(key);

@@ -580,8 +580,8 @@ public class GuideBook implements IGuideBook {
         //skills
         List<IPage> skills = PageHelper.pagesForLongText(translateComponent(base1_8 + "skills.text"));
         skills.add(new PageTextImage(translateComponent(base1_8 + "skills.vista.image"), VIdentifier.mod("textures/skills/vampire_forest_fog.png"), false));
-        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.neonatal.image"), VIdentifier.mod("textures/skills/neonatal_decrease.png"), false));
-        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.dbno.image"), VIdentifier.mod("textures/skills/dbno_duration.png"), false));
+        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.neonatal.image"), VIdentifier.mod("textures/skills/fast_recovery.png"), false));
+        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.dbno.image"), VIdentifier.mod("textures/skills/swift_resurrection.png"), false));
         skills.add(new PageTextImage(translateComponent(base1_8 + "skills.hissing.image"), VIdentifier.mod("textures/actions/hissing.png"), false));
         v1_8.addAll(skills);
         //balancing

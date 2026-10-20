@@ -4,7 +4,7 @@
   ],
   "placement": {
     "type": "after",
-    "segment": "vampirism:vampire/movement_speed_or_jump"
+    "segment": "vampirism:vampire/permanent_speed_or_jump_boost"
   },
   "skills": [
     "vampirism:summon_bats"

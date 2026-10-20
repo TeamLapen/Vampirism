@@ -4,10 +4,10 @@
   ],
   "placement": {
     "type": "after",
-    "segment": "vampirism:vampire/damage"
+    "segment": "vampirism:vampire/permanent_attack_damage_boost"
   },
   "skills": [
-    "vampirism:vampire_attack_speed"
+    "vampirism:permanent_attack_speed_boost"
   ],
   "tree": "vampirism:vampire/level"
 }

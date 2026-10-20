@@ -1,6 +1,6 @@
 {
   "parents": [
-    "vampirism:vampire/movement_speed_or_jump"
+    "vampirism:vampire/permanent_speed_or_jump_boost"
   ],
   "placement": {
     "type": "after",

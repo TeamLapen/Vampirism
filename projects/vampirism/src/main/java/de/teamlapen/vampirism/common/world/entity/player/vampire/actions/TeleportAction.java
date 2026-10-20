@@ -24,10 +24,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Set;
 
 
-public class TeleportVampireAction extends DefaultVampireAction {
+public class TeleportAction extends DefaultVampireAction {
 
 
-    public TeleportVampireAction() {
+    public TeleportAction() {
         super();
     }
 
@@ -73,7 +73,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
 
     @Override
     public IActionResult canBeUsedBy(@NotNull IVampirePlayer vampire) {
-        return IActionResult.otherAction(vampire.getActionHandler(), VampireActions.BAT);
+        return IActionResult.otherAction(vampire.getActionHandler(), VampireActions.BAT_FORM);
     }
 
     @Override

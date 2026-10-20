@@ -9,8 +9,8 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 
-public class InvisibilityVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
-    public InvisibilityVampireAction() {
+public class InvisibilityAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
+    public InvisibilityAction() {
         super();
     }
 

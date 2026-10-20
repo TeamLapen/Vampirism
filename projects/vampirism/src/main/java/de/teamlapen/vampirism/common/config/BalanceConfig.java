@@ -127,20 +127,20 @@ public class BalanceConfig {
     public final ModConfigSpec.IntValue vaTeleportMaxDistance;
     public final ModConfigSpec.IntValue vaTeleportCooldown;
     public final ModConfigSpec.BooleanValue vaTeleportEnabled;
-    public final ModConfigSpec.IntValue vaRageCooldown;
-    public final ModConfigSpec.IntValue vaRageMinDuration;
-    public final ModConfigSpec.IntValue vaRageDurationIncrease;
-    public final ModConfigSpec.BooleanValue vaRageEnabled;
+    public final ModConfigSpec.IntValue vaVampireRageCooldown;
+    public final ModConfigSpec.IntValue vaVampireRageMinDuration;
+    public final ModConfigSpec.IntValue vaVampireRageDurationIncrease;
+    public final ModConfigSpec.BooleanValue vaVampireRageEnabled;
     public final ModConfigSpec.IntValue vaSunscreenCooldown;
     public final ModConfigSpec.IntValue vaSunscreenDuration;
     public final ModConfigSpec.BooleanValue vaSunscreenEnabled;
-    public final ModConfigSpec.IntValue vaBatCooldown;
-    public final ModConfigSpec.IntValue vaBatDuration;
-    public final ModConfigSpec.BooleanValue vaBatEnabled;
-    public final ModConfigSpec.DoubleValue vaBatHealthReduction;
-    public final ModConfigSpec.DoubleValue vaBatExhaustion;
-    public final ModConfigSpec.DoubleValue vaBatFlightSpeed;
-    public final ModConfigSpec.BooleanValue vaBatAllowInteraction;
+    public final ModConfigSpec.IntValue vaBatFormCooldown;
+    public final ModConfigSpec.IntValue vaBatFormDuration;
+    public final ModConfigSpec.BooleanValue vaBatFormEnabled;
+    public final ModConfigSpec.DoubleValue vaBatFormHealthReduction;
+    public final ModConfigSpec.DoubleValue vaBatFormExhaustion;
+    public final ModConfigSpec.DoubleValue vaBatFormFlightSpeed;
+    public final ModConfigSpec.BooleanValue vaBatFormAllowInteraction;
     public final ModConfigSpec.BooleanValue vaSummonBatsEnabled;
     public final ModConfigSpec.IntValue vaSummonBatsCooldown;
     public final ModConfigSpec.IntValue vaSummonBatsCount;
@@ -150,11 +150,11 @@ public class BalanceConfig {
     public final ModConfigSpec.IntValue vaDarkBloodProjectileCooldown;
     public final ModConfigSpec.BooleanValue vaDarkBloodProjectileEnabled;
     public final ModConfigSpec.DoubleValue vaDarkBloodProjectileDamage;
-    public final ModConfigSpec.IntValue vaHalfInvulnerableCooldown;
-    public final ModConfigSpec.IntValue vaHalfInvulnerableDuration;
-    public final ModConfigSpec.IntValue vaHalfInvulnerableBloodCost;
-    public final ModConfigSpec.DoubleValue vaHalfInvulnerableThreshold;
-    public final ModConfigSpec.BooleanValue vaHalfInvulnerableEnabled;
+    public final ModConfigSpec.IntValue vaDamageLimiterCooldown;
+    public final ModConfigSpec.IntValue vaDamageLimiterDuration;
+    public final ModConfigSpec.IntValue vaDamageLimiterBloodCost;
+    public final ModConfigSpec.DoubleValue vaDamageLimiterThreshold;
+    public final ModConfigSpec.BooleanValue vaDamageLimiterEnabled;
     public final ModConfigSpec.BooleanValue vaHissingEnabled;
     public final ModConfigSpec.IntValue vaHissingCooldown;
     public final ModConfigSpec.BooleanValue vaJumpBoostEnabled;
@@ -521,18 +521,18 @@ public class BalanceConfig {
         vaTeleportMaxDistance = builder
                 .comment("Maximum distance in blocks a vampire can teleport in a single use.")
                 .defineInRange("teleportMaxDistance", 50, 1, 1000);
-        vaRageEnabled = builder
-                .comment("When enabled, vampires can use the rage action.")
-                .define("rageEnabled", true);
-        vaRageCooldown = builder
+        vaVampireRageEnabled = builder
+                .comment("When enabled, vampires can use the vampire rage action.")
+                .define("vampireRageEnabled", true);
+        vaVampireRageCooldown = builder
                 .comment("Cooldown for the vampire rage action, in seconds.")
-                .defineInRange("rageCooldown", 20, 0, Integer.MAX_VALUE);
-        vaRageMinDuration = builder
+                .defineInRange("vampireRageCooldown", 20, 0, Integer.MAX_VALUE);
+        vaVampireRageMinDuration = builder
                 .comment("Minimum duration of the vampire rage action, in seconds.")
-                .defineInRange("rageMinDuration", 13, 1, 10000);
-        vaRageDurationIncrease = builder
+                .defineInRange("vampireRageMinDuration", 13, 1, 10000);
+        vaVampireRageDurationIncrease = builder
                 .comment("Duration added to the vampire rage action per vampire level, in seconds.")
-                .defineInRange("rageDurationIncrease", 5, 0, 1000);
+                .defineInRange("vampireRageDurationIncrease", 5, 0, 1000);
         vaSunscreenEnabled = builder
                 .comment("When enabled, vampires can use the sunscreen action.")
                 .define("sunscreenEnabled", true);
@@ -542,27 +542,27 @@ public class BalanceConfig {
         vaSunscreenDuration = builder
                 .comment("Duration of the vampire sunscreen action, in seconds.")
                 .defineInRange("sunscreenDuration", 40, 1, Integer.MAX_VALUE);
-        vaBatEnabled = builder
+        vaBatFormEnabled = builder
                 .comment("When enabled, vampires can transform into a bat.")
-                .define("batEnabled", true);
-        vaBatCooldown = builder
+                .define("batFormEnabled", true);
+        vaBatFormCooldown = builder
                 .comment("Cooldown before a vampire can transform into a bat again, in seconds.")
-                .defineInRange("batCooldown", 0, 0, 10000);
-        vaBatDuration = builder
+                .defineInRange("batFormCooldown", 0, 0, 10000);
+        vaBatFormDuration = builder
                 .comment("Maximum duration of bat form, in seconds.")
-                .defineInRange("batDuration", Integer.MAX_VALUE, 10, Integer.MAX_VALUE);
-        vaBatHealthReduction = builder
+                .defineInRange("batFormDuration", Integer.MAX_VALUE, 10, Integer.MAX_VALUE);
+        vaBatFormHealthReduction = builder
                 .comment("Factor by which the player's health is reduced upon entering bat form.")
-                .defineInRange("batHealthReduction", 0.9, 0, 0.95);
-        vaBatExhaustion = builder
+                .defineInRange("batFormHealthReduction", 0.9, 0, 0.95);
+        vaBatFormExhaustion = builder
                 .comment("Additional blood exhaustion added per tick while in bat form. For reference, Haste I adds 0.01 per tick.")
-                .defineInRange("batExhaustion", 0.005f, 0, 0.05);
-        vaBatFlightSpeed = builder
+                .defineInRange("batFormExhaustion", 0.005f, 0, 0.05);
+        vaBatFormFlightSpeed = builder
                 .comment("Movement speed of the player while in bat form.")
-                .defineInRange("batFlightSpeed", 0.025f, 0.001, 0.2);
-        vaBatAllowInteraction = builder
+                .defineInRange("batFormFlightSpeed", 0.025f, 0.001, 0.2);
+        vaBatFormAllowInteraction = builder
                 .comment("When enabled, players in bat form can interact with blocks and items, and place or break blocks.")
-                .define("batAllowInteraction", false);
+                .define("batFormAllowInteraction", false);
         vaSummonBatsEnabled = builder
                 .comment("When enabled, vampires can use the summon bats action.")
                 .define("summonBatsEnabled", true);
@@ -590,21 +590,21 @@ public class BalanceConfig {
         vaDarkBloodProjectileDamage = builder
                 .comment("Damage dealt by the vampire dark blood projectile.")
                 .defineInRange("darkBloodProjectileDamage", 6d, 0, 10000);
-        vaHalfInvulnerableEnabled = builder
-                .comment("When enabled, vampires can use the partial invulnerability action.")
-                .define("halfInvulnerableEnabled", true);
-        vaHalfInvulnerableCooldown = builder
-                .comment("Cooldown for the vampire partial invulnerability action, in seconds.")
-                .defineInRange("halfInvulnerableCooldown", 60, 1, 10000);
-        vaHalfInvulnerableDuration = builder
-                .comment("Duration of the vampire partial invulnerability action, in seconds.")
-                .defineInRange("halfInvulnerableDuration", 30, 1, 10000);
-        vaHalfInvulnerableThreshold = builder
+        vaDamageLimiterEnabled = builder
+                .comment("When enabled, vampires can use the damage limiter action.")
+                .define("damageLimiterEnabled", true);
+        vaDamageLimiterCooldown = builder
+                .comment("Cooldown for the vampire damage limiter action, in seconds.")
+                .defineInRange("damageLimiterCooldown", 60, 1, 10000);
+        vaDamageLimiterDuration = builder
+                .comment("Duration of the vampire damage limiter action, in seconds.")
+                .defineInRange("damageLimiterDuration", 30, 1, 10000);
+        vaDamageLimiterThreshold = builder
                 .comment("Damage threshold relative to the player's max health. Hits above this threshold are negated while the action is active.")
-                .defineInRange("halfInvulnerableThreshold", 0.4d, 0.0d, 1d);
-        vaHalfInvulnerableBloodCost = builder
-                .comment("Blood cost per blocked hit during the partial invulnerability action.")
-                .defineInRange("halfInvulnerableBloodCost", 4, 0, 1000);
+                .defineInRange("damageLimiterThreshold", 0.4d, 0.0d, 1d);
+        vaDamageLimiterBloodCost = builder
+                .comment("Blood cost per blocked hit during the damage limiter action.")
+                .defineInRange("damageLimiterBloodCost", 4, 0, 1000);
         vaHissingEnabled = builder
                 .comment("When enabled, vampires can use the hissing action.")
                 .define("hissingEnabled", true);

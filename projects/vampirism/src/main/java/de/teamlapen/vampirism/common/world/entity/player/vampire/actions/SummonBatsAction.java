@@ -16,9 +16,9 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Summon bat skill
  */
-public class SummonBatVampireAction extends DefaultVampireAction {
+public class SummonBatsAction extends DefaultVampireAction {
 
-    public SummonBatVampireAction() {
+    public SummonBatsAction() {
         super();
     }
 
@@ -44,7 +44,7 @@ public class SummonBatVampireAction extends DefaultVampireAction {
 
     @Override
     public IActionResult canBeUsedBy(@NotNull IVampirePlayer player) {
-        var res = player.getActionHandler().isActionActive(VampireActions.BAT) || player.getRefinementHandler().isRefinementEquipped(ModRefinements.SUMMON_BATS);
+        var res = player.getActionHandler().isActionActive(VampireActions.BAT_FORM) || player.getRefinementHandler().isRefinementEquipped(ModRefinements.SUMMON_BATS);
         if (res) {
             return IActionResult.SUCCESS;
         } else {
