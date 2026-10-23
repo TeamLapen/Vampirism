@@ -1,11 +1,7 @@
 {
   "parents": [
-    "vampirism:vampire/no_longer_fledgling"
+    "vampirism:vampire/disguise"
   ],
-  "placement": {
-    "type": "after",
-    "segment": "vampirism:vampire/fleet_of_foot_or_feline_leap"
-  },
   "skills": [
     "vampirism:summon_bats"
   ],

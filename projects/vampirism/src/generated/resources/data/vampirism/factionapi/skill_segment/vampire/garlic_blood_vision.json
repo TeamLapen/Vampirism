@@ -2,10 +2,6 @@
   "parents": [
     "vampirism:vampire/blood_vision"
   ],
-  "placement": {
-    "type": "after",
-    "segment": "vampirism:vampire/hissing"
-  },
   "skills": [
     "vampirism:garlic_blood_vision"
   ],

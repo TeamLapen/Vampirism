@@ -1,6 +1,6 @@
 {
   "parents": [
-    "vampirism:vampire/fast_recovery_or_swift_resurrection"
+    "vampirism:vampire/blood_vision"
   ],
   "skills": [
     "vampirism:damage_limiter"

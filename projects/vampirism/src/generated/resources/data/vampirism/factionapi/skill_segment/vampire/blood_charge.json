@@ -1,7 +1,6 @@
 {
   "parents": [
-    "vampirism:vampire/art_of_the_cut",
-    "vampirism:vampire/art_of_the_draw"
+    "vampirism:vampire/frugal_vampire"
   ],
   "skills": [
     "vampirism:blood_charge"

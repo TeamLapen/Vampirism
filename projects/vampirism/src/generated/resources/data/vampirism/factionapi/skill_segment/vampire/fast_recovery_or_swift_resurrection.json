@@ -1,7 +1,6 @@
 {
   "parents": [
-    "vampirism:vampire/tough_skin",
-    "vampirism:vampire/liquid_blood"
+    "vampirism:vampire/disguise"
   ],
   "skills": [
     "vampirism:fast_recovery",

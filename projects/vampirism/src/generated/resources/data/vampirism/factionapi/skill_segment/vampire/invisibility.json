@@ -1,11 +1,9 @@
 {
   "parents": [
-    "vampirism:vampire/hissing"
+    "vampirism:vampire/dark_stalker",
+    "vampirism:vampire/feline_leap",
+    "vampirism:vampire/fleet_of_foot"
   ],
-  "placement": {
-    "type": "after",
-    "segment": "vampirism:vampire/dark_stalker"
-  },
   "skills": [
     "vampirism:invisibility"
   ],

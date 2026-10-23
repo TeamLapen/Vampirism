@@ -1,11 +1,7 @@
 {
   "parents": [
-    "vampirism:vampire/damage_limiter"
+    "vampirism:vampire/summon_bats"
   ],
-  "placement": {
-    "type": "after",
-    "segment": "vampirism:vampire/teleport"
-  },
   "skills": [
     "vampirism:sun_protection"
   ],

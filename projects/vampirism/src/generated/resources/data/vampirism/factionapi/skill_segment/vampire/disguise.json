@@ -1,6 +1,6 @@
 {
   "parents": [
-    "vampirism:vampire/summon_bats"
+    "vampirism:vampire/no_longer_fledgling"
   ],
   "skills": [
     "vampirism:disguise"

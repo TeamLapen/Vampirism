@@ -1,11 +1,7 @@
 {
   "parents": [
-    "vampirism:vampire/fleet_of_foot_or_feline_leap"
+    "vampirism:vampire/advanced_biter"
   ],
-  "placement": {
-    "type": "after",
-    "segment": "vampirism:vampire/tough_skin"
-  },
   "skills": [
     "vampirism:liquid_blood"
   ],

@@ -1,9 +1,8 @@
 {
   "parents": [
-    "vampirism:vampire/no_longer_fledgling"
+    "vampirism:vampire/tough_skin"
   ],
   "skills": [
-    "vampirism:fleet_of_foot",
     "vampirism:feline_leap"
   ],
   "tree": "vampirism:vampire/level"

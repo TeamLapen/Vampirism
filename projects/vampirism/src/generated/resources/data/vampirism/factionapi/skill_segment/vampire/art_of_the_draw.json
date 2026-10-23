@@ -1,11 +1,7 @@
 {
   "parents": [
-    "vampirism:vampire/vampire_rage"
+    "vampirism:vampire/liquid_blood"
   ],
-  "placement": {
-    "type": "after",
-    "segment": "vampirism:vampire/art_of_the_cut"
-  },
   "skills": [
     "vampirism:art_of_the_draw"
   ],
