@@ -1,7 +1,7 @@
 {
   "parents": [
     "vampirism:vampire/dark_stalker",
-    "vampirism:vampire/feline_leap",
+    "vampirism:vampire/permanent_jump_boost",
     "vampirism:vampire/fleet_of_foot"
   ],
   "skills": [

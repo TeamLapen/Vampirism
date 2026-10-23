@@ -1,6 +1,6 @@
 {
   "parents": [
-    "vampirism:hunter/attack_heavy_as_mountain",
+    "vampirism:hunter/attack_heavy_as_hammer",
     "vampirism:hunter/attack_swift_as_wind"
   ],
   "skills": [

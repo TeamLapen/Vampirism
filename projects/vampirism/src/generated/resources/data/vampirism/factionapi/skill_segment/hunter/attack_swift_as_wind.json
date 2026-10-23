@@ -4,7 +4,7 @@
   ],
   "placement": {
     "type": "after",
-    "segment": "vampirism:hunter/attack_heavy_as_mountain"
+    "segment": "vampirism:hunter/attack_heavy_as_hammer"
   },
   "skills": [
     "vampirism:attack_swift_as_wind"

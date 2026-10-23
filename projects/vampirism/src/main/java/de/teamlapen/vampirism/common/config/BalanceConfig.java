@@ -70,7 +70,7 @@ public class BalanceConfig {
     public final ModConfigSpec.DoubleValue vsBloodThirstReduction1;
     public final ModConfigSpec.DoubleValue vsSwordFinisherMaxHealth;
     public final ModConfigSpec.BooleanValue vsSwordFinisherOnPlayer;
-    public final ModConfigSpec.IntValue vsFelineLeapBoost;
+    public final ModConfigSpec.IntValue vsJumpBoost;
     public final ModConfigSpec.DoubleValue vsSpeedBoost;
     public final ModConfigSpec.IntValue vsBloodVisionDistanceSq;
     public final ModConfigSpec.DoubleValue vsSmallAttackDamageModifier;
@@ -356,9 +356,9 @@ public class BalanceConfig {
         vsSwordFinisherOnPlayer = builder
                 .comment("If the sword finisher works on players")
                 .define("swordFinisherOnPlayer", true);
-        vsFelineLeapBoost = builder
-                .comment("Jump boost level granted by the feline leap skill. Equivalent to the potion effect amplifier, where -1 is no boost.")
-                .defineInRange("felineLeapBoost", 1, -1, 5);
+        vsJumpBoost = builder
+                .comment("Jump boost level granted by the vampire jump skill. Equivalent to the potion effect amplifier, where -1 is no boost.")
+                .defineInRange("jumpBoost", 1, -1, 5);
         vsSpeedBoost = builder
                 .comment("Maximum speed boost granted by the vampire speed skill. Final max speed = base * (1 + value).")
                 .defineInRange("speedBoost", 0.15, 0, 3);

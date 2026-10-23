@@ -25,7 +25,7 @@ public class ToggleHighJumpAction extends DefaultVampireAction implements ILasti
         return Mth.clamp(ModConfig.balance().vaToggleHighJumpDuration.get(), 10, Integer.MAX_VALUE / 20 - 1) * 20;
     }
     private void applyEffect(IVampirePlayer vampire) {
-        ((VampirePlayer) vampire).getSkillProperties().setJumpBoost(ModConfig.balance().vsFelineLeapBoost.get() + 1);
+        ((VampirePlayer) vampire).getSkillProperties().setJumpBoost(ModConfig.balance().vsJumpBoost.get() + 1);
     }
 
     @Override

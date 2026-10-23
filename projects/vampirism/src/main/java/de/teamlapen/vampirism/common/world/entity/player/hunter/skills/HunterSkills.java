@@ -61,7 +61,7 @@ public class HunterSkills {
 
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> BASIC_TECHNOLOGY = SKILLS.registerSkill("basic_technology", props -> new HunterSkill(props.cost(2).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> NEAR_BREACH_REFORGING = SKILLS.registerSkill("near_breach_reforging", props -> new HunterSkill(props.cost(2).withDescription()));
-    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> ATTACK_HEAVY_AS_MOUNTAIN = SKILLS.registerSkill("attack_heavy_as_mountain", props -> new HunterSkill(props.cost(2).withDescription().attribute(Attributes.ATTACK_DAMAGE, () -> ModConfig.balance().hsSmallAttackDamageModifier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> ATTACK_HEAVY_AS_HAMMER = SKILLS.registerSkill("attack_heavy_as_hammer", props -> new HunterSkill(props.cost(2).withDescription().attribute(Attributes.ATTACK_DAMAGE, () -> ModConfig.balance().hsSmallAttackDamageModifier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> ATTACK_SWIFT_AS_WIND = SKILLS.registerSkill("attack_swift_as_wind", props -> new HunterSkill(props.cost(2).withDescription().attribute(Attributes.ATTACK_SPEED, () -> ModConfig.balance().hsSmallAttackSpeedModifier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> ARMOR_BOUND_SWIFTNESS = SKILLS.registerSkill("armor_bound_swiftness", props -> new HunterSkill(props.cost(2).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> ARMOR_BOUND_HIGHVAULT = SKILLS.registerSkill("armor_bound_highvault", props -> new HunterSkill(props.cost(2).withDescription()));
@@ -116,7 +116,7 @@ public class HunterSkills {
 
         public static final ResourceKey<ISkillSegment> KEY_BASIC_TECHNOLOGY = segment("basic_technology");
         public static final ResourceKey<ISkillSegment> KEY_NEAR_BREACH_REFORGING = segment("near_breach_reforging");
-        public static final ResourceKey<ISkillSegment> KEY_ATTACK_HEAVY_AS_MOUNTAIN = segment("attack_heavy_as_mountain");
+        public static final ResourceKey<ISkillSegment> KEY_ATTACK_HEAVY_AS_HAMMER = segment("attack_heavy_as_hammer");
         public static final ResourceKey<ISkillSegment> KEY_ATTACK_SWIFT_AS_WIND = segment("attack_swift_as_wind");
         public static final ResourceKey<ISkillSegment> KEY_ARMOR_BOUND_SWIFTNESS = segment("armor_bound_swiftness");
         public static final ResourceKey<ISkillSegment> KEY_ARMOR_BOUND_HIGHVAULT = segment("armor_bound_highvault");
@@ -198,19 +198,19 @@ public class HunterSkills {
             level(KEY_NEAR_BREACH_REFORGING, NEAR_BREACH_REFORGING)
                     .parents(KEY_BASIC_TECHNOLOGY)
                     .register(context);
-            level(KEY_ATTACK_HEAVY_AS_MOUNTAIN, ATTACK_HEAVY_AS_MOUNTAIN)
+            level(KEY_ATTACK_HEAVY_AS_HAMMER, ATTACK_HEAVY_AS_HAMMER)
                     .parents(KEY_BASIC_TECHNOLOGY)
                     .after(KEY_NEAR_BREACH_REFORGING)
                     .register(context);
             level(KEY_ATTACK_SWIFT_AS_WIND, ATTACK_SWIFT_AS_WIND)
                     .parents(KEY_BASIC_TECHNOLOGY)
-                    .after(KEY_ATTACK_HEAVY_AS_MOUNTAIN)
+                    .after(KEY_ATTACK_HEAVY_AS_HAMMER)
                     .register(context);
             level(KEY_ARMOR_BOUND_SWIFTNESS, ARMOR_BOUND_SWIFTNESS)
-                    .parents(KEY_ATTACK_HEAVY_AS_MOUNTAIN, KEY_ATTACK_SWIFT_AS_WIND)
+                    .parents(KEY_ATTACK_HEAVY_AS_HAMMER, KEY_ATTACK_SWIFT_AS_WIND)
                     .register(context);
             level(KEY_ARMOR_BOUND_HIGHVAULT, ARMOR_BOUND_HIGHVAULT)
-                    .parents(KEY_ATTACK_HEAVY_AS_MOUNTAIN, KEY_ATTACK_SWIFT_AS_WIND)
+                    .parents(KEY_ATTACK_HEAVY_AS_HAMMER, KEY_ATTACK_SWIFT_AS_WIND)
                     .after(KEY_ARMOR_BOUND_SWIFTNESS)
                     .register(context);
             level(KEY_CROSSBOW_TECHNIQUE, CROSSBOW_TECHNIQUE)

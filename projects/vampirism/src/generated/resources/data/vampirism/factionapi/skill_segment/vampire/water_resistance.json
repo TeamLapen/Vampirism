@@ -1,9 +1,9 @@
 {
   "parents": [
-    "vampirism:vampire/tough_skin"
+    "vampirism:vampire/advanced_biter"
   ],
   "skills": [
-    "vampirism:feline_leap"
+    "vampirism:water_resistance"
   ],
   "tree": "vampirism:vampire/level"
 }
