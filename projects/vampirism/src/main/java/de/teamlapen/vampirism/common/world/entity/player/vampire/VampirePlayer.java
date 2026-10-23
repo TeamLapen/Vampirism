@@ -263,7 +263,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             LOGGER.warn("Player can't bite in spectator mode");
             return;
         }
-        if (getActionHandler().isActionActive(VampireActions.BAT)) {
+        if (getActionHandler().isActionActive(VampireActions.BAT_FORM)) {
             LOGGER.warn("Cannot bite in bat mode");
             return;
         }
@@ -611,7 +611,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     @Override
     public void onDeath(DamageSource src) {
         super.onDeath(src);
-        if (this.getActionHandler().isActionActive(VampireActions.BAT) && src.getDirectEntity() instanceof Projectile) {
+        if (this.getActionHandler().isActionActive(VampireActions.BAT_FORM) && src.getDirectEntity() instanceof Projectile) {
             if (player instanceof ServerPlayer) {
                 ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger((ServerPlayer) player, VampireActionCriterionTrigger.Action.SNIPED_IN_BAT);
             }
@@ -645,11 +645,11 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         }
         endFeeding(true);
         if (getSkillProperties().half_invulnerable) {
-            if (amt >= asEntity().getMaxHealth() * (this.getRefinementHandler().isRefinementEquipped(ModRefinements.HALF_INVULNERABLE) ? ModConfig.balance().vrHalfInvulnerableThresholdMod.get() : 1) * ModConfig.balance().vaHalfInvulnerableThreshold.get() && amt < 999) { //Make sure "instant kills" are not blocked by this
-                if (useBlood(ModConfig.balance().vaHalfInvulnerableBloodCost.get(), false)) {
+            if (amt >= asEntity().getMaxHealth() * (this.getRefinementHandler().isRefinementEquipped(ModRefinements.HALF_INVULNERABLE) ? ModConfig.balance().vrHalfInvulnerableThresholdMod.get() : 1) * ModConfig.balance().vaDamageLimiterThreshold.get() && amt < 999) { //Make sure "instant kills" are not blocked by this
+                if (useBlood(ModConfig.balance().vaDamageLimiterBloodCost.get(), false)) {
                     return true;
                 } else {
-                    this.getActionHandler().deactivateAction(VampireActions.HALF_INVULNERABLE);
+                    this.getActionHandler().deactivateAction(VampireActions.DAMAGE_LIMITER);
                 }
             }
         }

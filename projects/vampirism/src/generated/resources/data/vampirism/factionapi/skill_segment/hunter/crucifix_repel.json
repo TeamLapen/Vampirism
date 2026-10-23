@@ -1,9 +1,0 @@
-{
-  "parents": [
-    "vampirism:hunter/ultimate_crucifix"
-  ],
-  "skills": [
-    "vampirism:crucifix_repel"
-  ],
-  "tree": "vampirism:hunter/level"
-}

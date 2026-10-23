@@ -1,0 +1,9 @@
+{
+  "parents": [
+    "vampirism:hunter/how_to_actually_use_axe"
+  ],
+  "skills": [
+    "vampirism:how_to_actually_use_stake"
+  ],
+  "tree": "vampirism:hunter/level"
+}

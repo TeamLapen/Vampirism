@@ -328,7 +328,7 @@ public class GuideBook implements IGuideBook {
 
         List<IPage> skillPages = new ArrayList<>();
         skillPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "skills.intro", FactionKeys.FACTION_MENU.getTranslatedKeyMessage())), VIdentifier.mod(base + "vampirism_menu")));
-        String disguise = String.format("§l%s§r\n", HunterActions.DISGUISE_HUNTER.get().getName().getString());
+        String disguise = String.format("§l%s§r\n", HunterActions.CAMOUFLAGE.get().getName().getString());
         disguise += translate(base + "skills.disguise.text", FactionKeys.ACTION.getTranslatedKeyMessage());
         skillPages.addAll(PageHelper.pagesForLongText(Component.literal(disguise)));
         String weaponTable = String.format("§l%s§r\n", loc(ModBlocks.WEAPON_TABLE.get()).getString());
@@ -580,8 +580,8 @@ public class GuideBook implements IGuideBook {
         //skills
         List<IPage> skills = PageHelper.pagesForLongText(translateComponent(base1_8 + "skills.text"));
         skills.add(new PageTextImage(translateComponent(base1_8 + "skills.vista.image"), VIdentifier.mod("textures/skills/vampire_forest_fog.png"), false));
-        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.neonatal.image"), VIdentifier.mod("textures/skills/neonatal_decrease.png"), false));
-        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.dbno.image"), VIdentifier.mod("textures/skills/dbno_duration.png"), false));
+        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.neonatal.image"), VIdentifier.mod("textures/skills/fast_recovery.png"), false));
+        skills.add(new PageTextImage(translateComponent(base1_8 + "skills.dbno.image"), VIdentifier.mod("textures/skills/swift_resurrection.png"), false));
         skills.add(new PageTextImage(translateComponent(base1_8 + "skills.hissing.image"), VIdentifier.mod("textures/actions/hissing.png"), false));
         v1_8.addAll(skills);
         //balancing
@@ -641,8 +641,8 @@ public class GuideBook implements IGuideBook {
         pages[1] = new PagePotionTableMix(HunterSkills.CONCENTRATED_BREWING.get().getName(), VampirismApi.services().extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.concentrated && !mix.durable && !mix.efficient).toArray(ExtendedPotionMix[]::new));
         pages[2] = new PagePotionTableMix(HunterSkills.DURABLE_BREWING.get().getName().copy().append("\n").append(HunterSkills.EFFICIENT_BREWING.get().getName()), VampirismApi.services().extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.durable && !mix.concentrated && mix.efficient).toArray(ExtendedPotionMix[]::new));
         pages[3] = new PagePotionTableMix(HunterSkills.CONCENTRATED_BREWING.get().getName().copy().append("\n").append(HunterSkills.EFFICIENT_BREWING.get().getName()), VampirismApi.services().extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.concentrated && !mix.durable && mix.efficient).toArray(ExtendedPotionMix[]::new));
-        pages[4] = new PagePotionTableMix(HunterSkills.MASTER_BREWER.get().getName(), VampirismApi.services().extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.master && !mix.durable && !mix.concentrated && !mix.efficient).toArray(ExtendedPotionMix[]::new));
-        pages[5] = new PagePotionTableMix(HunterSkills.MASTER_BREWER.get().getName().copy().append("\n").append(HunterSkills.EFFICIENT_BREWING.get().getName()), VampirismApi.services().extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.master && !mix.durable && !mix.concentrated && mix.efficient).toArray(ExtendedPotionMix[]::new));
+        pages[4] = new PagePotionTableMix(HunterSkills.FORGOTTEN_FORMULARY.get().getName(), VampirismApi.services().extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.master && !mix.durable && !mix.concentrated && !mix.efficient).toArray(ExtendedPotionMix[]::new));
+        pages[5] = new PagePotionTableMix(HunterSkills.FORGOTTEN_FORMULARY.get().getName().copy().append("\n").append(HunterSkills.EFFICIENT_BREWING.get().getName()), VampirismApi.services().extendedBrewingRecipeRegistry().getPotionMixes().stream().filter(mix -> mix.master && !mix.durable && !mix.concentrated && mix.efficient).toArray(ExtendedPotionMix[]::new));
         return pages;
     }
 

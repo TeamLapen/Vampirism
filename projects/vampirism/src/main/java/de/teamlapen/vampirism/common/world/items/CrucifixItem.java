@@ -47,7 +47,7 @@ public class CrucifixItem extends Item implements IItemWithTier, IDescriptionPro
     private static final Identifier COOLDOWN_GROUP = VIdentifier.mod("crucifix");
 
     public CrucifixItem(Tier tier, Properties properties) {
-        super(FactionRestriction.builder(VampirismTags.Factions.IS_HUNTER).skill(tier == Tier.ULTIMATE ? HunterSkills.ULTIMATE_CRUCIFIX : HunterSkills.CRUCIFIX_WIELDER).message(HolyWaterBottleItem.MASSAGE_RESTRICTION_HOLY).apply(properties).stacksTo(1).factions$withShiftDescriptionWithId("crucifix").component(DataComponents.USE_COOLDOWN, new UseCooldown( switch (tier) {
+        super(FactionRestriction.builder(VampirismTags.Factions.IS_HUNTER).skill(tier == Tier.ULTIMATE ? HunterSkills.CRUCIFIXION : HunterSkills.CRUCIFIX_WIELDER).message(HolyWaterBottleItem.MASSAGE_RESTRICTION_HOLY).apply(properties).stacksTo(1).factions$withShiftDescriptionWithId("crucifix").component(DataComponents.USE_COOLDOWN, new UseCooldown( switch (tier) {
             case NORMAL -> 7;
             case ENHANCED -> 5;
             case ULTIMATE -> 3;
@@ -68,7 +68,7 @@ public class CrucifixItem extends Item implements IItemWithTier, IDescriptionPro
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         if (Helper.isHunter(player)) {
-            if (ISkillHandler.isSkillEnabled(player, HunterSkills.CRUCIFIX_REPEL)) {
+            if (ISkillHandler.isSkillEnabled(player, HunterSkills.CRUCIFIX_REPELLING)) {
                 ItemStack itemStack = player.getItemInHand(hand);
                 if (level instanceof ServerLevel serverLevel) {
                     activePush(serverLevel, player, itemStack);
@@ -99,7 +99,7 @@ public class CrucifixItem extends Item implements IItemWithTier, IDescriptionPro
     public void inventoryTick(ItemStack stack, ServerLevel level, Entity entity, @Nullable EquipmentSlot slot) {
         Helper.handleHeldNonVampireItem(stack, entity, slot);
         if (entity instanceof LivingEntity livingEntity && slot != null && slot.getType() == EquipmentSlot.Type.HAND) {
-            if (livingEntity instanceof Player player && player.getCooldowns().isOnCooldown(stack) && ISkillHandler.isSkillEnabled(player, HunterSkills.CRUCIFIX_REPEL)) {
+            if (livingEntity instanceof Player player && player.getCooldowns().isOnCooldown(stack) && ISkillHandler.isSkillEnabled(player, HunterSkills.CRUCIFIX_REPELLING)) {
                 passivePush(level, player, stack, true);
             }
         }

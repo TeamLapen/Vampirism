@@ -71,7 +71,7 @@ public class DamageHandler {
         }
         if (vampire instanceof IVampirePlayer) {
             IActionHandler<IVampirePlayer> actionHandler = ((IVampirePlayer) vampire).getActionHandler();
-            actionHandler.deactivateAction(VampireActions.DISGUISE_VAMPIRE);
+            actionHandler.deactivateAction(VampireActions.DISGUISE);
         }
     }
 

@@ -1,6 +1,6 @@
 {
   "parents": [
-    "vampirism:hunter/master_brewer"
+    "vampirism:hunter/forgotten_formulary"
   ],
   "skills": [
     "vampirism:potion_resistance"

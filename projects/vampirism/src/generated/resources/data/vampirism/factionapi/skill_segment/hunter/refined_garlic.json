@@ -1,0 +1,9 @@
+{
+  "parents": [
+    "vampirism:hunter/vampire_repelling"
+  ],
+  "skills": [
+    "vampirism:refined_garlic"
+  ],
+  "tree": "vampirism:hunter/level"
+}

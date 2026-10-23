@@ -15,11 +15,11 @@ public class DisguiseOverlay extends TextureOverlay {
 
     @Override
     public void render(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
-        if (canRenderOverlays() && ModConfig.client().showDisguiseHUDOverlay.get()) {
+        if (canRenderOverlays() && ModConfig.client().showCamouflageHUDOverlay.get()) {
             HunterSkillProperties huntSpecial = HunterPlayer.get(this.player()).getSpecialAttributes();
-            if (huntSpecial.isConcealed()) {
+            if (huntSpecial.isInCamouflage()) {
                 graphics.pose().pushMatrix();
-                scaleBy(huntSpecial.getConcealmentProgress(), 1 / 4f, 2F, 1.0F, graphics);
+                scaleBy(huntSpecial.getCamouflageProgress(), 1 / 4f, 2F, 1.0F, graphics);
                 renderTextureOverlay(graphics, DISGUISE_TEXTURE, 1.0F);
                 graphics.pose().popMatrix();
             }

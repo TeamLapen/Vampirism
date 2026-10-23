@@ -402,7 +402,7 @@ public class VaporStillBlockEntity extends BaseContainerBlockEntity implements W
             durableBrewing = skills.isSkillEnabled(HunterSkills.DURABLE_BREWING) || skills.isSkillEnabled(HunterSkills.CONCENTRATED_DURABLE_BREWING);
             concentratedBrewing = skills.isSkillEnabled(HunterSkills.CONCENTRATED_BREWING) || skills.isSkillEnabled(HunterSkills.CONCENTRATED_DURABLE_BREWING);
             swiftBrewing = skills.isSkillEnabled(HunterSkills.SWIFT_BREWING);
-            masterBrewing = skills.isSkillEnabled(HunterSkills.MASTER_BREWER);
+            masterBrewing = skills.isSkillEnabled(HunterSkills.FORGOTTEN_FORMULARY);
             efficientBrewing = skills.isSkillEnabled(HunterSkills.EFFICIENT_BREWING);
             multiTaskBrewing = skills.isSkillEnabled(HunterSkills.MULTITASK_BREWING);
             ultimateBrewing = skills.isSkillEnabled(HunterSkills.ULTIMATE_BREWER);

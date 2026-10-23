@@ -100,7 +100,7 @@ public class ModKeys implements IMinecraftAccessor {
             //noinspection DataFlowIssue
             if (mouseOver != null && !player.isSpectator()) {
                 VampirePlayer vampire = VampirePlayer.get(player);
-                if (vampire.getLevel() > 0 && !vampire.getActionHandler().isActionActive(VampireActions.BAT)) {
+                if (vampire.getLevel() > 0 && !vampire.getActionHandler().isActionActive(VampireActions.BAT_FORM)) {
                     if (mouseOver instanceof EntityHitResult entityHitResult) {
                         VampirismMod.proxy.sendToServer(new ServerboundStartFeedingPacket(entityHitResult.getEntity().getId()));
                     } else if (mouseOver instanceof BlockHitResult blockHitResult) {
