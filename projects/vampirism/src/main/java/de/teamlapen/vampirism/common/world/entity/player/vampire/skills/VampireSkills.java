@@ -51,35 +51,35 @@ public class VampireSkills {
     public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> REGENERATION = SKILLS.registerSkill("regeneration", props -> new VampireSkill(props.cost(2).withDescription().actionSkill(VampireActions.REGENERATION)));
     public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> NO_LONGER_FLEDGLING = SKILLS.registerSkill("no_longer_fledgling", props -> new VampireSkill(props.cost(2).withDescription().unlocks(VampireActions.BAT_FORM).unlocks(VampireActions.INFECT)));
 
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> FLEET_OF_FOOT = SKILLS.registerSkill("fleet_of_foot", props -> new VampireSkill(props.cost(2).withDescription().attribute(Attributes.MOVEMENT_SPEED, () -> ModConfig.balance().vsSpeedBoost.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> FELINE_LEAP = SKILLS.registerSkill("feline_leap", props -> new VampireSkill(props.cost(2).separateSkillName().withDescription().actionSkill(VampireActions.TOGGLE_HIGH_JUMP)));
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> TOUGH_SKIN = SKILLS.registerSkill("tough_skin", props -> new VampireSkill(props.cost(2).withDescription().attribute(ModAttributes.SUNDAMAGE, () -> ModConfig.balance().vsSundamageReduction1.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> LIQUID_BLOOD = SKILLS.registerSkill("liquid_blood", props -> new VampireSkill(props.cost(1).withDescription().onEnable(ModConsumer.ENABLE_VAMPIRE_WATER_RESISTANCE).onDisable(ModConsumer.DISABLE_VAMPIRE_WATER_RESISTANCE)));
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> FAST_RECOVERY = SKILLS.registerSkill("fast_recovery", props -> new VampireSkill(props.cost(1).withDescription().attribute(ModAttributes.NEONATAL_DURATION, () -> ModConfig.balance().vsNeonatalReduction.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> SWIFT_RESURRECTION = SKILLS.registerSkill("swift_resurrection", props -> new VampireSkill(props.cost(1).withDescription().attribute(ModAttributes.DBNO_DURATION, () -> ModConfig.balance().vsDbnoReduction.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> DAMAGE_LIMITER = SKILLS.registerSkill("damage_limiter", props -> new VampireSkill(props.cost(2).withDescription().actionSkill(VampireActions.DAMAGE_LIMITER)));
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> TELEPORT = SKILLS.registerSkill("teleport", props -> new VampireSkill(props.cost(3).withDescription().actionSkill(VampireActions.TELEPORT)));
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> SUN_PROTECTION = SKILLS.registerSkill("sun_protection", props -> new VampireSkill(props.cost(2).withDescription().actionSkill(VampireActions.SUN_PROTECTION)));
-
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> SUMMON_BATS = SKILLS.registerSkill("summon_bats", props -> new VampireSkill(props.cost(1).withDescription().actionSkill(VampireActions.SUMMON_BATS)));
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> DISGUISE = SKILLS.registerSkill("disguise", props -> new VampireSkill(props.cost(1).withDescription().actionSkill(VampireActions.DISGUISE)));
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> ADVANCED_BITER = SKILLS.registerSkill("advanced_biter", props -> new VampireSkill(props.cost(1).withDescription().onEnable(ModConsumer.ENABLE_VAMPIRE_ADVANCED_BITER).onDisable(ModConsumer.DISABLE_VAMPIRE_ADVANCED_BITER)));
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> FRUGAL_VAMPIRE = SKILLS.registerSkill("frugal_vampire", props -> new VampireSkill(props.cost(1).withDescription().attribute(ModAttributes.BLOOD_EXHAUSTION, () -> ModConfig.balance().vsBloodThirstReduction1.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> BLOOD_VISION = SKILLS.registerSkill("blood_vision", props -> new VampireSkill(props.cost(2).withDescription().onEnable(ModConsumer.ENABLE_VAMPIRE_BLOOD_VISION).onDisable(ModConsumer.DISABLE_VAMPIRE_BLOOD_VISION)));
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> HISSING = SKILLS.registerSkill("hissing", props -> new VampireSkill(props.cost(1).withDescription().actionSkill(VampireActions.HISSING)));
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> DARK_STALKER = SKILLS.registerSkill("dark_stalker", props -> new VampireSkill(props.cost(2).withDescription().actionSkill(VampireActions.DARK_STALKER)));
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> INVISIBILITY = SKILLS.registerSkill("invisibility", props -> new VampireSkill(props.cost(3).withDescription().actionSkill(VampireActions.INVISIBILITY)));
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> GARLIC_BLOOD_VISION = SKILLS.registerSkill("garlic_blood_vision", props -> new VampireSkill(props.cost(1).withDescription().onEnable(ModConsumer.ENABLE_VAMPIRE_GARLIC_VISION).onDisable(ModConsumer.DISABLE_VAMPIRE_GARLIC_VISION)));
-
     public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> VAMPIRE_RAGE = SKILLS.registerSkill("vampire_rage", props -> new VampireSkill(props.cost(2).withDescription().actionSkill(VampireActions.VAMPIRE_RAGE)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> ADVANCED_BITER = SKILLS.registerSkill("advanced_biter", props -> new VampireSkill(props.cost(1).withDescription().onEnable(ModConsumer.ENABLE_VAMPIRE_ADVANCED_BITER).onDisable(ModConsumer.DISABLE_VAMPIRE_ADVANCED_BITER)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> FINISHER = SKILLS.registerSkill("finisher", props -> new VampireSkill(props.cost(3).withDescription(Component.translatable("skill.vampirism.finisher.desc", ConfigComponent.calculateDouble(ModConfig.balance().vsSwordFinisherMaxHealth, 100, ConfigComponent.Operator.MULTIPLY)))));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> DARK_BLOOD_PROJECTILE = SKILLS.registerSkill("dark_blood_projectile", props -> new VampireSkill(props.cost(2).withDescription().actionSkill(VampireActions.DARK_BLOOD_PROJECTILE)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> BLOOD_CHARGE = SKILLS.registerSkill("blood_charge", props -> new VampireSkill(props.cost(1).withDescription()));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> FREEZE = SKILLS.registerSkill("freeze", props -> new VampireSkill(props.cost(2).withDescription().actionSkill(VampireActions.FREEZE)));
+
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> SUN_PROTECTION = SKILLS.registerSkill("sun_protection", props -> new VampireSkill(props.cost(2).withDescription().actionSkill(VampireActions.SUN_PROTECTION)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> ART_OF_THE_DRAW = SKILLS.registerSkill("art_of_the_draw", props -> new VampireSkill(props.cost(2).withDescription().attribute(Attributes.ATTACK_SPEED, () -> ModConfig.balance().vsSmallAttackSpeedModifier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> FLEET_OF_FOOT = SKILLS.registerSkill("fleet_of_foot", props -> new VampireSkill(props.cost(2).withDescription().attribute(Attributes.MOVEMENT_SPEED, () -> ModConfig.balance().vsSpeedBoost.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> BLOOD_VISION = SKILLS.registerSkill("blood_vision", props -> new VampireSkill(props.cost(2).withDescription().onEnable(ModConsumer.ENABLE_VAMPIRE_BLOOD_VISION).onDisable(ModConsumer.DISABLE_VAMPIRE_BLOOD_VISION)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> GARLIC_BLOOD_VISION = SKILLS.registerSkill("garlic_blood_vision", props -> new VampireSkill(props.cost(1).withDescription().onEnable(ModConsumer.ENABLE_VAMPIRE_GARLIC_VISION).onDisable(ModConsumer.DISABLE_VAMPIRE_GARLIC_VISION)));
     public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> ART_OF_THE_CUT = SKILLS.registerSkill("art_of_the_cut", props -> new VampireSkill(props.cost(2).withDescription()
             .attribute(Attributes.ATTACK_DAMAGE, () -> ModConfig.balance().vsSmallAttackDamageModifier.get(), AttributeModifier.Operation.ADD_VALUE)
             .attribute(Attributes.ATTACK_DAMAGE, () -> ModConfig.balance().vsSmallAttackDamageMultiplier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> ART_OF_THE_DRAW = SKILLS.registerSkill("art_of_the_draw", props -> new VampireSkill(props.cost(2).withDescription().attribute(Attributes.ATTACK_SPEED, () -> ModConfig.balance().vsSmallAttackSpeedModifier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> BLOOD_CHARGE = SKILLS.registerSkill("blood_charge", props -> new VampireSkill(props.cost(1).withDescription()));
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> FINISHER = SKILLS.registerSkill("finisher", props -> new VampireSkill(props.cost(3).withDescription(Component.translatable("skill.vampirism.finisher.desc", ConfigComponent.calculateDouble(ModConfig.balance().vsSwordFinisherMaxHealth, 100, ConfigComponent.Operator.MULTIPLY)))));
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> DARK_BLOOD_PROJECTILE = SKILLS.registerSkill("dark_blood_projectile", props -> new VampireSkill(props.cost(2).withDescription().actionSkill(VampireActions.DARK_BLOOD_PROJECTILE)));
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> FREEZE = SKILLS.registerSkill("freeze", props -> new VampireSkill(props.cost(2).withDescription().actionSkill(VampireActions.FREEZE)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> FELINE_LEAP = SKILLS.registerSkill("feline_leap", props -> new VampireSkill(props.cost(2).separateSkillName().withDescription().actionSkill(VampireActions.TOGGLE_HIGH_JUMP)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> FAST_RECOVERY = SKILLS.registerSkill("fast_recovery", props -> new VampireSkill(props.cost(1).withDescription().attribute(ModAttributes.NEONATAL_DURATION, () -> ModConfig.balance().vsNeonatalReduction.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> SWIFT_RESURRECTION = SKILLS.registerSkill("swift_resurrection", props -> new VampireSkill(props.cost(1).withDescription().attribute(ModAttributes.DBNO_DURATION, () -> ModConfig.balance().vsDbnoReduction.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> TELEPORT = SKILLS.registerSkill("teleport", props -> new VampireSkill(props.cost(3).withDescription().actionSkill(VampireActions.TELEPORT)));
+
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> SUMMON_BATS = SKILLS.registerSkill("summon_bats", props -> new VampireSkill(props.cost(1).withDescription().actionSkill(VampireActions.SUMMON_BATS)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> TOUGH_SKIN = SKILLS.registerSkill("tough_skin", props -> new VampireSkill(props.cost(2).withDescription().attribute(ModAttributes.SUNDAMAGE, () -> ModConfig.balance().vsSundamageReduction1.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> LIQUID_BLOOD = SKILLS.registerSkill("liquid_blood", props -> new VampireSkill(props.cost(1).withDescription().onEnable(ModConsumer.ENABLE_VAMPIRE_WATER_RESISTANCE).onDisable(ModConsumer.DISABLE_VAMPIRE_WATER_RESISTANCE)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> FRUGAL_VAMPIRE = SKILLS.registerSkill("frugal_vampire", props -> new VampireSkill(props.cost(1).withDescription().attribute(ModAttributes.BLOOD_EXHAUSTION, () -> ModConfig.balance().vsBloodThirstReduction1.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> DISGUISE = SKILLS.registerSkill("disguise", props -> new VampireSkill(props.cost(1).withDescription().actionSkill(VampireActions.DISGUISE)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> DAMAGE_LIMITER = SKILLS.registerSkill("damage_limiter", props -> new VampireSkill(props.cost(2).withDescription().actionSkill(VampireActions.DAMAGE_LIMITER)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> INVISIBILITY = SKILLS.registerSkill("invisibility", props -> new VampireSkill(props.cost(3).withDescription().actionSkill(VampireActions.INVISIBILITY)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> DARK_STALKER = SKILLS.registerSkill("dark_stalker", props -> new VampireSkill(props.cost(2).withDescription().actionSkill(VampireActions.DARK_STALKER)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> HISSING = SKILLS.registerSkill("hissing", props -> new VampireSkill(props.cost(1).withDescription().actionSkill(VampireActions.HISSING)));
 
     public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> VAMPIRE_LORD_ROOT = SKILLS.registerSkill("vampire_lord_root", VampireLordSkill::new);
 
@@ -104,31 +104,31 @@ public class VampireSkills {
         public static final ResourceKey<ISkillSegment> KEY_REGENERATION = segment("regeneration");
         public static final ResourceKey<ISkillSegment> KEY_NO_LONGER_FLEDGLING = segment("no_longer_fledgling");
 
-        public static final ResourceKey<ISkillSegment> KEY_FLEET_OF_FOOT_OR_FELINE_LEAP = segment("fleet_of_foot_or_feline_leap");
-        public static final ResourceKey<ISkillSegment> KEY_TOUGH_SKIN = segment("tough_skin");
-        public static final ResourceKey<ISkillSegment> KEY_LIQUID_BLOOD = segment("liquid_blood");
-        public static final ResourceKey<ISkillSegment> KEY_FAST_RECOVERY_OR_SWIFT_RESURRECTION = segment("fast_recovery_or_swift_resurrection");
-        public static final ResourceKey<ISkillSegment> KEY_DAMAGE_LIMITER = segment("damage_limiter");
-        public static final ResourceKey<ISkillSegment> KEY_TELEPORT = segment("teleport");
-        public static final ResourceKey<ISkillSegment> KEY_SUN_PROTECTION = segment("sun_protection");
-
-        public static final ResourceKey<ISkillSegment> KEY_SUMMON_BATS = segment("summon_bats");
-        public static final ResourceKey<ISkillSegment> KEY_DISGUISE = segment("disguise");
-        public static final ResourceKey<ISkillSegment> KEY_ADVANCED_BITER = segment("advanced_biter");
-        public static final ResourceKey<ISkillSegment> KEY_FRUGAL_VAMPIRE = segment("frugal_vampire");
-        public static final ResourceKey<ISkillSegment> KEY_BLOOD_VISION = segment("blood_vision");
-        public static final ResourceKey<ISkillSegment> KEY_HISSING = segment("hissing");
-        public static final ResourceKey<ISkillSegment> KEY_DARK_STALKER = segment("dark_stalker");
-        public static final ResourceKey<ISkillSegment> KEY_INVISIBILITY = segment("invisibility");
-        public static final ResourceKey<ISkillSegment> KEY_GARLIC_BLOOD_VISION = segment("garlic_blood_vision");
-
         public static final ResourceKey<ISkillSegment> KEY_VAMPIRE_RAGE = segment("vampire_rage");
-        public static final ResourceKey<ISkillSegment> KEY_ART_OF_THE_CUT = segment("art_of_the_cut");
-        public static final ResourceKey<ISkillSegment> KEY_ART_OF_THE_DRAW = segment("art_of_the_draw");
-        public static final ResourceKey<ISkillSegment> KEY_BLOOD_CHARGE = segment("blood_charge");
+        public static final ResourceKey<ISkillSegment> KEY_ADVANCED_BITER = segment("advanced_biter");
         public static final ResourceKey<ISkillSegment> KEY_FINISHER = segment("finisher");
         public static final ResourceKey<ISkillSegment> KEY_DARK_BLOOD_PROJECTILE = segment("dark_blood_projectile");
+        public static final ResourceKey<ISkillSegment> KEY_BLOOD_CHARGE = segment("blood_charge");
         public static final ResourceKey<ISkillSegment> KEY_FREEZE = segment("freeze");
+
+        public static final ResourceKey<ISkillSegment> KEY_SUN_PROTECTION = segment("sun_protection");
+        public static final ResourceKey<ISkillSegment> KEY_ART_OF_THE_DRAW = segment("art_of_the_draw");
+        public static final ResourceKey<ISkillSegment> KEY_ART_OF_THE_CUT = segment("art_of_the_cut");
+        public static final ResourceKey<ISkillSegment> KEY_FLEET_OF_FOOT_OR_FELINE_LEAP = segment("fleet_of_foot_or_feline_leap");
+        public static final ResourceKey<ISkillSegment> KEY_DARK_STALKER = segment("dark_stalker");
+        public static final ResourceKey<ISkillSegment> KEY_INVISIBILITY = segment("invisibility");
+        public static final ResourceKey<ISkillSegment> KEY_TOUGH_SKIN = segment("tough_skin");
+        public static final ResourceKey<ISkillSegment> KEY_BLOOD_VISION = segment("blood_vision");
+        public static final ResourceKey<ISkillSegment> KEY_GARLIC_BLOOD_VISION = segment("garlic_blood_vision");
+        public static final ResourceKey<ISkillSegment> KEY_FAST_RECOVERY_OR_SWIFT_RESURRECTION = segment("fast_recovery_or_swift_resurrection");
+        public static final ResourceKey<ISkillSegment> KEY_TELEPORT = segment("teleport");
+
+        public static final ResourceKey<ISkillSegment> KEY_SUMMON_BATS = segment("summon_bats");
+        public static final ResourceKey<ISkillSegment> KEY_HISSING = segment("hissing");
+        public static final ResourceKey<ISkillSegment> KEY_LIQUID_BLOOD = segment("liquid_blood");
+        public static final ResourceKey<ISkillSegment> KEY_FRUGAL_VAMPIRE = segment("frugal_vampire");
+        public static final ResourceKey<ISkillSegment> KEY_DISGUISE = segment("disguise");
+        public static final ResourceKey<ISkillSegment> KEY_DAMAGE_LIMITER = segment("damage_limiter");
 
         // Lord
         public static final ResourceKey<ISkillSegment> KEY_VAMPIRE_LORD_ROOT = segment("vampire_lord_root");
@@ -203,16 +203,16 @@ public class VampireSkills {
             level(KEY_HISSING, HISSING)
                     .parents(KEY_BLOOD_VISION)
                     .register(context);
+            level(KEY_GARLIC_BLOOD_VISION, GARLIC_BLOOD_VISION)
+                    .parents(KEY_BLOOD_VISION)
+                    .after(KEY_HISSING)
+                    .register(context);
             level(KEY_DARK_STALKER, DARK_STALKER)
                     .parents(KEY_HISSING)
                     .register(context);
             level(KEY_INVISIBILITY, INVISIBILITY)
                     .parents(KEY_HISSING)
                     .after(KEY_DARK_STALKER)
-                    .register(context);
-            level(KEY_GARLIC_BLOOD_VISION, GARLIC_BLOOD_VISION)
-                    .parents(KEY_BLOOD_VISION)
-                    .after(KEY_HISSING)
                     .register(context);
 
             level(KEY_VAMPIRE_RAGE, VAMPIRE_RAGE)
