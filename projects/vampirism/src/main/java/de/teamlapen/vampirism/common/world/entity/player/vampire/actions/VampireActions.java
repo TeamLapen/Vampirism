@@ -19,21 +19,20 @@ public class VampireActions {
     public static final DeferredAction<IVampirePlayer, ILastingAction<IVampirePlayer>, BatFormAction> BAT_FORM = ACTIONS.registerAction("bat_form", BatFormAction::new);
     public static final DeferredAction<IVampirePlayer, IAction<IVampirePlayer>, InfectAction> INFECT = ACTIONS.registerAction("infect", InfectAction::new);
 
-    public static final DeferredAction<IVampirePlayer, ILastingAction<IVampirePlayer> , ToggleHighJumpAction> TOGGLE_HIGH_JUMP = ACTIONS.registerAction("toggle_high_jump", ToggleHighJumpAction::new);
-    public static final DeferredAction<IVampirePlayer, ILastingAction<IVampirePlayer>, DamageLimiterAction> DAMAGE_LIMITER = ACTIONS.registerAction("damage_limiter", DamageLimiterAction::new);
-    public static final DeferredAction<IVampirePlayer, IAction<IVampirePlayer>, TeleportAction> TELEPORT = ACTIONS.registerAction("teleport", TeleportAction::new);
-    public static final DeferredAction<IVampirePlayer, ILastingAction<IVampirePlayer>, SunProtectionAction> SUN_PROTECTION = ACTIONS.registerAction("sun_protection", SunProtectionAction::new);
-
-    public static final DeferredAction<IVampirePlayer, IAction<IVampirePlayer>, SummonBatsAction> SUMMON_BATS = ACTIONS.registerAction("summon_bats", SummonBatsAction::new);
-    public static final DeferredAction<IVampirePlayer, ILastingAction<IVampirePlayer>, DisguiseAction> DISGUISE = ACTIONS.registerAction("disguise", DisguiseAction::new);
-    public static final DeferredAction<IVampirePlayer, IAction<IVampirePlayer>, HissingAction> HISSING = ACTIONS.registerAction("hissing", HissingAction::new);
-    public static final DeferredAction<IVampirePlayer, ILastingAction<IVampirePlayer>, DarkStalkerAction> DARK_STALKER = ACTIONS.registerAction("dark_stalker", DarkStalkerAction::new);
-    public static final DeferredAction<IVampirePlayer, ILastingAction<IVampirePlayer>, InvisibilityAction> INVISIBILITY = ACTIONS.registerAction("invisibility", InvisibilityAction::new);
-
     public static final DeferredAction<IVampirePlayer, ILastingAction<IVampirePlayer>, VampireRageAction> VAMPIRE_RAGE = ACTIONS.registerAction("vampire_rage", VampireRageAction::new);
     public static final DeferredAction<IVampirePlayer, IAction<IVampirePlayer>, DarkBloodProjectileAction> DARK_BLOOD_PROJECTILE = ACTIONS.registerAction("dark_blood_projectile", DarkBloodProjectileAction::new);
     public static final DeferredAction<IVampirePlayer, IAction<IVampirePlayer>, FreezeAction> FREEZE = ACTIONS.registerAction("freeze", FreezeAction::new);
 
+    public static final DeferredAction<IVampirePlayer, ILastingAction<IVampirePlayer>, SunProtectionAction> SUN_PROTECTION = ACTIONS.registerAction("sun_protection", SunProtectionAction::new);
+    public static final DeferredAction<IVampirePlayer, IAction<IVampirePlayer>, TeleportAction> TELEPORT = ACTIONS.registerAction("teleport", TeleportAction::new);
+
+    public static final DeferredAction<IVampirePlayer, IAction<IVampirePlayer>, SummonBatsAction> SUMMON_BATS = ACTIONS.registerAction("summon_bats", SummonBatsAction::new);
+    public static final DeferredAction<IVampirePlayer, ILastingAction<IVampirePlayer>, DisguiseAction> DISGUISE = ACTIONS.registerAction("disguise", DisguiseAction::new);
+    public static final DeferredAction<IVampirePlayer, ILastingAction<IVampirePlayer>, DamageLimiterAction> DAMAGE_LIMITER = ACTIONS.registerAction("damage_limiter", DamageLimiterAction::new);
+    public static final DeferredAction<IVampirePlayer, ILastingAction<IVampirePlayer>, InvisibilityAction> INVISIBILITY = ACTIONS.registerAction("invisibility", InvisibilityAction::new);
+    public static final DeferredAction<IVampirePlayer, IAction<IVampirePlayer>, HissingAction> HISSING = ACTIONS.registerAction("hissing", HissingAction::new);
+    public static final DeferredAction<IVampirePlayer, ILastingAction<IVampirePlayer>, DarkStalkerAction> DARK_STALKER = ACTIONS.registerAction("dark_stalker", DarkStalkerAction::new);
+    public static final DeferredAction<IVampirePlayer, ILastingAction<IVampirePlayer> , ToggleHighJumpAction> TOGGLE_HIGH_JUMP = ACTIONS.registerAction("toggle_high_jump", ToggleHighJumpAction::new);
     public static final DeferredAction<IVampirePlayer, IAction<IVampirePlayer>, MistAction> MIST = ACTIONS.registerAction("mist", MistAction::new);
     public static final DeferredAction<IVampirePlayer, IAction<IVampirePlayer>, AuraOfDarknessAction> AURA_OF_DARKNESS = ACTIONS.registerAction("aura_of_darkness", AuraOfDarknessAction::new);
 
