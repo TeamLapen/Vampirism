@@ -496,6 +496,7 @@
   "effect.vampirism.whispers_of_the_veil": "Whispers of The Veil",
   "effect.vampirism.sun_sensitivity": "Sun Sensitivity",
   "effect.vampirism.aura_of_darkness": "Aura of Darkness",
+  "effect.vampirism.disorientation": "Disorientation",
   "effect.vampirism.duration.unknown": "?",
 
   "potion.potency.6": "VII",
@@ -1804,6 +1805,8 @@
   "vampirism.configuration.hissingEnabled.tooltip": "When enabled, vampires can use the hissing action.",
   "vampirism.configuration.hissingCooldown": "Hissing Cooldown",
   "vampirism.configuration.hissingCooldown.tooltip": "Cooldown for the vampire hissing action, in seconds.",
+  "vampirism.configuration.hissingDuration": "Hissing Duration",
+  "vampirism.configuration.hissingDuration.tooltip": "Duration of the disorientation applied by the vampire hissing action, in seconds.",
   "vampirism.configuration.darkStalkerEnabled": "Dark Stalker Enabled",
   "vampirism.configuration.darkStalkerEnabled.tooltip": "When enabled, vampires can use the dark stalker action.",
   "vampirism.configuration.darkStalkerCooldown": "Dark Stalker Cooldown",
