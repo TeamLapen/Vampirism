@@ -30,7 +30,8 @@ public class HissingAction extends DefaultVampireAction {
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.ENTITY_VAMPIRE_SCREAM.get(), SoundSource.PLAYERS, 1, 1);
 
         int duration = ModConfig.balance().vaHissingDuration.get() * 20;
-        player.level().getEntitiesOfClass(Mob.class, player.getBoundingBox().inflate(10), mob -> mob.getTarget() == player || !Helper.isVampire(mob)).forEach(mob -> mob.addEffect(new MobEffectInstance(ModEffects.DISORIENTATION, duration), player));
+        int radius = ModConfig.balance().vaHissingRadius.get();
+        player.level().getEntitiesOfClass(Mob.class, player.getBoundingBox().inflate(radius), mob -> mob.getTarget() == player || !Helper.isVampire(mob)).forEach(mob -> mob.addEffect(new MobEffectInstance(ModEffects.DISORIENTATION, duration), player));
 
         return IActionResult.SUCCESS;
     }

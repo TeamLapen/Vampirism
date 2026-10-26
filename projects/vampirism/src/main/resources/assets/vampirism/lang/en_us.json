@@ -1805,6 +1805,8 @@
   "vampirism.configuration.hissingCooldown.tooltip": "Cooldown for the vampire hissing action, in seconds.",
   "vampirism.configuration.hissingDuration": "Hissing Duration",
   "vampirism.configuration.hissingDuration.tooltip": "Duration of the disorientation applied by the vampire hissing action, in seconds.",
+  "vampirism.configuration.hissingRadius": "Hissing Radius",
+  "vampirism.configuration.hissingRadius.tooltip": "Radius in blocks within which mobs are disoriented by the vampire hissing action.",
   "vampirism.configuration.darkStalkerEnabled": "Dark Stalker Enabled",
   "vampirism.configuration.darkStalkerEnabled.tooltip": "When enabled, vampires can use the dark stalker action.",
   "vampirism.configuration.darkStalkerCooldown": "Dark Stalker Cooldown",
