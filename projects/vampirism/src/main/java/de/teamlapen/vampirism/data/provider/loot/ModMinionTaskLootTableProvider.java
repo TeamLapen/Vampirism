@@ -29,9 +29,7 @@ public class ModMinionTaskLootTableProvider implements LootTableSubProvider {
     public void generate(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> output) {
         output.accept(ModLootTables.MINION_COLLECT_BLOOD, LootTable.lootTable()
                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1))
-                        .add(LootItem.lootTableItem(ModItems.BLOOD_BOTTLE.get()).setWeight(20).apply(SetBloodFunction.builder(IBottleBlood.MAX_VALUE)))
-                        .add(LootItem.lootTableItem(ModItems.HUMAN_HEART.get()).setWeight(5))
-                        .add(LootItem.lootTableItem(Items.IRON_NUGGET).setWeight(12).apply(SetItemCountFunction.setCount(ConstantValue.exactly(12))))
-                        .add(LootItem.lootTableItem(Items.GOLD_NUGGET).setWeight(10).apply(SetItemCountFunction.setCount(ConstantValue.exactly(6))))));
+                        .add(LootItem.lootTableItem(ModItems.BLOOD_BOTTLE.get()).setWeight(20).apply(SetBloodFunction.builder(2, IBottleBlood.MAX_VALUE)))
+                        .add(LootItem.lootTableItem(ModItems.HUMAN_HEART.get()).setWeight(2))));
     }
 }
