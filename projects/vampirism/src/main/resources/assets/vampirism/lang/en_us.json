@@ -548,7 +548,7 @@
   "action.vampirism.vampire_invisibility": "Invisibility",
   "action.vampirism.vampire_invisibility.desc": "Turn invisible for a short duration",
   "action.vampirism.hissing": "Hissing",
-  "action.vampirism.hissing.desc": "Hiss at nearby enemies, causing them to lose track of you",
+  "action.vampirism.hissing.desc": "Hiss to disorient nearby enemies, leaving them unable to target anyone for a period of time unless they are hurt",
   "action.vampirism.dark_stalker": "Dark Stalker",
   "action.vampirism.dark_stalker.desc": "Move completely silently while active",
   "action.vampirism.disguise_hunter": "Disguise",
