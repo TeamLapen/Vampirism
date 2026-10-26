@@ -1,10 +1,9 @@
 package de.teamlapen.faction.client.gui.screens.radial.edit;
 
 import de.teamlapen.faction.api.util.FIdentifier;
-import de.teamlapen.faction.client.IMinecraftAccessor;
 import de.teamlapen.faction.client.gui.components.ColoredImageWidget;
 import de.teamlapen.faction.client.gui.components.RepositionCallback;
-import de.teamlapen.faction.client.gui.radialmenu.DrawCallback;
+import de.teamlapen.faction.client.gui.radialmenu.IEntryDrawable;
 import de.teamlapen.faction.client.gui.radialmenu.GuiRadialMenu;
 import de.teamlapen.faction.client.gui.radialmenu.IRadialMenuSlot;
 import de.teamlapen.faction.client.gui.radialmenu.RadialMenu;
@@ -44,7 +43,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     protected ItemWrapper<T> movingItem;
     private final ItemOrdering<T> ordering;
     private final Function<T, MutableComponent> nameFunction;
-    private final DrawCallback<T> drawCallback;
+    private final IEntryDrawable<T> drawCallback;
     private final Consumer<ItemOrdering<T>> saveAction;
     private final Function<T, Boolean> isEnabled;
     private ExcludedItemList excludedList;
@@ -52,7 +51,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     protected final GridLayout layout = new GridLayout();
     protected final List<RepositionCallback> repositionCallback = new ArrayList<>();
 
-    public ReorderingGuiRadialMenu(ItemOrdering<T> ordering, Function<T, MutableComponent> nameFunction, DrawCallback<T> drawCallback, @NotNull Consumer<ItemOrdering<T>> saveAction, Function<T, Boolean> isEnabled) {
+    public ReorderingGuiRadialMenu(ItemOrdering<T> ordering, Function<T, MutableComponent> nameFunction, IEntryDrawable<T> drawCallback, @NotNull Consumer<ItemOrdering<T>> saveAction, Function<T, Boolean> isEnabled) {
         super(createMenu(ordering, nameFunction, drawCallback, isEnabled));
         this.ordering = ordering;
         this.nameFunction = nameFunction;
@@ -145,13 +144,13 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
         for (int i = 0; i < this.ordering.getOrdering().size(); i++) {
             NoItemRadialMenuSlot<T> tNoItemRadialMenuSlot = new NoItemRadialMenuSlot<>(this.nameFunction, new ItemWrapper<>(), this.isEnabled);
             this.radialMenuSlots.add(i,tNoItemRadialMenuSlot);
-            tNoItemRadialMenuSlot.primarySlotIcon().selectItem(this.ordering.getOrdering().get(i));
+            tNoItemRadialMenuSlot.item().selectItem(this.ordering.getOrdering().get(i));
         }
         this.checkEmpty();
     }
 
     private void addDummyMenuItems() {
-        if (!(this.radialMenuSlots.size() == 1 && this.radialMenuSlots.getFirst().primarySlotIcon().get() == null)) {
+        if (!(this.radialMenuSlots.size() == 1 && this.radialMenuSlots.getFirst().item().get() == null)) {
             for (int i = this.radialMenuSlots.size() - 1; i >= 0; i--) {
                 this.radialMenuSlots.add(i, new NoItemRadialMenuSlot<>(this.nameFunction, new ItemWrapper<>(), this.isEnabled));
             }
@@ -179,7 +178,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     }
 
     protected void removeDummyItems() {
-        this.radialMenuSlots.removeIf(slot -> slot.primarySlotIcon().getOptional().isEmpty());
+        this.radialMenuSlots.removeIf(slot -> slot.item().getOptional().isEmpty());
         this.checkEmpty();
     }
 
@@ -189,7 +188,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     }
 
     private void syncOrdering() {
-        this.ordering.applyOrdering(this.radialMenuSlots.stream().map(IRadialMenuSlot::primarySlotIcon).flatMap(a -> a.getOptional().stream()).collect(Collectors.toList()));
+        this.ordering.applyOrdering(this.radialMenuSlots.stream().map(IRadialMenuSlot::item).flatMap(a -> a.getOptional().stream()).collect(Collectors.toList()));
         this.updateExcludedList();
     }
 
@@ -209,20 +208,20 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
         if (this.selectedItem != -1) {
             IRadialMenuSlot<ItemWrapper<T>> selected = this.radialMenuSlots.get(this.selectedItem);
             if (this.movingItem != null) {
-                selected.primarySlotIcon().swapItem(this.movingItem);
+                selected.item().swapItem(this.movingItem);
                 if (this.movingItem.get() == null) {
                     this.removeDummyItems();
                     this.movingItem = null;
                 }
-                if (this.radialMenuSlots.stream().noneMatch(s -> s.primarySlotIcon() == this.movingItem)) {
+                if (this.radialMenuSlots.stream().noneMatch(s -> s.item() == this.movingItem)) {
                     this.excludeItem(this.movingItem);
                 }
                 syncOrdering();
             } else {
-                if (selected.primarySlotIcon().get() == null) {
+                if (selected.item().get() == null) {
                     return;
                 }
-                this.movingItem = selected.primarySlotIcon();
+                this.movingItem = selected.item();
                 addDummyMenuItems();
             }
         }
@@ -242,7 +241,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
 
     @Override
     public void drawSlice(IRadialMenuSlot<ItemWrapper<T>> slot, boolean highlighted, GuiGraphicsExtractor buffer, float x, float y, float z, float radiusIn, float radiusOut, float startAngle, float endAngle, int r, int g, int b, int a) {
-        if (this.movingItem == null && !slot.primarySlotIcon().getOptional().map(this.isEnabled).orElse(true)) {
+        if (this.movingItem == null && !slot.item().getOptional().map(this.isEnabled).orElse(true)) {
             r = 80;
         }
         super.drawSlice(slot, highlighted, buffer, x, y, z, radiusIn, radiusOut, startAngle, endAngle, r, g, b, Math.min(255, (int) (a * 2f)));
@@ -271,15 +270,14 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
         return super.keyPressed(keyEvent);
     }
 
-    private static <T> RadialMenu<ItemWrapper<T>> createMenu(ItemOrdering<T> ordering, Function<T, MutableComponent> nameFunction, DrawCallback<T> drawCallback, Function<T, Boolean> isEnabled) {
+    private static <T> RadialMenu<ItemWrapper<T>> createMenu(ItemOrdering<T> ordering, Function<T, MutableComponent> nameFunction, IEntryDrawable<T> drawCallback, Function<T, Boolean> isEnabled) {
         List<IRadialMenuSlot<ItemWrapper<T>>> collect = ordering.getOrdering().stream().map(a -> (IRadialMenuSlot<ItemWrapper<T>>) new NoItemRadialMenuSlot<>(nameFunction, new ItemWrapper<>(a), isEnabled)).collect(Collectors.toList());
         if (collect.isEmpty()) {
             collect.add(new NoItemRadialMenuSlot<>(nameFunction, new ItemWrapper<>(), isEnabled));
         }
-        return new RadialMenu<>((i) -> {
-        }, collect, (objectToBeDrawn, poseStack, positionX, positionY, size, renderTransparent) -> {
+        return new RadialMenu<>(collect, (objectToBeDrawn, poseStack, positionX, positionY, size, renderTransparent) -> {
             objectToBeDrawn.run(item -> drawCallback.accept(item, poseStack, positionX, positionY, size, renderTransparent));
-        }, 0);
+        },(_,_) -> {});
     }
 
     public class ExcludedItemList extends ContainerObjectSelectionList<ExcludedEntry<T>> {

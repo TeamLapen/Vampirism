@@ -1,0 +1,29 @@
+{
+  "type": "factionapi:minion_collect",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "vampirism:set_blood",
+              "maxBlood": 5,
+              "minBlood": 2
+            }
+          ],
+          "name": "vampirism:blood_bottle",
+          "weight": 20
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:human_heart",
+          "weight": 2
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "vampirism:minion_tasks/collect_blood"
+}

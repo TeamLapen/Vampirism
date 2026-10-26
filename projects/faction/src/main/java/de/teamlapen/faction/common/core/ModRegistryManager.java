@@ -18,6 +18,7 @@ public class ModRegistryManager {
         FactionEntities.register(bus);
         FactionItems.register(bus);
         FactionMenus.register(bus);
+        FactionMinionTaskCategories.register(bus);
         FactionMinionTasks.register(bus);
         FactionParticles.register(bus);
         FactionSounds.register(bus);
@@ -28,6 +29,8 @@ public class ModRegistryManager {
         FactionSkills.register(bus);
         FactionSkillPointProvider.register(bus);
         FactionConsumer.register(bus);
+        FactionLootContextParamSets.register();
+        FactionAttributes.register(bus);
 
         registerModEventHandler(bus);
     }

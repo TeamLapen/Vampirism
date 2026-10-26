@@ -84,7 +84,6 @@ public class VampireSkills {
     public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> VAMPIRE_LORD_ROOT = SKILLS.registerSkill("vampire_lord_root", VampireLordSkill::new);
 
     public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> VAMPIRE_BETTER_MINIONS = SKILLS.registerSkill("vampire_better_minions", props -> new VampireLordSkill(props.cost(3).withDescription().onEnable(FactionConsumer.ENABLE_MINION_INCREASED_STATS).onDisable(FactionConsumer.DISABLE_MINION_INCREASED_STATS)));
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> BLOOD_COLLECTION = SKILLS.registerSkill("blood_collection", props -> new VampireLordSkill(props.cost(2).withDescription()));
 
     public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> DRACULA_ROOT = SKILLS.registerSkill("dracula_root", props -> new DraculaSkill(props.withDescription()));
 
@@ -137,6 +136,7 @@ public class VampireSkills {
         public static final ResourceKey<ISkillSegment> KEY_LORD_MOVEMENT_OR_ATTACK_SPEED = segment("lord_movement_or_attack_speed");
         public static final ResourceKey<ISkillSegment> KEY_BLOOD_COLLECTION = segment("blood_collection");
         public static final ResourceKey<ISkillSegment> KEY_MINION_RECOVERY = segment("minion_recovery");
+        public static final ResourceKey<ISkillSegment> KEY_RESOURCE_DIVERSITY = segment("resource_diversity");
 
         // Dracula
         public static final ResourceKey<ISkillSegment> KEY_DRACULA_ROOT = segment("dracula_root");
@@ -246,13 +246,16 @@ public class VampireSkills {
                     .parents(KEY_VAMPIRE_LORD_ROOT)
                     .after(KEY_VAMPIRE_BETTER_MINIONS)
                     .register(context);
-            lord(KEY_BLOOD_COLLECTION, BLOOD_COLLECTION)
+            lord(KEY_BLOOD_COLLECTION, FactionSkills.MINION_COLLECT)
                     .parents(KEY_VAMPIRE_LORD_ROOT)
                     .after(KEY_LORD_MOVEMENT_OR_ATTACK_SPEED)
                     .register(context);
             lord(KEY_MINION_RECOVERY, FactionSkills.MINION_RECOVERY)
                     .parents(KEY_VAMPIRE_LORD_ROOT)
                     .after(KEY_BLOOD_COLLECTION)
+                    .register(context);
+            lord(KEY_RESOURCE_DIVERSITY, FactionSkills.RESOURCE_DIVERSITY)
+                    .parents(KEY_BLOOD_COLLECTION)
                     .register(context);
 
             dracula(KEY_DRACULA_ROOT, DRACULA_ROOT)

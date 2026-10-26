@@ -85,7 +85,6 @@ public class HunterSkills {
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> HUNTER_LORD_ROOT = SKILLS.registerSkill("hunter_lord_root", props -> new HunterSkill(props.tree(FactionSkillTreeTags.LORD)));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> HUNTER_BETTER_MINIONS = SKILLS.registerSkill("hunter_better_minions", props -> new HunterSkill(props.cost(3).withDescription().tree(FactionSkillTreeTags.LORD).onEnable(FactionConsumer.ENABLE_MINION_INCREASED_STATS).onDisable(FactionConsumer.DISABLE_MINION_INCREASED_STATS)));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> MINION_TECHNOLOGY = SKILLS.registerSkill("minion_technology", props -> new HunterSkill(props.cost(1).withDescription().tree(FactionSkillTreeTags.LORD)));
-    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> SUPPLY_COLLECTION = SKILLS.registerSkill("supply_collection", props -> new HunterSkill(props.cost(2).withDescription().tree(FactionSkillTreeTags.LORD)));
 
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> MARSHALL_ROOT = SKILLS.registerSkill("marshall_root", props -> new HunterSkill(props.withDescription().tree(ModSkillTreeTags.MARSHALL)));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> MASTER_ALCHEMIST = SKILLS.registerSkill("master_alchemist", props -> new HunterSkill(props.cost(1).withDescription().tree(ModSkillTreeTags.MARSHALL)));
@@ -141,6 +140,7 @@ public class HunterSkills {
         public static final ResourceKey<ISkillSegment> KEY_LORD_MOVEMENT_OR_ATTACK_SPEED = segment("lord_movement_or_attack_speed");
         public static final ResourceKey<ISkillSegment> KEY_SUPPLY_COLLECTION = segment("supply_collection");
         public static final ResourceKey<ISkillSegment> KEY_MINION_RECOVERY = segment("minion_recovery");
+        public static final ResourceKey<ISkillSegment> KEY_RESOURCE_DIVERSITY = segment("resource_diversity");
 
         // Marshall
         public static final ResourceKey<ISkillSegment> KEY_MARSHALL_ROOT = segment("marshall_root");
@@ -266,13 +266,16 @@ public class HunterSkills {
                     .parents(KEY_HUNTER_LORD_ROOT)
                     .after(KEY_HUNTER_BETTER_MINIONS)
                     .register(context);
-            lord(KEY_SUPPLY_COLLECTION, SUPPLY_COLLECTION)
+            lord(KEY_SUPPLY_COLLECTION, FactionSkills.MINION_COLLECT)
                     .parents(KEY_HUNTER_LORD_ROOT)
                     .after(KEY_LORD_MOVEMENT_OR_ATTACK_SPEED)
                     .register(context);
             lord(KEY_MINION_RECOVERY, FactionSkills.MINION_RECOVERY)
                     .parents(KEY_HUNTER_LORD_ROOT)
                     .after(KEY_SUPPLY_COLLECTION)
+                    .register(context);
+            lord(KEY_RESOURCE_DIVERSITY, FactionSkills.RESOURCE_DIVERSITY)
+                    .parents(KEY_SUPPLY_COLLECTION)
                     .register(context);
 
             marshall(KEY_MARSHALL_ROOT, MARSHALL_ROOT)

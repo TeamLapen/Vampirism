@@ -6,9 +6,6 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Unit;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import org.jetbrains.annotations.ApiStatus;
-
-import java.util.function.Supplier;
 
 import static de.teamlapen.vampirism.api.APIUtil.supplyDataComponent;
 

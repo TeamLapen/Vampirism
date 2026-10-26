@@ -53,7 +53,7 @@ public class DeferredProperty<T extends PropertySync> extends Property {
             case FULL_UPDATE -> property.get().serializeFullUpdate(child);
             case UPDATE -> property.get().serializeUpdate(child);
         }
-        return property.get().hashCode();
+        return property.get().getStatus();
     }
 
     public static class Builder<T extends PropertySync> {

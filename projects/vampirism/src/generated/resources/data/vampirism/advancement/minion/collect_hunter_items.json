@@ -3,7 +3,7 @@
   "criteria": {
     "task": {
       "conditions": {
-        "task": "vampirism:collect_hunter_items"
+        "task": "factionapi:collect_resources"
       },
       "trigger": "factionapi:minion_action"
     }
