@@ -113,10 +113,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     private final static String KEY_FANGS = "fang_type";
     private static final String KEY_APPEARANCE_TYPE_VERSION = "appearance_type_version";
     private static final int APPEARANCE_TYPE_VERSION = 1;
-    private static final String KEY_EYE_X = "eye_x";
-    private static final String KEY_EYE_Y = "eye_y";
-    private static final String KEY_FANG_X = "fang_x";
-    private static final String KEY_FANG_Y = "fang_y";
+    private static final String KEY_FACE_POSITIONS = "face_positions";
     private static final int FACE_SIZE = 8;
     private final static String KEY_GLOWING_EYES = "glowing_eyes";
     private final static String KEY_SPAWN_BITE_PARTICLE = "bite_particle";
@@ -571,10 +568,11 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         VampirePlayerSpecialAttributes a = getSpecialAttributes();
         int savedEyeType = nbt.getInt(KEY_EYE);
         int savedFangType = nbt.getInt(KEY_FANGS);
-        a.eyeX = readFaceCoordinate(nbt, KEY_EYE_X);
-        a.eyeY = readFaceCoordinate(nbt, KEY_EYE_Y);
-        a.fangX = readFaceCoordinate(nbt, KEY_FANG_X);
-        a.fangY = readFaceCoordinate(nbt, KEY_FANG_Y);
+        int[] facePositions = readFacePositions(nbt);
+        a.eyeX = facePositions[0];
+        a.eyeY = facePositions[1];
+        a.fangX = facePositions[2];
+        a.fangY = facePositions[3];
         if (nbt.getInt(KEY_APPEARANCE_TYPE_VERSION) < APPEARANCE_TYPE_VERSION) {
             boolean hasCustomEyePosition = a.eyeX >= 0 && isValidFacePosition(a.eyeX, a.eyeY);
             a.eyeType = remapLegacyEyeType(savedEyeType, hasCustomEyePosition);
@@ -1062,8 +1060,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             attributes.eyeY = y;
             if (!isRemote()) {
                 CompoundTag nbt = new CompoundTag();
-                nbt.putInt(KEY_EYE_X, x);
-                nbt.putInt(KEY_EYE_Y, y);
+                writeFacePositions(nbt);
                 sync(nbt, true);
             }
         }
@@ -1080,8 +1077,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
             attributes.fangY = y;
             if (!isRemote()) {
                 CompoundTag nbt = new CompoundTag();
-                nbt.putInt(KEY_FANG_X, x);
-                nbt.putInt(KEY_FANG_Y, y);
+                writeFacePositions(nbt);
                 sync(nbt, true);
             }
         }
@@ -1202,11 +1198,12 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         if (nbt.contains(KEY_FANGS)) {
             setFangType(nbt.getInt(KEY_FANGS));
         }
-        if (nbt.contains(KEY_EYE_X) && nbt.contains(KEY_EYE_Y)) {
-            setEyePosition(nbt.getInt(KEY_EYE_X), nbt.getInt(KEY_EYE_Y));
-        }
-        if (nbt.contains(KEY_FANG_X) && nbt.contains(KEY_FANG_Y)) {
-            setFangPosition(nbt.getInt(KEY_FANG_X), nbt.getInt(KEY_FANG_Y));
+        if (nbt.contains(KEY_FACE_POSITIONS, Tag.TAG_INT_ARRAY)) {
+            int[] facePositions = nbt.getIntArray(KEY_FACE_POSITIONS);
+            if (facePositions.length == 4) {
+                setEyePosition(facePositions[0], facePositions[1]);
+                setFangPosition(facePositions[2], facePositions[3]);
+            }
         }
         if (nbt.contains(KEY_SPAWN_BITE_PARTICLE)) {
             spawnBiteParticle(nbt.getInt(KEY_SPAWN_BITE_PARTICLE));
@@ -1269,22 +1266,13 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
         return nbt;
     }
 
-    private static int readFaceCoordinate(CompoundTag nbt, String key) {
-        return nbt.contains(key) ? nbt.getInt(key) : -1;
+    private static int[] readFacePositions(CompoundTag nbt) {
+        int[] positions = nbt.getIntArray(KEY_FACE_POSITIONS);
+        return positions.length == 4 ? positions : new int[]{-1, -1, -1, -1};
     }
 
     private static int remapLegacyEyeType(int type, boolean hasCustomPosition) {
-        return switch (type) {
-            case 0, 6, 7 -> 0;
-            case 1, 8, 9 -> 1;
-            case 2, 4, 10, 11 -> 2;
-            case 3 -> 3;
-            case 5, 12 -> 4;
-            case 14 -> hasCustomPosition ? 2 : -1;
-            case 15 -> 5;
-            case 16 -> 6;
-            default -> -1;
-        };
+        return type == 14 && hasCustomPosition ? 2 : REFERENCE.mapLegacyEyeType(type);
     }
 
     private static int legacyEyeX(int type) {
@@ -1309,10 +1297,7 @@ public class VampirePlayer extends FactionBasePlayer<IVampirePlayer> implements 
     }
 
     private void writeFacePositions(CompoundTag nbt) {
-        nbt.putInt(KEY_EYE_X, getEyeX());
-        nbt.putInt(KEY_EYE_Y, getEyeY());
-        nbt.putInt(KEY_FANG_X, getFangX());
-        nbt.putInt(KEY_FANG_Y, getFangY());
+        nbt.putIntArray(KEY_FACE_POSITIONS, new int[]{getEyeX(), getEyeY(), getFangX(), getFangY()});
     }
 
     private void applyEntityAttributes() {

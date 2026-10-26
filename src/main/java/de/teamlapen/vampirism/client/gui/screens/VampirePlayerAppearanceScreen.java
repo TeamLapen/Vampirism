@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.lib.util.Color;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -24,7 +25,6 @@ import org.jetbrains.annotations.Nullable;
 public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
 
     private static final Component NAME = Component.translatable("gui.vampirism.appearance");
-    private static final int TITLE_COUNT = 5;
     private static final int PREVIEW_LEFT = 190;
     private static final int PREVIEW_TOP = 30;
     private static final int PREVIEW_RIGHT = 250;
@@ -82,7 +82,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
 
     private Tooltip createTitleGenderTooltip() {
         MutableComponent tooltip = Component.empty();
-        for (int level = 1; level <= TITLE_COUNT; level++) {
+        for (int level = 1; level <= REFERENCE.HIGHEST_VAMPIRE_LORD; level++) {
             if (level > 1) tooltip.append(Component.literal("\n"));
             tooltip.append(LordTitles.getVampireTitle(level, IPlayableFaction.TitleGender.MALE))
                     .append(Component.literal(" --> "))
