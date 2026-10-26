@@ -91,7 +91,9 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extend
 
     @Override
     public void sync() {
-        this.player.sync();
+        if (!player.isRemote()) {
+            this.player.sync();
+        }
     }
 
     public void deactivateAllActions() {

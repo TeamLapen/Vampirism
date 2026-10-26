@@ -3,7 +3,7 @@
     "vampirism:vampire/blood_vision"
   ],
   "skills": [
-    "vampirism:blood_vision_garlic"
+    "vampirism:garlic_blood_vision"
   ],
   "tree": "vampirism:vampire/level"
 }

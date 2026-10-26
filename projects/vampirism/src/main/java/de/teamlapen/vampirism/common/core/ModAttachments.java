@@ -53,8 +53,6 @@ public class ModAttachments {
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<Bat>> VAMPIRE_BAT = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.VAMPIRE_BAT.getPath(), () -> AttachmentType.builder(new VampireBat.Factory()).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<InfectionStatus>> INFECTION_STATUS = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.INFECTION_STATUS.getPath(), () -> AttachmentType.builder(new InfectionStatus.Factory()).serialize(new InfectionStatus.Serializer()).sync(new InfectionStatus.Sync()).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<QuarrelEntity.HurtBypassTracker>> QUARREL_HURT_BYPASS = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.QUARREL_HURT_BYPASS.getPath(), () -> AttachmentType.builder(QuarrelEntity.HurtBypassTracker::new).build());
-    public static final DeferredHolder<AttachmentType<?>, AttachmentType<EntitySyncHolder<VampireMinionEntity, VampireMinionEntity.VampireMinionData>>> VAMPIRE_MINION_DATA = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.VAMPIRE_MINION_DATA.getPath(), () -> syncHolder(new EntitySyncHolder.Factory<>(VampireMinionEntity.class)).build());
-    public static final DeferredHolder<AttachmentType<?>, AttachmentType<EntitySyncHolder<HunterMinionEntity, HunterMinionEntity.HunterMinionData>>> HUNTER_MINION_DATA = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.HUNTER_MINION_DATA.getPath(), () -> syncHolder(new EntitySyncHolder.Factory<>(HunterMinionEntity.class)).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<GlobalPos>> VELMORRA_PORTAL = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.VELMORRA_PORTAL.getPath(), () -> AttachmentType.builder(new VelmorraDimension.VelmorraPortalPos()).serialize(GlobalPos.MAP_CODEC).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<Identifier>> MARKER = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.MARKER.getPath(), () -> AttachmentType.builder(() -> Identifier.withDefaultNamespace("none")).serialize(Identifier.CODEC.fieldOf("key")).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<DraculaPlayer>> DRACULA_PLAYER = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.DRACULA_PLAYER.getPath(), () -> playerAttachment(DraculaPlayer::new).copyOnDeath().build());
@@ -79,10 +77,6 @@ public class ModAttachments {
 
     private static <T extends IAttachmentSync & IEntity, Z extends IAttachmentHolder> AttachmentType.Builder<T> syncAttachment(AttachmentSynchronization<T, Z> options) {
         return AttachmentType.builder(options).serialize(options).sync(options);
-    }
-
-    private static <TEntity extends EntitySyncHolder.ISyncHolder<TData>, TData extends PropertySync> AttachmentType.Builder<EntitySyncHolder<TEntity, TData>> syncHolder(EntitySyncHolder.Factory<TEntity, TData> options) {
-        return AttachmentType.builder(options).sync(options);
     }
 
 }

@@ -62,16 +62,16 @@ public interface IProxy {
 
     }
 
-    default void displayVampireMinionAppearanceScreen(VampireMinionEntity entity) {
+    default void displayVampireMinionAppearanceScreen(VampireMinionEntity entity, Runnable back) {
     }
 
-    default void displayVampireMinionStatsaScreen(VampireMinionEntity entity) {
+    default void displayVampireMinionStatsScreen(VampireMinionEntity entity, Runnable back) {
     }
 
-    default void displayHunterMinionAppearanceScreen(HunterMinionEntity entity) {
+    default void displayHunterMinionAppearanceScreen(HunterMinionEntity entity, Runnable back) {
     }
 
-    default void displayHunterMinionStatsScreen(HunterMinionEntity entity) {
+    default void displayHunterMinionStatsScreen(HunterMinionEntity entity, Runnable back) {
 
     }
 

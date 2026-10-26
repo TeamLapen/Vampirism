@@ -6,9 +6,12 @@ import java.util.List;
 
 public interface IRadialMenuSlot<T> {
 
-    Component slotName();
+    Component description();
 
-    T primarySlotIcon();
+    T item();
 
-    List<T> secondarySlotIcons();
+    List<Item<T>> secondaryItems();
+
+    record Item<T>(T item, Component name) {
+    }
 }

@@ -1,18 +1,18 @@
 {
   "values": [
-    "vampirism:awareness_hunter",
-    "vampirism:potion_resistance_hunter",
+    "vampirism:sixth_sense",
+    "vampirism:potion_resistance",
     "vampirism:dark_blood_projectile",
     "vampirism:dark_stalker",
-    "vampirism:disguise_vampire",
+    "vampirism:disguise",
     "vampirism:freeze",
-    "vampirism:half_invulnerable",
+    "vampirism:damage_limiter",
     "vampirism:hissing",
-    "vampirism:vampire_invisibility",
+    "vampirism:invisibility",
     "vampirism:vampire_rage",
-    "vampirism:regen",
-    "vampirism:summon_bat",
-    "vampirism:sunscreen",
+    "vampirism:regeneration",
+    "vampirism:summon_bats",
+    "vampirism:sun_protection",
     "vampirism:teleport"
   ]
 }

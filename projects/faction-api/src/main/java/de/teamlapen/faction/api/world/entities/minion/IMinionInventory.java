@@ -23,6 +23,8 @@ public interface IMinionInventory extends Container {
      */
     int getAvailableSize();
 
+    void updateFromData(IMinionData data);
+
     NonNullList<ItemStack> getInventoryArmor();
 
     NonNullList<ItemStack> getInventoryHands();

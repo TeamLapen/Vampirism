@@ -1,13 +1,13 @@
 {
   "parents": [
-    "vampirism:hunter/lord_root"
+    "vampirism:hunter/hunter_lord_root"
   ],
   "placement": {
     "type": "after",
     "segment": "vampirism:hunter/lord_movement_or_attack_speed"
   },
   "skills": [
-    "vampirism:hunter_minion_collect"
+    "factionapi:minion_collect"
   ],
   "tree": "vampirism:hunter/lord"
 }

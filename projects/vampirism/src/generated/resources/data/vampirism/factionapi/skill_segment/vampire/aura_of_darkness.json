@@ -4,7 +4,7 @@
   ],
   "placement": {
     "type": "after",
-    "segment": "vampirism:vampire/mist_form"
+    "segment": "vampirism:vampire/mist"
   },
   "skills": [
     "vampirism:aura_of_darkness"

@@ -25,11 +25,14 @@ public class ModPacketDispatcher {
         registrar.playToServer(ServerboundToggleActionPacket.TYPE, ServerboundToggleActionPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleToggleActionPacket(msg, context));
         registrar.playToServer(ServerboundUnlockSkillPacket.TYPE, ServerboundUnlockSkillPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleUnlockSkillPacket(msg, context));
         registrar.playToServer(ServerboundForgetSkillPacket.TYPE, ServerboundForgetSkillPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleForgetSkillPacket(msg, context));
+        registrar.playToServer(ServerboundOpenMinionMenuPacket.TYPE, ServerboundOpenMinionMenuPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleOpenMinionMenuPacket(msg, context));
         registrar.playToServer(ServerboundToggleMinionTaskLock.TYPE, ServerboundToggleMinionTaskLock.CODEC, (msg, context) -> ServerPayloadHandler.handleToggleMinionTaskLock(msg, context));
         registrar.playToServer(ServerboundDeleteRefinementPacket.TYPE, ServerboundDeleteRefinementPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleDeleteRefinementPacket(msg, context));
         registrar.playToServer(ServerboundSimpleInputEvent.TYPE, ServerboundSimpleInputEvent.CODEC, (msg, context) -> ServerPayloadHandler.handleSimpleInputEvent(msg, context));
         registrar.playToServer(ServerboundUpgradeMinionStatPacket.TYPE, ServerboundUpgradeMinionStatPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleUpgradeMinionStatPacket(msg, context));
         registrar.playToServer(ServerboundResetMinionStatPacket.TYPE, ServerboundResetMinionStatPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleResetMinionStatPacket(msg, context));
+        registrar.playToServer(ServerboundCustomizationPacket.TYPE, ServerboundCustomizationPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleCustomizationPacket(msg, context));
+
         registrar.playToClient(ClientboundTaskStatusPacket.TYPE, ClientboundTaskStatusPacket.CODEC, (msg, context) -> FactionClientPayloadHandler.handleTaskStatusPacket(msg, context));
         registrar.playToClient(ClientboundRequestMinionSelectPacket.TYPE, ClientboundRequestMinionSelectPacket.CODEC, (msg, context) -> FactionClientPayloadHandler.handleRequestMinionSelectPacket(msg, context));
         registrar.playToClient(ClientboundTaskPacket.TYPE, ClientboundTaskPacket.CODEC, (msg, context) -> FactionClientPayloadHandler.handleTaskPacket(msg, context));

@@ -9,6 +9,8 @@ import net.minecraft.core.component.DataComponentType;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jspecify.annotations.Nullable;
 
+import java.util.stream.Stream;
+
 /**
  * Represents a synchronization mechanism for attachments {@link net.neoforged.neoforge.attachment.AttachmentType} where
  * data is saved on disk and synchronized to the client.
@@ -22,7 +24,8 @@ public abstract class AttachmentSync extends PropertySync implements IAttachment
     private final SimpleMutableDataComponentMap dataComponents = new SimpleMutableDataComponentMap(this);
 
     public void sync() {
-        if (this.properties.stream().anyMatch(Property::hasChanged)) {
+        var propertyStream = this.properties.stream().filter(Property::hasChanged).toList();
+        if (!propertyStream.isEmpty()) {
             asEntity().syncData(getType());
         }
     }

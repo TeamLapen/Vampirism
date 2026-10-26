@@ -1,9 +1,0 @@
-{
-  "parents": [
-    "vampirism:hunter/basic_technology"
-  ],
-  "skills": [
-    "vampirism:hunter_attack_damage"
-  ],
-  "tree": "vampirism:hunter/level"
-}

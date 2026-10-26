@@ -1,9 +1,0 @@
-{
-  "parents": [
-    "vampirism:vampire/summon_bats"
-  ],
-  "skills": [
-    "vampirism:sunscreen"
-  ],
-  "tree": "vampirism:vampire/level"
-}

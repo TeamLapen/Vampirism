@@ -7,8 +7,9 @@ import de.teamlapen.faction.api.factions.refinements.IRefinementHandler;
 import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.api.factions.skills.ISkillHandler;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
-import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
+import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
+import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.core.FactionItems;
 import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
@@ -21,7 +22,6 @@ import de.teamlapen.faction.common.factions.skills.SkillTreeGraphs;
 import de.teamlapen.faction.common.factions.tasks.TaskManager;
 import de.teamlapen.faction.common.network.packets.client.ClientboundRequestMinionSelectPacket;
 import de.teamlapen.faction.common.network.packets.server.*;
-import de.teamlapen.faction.common.util.RegUtil;
 import de.teamlapen.faction.common.world.inventory.InventoryHelper;
 import de.teamlapen.faction.common.world.items.OblivionPotionItem;
 import net.minecraft.core.Holder;
@@ -65,7 +65,7 @@ public class ServerPayloadHandler {
                         if (controller.recallMinion(msg.minionID())) {
                             controller.createMinionEntityAtPlayer(msg.minionID(), context.player());
                         } else {
-                            context.player().sendOverlayMessage(Component.translatable("message.factionapi.minion.still_recovering", controller.contactMinionData(msg.minionID(), MinionData::getFormattedName).orElseGet(() -> Component.literal("1"))));
+                            context.player().sendOverlayMessage(Component.translatable("message.factionapi.minion.still_recovering", controller.contactMinionData(msg.minionID(), MinionData::getName).orElseGet(() -> "1")));
                         }
                     }
                 } else if (RESPAWN.equals(msg.taskID())) {
@@ -81,9 +81,10 @@ public class ServerPayloadHandler {
                         LOGGER.error("Cannot find action to activate {}", msg.taskID());
                     } else if (msg.minionID() < -1) {
                         LOGGER.error("Illegal minion id {}", msg.minionID());
+                    } else if (!task.get().value().isAvailable(player) || (msg.minionID() == -1 && !task.get().components().has(FactionDataComponents.MINION_TASK_GLOBAL_COMMAND))) {
+                        LOGGER.warn("Player {} tried to activate unavailable minion task {}", context.player().getName().getString(), msg.taskID());
                     } else {
-                        //noinspection unchecked
-                        controller.activateTask(msg.minionID(), (IMinionTask<?, MinionData>) task.get().value());
+                        controller.activateTask(msg.minionID(), task.get());
                     }
                 }
             });
@@ -149,6 +150,15 @@ public class ServerPayloadHandler {
         });
     }
 
+    public static void handleOpenMinionMenuPacket(ServerboundOpenMinionMenuPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            ServerPlayer player = (ServerPlayer) context.player();
+            if (player.level().getEntity(msg.entityId()) instanceof MinionEntity minion && minion.isLord(player) && player.isWithinEntityInteractionRange(minion, 4)) {
+                minion.openMenu(player);
+            }
+        });
+    }
+
     public static void handleToggleMinionTaskLock(ServerboundToggleMinionTaskLock msg, IPayloadContext context) {
         context.enqueueWork(() -> {
             FactionPlayerHandler.get(context.player()).getPlayerLord().flatMap(x -> MinionWorldData.getData(context.player().level()).map(y -> y.getOrCreateController(x))).ifPresent(controller -> {
@@ -210,7 +220,7 @@ public class ServerPayloadHandler {
         context.enqueueWork(() -> {
             Player player = context.player();
             Entity entity = player.level().getEntity(msg.entityId());
-            if (entity instanceof MinionEntity<?> minion) {
+            if (entity instanceof MinionEntity minion && minion.isLord(player)) {
                 if (minion.getMinionData().map(d -> d.upgradeStat(msg.stat(), minion)).orElse(false)) {
                     minion.sync();
                 }
@@ -222,11 +232,19 @@ public class ServerPayloadHandler {
         context.enqueueWork(() -> {
             Player player = context.player();
             Entity entity = player.level().getEntity(msg.entityId());
-            if (entity instanceof MinionEntity<?> minion) {
+            if (entity instanceof MinionEntity minion && minion.isLord(player)) {
                 minion.getMinionData().ifPresent(d -> {
                     d.resetStats(minion);
                     minion.sync();
                 });
+            }
+        });
+    }
+
+    public static void handleCustomizationPacket(ServerboundCustomizationPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            if (context.player().level().getEntity(msg.entityId()) instanceof MinionEntity minion && minion.isLord(context.player())) {
+                minion.apply(msg.data());
             }
         });
     }

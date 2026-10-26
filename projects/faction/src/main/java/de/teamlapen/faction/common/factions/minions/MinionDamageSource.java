@@ -17,11 +17,11 @@ import org.jetbrains.annotations.Nullable;
 public class MinionDamageSource extends DamageSource {
 
     @NotNull
-    protected final MinionEntity<?> minionEntity;
+    protected final MinionEntity minionEntity;
     @Nullable
     protected final Player playerEntity;
 
-    public MinionDamageSource(Holder<DamageType> damageType, @NotNull MinionEntity<?> minion) {
+    public MinionDamageSource(Holder<DamageType> damageType, @NotNull MinionEntity minion) {
         super(damageType, minion, minion.getLordOpt().map(IPlayer::asEntity).orElse(null));
         this.minionEntity = minion;
         this.playerEntity = (Player) getEntity();

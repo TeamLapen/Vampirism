@@ -3,7 +3,7 @@
     "vampirism:vampire/vampire_rage"
   ],
   "skills": [
-    "vampirism:less_blood_thirst"
+    "vampirism:frugal_vampire"
   ],
   "tree": "vampirism:vampire/level"
 }

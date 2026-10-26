@@ -141,7 +141,7 @@ public class VaporStillRecipeCategory extends AbstractRecipeCategory<JEIPotionMi
             required.add(HunterSkills.CONCENTRATED_BREWING);
         }
         if (mix.master) {
-            required.add(HunterSkills.MASTER_BREWER);
+            required.add(HunterSkills.FORGOTTEN_FORMULARY);
         }
         if (mix.sovereign) {
             required.add(HunterSkills.ULTIMATE_BREWER);

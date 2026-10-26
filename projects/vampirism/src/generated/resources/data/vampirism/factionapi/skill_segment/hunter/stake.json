@@ -1,9 +1,0 @@
-{
-  "parents": [
-    "vampirism:hunter/level_root"
-  ],
-  "skills": [
-    "vampirism:stake1"
-  ],
-  "tree": "vampirism:hunter/level"
-}

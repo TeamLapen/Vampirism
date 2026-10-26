@@ -7,6 +7,7 @@ import de.teamlapen.faction.api.world.entities.IEntityLeader;
 import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
+import de.teamlapen.faction.common.factions.minions.MinionData;
 import de.teamlapen.faction.common.factions.minions.MinionWorldData;
 import de.teamlapen.faction.common.util.SpawnUtil;
 import de.teamlapen.faction.common.world.effects.FactionBadOmenMobEffect;
@@ -25,6 +26,7 @@ import de.teamlapen.vampirism.common.world.entity.IEntityFollower;
 import de.teamlapen.vampirism.common.world.entity.ai.goals.*;
 import de.teamlapen.vampirism.common.world.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.common.world.entity.minion.VampireMinionEntity;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -150,7 +152,8 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         FactionPlayerHandler.get(player).getPlayerLord().filter(x -> x.getMaxMinions() > 0).filter(x -> IFaction.is(x.getFaction(), getFaction())).ifPresentOrElse(lord -> {
             MinionWorldData.getData(player.level()).map(w -> w.getOrCreateController(lord)).ifPresent(controller -> {
                 if (controller.hasFreeMinionSlot()) {
-                    VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData(lord, this);
+                    MinionData data = (MinionData) ModFactions.VAMPIRE_MINION.get().createData(VampirePlayer.get(player), ModFactions.VAMPIRE_MINION.get());
+                    data.set(FactionDataComponents.MINION_SKIN, getEntityTextureType());
                     TagValueOutput withContext = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, lord.registryAccess());
                     this.serializeAttachments(withContext);
                     data.updateEntityCaps(withContext.buildResult());
@@ -164,7 +167,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                     minion.claimMinionSlot(id, controller);
                     minion.copyPosition(this);
                     minion.markAsConverted();
-                    controller.activateTask(0, FactionMinionTasks.STAY.get());
+                    controller.activateTask(0, FactionMinionTasks.STAY);
                     SpawnUtil.replaceEntity(this, minion);
                 } else {
                     LOGGER.warn("No free slot");

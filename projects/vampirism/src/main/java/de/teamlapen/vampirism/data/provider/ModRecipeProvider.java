@@ -589,6 +589,14 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .requires(ModItems.OBI_BELT)
                 .unlockedBy("has_obi_belt", has(ModItems.OBI_BELT))
                 .save(output, modString("leather_from_obi_belt"));
+        shaped(RecipeCategory.FOOD, ModItems.GOLDEN_HEART)
+                .define('#', Items.GOLD_INGOT)
+                .define('X', ModItems.HUMAN_HEART.get())
+                .pattern("###")
+                .pattern("#X#")
+                .pattern("###")
+                .unlockedBy("has_gold_ingot", this.has(Items.GOLD_INGOT))
+                .save(this.output);
     }
 
     private void recipesToolsAndArmor() {
@@ -934,7 +942,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
         cauldronRecipe(ModItems.PURE_SALT, 4)
                 .withIngredient(GARLIC)
                 .withFluid(new FluidStackTemplate(Fluids.WATER, FluidType.BUCKET_VOLUME))
-                .withSkills(HunterSkills.BASIC_ALCHEMY)
+                .withSkills(HunterSkills.APPRENTICE_ALCHEMY)
                 .cookTime(1200)
                 .save(output);
         cauldronRecipe(ModItems.ALCHEMICAL_FIRE, 4)
@@ -952,24 +960,24 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
         cauldronRecipe(ModItems.GARLIC_DIFFUSER_CORE)
                 .withIngredient(WOOL)
                 .withFluid(GARLIC)
-                .withSkills(HunterSkills.GARLIC_DIFFUSER)
+                .withSkills(HunterSkills.VAMPIRE_REPELLING)
                 .save(output);
         cauldronRecipe(ModItems.GARLIC_DIFFUSER_CORE_STRONG)
                 .withIngredient(ModItems.GARLIC_DIFFUSER_CORE)
                 .withFluid(ModItems.HOLY_WATER_BOTTLE_ULTIMATE)
-                .withSkills(HunterSkills.GARLIC_DIFFUSER_IMPROVED)
+                .withSkills(HunterSkills.AUGMENTED_DIFFUSERS)
                 .experience(2.0f)
                 .save(output);
         cauldronRecipe(ModItems.GARLIC_DIFFUSER_CORE_LONG)
                 .withIngredient(WOOL)
                 .withFluid(PURIFIED_GARLIC)
-                .withSkills(HunterSkills.GARLIC_DIFFUSER_IMPROVED)
+                .withSkills(HunterSkills.AUGMENTED_DIFFUSERS)
                 .experience(2.0f)
                 .save(output);
         cauldronRecipe(ModItems.PURIFIED_GARLIC, 2)
                 .withIngredient(GARLIC)
                 .withFluid(HOLY_WATER)
-                .withSkills(HunterSkills.PURIFIED_GARLIC)
+                .withSkills(HunterSkills.REFINED_GARLIC)
                 .save(output);
         cauldronRecipe(ModItems.BLOOD_INFUSED_IRON_BLOCK)
                 .withFluid(ModItems.PURE_BLOOD_0)
@@ -1012,7 +1020,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
     private void recipesWeaponTable() {
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL)
                 .lava(1)
-                .skills(HunterSkills.WEAPON_TABLE)
+                .skills(HunterSkills.BASIC_TECHNOLOGY)
                 .pattern("XZZX")
                 .pattern("XXXX")
                 .pattern("XYYX")
@@ -1053,7 +1061,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL)
                 .lava(1)
-                .skills(HunterSkills.WEAPON_TABLE)
+                .skills(HunterSkills.BASIC_TECHNOLOGY)
                 .pattern("XZZX")
                 .pattern("XYYX")
                 .pattern("XXXX")
@@ -1091,7 +1099,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_HEAD_NORMAL)
                 .lava(1)
-                .skills(HunterSkills.WEAPON_TABLE)
+                .skills(HunterSkills.BASIC_TECHNOLOGY)
                 .pattern("XXXX")
                 .pattern("XYYX")
                 .pattern("XZZX")
@@ -1129,7 +1137,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL)
                 .lava(1)
-                .skills(HunterSkills.WEAPON_TABLE)
+                .skills(HunterSkills.BASIC_TECHNOLOGY)
                 .pattern("XXXX")
                 .pattern("XYYX")
                 .pattern("XZZX")
@@ -1175,7 +1183,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
 
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_CHEST_NORMAL)
                 .lava(1)
-                .skills(HunterSkills.WEAPON_TABLE)
+                .skills(HunterSkills.BASIC_TECHNOLOGY)
                 .pattern("XWWX")
                 .pattern("XZZX")
                 .pattern("XZZX")
@@ -1219,7 +1227,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_LEGS_NORMAL)
                 .lava(1)
-                .skills(HunterSkills.WEAPON_TABLE)
+                .skills(HunterSkills.BASIC_TECHNOLOGY)
                 .pattern("XYYX")
                 .pattern("XZZX")
                 .pattern("XZZX")
@@ -1260,7 +1268,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_HEAD_NORMAL)
                 .lava(1)
-                .skills(HunterSkills.WEAPON_TABLE)
+                .skills(HunterSkills.BASIC_TECHNOLOGY)
                 .pattern("XYYX")
                 .pattern("XZZX")
                 .pattern("XZZX")
@@ -1301,7 +1309,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_FEET_NORMAL)
                 .lava(1)
-                .skills(HunterSkills.WEAPON_TABLE)
+                .skills(HunterSkills.BASIC_TECHNOLOGY)
                 .pattern("    ")
                 .pattern("X  X")
                 .pattern("XZZX")
@@ -1348,7 +1356,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
 
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.BASIC_CROSSBOW)
                 .lava(1)
-                .skills(HunterSkills.WEAPON_TABLE)
+                .skills(HunterSkills.BASIC_TECHNOLOGY)
                 .pattern("YXXY")
                 .pattern(" ZZ ")
                 .pattern(" ZZ ")
@@ -1359,7 +1367,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.BASIC_DOUBLE_CROSSBOW)
                 .lava(2)
-                .skills(HunterSkills.WEAPON_TABLE, HunterSkills.DOUBLE_IT)
+                .skills(HunterSkills.BASIC_TECHNOLOGY, HunterSkills.DOUBLE_IT)
                 .pattern("YXXY")
                 .pattern("YXXY")
                 .pattern(" ZZ ")
@@ -1519,7 +1527,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("gold", has(GOLD_BLOCK))
                 .unlockedBy("holy_water", has(ModItems.HOLY_WATER_BOTTLE_ENHANCED))
                 .unlockedBy("stake", has(ModItems.STAKE))
-                .skills(HunterSkills.ULTIMATE_CRUCIFIX)
+                .skills(HunterSkills.CRUCIFIXION)
                 .save(output);
 
         quarrelRecipe(ModItems.QUARREL_TELEPORT, ModOils.TELEPORT, 1);

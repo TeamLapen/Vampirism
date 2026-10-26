@@ -5,7 +5,7 @@ import de.teamlapen.faction.client.FactionsClientMod;
 import de.teamlapen.faction.common.config.FactionConfig;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.network.packets.client.*;
-import de.teamlapen.faction.common.network.packets.server.ClientboundActionBindingPacket;
+import de.teamlapen.faction.common.network.packets.client.ClientboundActionBindingPacket;
 import de.teamlapen.faction.common.network.packets.server.ServerboundSelectMinionTaskPacket;
 import de.teamlapen.faction.common.world.IEventReceiver;
 import de.teamlapen.faction.common.world.inventory.FactionMenu;
@@ -33,7 +33,7 @@ public class FactionClientPayloadHandler {
     }
 
     public static void handleRequestMinionSelectPacket(ClientboundRequestMinionSelectPacket msg, IPayloadContext context) {
-        context.enqueueWork(() -> openScreen(new SelectionScreen(Component.translatable("gui.factionapi.select_minion"), msg.minions().stream().map(x -> IComponentWithAction.of(x.getSecond(), () -> {
+        context.enqueueWork(() -> openScreen(new SelectionScreen(Component.translatable("gui.factionapi.select_minion"), msg.minions().stream().map(x -> IComponentWithAction.of(Component.literal(x.getSecond()), () -> {
             FactionsMod.proxy.sendToServer(new ServerboundSelectMinionTaskPacket(x.getFirst(), ServerboundSelectMinionTaskPacket.RECALL));
         })).toList())));
     }

@@ -3,7 +3,7 @@
   "criteria": {
     "action": {
       "conditions": {
-        "action": "vampirism:bat"
+        "action": "vampirism:bat_form"
       },
       "trigger": "factionapi:action"
     },

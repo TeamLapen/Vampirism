@@ -226,7 +226,7 @@ public class ModEntityEventHandler {
         if (event.getEntity() instanceof Player player) {
             HunterPlayer hunter = HunterPlayer.get(player);
             if (hunter.isDisguised()) {
-                event.modifyVisibility((hunter.getSpecialAttributes().fullHunterCoat != null ? 0.5 : 1) * ModConfig.balance().haDisguiseVisibilityMod.get());
+                event.modifyVisibility((hunter.getSpecialAttributes().fullHunterCoat != null ? 0.5 : 1) * ModConfig.balance().haCamouflageVisibilityMod.get());
             }
         }
     }
@@ -241,7 +241,7 @@ public class ModEntityEventHandler {
                     event.setResultStack(new ItemStack(Items.GLASS_BOTTLE));
                     return;
                 }
-                ((MinionEntity<?>) event.getEntity()).getInventory().ifPresent(inv -> inv.addItemStack(new ItemStack(Items.GLASS_BOTTLE)));
+                ((MinionEntity) event.getEntity()).getInventory().ifPresent(inv -> inv.addItemStack(new ItemStack(Items.GLASS_BOTTLE)));
             }
         }
     }
@@ -301,9 +301,9 @@ public class ModEntityEventHandler {
             });
             if (Helper.isHunter(player) && Helper.isVampire(event.getEntity())) {
                 Item item = stack.getItem();
-                if (item instanceof HunterAxeItem && HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.AXE2)) {
+                if (item instanceof HunterAxeItem && HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.HOW_TO_ACTUALLY_USE_AXE)) {
                     event.getEntity().addEffect(new MobEffectInstance(ModEffects.BLEEDING, 20, 0, false, false, true));
-                } else if (item == ModItems.STAKE.get() && HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.STAKE2)) {
+                } else if (item == ModItems.STAKE.get() && HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.HOW_TO_ACTUALLY_USE_STAKE)) {
                     event.getEntity().addEffect(new MobEffectInstance(ModEffects.BLEEDING, 40, 0, false, false, true));
                 }
             }

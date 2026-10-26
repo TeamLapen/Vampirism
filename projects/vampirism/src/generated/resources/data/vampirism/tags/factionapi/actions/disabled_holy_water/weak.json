@@ -1,6 +1,6 @@
 {
   "values": [
-    "vampirism:disguise_vampire",
-    "vampirism:vampire_invisibility"
+    "vampirism:disguise",
+    "vampirism:invisibility"
   ]
 }

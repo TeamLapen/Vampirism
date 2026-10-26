@@ -1,9 +1,0 @@
-{
-  "parents": [
-    "vampirism:vampire/no_longer_fledgling"
-  ],
-  "skills": [
-    "vampirism:vampire_disguise"
-  ],
-  "tree": "vampirism:vampire/level"
-}

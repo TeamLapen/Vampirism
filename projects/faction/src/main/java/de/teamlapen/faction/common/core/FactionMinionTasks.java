@@ -1,26 +1,37 @@
 package de.teamlapen.faction.common.core;
 
-import de.teamlapen.faction.api.FactionRegistries;
+import de.teamlapen.faction.api.factions.lord.ILordPlayer;
+import de.teamlapen.faction.api.registries.minion_tasks.DeferredMinionTask;
+import de.teamlapen.faction.api.registries.minion_tasks.DeferredMinionTaskRegister;
 import de.teamlapen.faction.api.util.REFERENCE;
-import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
-import de.teamlapen.faction.common.factions.minions.management.DefendAreaTask;
-import de.teamlapen.faction.common.factions.minions.management.NothingTask;
-import de.teamlapen.faction.common.factions.minions.management.SimpleMinionTask;
-import de.teamlapen.faction.common.factions.minions.management.StayTask;
+import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
+import de.teamlapen.faction.common.factions.minions.MinionData;
+import de.teamlapen.faction.common.factions.minions.management.*;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class FactionMinionTasks {
 
-    public static final DeferredRegister<IMinionTask<?, ?>> MINION_TASKS = DeferredRegister.create(FactionRegistries.Keys.MINION_TASK, REFERENCE.MOD_ID);
+    public static final DeferredMinionTaskRegister MINION_TASKS = DeferredMinionTaskRegister.create(REFERENCE.MOD_ID);
 
-    public static final DeferredHolder<IMinionTask<?,?>, StayTask> STAY = MINION_TASKS.register("stay", StayTask::new);
-    public static final DeferredHolder<IMinionTask<?,?>, DefendAreaTask> DEFEND_AREA = MINION_TASKS.register("defend_area", DefendAreaTask::new);
-    public static final DeferredHolder<IMinionTask<?,?>, SimpleMinionTask> FOLLOW_LORD = MINION_TASKS.register("follow_lord", () -> new SimpleMinionTask(FactionMinionTasks.FOLLOW_LORD));
+    public static final DeferredMinionTask<IMinionTask.EmptyState, MinionTask<IMinionTask.EmptyState>> NOTHING = MINION_TASKS.registerTask("nothing", (p, s) -> new MinionTask<>(p, s) {
+        @Override
+        public boolean isAvailable(ILordPlayer player) {
+            return false; // only used as the default state, can not be selected
+        }
+    });
 
-    public static final DeferredHolder<IMinionTask<?,?>, NothingTask> NOTHING = MINION_TASKS.register("nothing", NothingTask::new);
-    public static final DeferredHolder<IMinionTask<?,?>, SimpleMinionTask> PROTECT_LORD = MINION_TASKS.register("protect_lord", () -> new SimpleMinionTask(FactionMinionTasks.PROTECT_LORD));
+    public static final DeferredMinionTask<StayTask.State, StayTask> STAY = MINION_TASKS.registerTask("stay", StayTask::new, p -> p.markGlobal().category(FactionMinionTaskCategories.MOVEMENT));
+    public static final DeferredMinionTask<DefendAreaTask.State, DefendAreaTask> DEFEND_AREA = MINION_TASKS.registerTask("defend_area", DefendAreaTask::new, p -> p.markGlobal().category(FactionMinionTaskCategories.DEFEND));
+
+    public static final DeferredMinionTask<MinionTask.EmptyState, MinionTask<MinionTask.EmptyState>> FOLLOW_LORD = MINION_TASKS.registerTask("follow_lord", MinionTask::new, p -> p.markGlobal().categoryDefault(FactionMinionTaskCategories.MOVEMENT));
+    public static final DeferredMinionTask<MinionTask.EmptyState, MinionTask<MinionTask.EmptyState>> PROTECT_LORD = MINION_TASKS.registerTask("protect_lord", MinionTask::new, p -> p.markGlobal().categoryDefault(FactionMinionTaskCategories.DEFEND));
+
+    public static final DeferredMinionTask<CollectResourcesTask.State, CollectResourcesTask> COLLECT_RESOURCES = MINION_TASKS.registerTask("collect_resources", p -> new CollectResourcesTask(p, FactionLootTables.MINION_COLLECT_RESOURCES), p -> p.markGlobal().categoryDefault(FactionMinionTaskCategories.COLLECT_RESOURCES).requires(FactionSkills.MINION_COLLECT));
+    public static final DeferredMinionTask<CollectResourcesTask.State, CollectResourcesTask> COLLECT_WOOD = MINION_TASKS.registerTask("collect_wood", p -> new CollectResourcesTask(p, FactionLootTables.MINION_COLLECT_WOOD), p -> p.markGlobal().category(FactionMinionTaskCategories.COLLECT_RESOURCES).requires(FactionSkills.RESOURCE_DIVERSITY));
+    public static final DeferredMinionTask<CollectResourcesTask.State, CollectResourcesTask> COLLECT_ORES = MINION_TASKS.registerTask("collect_ores", p -> new CollectResourcesTask(p, FactionLootTables.MINION_COLLECT_ORES), p -> p.markGlobal().category(FactionMinionTaskCategories.COLLECT_RESOURCES).requires(FactionSkills.RESOURCE_DIVERSITY));
+    public static final DeferredMinionTask<CollectResourcesTask.State, CollectResourcesTask> COLLECT_FISH = MINION_TASKS.registerTask("collect_fish", p -> new CollectResourcesTask(p, FactionLootTables.MINION_COLLECT_FISH), p -> p.markGlobal().category(FactionMinionTaskCategories.COLLECT_RESOURCES).requires(FactionSkills.RESOURCE_DIVERSITY));
+    public static final DeferredMinionTask<CollectResourcesTask.State, CollectResourcesTask> COLLECT_PLANTS = MINION_TASKS.registerTask("collect_plants", p -> new CollectResourcesTask(p, FactionLootTables.MINION_COLLECT_PLANTS), p -> p.markGlobal().category(FactionMinionTaskCategories.COLLECT_RESOURCES).requires(FactionSkills.RESOURCE_DIVERSITY));
+    public static final DeferredMinionTask<CollectResourcesTask.State, CollectResourcesTask> COLLECT_MOB_LOOT = MINION_TASKS.registerTask("collect_mob_loot", p -> new CollectResourcesTask(p, FactionLootTables.MINION_COLLECT_MOB_LOOT), p -> p.markGlobal().category(FactionMinionTaskCategories.COLLECT_RESOURCES).requires(FactionSkills.RESOURCE_DIVERSITY));
 
     public static void register(IEventBus bus) {
         MINION_TASKS.register(bus);

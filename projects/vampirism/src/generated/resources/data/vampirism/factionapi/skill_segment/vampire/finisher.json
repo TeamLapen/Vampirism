@@ -3,7 +3,7 @@
     "vampirism:vampire/damage_limiter"
   ],
   "skills": [
-    "vampirism:sword_finisher"
+    "vampirism:finisher"
   ],
   "tree": "vampirism:vampire/level"
 }

@@ -5,11 +5,12 @@ import de.teamlapen.faction.api.factions.IFactionHelper;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
-import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
+import de.teamlapen.faction.api.world.entities.minion.IMinionData;
+import de.teamlapen.faction.api.world.entities.minion.IMinionEntity;
+import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
 import de.teamlapen.faction.common.config.FactionConfig;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
 import de.teamlapen.faction.common.core.FactionSkills;
-import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.server.commands.arguments.MinionArgument;
 import de.teamlapen.faction.common.util.ModCodecs;
@@ -73,7 +74,6 @@ public class PlayerMinionController implements ValueIOSerializable {
     @NotNull
     private final UUID lordID;
     private int maxMinions;
-    @NotNull
     private Holder<? extends IPlayableFaction<?>> faction;
     @NotNull
     private MinionInfo @NotNull [] minions = new MinionInfo[0];
@@ -86,7 +86,7 @@ public class PlayerMinionController implements ValueIOSerializable {
         this.lordID = lordID;
     }
 
-    public void activateTask(int minionID, @NotNull IMinionTask<?, MinionData> task) {
+    public void activateTask(int minionID, @NotNull Holder<? extends IMinionTask<?>> task) {
         if (!this.getLordPlayer().map(LivingEntity::isSpectator).orElse(false)) {
             if (minionID >= minions.length) {
                 LOGGER.warn("Trying to activate a task for a non-existent minion {}", minionID);
@@ -130,7 +130,7 @@ public class PlayerMinionController implements ValueIOSerializable {
      * @param entity wrapper entity
      */
     @Nullable
-    public <T extends MinionData> T checkoutMinion(int id, int token, @NotNull MinionEntity<T> entity) {
+    public <T extends MinionData> T checkoutMinion(int id, int token, @NotNull MinionEntity entity) {
         MinionInfo i = getMinionInfo(id, token);
         if (i != null) {
             int entityId = entity.getId();
@@ -163,7 +163,7 @@ public class PlayerMinionController implements ValueIOSerializable {
     /**
      * Contact the minion entity for the given slot if loaded
      */
-    public void contactMinion(int slot, Consumer<MinionEntity<?>> entityConsumer) {
+    public void contactMinion(int slot, Consumer<MinionEntity> entityConsumer) {
         if (slot < minions.length) {
             getMinionEntity(minions[slot]).ifPresent(entityConsumer);
         }
@@ -180,7 +180,7 @@ public class PlayerMinionController implements ValueIOSerializable {
         return Optional.empty();
     }
 
-    public void forEach(@NotNull BiConsumer<MinionData, Optional<MinionEntity<?>>> consumer) {
+    public void forEach(@NotNull BiConsumer<MinionData, Optional<MinionEntity>> consumer) {
         for (MinionInfo minion : minions) {
             consumer.accept(minion.data, getMinionEntity(minion));
         }
@@ -189,16 +189,16 @@ public class PlayerMinionController implements ValueIOSerializable {
     /**
      * Contact all currently loaded (checked-out) minions
      */
-    public void contactMinions(Consumer<MinionEntity<?>> entityConsumer) {
+    public void contactMinions(Consumer<MinionEntity> entityConsumer) {
         for (MinionInfo m : minions) {
             getMinionEntity(m).ifPresent(entityConsumer);
         }
     }
 
     @Nullable
-    public MinionEntity<?> createMinionEntityAtPlayer(int id, @NotNull Player p) {
+    public MinionEntity createMinionEntityAtPlayer(int id, @NotNull Player p) {
         assert id >= 0;
-        EntityType<? extends MinionEntity<?>> type = minions[id].minionType;
+        EntityType<? extends MinionEntity> type = minions[id].minionType;
         if (type == null) {
             LOGGER.warn("Cannot create minion because type does not exist");
         } else {
@@ -212,7 +212,7 @@ public class PlayerMinionController implements ValueIOSerializable {
                     m.copyPosition(p);
                     checkDeathStatus(id, m);
                     p.level().addFreshEntity(m);
-                    activateTask(id, FactionMinionTasks.STAY.get());
+                    activateTask(id, FactionMinionTasks.STAY);
                     m.sync();
                     return m;
                 }
@@ -227,7 +227,7 @@ public class PlayerMinionController implements ValueIOSerializable {
      * tmp fix to heal minions that are not dead but have negative health
      */
     @Deprecated
-    private void checkDeathStatus(int id, MinionEntity<?> minion) {
+    private void checkDeathStatus(int id, MinionEntity minion) {
         MinionData data = minions[id].data;
         if (data.getHealth() <= 0) {
             data.setHealth(data.getMaxHealth());
@@ -239,12 +239,12 @@ public class PlayerMinionController implements ValueIOSerializable {
      *
      * @return minion slot id or -1 if no free minion slot
      */
-    public int createNewMinionSlot(@NotNull MinionData data, EntityType<? extends MinionEntity<?>> minionType) {
+    public int createNewMinionSlot(@NotNull MinionData data, EntityType<? extends IMinionEntity> minionType) {
         int i = minions.length;
         if (i < maxMinions) {
             MinionInfo[] n = Arrays.copyOf(minions, i + 1);
             Optional<Integer>[] t = Arrays.copyOf(minionTokens, i + 1);
-            n[i] = new MinionInfo(i, data, minionType);
+            n[i] = new MinionInfo(i, data, (EntityType<? extends MinionEntity>) minionType);
             t[i] = Optional.empty();
             minions = n;
             minionTokens = t;
@@ -263,8 +263,8 @@ public class PlayerMinionController implements ValueIOSerializable {
         return ids;
     }
 
-    public @NotNull List<MutableComponent> getRecoveringMinionNames() {
-        return Arrays.stream(this.minions).filter(MinionInfo::isStillRecovering).map(i -> i.data).map(MinionData::getFormattedName).collect(Collectors.toList());
+    public @NotNull List<Component> getRecoveringMinionNames() {
+        return Arrays.stream(this.minions).filter(MinionInfo::isStillRecovering).map(i -> i.data).map(MinionData::getName).map(Component::literal).collect(Collectors.toList());
     }
 
     public @NotNull UUID getUUID() {
@@ -364,7 +364,7 @@ public class PlayerMinionController implements ValueIOSerializable {
         for (MinionInfo i : minions) {
             ValueOutput child = data.addChild();
 
-            i.data.serialize(child.child("content"));
+            MinionData.toCompound(i.data, child.child("content"));
             child.putInt("death_timer", i.deathCooldown);
             child.putInt("id", i.minionID);
 
@@ -397,12 +397,12 @@ public class PlayerMinionController implements ValueIOSerializable {
 
             int id = idOpt.get();
 
-            MinionData minionData = MinionData.fromNBT(data.childOrEmpty("content"));
+            MinionData minionData = MinionData.fromCompound(data.childOrEmpty("content")).orElse(null);
             if (minionData == null) {
                 continue;
             }
 
-            EntityType<? extends MinionEntity<?>> type = data.read("entity_type", ModCodecs.<MinionEntity<?>>entityCodec()).orElse(null);
+            EntityType<? extends MinionEntity> type = data.read("entity_type", ModCodecs.<MinionEntity>entityCodec()).orElse(null);
 
             MinionInfo minionInfo = new MinionInfo(id, minionData, type);
             minionInfo.deathCooldown = data.getIntOr("death_timer", 0);
@@ -457,23 +457,18 @@ public class PlayerMinionController implements ValueIOSerializable {
                 i.deathCooldown--;
                 if (i.deathCooldown == 0) {
                     i.data.setHealth(i.data.getMaxHealth());
-                    getLordPlayer().ifPresent(player -> player.sendOverlayMessage(Component.translatable("dialogue.factionapi.minion.can_respawn", i.data.getFormattedName())));
+                    getLordPlayer().ifPresent(player -> player.sendOverlayMessage(Component.translatable("dialogue.factionapi.minion.can_respawn", i.data.getName())));
                 }
             } else {
-                IMinionTask.IMinionTaskDesc<MinionData> taskDesc = i.data.getCurrentTaskDesc();
-                tickTask(taskDesc.getTask(), taskDesc, i);
+                tickTask(i.data.getActiveTask(), i);
             }
         }
     }
 
-    private void activateTask(@NotNull MinionInfo info, @NotNull IMinionTask<?, MinionData> task) {
-        @Nullable
-        IMinionTask.IMinionTaskDesc<MinionData> desc = task.activateTask(getLordPlayer().orElse(null), getMinionEntity(info).orElse(null), info.data);
-        if (desc == null) {
-            getLordPlayer().ifPresent(player -> player.sendOverlayMessage(Component.translatable("message.factionapi.minion_task.could_not_activate")));
-        } else {
-            MinionData d = info.data;
-            d.switchTask(d.getCurrentTaskDesc().getTask(), d.getCurrentTaskDesc(), desc);
+    private void activateTask(@NotNull MinionInfo info, @NotNull Holder<? extends IMinionTask<?>> task) {
+        MinionEntity minionEntity = getMinionEntity(info).orElse(null);
+        MinionData data = info.data;
+        if (data.switchTask(getLordPlayer().orElse(null), minionEntity, task)) {
             this.contactMinion(info.minionID, MinionEntity::onTaskChanged);
         }
     }
@@ -486,14 +481,14 @@ public class PlayerMinionController implements ValueIOSerializable {
         return Optional.ofNullable(server.getPlayerList().getPlayer(lordID));
     }
 
-    private @NotNull Optional<MinionEntity<?>> getMinionEntity(@NotNull MinionInfo info) {
+    private @NotNull Optional<MinionEntity> getMinionEntity(@NotNull MinionInfo info) {
         if (info.isActive()) {
             assert info.dimension != null;
             Level w = server.getLevel(info.dimension);
             if (w != null) {
                 Entity e = w.getEntity(info.entityId);
                 if (e instanceof MinionEntity) {
-                    return Optional.of((MinionEntity<?>) e);
+                    return Optional.of((MinionEntity) e);
                 } else {
                     LOGGER.warn("Retrieved entity is not a minion entity {}", e);
                 }
@@ -529,13 +524,16 @@ public class PlayerMinionController implements ValueIOSerializable {
 
     }
 
-    @SuppressWarnings("unchecked")
-    private <Q extends IMinionTask.IMinionTaskDesc<MinionData>, T extends IMinionTask<Q, MinionData>> void tickTask(@NotNull T task, IMinionTask.IMinionTaskDesc<MinionData> desc, @NotNull MinionInfo info) {
+    private <Q extends IMinionTask.IMinionTaskState> void tickTask(@NotNull IMinionData.IActiveTask<Q> task, @NotNull MinionInfo info) {
+        IMinionTask<Q> minionTask = task.task().value();
         if (info.isActive()) {
-            task.tickActive((Q) desc, () -> getMinionEntity(info).map(m -> m), info.data);
+            minionTask.tickActive(task.data(), () -> getMinionEntity(info).map(m -> m), info.data);
         } else {
-            task.tickBackground((Q) desc, info.data);
-
+            minionTask.tickBackground(task.data(), info.data);
+        }
+        if (minionTask.isFinished(task.data())) {
+            getLordPlayer().ifPresent(player -> player.sendSystemMessage(minionTask.getFinishedMessage(task.data(), info.data)));
+            activateTask(info, FactionMinionTasks.FOLLOW_LORD);
         }
     }
 
@@ -548,18 +546,18 @@ public class PlayerMinionController implements ValueIOSerializable {
      * @return collection of minion ids
      */
     public Collection<MinionArgument.MinionId> getMinionIdForName(String playerName) {
-        return Arrays.stream(minions).map(i -> new MinionArgument.MinionId(playerName, i.minionID, i.data.getFormattedName().getString())).collect(Collectors.toList());
+        return Arrays.stream(minions).map(i -> new MinionArgument.MinionId(playerName, i.minionID, i.data.getName())).collect(Collectors.toList());
     }
 
     private static class MinionInfo {
         private final int minionID;
         private final @NotNull MinionData data;
-        private final @Nullable EntityType<? extends MinionEntity<?>> minionType;
+        private final @Nullable EntityType<? extends MinionEntity> minionType;
         private int entityId = -1;
         private int deathCooldown = 0;
         private @Nullable ResourceKey<Level> dimension;
 
-        private MinionInfo(int id, @NotNull MinionData data, @Nullable EntityType<? extends MinionEntity<?>> minionType) {
+        private MinionInfo(int id, @NotNull MinionData data, @Nullable EntityType<? extends MinionEntity> minionType) {
             this.minionID = id;
             this.data = data;
             this.minionType = minionType;

@@ -144,7 +144,7 @@ public class ModAdvancementProvider extends AdvancementProvider {
             AdvancementHolder bat = Advancement.Builder.advancement()
                     .display(Items.FEATHER, Component.translatable("advancement.vampirism.bat"), Component.translatable("advancement.vampirism.bat.desc"), null, AdvancementType.TASK, true, true, false)
                     .parent(become_vampire)
-                    .addCriterion("action", ActionCriterionTrigger.TriggerInstance.of(VampireActions.BAT))
+                    .addCriterion("action", ActionCriterionTrigger.TriggerInstance.of(VampireActions.BAT_FORM))
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.VAMPIRE, 1))
                     .save(consumer, REFERENCE.MODID + ":vampire/bat");
             AdvancementHolder first_blood = Advancement.Builder.advancement()
@@ -354,7 +354,7 @@ public class ModAdvancementProvider extends AdvancementProvider {
             AdvancementHolder collect_hunter_items = Advancement.Builder.advancement()
                     .display(Items.BUNDLE, Component.translatable("advancement.vampirism.collect_hunter_items"), Component.translatable("advancement.vampirism.collect_hunter_items.desc"), null, AdvancementType.TASK, true, true, false)
                     .parent(become_lord)
-                    .addCriterion("task", MinionTaskCriterionTrigger.TriggerInstance.tasks(MinionTasks.COLLECT_HUNTER_ITEMS.get()))
+                    .addCriterion("task", MinionTaskCriterionTrigger.TriggerInstance.tasks(FactionMinionTasks.COLLECT_RESOURCES.get()))
                     .save(consumer, REFERENCE.MODID + ":minion/collect_hunter_items");
             AdvancementHolder protect_lord = Advancement.Builder.advancement()
                     .display(Items.SHIELD, Component.translatable("advancement.vampirism.protect_lord"), Component.translatable("advancement.vampirism.protect_lord.desc"), null, AdvancementType.TASK, true, true, false)

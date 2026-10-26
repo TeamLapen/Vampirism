@@ -104,7 +104,7 @@ public class MinionInventoryCommand extends BasicCommand {
             throw NO_MINION.create();
         }
         Optional<MinionInventory> minionInventory = controller.contactMinionData(minionId, minionData -> {
-            playerMinionIdentifier.updateName(minionData.getFormattedName().getString());
+            playerMinionIdentifier.updateName(minionData.getName());
             return minionData.getInventory();
         });
         if (minionInventory.isEmpty()) {

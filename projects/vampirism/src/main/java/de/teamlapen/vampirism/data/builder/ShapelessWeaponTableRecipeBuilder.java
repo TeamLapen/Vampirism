@@ -114,7 +114,7 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
                 .rewards(AdvancementRewards.Builder.recipe(id))
                 .requirements(AdvancementRequirements.Strategy.OR);
         advancementBuilder.addCriterion("has_skill", FactionAdvancements.TRIGGER_SKILL_UNLOCKED.get().createCriterion(
-                new SkillUnlockedCriterionTrigger.TriggerInstance(Optional.empty(), HunterSkills.WEAPON_TABLE.get())));
+                new SkillUnlockedCriterionTrigger.TriggerInstance(Optional.empty(), HunterSkills.BASIC_TECHNOLOGY.get())));
         this.skills.forEach(skill -> advancementBuilder.addCriterion(
                 "has_skill_" + skill.unwrapKey().map(ResourceKey::identifier).map(Identifier::toString).orElseThrow().replace(":", "_"),
                 FactionAdvancements.TRIGGER_SKILL_UNLOCKED.get().createCriterion(

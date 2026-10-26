@@ -28,5 +28,6 @@ public class FactionAttachments {
         public static final Identifier TASK_MANAGER = FIdentifier.mod("task_manager");
         public static final Identifier REFINEMENT_HANDLER = FIdentifier.mod("refinement_handler");
         public static final Identifier LORD_PLAYER = FIdentifier.mod("lord_player");
+        public static final Identifier MINION_DATA = FIdentifier.mod("minion_data");
     }
 }

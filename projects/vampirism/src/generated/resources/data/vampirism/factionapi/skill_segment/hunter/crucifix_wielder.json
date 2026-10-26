@@ -1,10 +1,10 @@
 {
   "parents": [
-    "vampirism:hunter/basic_alchemy"
+    "vampirism:hunter/apprentice_alchemy"
   ],
   "placement": {
     "type": "after",
-    "segment": "vampirism:hunter/garlic_diffuser"
+    "segment": "vampirism:hunter/vampire_repelling"
   },
   "skills": [
     "vampirism:crucifix_wielder"

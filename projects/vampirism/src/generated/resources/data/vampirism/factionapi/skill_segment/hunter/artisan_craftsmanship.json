@@ -1,10 +1,10 @@
 {
   "parents": [
-    "vampirism:hunter/actually_use_axe"
+    "vampirism:hunter/how_to_actually_use_axe"
   ],
   "placement": {
     "type": "after",
-    "segment": "vampirism:hunter/actually_use_stake"
+    "segment": "vampirism:hunter/how_to_actually_use_stake"
   },
   "skills": [
     "vampirism:artisan_craftsmanship"
