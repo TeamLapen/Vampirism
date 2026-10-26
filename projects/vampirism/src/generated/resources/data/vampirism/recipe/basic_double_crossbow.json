@@ -17,7 +17,7 @@
     "id": "vampirism:basic_double_crossbow"
   },
   "skill": [
-    "vampirism:weapon_table",
+    "vampirism:basic_technology",
     "vampirism:double_it"
   ]
 }

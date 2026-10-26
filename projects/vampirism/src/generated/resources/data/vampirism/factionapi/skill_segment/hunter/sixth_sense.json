@@ -1,0 +1,9 @@
+{
+  "parents": [
+    "vampirism:hunter/crucifix_wielder"
+  ],
+  "skills": [
+    "vampirism:sixth_sense"
+  ],
+  "tree": "vampirism:hunter/level"
+}

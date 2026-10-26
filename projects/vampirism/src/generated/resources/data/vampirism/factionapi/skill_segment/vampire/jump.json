@@ -1,9 +1,0 @@
-{
-  "parents": [
-    "vampirism:vampire/tough_skin"
-  ],
-  "skills": [
-    "vampirism:vampire_jump"
-  ],
-  "tree": "vampirism:vampire/level"
-}

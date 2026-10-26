@@ -108,7 +108,7 @@ public class WeaponTableBlock extends BaseHorizontalBlock {
      */
     private boolean canUse(Player player) {
         if (Helper.isHunter(player)) {
-            return HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.WEAPON_TABLE);
+            return HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.BASIC_TECHNOLOGY);
         }
         return false;
     }

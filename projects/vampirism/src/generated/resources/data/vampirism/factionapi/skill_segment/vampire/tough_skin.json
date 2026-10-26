@@ -1,10 +1,10 @@
 {
   "parents": [
-    "vampirism:vampire/damage",
-    "vampirism:vampire/attack_speed"
+    "vampirism:vampire/art_of_the_cut",
+    "vampirism:vampire/art_of_the_draw"
   ],
   "skills": [
-    "vampirism:less_sundamage"
+    "vampirism:tough_skin"
   ],
   "tree": "vampirism:vampire/level"
 }

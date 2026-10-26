@@ -1,0 +1,9 @@
+{
+  "parents": [
+    "vampirism:hunter/how_to_use_stake"
+  ],
+  "skills": [
+    "vampirism:camouflage"
+  ],
+  "tree": "vampirism:hunter/level"
+}

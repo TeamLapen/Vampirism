@@ -1,7 +1,7 @@
 {
   "parents": [
-    "vampirism:hunter/armor_bound_speed",
-    "vampirism:hunter/armor_bound_jump"
+    "vampirism:hunter/armor_bound_swiftness",
+    "vampirism:hunter/armor_bound_highvault"
   ],
   "skills": [
     "vampirism:crossbow_technique"

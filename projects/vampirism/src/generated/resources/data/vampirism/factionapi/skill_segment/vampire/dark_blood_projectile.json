@@ -1,6 +1,6 @@
 {
   "parents": [
-    "vampirism:vampire/sunscreen"
+    "vampirism:vampire/sun_protection"
   ],
   "skills": [
     "vampirism:dark_blood_projectile"

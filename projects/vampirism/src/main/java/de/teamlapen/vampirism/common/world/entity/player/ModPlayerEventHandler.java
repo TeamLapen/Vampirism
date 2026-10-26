@@ -26,7 +26,7 @@ import de.teamlapen.vampirism.common.world.entity.QuarrelEntity;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.common.world.entity.player.vampire.actions.BatVampireAction;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.actions.BatFormAction;
 import de.teamlapen.vampirism.common.world.items.component.AppliedOilContent;
 import de.teamlapen.vampirism.common.world.items.crossbow.HunterCrossbowItem;
 import de.teamlapen.vampirism.common.world.potions.BasePotion;
@@ -107,7 +107,7 @@ public class ModPlayerEventHandler {
         if (event.getEntity() instanceof Player && ((Player) event.getEntity()).getInventory() != null /*make sure we are not in the player's contructor*/ && (!(event.getEntity() instanceof ServerPlayer serverPlayer) || serverPlayer.connection != null)) {
             if (event.getEntity().isAlive() && event.getEntity().position().lengthSqr() != 0 && event.getEntity().getVehicle() == null) { //Do not attempt to get capability while entity is being initialized
                 if (VampirePlayer.get((Player) event.getEntity()).getSkillProperties().bat) {
-                    event.setNewSize(BatVampireAction.BAT_SIZE);
+                    event.setNewSize(BatFormAction.BAT_SIZE);
                 } else if (VampirePlayer.get((Player) event.getEntity()).getSkillProperties().isDBNO) {
                     event.setNewSize(EntityDimensions.fixed(0.6f, 0.95f).withEyeHeight(0.725f));
                 }

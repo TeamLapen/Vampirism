@@ -3,7 +3,7 @@
     "vampirism:vampire/regeneration"
   ],
   "skills": [
-    "vampirism:fledgling"
+    "vampirism:no_longer_fledgling"
   ],
   "tree": "vampirism:vampire/level"
 }

@@ -135,7 +135,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IIt
             double relTh = 0;
             ISkillHandler<IVampirePlayer> skillHandler = VampirePlayer.get(player).getSkillHandler();
             IRefinementAccess refinementHandler = VampirePlayer.get(player).getRefinementHandler();
-            if (skillHandler.isSkillEnabled(VampireSkills.SWORD_FINISHER) && !(target instanceof Player) || ModConfig.balance().vsSwordFinisherOnPlayer.get()) {
+            if (skillHandler.isSkillEnabled(VampireSkills.FINISHER) && !(target instanceof Player) || ModConfig.balance().vsSwordFinisherOnPlayer.get()) {
                 relTh = ModConfig.balance().vsSwordFinisherMaxHealth.get() * (refinementHandler.isRefinementEquipped(ModRefinements.SWORD_FINISHER) ? ModConfig.balance().vrSwordFinisherThresholdMod.get() : 1d);
             }
             List<IItemWithTier.Tier> hunterCoatArmor = Arrays.stream(EquipmentSlot.values()).filter(EquipmentSlot::isArmor).map(target::getItemBySlot).filter(s -> s.getItem() instanceof HunterCoatItem).map(s -> ((HunterCoatItem) s.getItem()).getVampirismTier()).toList();

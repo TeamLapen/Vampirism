@@ -22,8 +22,8 @@ public class ClientConfig {
 
     // Overlays
     public final ModConfigSpec.BooleanValue showFullScreenOverlay;
-    public final ModConfigSpec.BooleanValue showBatHUDOverlay;
-    public final ModConfigSpec.BooleanValue showDisguiseHUDOverlay;
+    public final ModConfigSpec.BooleanValue showBatFormHUDOverlay;
+    public final ModConfigSpec.BooleanValue showCamouflageHUDOverlay;
     public final ModConfigSpec.BooleanValue showVampireRageHUDOverlay;
     public final ModConfigSpec.BooleanValue showSunHUDOverlay;
     public final ModConfigSpec.BooleanValue showSunBlindOverlay;
@@ -72,12 +72,12 @@ public class ClientConfig {
         this.showFullScreenOverlay = builder
                 .comment("When enabled, renders full-screen colored overlays, e.g. when leveling up as a vampire.")
                 .define("showFullScreenOverlay", true);
-        this.showBatHUDOverlay = builder
-                .comment("When enabled, shows the bat mode indicator in the HUD.")
-                .define("showBatHUDOverlay", true);
-        this.showDisguiseHUDOverlay = builder
-                .comment("When enabled, shows the disguise indicator in the HUD.")
-                .define("showDisguiseHUDOverlay", true);
+        this.showBatFormHUDOverlay = builder
+                .comment("When enabled, shows the bat form indicator in the HUD.")
+                .define("showBatFormHUDOverlay", true);
+        this.showCamouflageHUDOverlay = builder
+                .comment("When enabled, shows the camouflage indicator in the HUD.")
+                .define("showCamouflageHUDOverlay", true);
         this.showVampireRageHUDOverlay = builder
                 .comment("When enabled, shows the vampire rage indicator in the HUD.")
                 .define("showVampireRageHUDOverlay", true);
