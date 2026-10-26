@@ -422,11 +422,27 @@ public abstract class MinionEntity extends PathfinderMob implements ValueIOSeria
         sync();
     }
 
-    public void openAppearanceScreen() {
+    /**
+     * Client side only
+     *
+     * @param back returns to the minion inventory
+     */
+    public void openAppearanceScreen(Runnable back) {
     }
 
-    public void openStatsScreen() {
+    /**
+     * Client side only
+     *
+     * @param back returns to the minion inventory
+     */
+    public void openStatsScreen(Runnable back) {
+    }
 
+    public void openMenu(@NotNull ServerPlayer player) {
+        player.openMenu(new SimpleMenuProvider((id, playerInventory, _) -> MinionContainer.create(id, playerInventory, this, getLord().orElseThrow()).orElse(null), Component.translatable("gui.factionapi.minion.name").append(this.getMinionData().map(MinionData::getName).orElse("Minion"))), buf -> {
+            buf.writeVarInt(this.getId());
+            buf.writeVarInt(this.getInventory().map(IMinionInventory::getAvailableSize).orElse(9));
+        });
     }
 
     @Override
@@ -554,11 +570,8 @@ public abstract class MinionEntity extends PathfinderMob implements ValueIOSeria
     @Override
     protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (isLord(player)) {
-            if (player instanceof ServerPlayer) {
-                player.openMenu(new SimpleMenuProvider((id, playerInventory, _) -> MinionContainer.create(id, playerInventory, this, getLord().orElseThrow()).orElse(null), Component.translatable("gui.factionapi.minion.name").append(this.getMinionData().map(MinionData::getName).orElse("Minion"))), buf -> {
-                    buf.writeVarInt(this.getId());
-                    buf.writeVarInt(this.getInventory().map(IMinionInventory::getAvailableSize).orElse(9));
-                });
+            if (player instanceof ServerPlayer serverPlayer) {
+                openMenu(serverPlayer);
             }
             return InteractionResult.SUCCESS;
         }

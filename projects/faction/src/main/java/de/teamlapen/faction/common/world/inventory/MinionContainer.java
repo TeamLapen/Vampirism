@@ -9,6 +9,7 @@ import de.teamlapen.faction.common.core.FactionMenus;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.minions.MinionEntity;
+import de.teamlapen.faction.common.network.packets.server.ServerboundOpenMinionMenuPacket;
 import de.teamlapen.faction.common.network.packets.server.ServerboundSelectMinionTaskPacket;
 import de.teamlapen.faction.common.network.packets.server.ServerboundToggleMinionTaskLock;
 import de.teamlapen.faction.common.util.RegUtil;
@@ -122,12 +123,24 @@ public class MinionContainer extends AbstractInventoryContainer {
         return minionEntity.isAlive();
     }
 
+    /**
+     * Client side only. Closes this container, the sub screen reopens it when returning
+     */
     public void openConfigurationScreen() {
-        this.minionEntity.openAppearanceScreen();
+        this.player.closeContainer();
+        this.minionEntity.openAppearanceScreen(this::reopen);
     }
 
+    /**
+     * Client side only. Closes this container, the sub screen reopens it when returning
+     */
     public void openStatsScreen() {
-        this.minionEntity.openStatsScreen();
+        this.player.closeContainer();
+        this.minionEntity.openStatsScreen(this::reopen);
+    }
+
+    private void reopen() {
+        FactionsMod.proxy.sendToServer(new ServerboundOpenMinionMenuPacket(this.minionEntity.getId()));
     }
 
     public void setTaskToActivate(int id) {

@@ -74,13 +74,13 @@ public class HunterMinionEntity extends MinionEntity implements IHunter, IVampir
     }
 
     @Override
-    public void openAppearanceScreen() {
-        VampirismMod.proxy.displayHunterMinionAppearanceScreen(this);
+    public void openAppearanceScreen(Runnable back) {
+        VampirismMod.proxy.displayHunterMinionAppearanceScreen(this, back);
     }
 
     @Override
-    public void openStatsScreen() {
-        VampirismMod.proxy.displayHunterMinionStatsScreen(this);
+    public void openStatsScreen(Runnable back) {
+        VampirismMod.proxy.displayHunterMinionStatsScreen(this, back);
     }
 
     @Override

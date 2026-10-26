@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client;
 
-import de.teamlapen.faction.client.gui.screens.ILastScreenProvider;
 import de.teamlapen.faction.client.gui.screens.MinionStatsScreen;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.gui.screens.*;
@@ -62,23 +61,23 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void displayVampireMinionAppearanceScreen(VampireMinionEntity entity) {
-        openScreen(new VampireMinionAppearanceScreen(entity, ILastScreenProvider.current()));
+    public void displayVampireMinionAppearanceScreen(VampireMinionEntity entity, Runnable back) {
+        openScreen(new VampireMinionAppearanceScreen(entity, back::run));
     }
 
     @Override
-    public void displayVampireMinionStatsScreen(VampireMinionEntity entity) {
-        openScreen(new MinionStatsScreen<>(entity, ILastScreenProvider.current()));
+    public void displayVampireMinionStatsScreen(VampireMinionEntity entity, Runnable back) {
+        openScreen(new MinionStatsScreen<>(entity, back::run));
     }
 
     @Override
-    public void displayHunterMinionAppearanceScreen(HunterMinionEntity entity) {
-        openScreen(new HunterMinionAppearanceScreen(entity, ILastScreenProvider.current()));
+    public void displayHunterMinionAppearanceScreen(HunterMinionEntity entity, Runnable back) {
+        openScreen(new HunterMinionAppearanceScreen(entity, back::run));
     }
 
     @Override
-    public void displayHunterMinionStatsScreen(HunterMinionEntity entity) {
-        openScreen(new MinionStatsScreen<>(entity, ILastScreenProvider.current()));
+    public void displayHunterMinionStatsScreen(HunterMinionEntity entity, Runnable back) {
+        openScreen(new MinionStatsScreen<>(entity, back::run));
     }
 
     @Nullable

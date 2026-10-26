@@ -139,13 +139,13 @@ public class VampireMinionEntity extends MinionEntity implements IVampire {
     }
 
     @Override
-    public void openAppearanceScreen() {
-        VampirismMod.proxy.displayVampireMinionAppearanceScreen(this);
+    public void openAppearanceScreen(Runnable back) {
+        VampirismMod.proxy.displayVampireMinionAppearanceScreen(this, back);
     }
 
     @Override
-    public void openStatsScreen() {
-        VampirismMod.proxy.displayVampireMinionStatsScreen(this);
+    public void openStatsScreen(Runnable back) {
+        VampirismMod.proxy.displayVampireMinionStatsScreen(this, back);
     }
 
     @Override

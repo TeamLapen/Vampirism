@@ -25,6 +25,7 @@ public class ModPacketDispatcher {
         registrar.playToServer(ServerboundToggleActionPacket.TYPE, ServerboundToggleActionPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleToggleActionPacket(msg, context));
         registrar.playToServer(ServerboundUnlockSkillPacket.TYPE, ServerboundUnlockSkillPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleUnlockSkillPacket(msg, context));
         registrar.playToServer(ServerboundForgetSkillPacket.TYPE, ServerboundForgetSkillPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleForgetSkillPacket(msg, context));
+        registrar.playToServer(ServerboundOpenMinionMenuPacket.TYPE, ServerboundOpenMinionMenuPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleOpenMinionMenuPacket(msg, context));
         registrar.playToServer(ServerboundToggleMinionTaskLock.TYPE, ServerboundToggleMinionTaskLock.CODEC, (msg, context) -> ServerPayloadHandler.handleToggleMinionTaskLock(msg, context));
         registrar.playToServer(ServerboundDeleteRefinementPacket.TYPE, ServerboundDeleteRefinementPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleDeleteRefinementPacket(msg, context));
         registrar.playToServer(ServerboundSimpleInputEvent.TYPE, ServerboundSimpleInputEvent.CODEC, (msg, context) -> ServerPayloadHandler.handleSimpleInputEvent(msg, context));

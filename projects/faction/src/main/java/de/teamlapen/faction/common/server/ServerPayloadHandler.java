@@ -150,6 +150,15 @@ public class ServerPayloadHandler {
         });
     }
 
+    public static void handleOpenMinionMenuPacket(ServerboundOpenMinionMenuPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            ServerPlayer player = (ServerPlayer) context.player();
+            if (player.level().getEntity(msg.entityId()) instanceof MinionEntity minion && minion.isLord(player) && player.isWithinEntityInteractionRange(minion, 4)) {
+                minion.openMenu(player);
+            }
+        });
+    }
+
     public static void handleToggleMinionTaskLock(ServerboundToggleMinionTaskLock msg, IPayloadContext context) {
         context.enqueueWork(() -> {
             FactionPlayerHandler.get(context.player()).getPlayerLord().flatMap(x -> MinionWorldData.getData(context.player().level()).map(y -> y.getOrCreateController(x))).ifPresent(controller -> {
