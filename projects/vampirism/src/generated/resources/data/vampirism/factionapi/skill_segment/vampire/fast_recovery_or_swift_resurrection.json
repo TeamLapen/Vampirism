@@ -1,0 +1,10 @@
+{
+  "parents": [
+    "vampirism:vampire/disguise"
+  ],
+  "skills": [
+    "vampirism:fast_recovery",
+    "vampirism:swift_resurrection"
+  ],
+  "tree": "vampirism:vampire/level"
+}

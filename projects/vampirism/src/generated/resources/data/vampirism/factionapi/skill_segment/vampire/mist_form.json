@@ -1,9 +1,0 @@
-{
-  "parents": [
-    "vampirism:vampire/dracula_root"
-  ],
-  "skills": [
-    "vampirism:mist_form"
-  ],
-  "tree": "vampirism:vampire/dracula"
-}

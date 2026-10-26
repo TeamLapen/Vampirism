@@ -37,6 +37,7 @@ public class SkillProperties<T extends ISkillPlayer<T>> {
     @Nullable
     private ResourceKey<IAction<?>> action;
     private boolean addDefaultDescription;
+    private boolean separateSkillName;
 
 
     //<editor-fold desc="Value Getter">
@@ -50,7 +51,7 @@ public class SkillProperties<T extends ISkillPlayer<T>> {
     }
 
     public String effectiveNameId() {
-        return this.action != null ? ACTION_NAME_ID.get(action) : NAME_ID.get(this.skillIdOrThrow());
+        return this.action != null && !this.separateSkillName ? ACTION_NAME_ID.get(action) : NAME_ID.get(this.skillIdOrThrow());
     }
 
     public Map<Holder<Attribute>, SkillAttributeHolder> attributes() {
@@ -110,6 +111,11 @@ public class SkillProperties<T extends ISkillPlayer<T>> {
 
     public SkillProperties<T> withDescription(Component component) {
         return component(FactionDataComponents.SKILL_DESCRIPTION, component);
+    }
+
+    public SkillProperties<T> separateSkillName() {
+        this.separateSkillName = true;
+        return this;
     }
 
     /**

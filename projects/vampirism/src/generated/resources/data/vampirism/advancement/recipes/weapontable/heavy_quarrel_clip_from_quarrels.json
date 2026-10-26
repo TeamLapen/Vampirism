@@ -13,7 +13,7 @@
     },
     "has_skill": {
       "conditions": {
-        "skill": "vampirism:weapon_table"
+        "skill": "vampirism:basic_technology"
       },
       "trigger": "factionapi:skill_unlocked"
     },

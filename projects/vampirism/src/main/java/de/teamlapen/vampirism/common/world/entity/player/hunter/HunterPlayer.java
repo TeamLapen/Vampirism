@@ -70,7 +70,7 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
 
     @Override
     public void breakDisguise() {
-        this.getActionHandler().deactivateAction(HunterActions.DISGUISE_HUNTER);
+        this.getActionHandler().deactivateAction(HunterActions.CAMOUFLAGE);
     }
 
     @Override
@@ -102,8 +102,8 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
 
     @Override
     public void leaveFaction() {
-        IEffectInstanceWithSource.removePotionEffect(player, MobEffects.JUMP_BOOST, HunterSkills.ARMOR_JUMP.getId());
-        IEffectInstanceWithSource.removePotionEffect(player, MobEffects.SPEED, HunterSkills.ARMOR_SPEED.getId());
+        IEffectInstanceWithSource.removePotionEffect(player, MobEffects.JUMP_BOOST, HunterSkills.ARMOR_BOUND_HIGHVAULT.getId());
+        IEffectInstanceWithSource.removePotionEffect(player, MobEffects.SPEED, HunterSkills.ARMOR_BOUND_SWIFTNESS.getId());
         super.leaveFaction();
     }
 
@@ -125,23 +125,23 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
             if (!isRemote()) {
                 if (player.level().getGameTime() % 100 == 8) {
                     if (Arrays.stream(EquipmentSlot.values()).filter(i -> i.getType() == EquipmentSlot.Type.HUMANOID_ARMOR).map(player::getItemBySlot).allMatch(i -> i.is(ModItemTags.HUNTER_COAT))) {
-                        if (this.getSkillHandler().isSkillEnabled(HunterSkills.ARMOR_JUMP)) {
+                        if (this.getSkillHandler().isSkillEnabled(HunterSkills.ARMOR_BOUND_HIGHVAULT)) {
                             MobEffectInstance mobEffectInstance = new MobEffectInstance(MobEffects.JUMP_BOOST, -1, 0, false, false);
-                            mobEffectInstance.factions$addProperty(HunterSkills.ARMOR_JUMP.getId());
+                            mobEffectInstance.factions$addProperty(HunterSkills.ARMOR_BOUND_HIGHVAULT.getId());
                             player.addEffect(mobEffectInstance);
                         } else {
-                            IEffectInstanceWithSource.removePotionEffect(player, MobEffects.JUMP_BOOST, HunterSkills.ARMOR_JUMP.getId());
+                            IEffectInstanceWithSource.removePotionEffect(player, MobEffects.JUMP_BOOST, HunterSkills.ARMOR_BOUND_HIGHVAULT.getId());
                         }
-                        if (this.getSkillHandler().isSkillEnabled(HunterSkills.ARMOR_SPEED)) {
+                        if (this.getSkillHandler().isSkillEnabled(HunterSkills.ARMOR_BOUND_SWIFTNESS)) {
                             MobEffectInstance mobEffectInstance = new MobEffectInstance(MobEffects.SPEED, -1, 0, false, false);
-                            mobEffectInstance.factions$addProperty(HunterSkills.ARMOR_SPEED.getId());
+                            mobEffectInstance.factions$addProperty(HunterSkills.ARMOR_BOUND_SWIFTNESS.getId());
                             player.addEffect(mobEffectInstance);
                         } else {
-                            IEffectInstanceWithSource.removePotionEffect(player, MobEffects.SPEED, HunterSkills.ARMOR_SPEED.getId());
+                            IEffectInstanceWithSource.removePotionEffect(player, MobEffects.SPEED, HunterSkills.ARMOR_BOUND_SWIFTNESS.getId());
                         }
                     } else {
-                        IEffectInstanceWithSource.removePotionEffect(player, MobEffects.JUMP_BOOST, HunterSkills.ARMOR_JUMP.getId());
-                        IEffectInstanceWithSource.removePotionEffect(player, MobEffects.SPEED, HunterSkills.ARMOR_SPEED.getId());
+                        IEffectInstanceWithSource.removePotionEffect(player, MobEffects.JUMP_BOOST, HunterSkills.ARMOR_BOUND_HIGHVAULT.getId());
+                        IEffectInstanceWithSource.removePotionEffect(player, MobEffects.SPEED, HunterSkills.ARMOR_BOUND_SWIFTNESS.getId());
                     }
                 }
             } else {
@@ -158,8 +158,8 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
                 if (!OilUtils.getEquippedArmorOils(this.player).isEmpty()) {
                     this.player.addEffect(new MobEffectInstance(ModEffects.TOXICANT, 120, 0, false, false));
                 }
-                IEffectInstanceWithSource.removePotionEffect(player, MobEffects.JUMP_BOOST, HunterSkills.ARMOR_JUMP.getId());
-                IEffectInstanceWithSource.removePotionEffect(player, MobEffects.SPEED, HunterSkills.ARMOR_SPEED.getId());
+                IEffectInstanceWithSource.removePotionEffect(player, MobEffects.JUMP_BOOST, HunterSkills.ARMOR_BOUND_HIGHVAULT.getId());
+                IEffectInstanceWithSource.removePotionEffect(player, MobEffects.SPEED, HunterSkills.ARMOR_BOUND_SWIFTNESS.getId());
             }
         }
         getSpecialAttributes().fullHunterCoat = level > 0 ? HunterCoatItem.isFullyEquipped(player) : null;

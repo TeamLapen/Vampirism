@@ -144,7 +144,7 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
         if (canOpen(player)) {
             if (!Helper.isHunter(player)) {
                 player.sendOverlayMessage(FactionRestriction.getFactionRestrictionMessage(ModFactions.HUNTER.get()));
-            } else if (HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.BASIC_ALCHEMY)) {
+            } else if (HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.APPRENTICE_ALCHEMY)) {
                 if (ownerID == null) {
                     setOwnerID(player);
                 }

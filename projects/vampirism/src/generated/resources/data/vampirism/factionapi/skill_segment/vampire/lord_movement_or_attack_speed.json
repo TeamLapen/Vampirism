@@ -1,10 +1,10 @@
 {
   "parents": [
-    "vampirism:vampire/lord_root"
+    "vampirism:vampire/vampire_lord_root"
   ],
   "placement": {
     "type": "after",
-    "segment": "vampirism:vampire/better_minions"
+    "segment": "vampirism:vampire/vampire_better_minions"
   },
   "skills": [
     "vampirism:lord_speed",

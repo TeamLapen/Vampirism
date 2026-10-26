@@ -17,9 +17,9 @@ public class BatOverlay extends TextureOverlay {
 
     @Override
     public void render(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
-        if (canRenderOverlays() && ModConfig.client().showBatHUDOverlay.get()) {
+        if (canRenderOverlays() && ModConfig.client().showBatFormHUDOverlay.get()) {
             IActionHandler<IVampirePlayer> actionHandler = VampirePlayer.get(this.player()).getActionHandler();
-            if (actionHandler.isActionActive(VampireActions.BAT)) {
+            if (actionHandler.isActionActive(VampireActions.BAT_FORM)) {
                 renderTextureOverlay(graphics, BAT_TEXTURE, 1.0F);
             }
         }

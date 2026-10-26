@@ -248,6 +248,9 @@ public class ModCreativeTabs {
             addWeapons();
             addArmor();
 
+            add(GOLDEN_HEART);
+            add(ENCHANTED_GOLDEN_HEART);
+
             addItemGen(BLOOD_BOTTLE);
 
             add(PURE_BLOOD_0);

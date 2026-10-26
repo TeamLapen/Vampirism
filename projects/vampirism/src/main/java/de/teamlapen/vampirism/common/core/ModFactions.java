@@ -73,7 +73,7 @@ public class ModFactions {
                     .totem(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER, ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED)));
 
     public static final DeferredHolder<IMinionEntry<?>, IMinionEntry<IVampirePlayer>> VAMPIRE_MINION = MINIONS.register(VampirismFactions.Keys.VAMPIRE.getPath(), () -> new MinionEntry<>(new MinionEntryProperties<IVampirePlayer>()
-            .withProvider((player, entry) -> createMinionData(player, entry, VampireSkills.MINION_STATS_INCREASE))
+            .withProvider((player, entry) -> createMinionData(player, entry, VampireSkills.VAMPIRE_BETTER_MINIONS))
             .withEntityType(ModEntities.VAMPIRE_MINION)
             .withFaction(ModFactions.VAMPIRE)
             .withMinionStats(MinionStats.HEALTH_STATS, MinionStats.INVENTORY_STATS, MinionStats.ATTACK_DAMAGE_STATS, MinionStats.SPEED_STATS)
@@ -81,7 +81,7 @@ public class ModFactions {
             .withMaxLevel(6)));
 
     public static final DeferredHolder<IMinionEntry<?>, IMinionEntry<IHunterPlayer>> HUNTER_MINION = MINIONS.register(VampirismFactions.Keys.HUNTER.getPath(), () -> new MinionEntry<>(new MinionEntryProperties<IHunterPlayer>()
-            .withProvider((player, entry) -> createMinionData(player, entry, HunterSkills.MINION_STATS_INCREASE))
+            .withProvider((player, entry) -> createMinionData(player, entry, HunterSkills.HUNTER_BETTER_MINIONS))
             .withEntityType(ModEntities.HUNTER_MINION)
             .withFaction(ModFactions.HUNTER)
             .withMinionStats(MinionStats.HEALTH_STATS, MinionStats.INVENTORY_STATS, MinionStats.ATTACK_DAMAGE_STATS, MinionStats.SPEED_STATS, MinionStats.RESOURCES_STATS)

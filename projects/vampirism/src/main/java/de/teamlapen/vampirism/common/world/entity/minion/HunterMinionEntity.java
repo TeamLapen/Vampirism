@@ -147,7 +147,7 @@ public class HunterMinionEntity extends MinionEntity implements IHunter, IVampir
 
     @Override
     public boolean canUseCrossbow(ItemStack stack) {
-        return !(stack.getItem() instanceof TechCrossbowItem) || getLordOpt().map(x -> ISkillHandler.isSkillEnabled(x.asEntity(), HunterSkills.MINION_TECH_CROSSBOWS)).orElse(false);
+        return !(stack.getItem() instanceof TechCrossbowItem) || getLordOpt().map(x -> ISkillHandler.isSkillEnabled(x.asEntity(), HunterSkills.MINION_TECHNOLOGY)).orElse(false);
     }
 
     @Override
@@ -172,7 +172,7 @@ public class HunterMinionEntity extends MinionEntity implements IHunter, IVampir
     public @NotNull Predicate<ItemStack> getEquipmentPredicate(EquipmentSlot slotType) {
         Predicate<ItemStack> predicate = super.getEquipmentPredicate(slotType);
         if (slotType == EquipmentSlot.MAINHAND) {
-            predicate = predicate.and(stack -> !(stack.getItem() instanceof TechCrossbowItem) || getLord().map(x -> ISkillHandler.isSkillEnabled(x.asEntity(), HunterSkills.MINION_TECH_CROSSBOWS)).orElse(false));
+            predicate = predicate.and(stack -> !(stack.getItem() instanceof TechCrossbowItem) || getLord().map(x -> ISkillHandler.isSkillEnabled(x.asEntity(), HunterSkills.MINION_TECHNOLOGY)).orElse(false));
         }
         return predicate;
     }
