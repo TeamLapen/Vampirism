@@ -21,6 +21,10 @@ public class HoverList<T extends HoverList.Entry<T>> extends SimpleList<T> {
         return new Builder<>(x, y, pWidth, pHeight);
     }
 
+    public int getHoveredIndex() {
+        return this.visible ? this.children().indexOf(this.getHovered()) : -1;
+    }
+
     public static class Builder<T extends Entry<T>> extends SimpleList.Builder<T> {
 
         protected List<Triple<Component, Runnable, Consumer<Boolean>>> components;
