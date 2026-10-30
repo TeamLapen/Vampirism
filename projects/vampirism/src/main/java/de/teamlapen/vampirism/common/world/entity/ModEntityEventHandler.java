@@ -332,4 +332,25 @@ public class ModEntityEventHandler {
             event.setAmount(event.getAmount() * multiplier);
         }
     }
+
+    @SubscribeEvent
+    public void preventPlayerDisorientation(MobEffectEvent.Applicable event) {
+        if (event.getEntity() instanceof Player && event.getEffectInstance().is(ModEffects.DISORIENTATION)) {
+            event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
+        }
+    }
+
+    @SubscribeEvent
+    public void onChangeTarget(LivingChangeTargetEvent event) {
+        if (event.getNewAboutToBeSetTarget() != null && event.getEntity().hasEffect(ModEffects.DISORIENTATION)) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public void onDisorientedDamage(LivingIncomingDamageEvent event) {
+        if (event.getSource().getEntity() != null && event.getEntity().hasEffect(ModEffects.DISORIENTATION)) {
+            event.getEntity().removeEffect(ModEffects.DISORIENTATION);
+        }
+    }
 }

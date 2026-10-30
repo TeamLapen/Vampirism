@@ -46,6 +46,7 @@ public class ModEffects {
     public static final DeferredHolder<MobEffect, MobEffect> WHISPERS_OF_THE_VEIL = EFFECTS.register("whispers_of_the_veil", WhispersOfTheVeilMobEffect::new);
     public static final DeferredHolder<MobEffect, MobEffect> SUN_SENSITIVITY = EFFECTS.register("sun_sensitivity", () -> new SimpleMobEffect(MobEffectCategory.HARMFUL, 0xFFF2B3));
     public static final DeferredHolder<MobEffect, MobEffect> AURA_OF_DARKNESS = EFFECTS.register("aura_of_darkness", () -> new SimpleMobEffect(MobEffectCategory.BENEFICIAL, 0x333333));
+    public static final DeferredHolder<MobEffect, MobEffect> DISORIENTATION = EFFECTS.register("disorientation", () -> new DisorientationEffect(MobEffectCategory.HARMFUL, 0x8C7DA8));
 
     static void register(IEventBus bus) {
         EFFECTS.register(bus);

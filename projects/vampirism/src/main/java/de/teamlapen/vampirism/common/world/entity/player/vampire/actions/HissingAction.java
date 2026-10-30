@@ -3,13 +3,13 @@ package de.teamlapen.vampirism.common.world.entity.player.vampire.actions;
 import de.teamlapen.faction.api.factions.actions.IActionResult;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.common.config.ModConfig;
+import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModSounds;
+import de.teamlapen.vampirism.common.util.Helper;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.AABB;
-import org.jetbrains.annotations.NotNull;
 
 public class HissingAction extends DefaultVampireAction {
 
@@ -24,16 +24,15 @@ public class HissingAction extends DefaultVampireAction {
     }
 
     @Override
-    protected IActionResult activateServer(@NotNull IVampirePlayer vampire, ActivationContext context) {
+    protected IActionResult activateServer(IVampirePlayer vampire, ActivationContext context) {
         Player player = vampire.asEntity();
+
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.ENTITY_VAMPIRE_SCREAM.get(), SoundSource.PLAYERS, 1, 1);
-        player.level().getEntitiesOfClass(Mob.class, new AABB(player.blockPosition()).inflate(10, 10, 10)).forEach(e -> {
-            if (e.getTarget() == player) {
-                e.targetSelector.getAvailableGoals().stream().filter(WrappedGoal::isRunning).forEach(WrappedGoal::stop);
-                e.setTarget(null);
-            }
-        });
+
+        int duration = ModConfig.balance().vaHissingDuration.get() * 20;
+        int radius = ModConfig.balance().vaHissingRadius.get();
+        player.level().getEntitiesOfClass(Mob.class, player.getBoundingBox().inflate(radius), mob -> mob.getTarget() == player || !Helper.isVampire(mob)).forEach(mob -> mob.addEffect(new MobEffectInstance(ModEffects.DISORIENTATION, duration), player));
+
         return IActionResult.SUCCESS;
     }
-
 }
