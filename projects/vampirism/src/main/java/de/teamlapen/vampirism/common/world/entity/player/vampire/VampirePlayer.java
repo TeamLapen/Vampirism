@@ -929,8 +929,26 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         this.customization.setFangType(fangType);
     }
 
+    public int getEyePosition() {
+        return this.customization.eyePosition();
+    }
+
+    public int getFangPosition() {
+        return this.customization.fangPosition();
+    }
+
+    public void setEyePosition(int position) {
+        this.customization.setEyePosition(position);
+    }
+
+    public void setFangPosition(int position) {
+        this.customization.setFangPosition(position);
+    }
+
     public static final AppearanceKey<Identifier> FangType = AppearancePacket.register(VIdentifier.mod("fang_type"), Identifier.STREAM_CODEC);
     public static final AppearanceKey<Identifier> EyeType = AppearancePacket.register(VIdentifier.mod("eye_type"), Identifier.STREAM_CODEC);
+    public static final AppearanceKey<Integer> EyePosition = AppearancePacket.register(VIdentifier.mod("eye_position"), ByteBufCodecs.VAR_INT);
+    public static final AppearanceKey<Integer> FangPosition = AppearancePacket.register(VIdentifier.mod("fang_position"), ByteBufCodecs.VAR_INT);
     public static final AppearanceKey<Boolean> GlowingEye = AppearancePacket.register(VIdentifier.mod("glowing_eye"), ByteBufCodecs.BOOL);
     public static final AppearanceKey<IPlayableFaction.TitleGender> TitleGenderType = AppearancePacket.register(VIdentifier.mod("title_gender_type"), NeoForgeStreamCodecs.enumCodec(IPlayableFaction.TitleGender.class));
     public static final AppearanceKey<IWingsEntity.Texture> WingsTexture = AppearancePacket.register(VIdentifier.mod("wings_texure"), NeoForgeStreamCodecs.enumCodec(IWingsEntity.Texture.class));
@@ -942,6 +960,10 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             setFangType((Identifier) data);
         } else if (id.equals(EyeType)) {
             setEyeType((Identifier) data);
+        } else if (id.equals(EyePosition)) {
+            setEyePosition((Integer) data);
+        } else if (id.equals(FangPosition)) {
+            setFangPosition((Integer) data);
         } else if (id.equals(GlowingEye)) {
             setGlowingEyes((Boolean) data);
         } else if (id.equals(TitleGenderType)) {

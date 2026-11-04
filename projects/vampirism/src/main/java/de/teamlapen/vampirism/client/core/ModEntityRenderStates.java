@@ -52,6 +52,8 @@ public class ModEntityRenderStates {
     public static final ContextKey<Integer> VAMPIRE_LEVEL = create("vampire/level");
     public static final ContextKey<Identifier> VAMPIRE_EYE_TYPE = create("vampire/eye_type");
     public static final ContextKey<Identifier> VAMPIRE_FANG_TYPE = create("vampire/fang_type");
+    public static final ContextKey<Integer> VAMPIRE_EYE_POSITION = create("vampire/eye_position");
+    public static final ContextKey<Integer> VAMPIRE_FANG_POSITION = create("vampire/fang_position");
     public static final ContextKey<Boolean> VAMPIRE_GLOWING_EYES = create("vampire/glowing_eyes");
     public static final ContextKey<Boolean> VAMPIRE_INVISIBLE = create("vampire/invisible");
     public static final ContextKey<Bat> VAMPIRE_BAT = create("vampire/bat");
@@ -131,6 +133,8 @@ public class ModEntityRenderStates {
             state.setRenderData(VAMPIRE_LEVEL, vampire.getLevel());
             state.setRenderData(VAMPIRE_EYE_TYPE, vampire.getEyeType());
             state.setRenderData(VAMPIRE_FANG_TYPE, vampire.getFangType());
+            state.setRenderData(VAMPIRE_EYE_POSITION, vampire.getEyePosition());
+            state.setRenderData(VAMPIRE_FANG_POSITION, vampire.getFangPosition());
             state.setRenderData(VAMPIRE_GLOWING_EYES, vampire.getGlowingEyes());
             state.setRenderData(VAMPIRE_INVISIBLE, vampire.getSkillProperties().invisible);
             state.setRenderData(VAMPIRE_DBNO, vampire.isDBNO());
