@@ -157,6 +157,8 @@ public class BalanceConfig {
     public final ModConfigSpec.BooleanValue vaDamageLimiterEnabled;
     public final ModConfigSpec.BooleanValue vaHissingEnabled;
     public final ModConfigSpec.IntValue vaHissingCooldown;
+    public final ModConfigSpec.IntValue vaHissingDuration;
+    public final ModConfigSpec.IntValue vaHissingRadius;
     public final ModConfigSpec.BooleanValue vaToggleHighJumpEnabled;
     public final ModConfigSpec.IntValue vaToggleHighJumpCooldown;
     public final ModConfigSpec.IntValue vaToggleHighJumpDuration;
@@ -607,7 +609,13 @@ public class BalanceConfig {
                 .define("hissingEnabled", true);
         vaHissingCooldown = builder
                 .comment("Cooldown for the vampire hissing action, in seconds.")
-                .defineInRange("hissingCooldown", 60, 0, 10000);
+                .defineInRange("hissingCooldown", 25, 0, 10000);
+        vaHissingDuration = builder
+                .comment("Duration of the disorientation applied by the vampire hissing action, in seconds.")
+                .defineInRange("hissingDuration", 7, 1, 10000);
+        vaHissingRadius = builder
+                .comment("Radius in blocks within which mobs are disoriented by the vampire hissing action.")
+                .defineInRange("hissingRadius", 10, 1, 50);
         vaToggleHighJumpEnabled = builder
                 .define("toggleHighJumpEnabled", true);
         vaToggleHighJumpCooldown = builder
