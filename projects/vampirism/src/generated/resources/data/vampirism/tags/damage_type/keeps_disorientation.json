@@ -1,0 +1,12 @@
+{
+  "values": [
+    "minecraft:fall",
+    "minecraft:stalagmite",
+    "minecraft:cactus",
+    "minecraft:sweet_berry_bush",
+    "minecraft:in_wall",
+    "minecraft:cramming",
+    "minecraft:dry_out",
+    "vampirism:sun_damage"
+  ]
+}

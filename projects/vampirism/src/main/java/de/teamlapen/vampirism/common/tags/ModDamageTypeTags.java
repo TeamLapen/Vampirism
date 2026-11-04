@@ -10,6 +10,7 @@ public class ModDamageTypeTags {
     public static final TagKey<DamageType> REMAINS_INVULNERABLE = tag("remains_invulnerable");
     public static final TagKey<DamageType> MOTHER_RESISTANT_TO = tag("mother_resistant_to");
     public static final TagKey<DamageType> VAMPIRE_IMMORTAL = tag("vampire_immortal");
+    public static final TagKey<DamageType> KEEPS_DISORIENTATION = tag("keeps_disorientation");
 
     private static TagKey<DamageType> tag(String name) {
         return TagKey.create(Registries.DAMAGE_TYPE, VIdentifier.mod(name));
