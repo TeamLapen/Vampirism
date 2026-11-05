@@ -9,7 +9,6 @@ import de.teamlapen.gui.components.IRenderLast;
 import de.teamlapen.faction.client.gui.screens.AppearanceScreen;
 import de.teamlapen.faction.client.gui.screens.ILastScreenProvider;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IDraculaPlayer;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IWingsEntity;
@@ -17,15 +16,15 @@ import de.teamlapen.vampirism.common.network.packets.server.ServerboundAppearanc
 import de.teamlapen.vampirism.common.util.LordTitles;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.Renderable;
-import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.layouts.LayoutElement;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
@@ -94,12 +93,14 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
                     .build());
         }
 
+        StringWidget titlePreview = new StringWidget(titlePreview(), minecraft.font);
         Checkbox titleGenderBox = Checkbox.builder(Component.translatable("gui.vampirism.appearance.title_gender"), minecraft.font).selected(titleGender).onValueChange((button, selected) -> {
             titleGender = selected;
             FactionPlayerHandler.get(entity).getPlayerLord().ifPresent(lord -> lord.setTitleGender(titleGender));
+            titlePreview.setMessage(titlePreview());
         }).build();
-        titleGenderBox.setTooltip(createTitleGenderTooltip());
         vertical.addChild(titleGenderBox);
+        vertical.addChild(titlePreview);
 
         return vertical;
     }
@@ -109,15 +110,8 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
         vampire.getCustomization().setWingsTexture(this.wingsTexture = availableWingsTextures.get(wingsTexture));
     }
 
-    private Tooltip createTitleGenderTooltip() {
-        LordTitles.VampireTitles titles = new LordTitles.VampireTitles();
-        MutableComponent tooltip = Component.empty();
-        for (int level = 1; level <= REFERENCE.HIGHEST_VAMPIRE_LORD; level++) {
-            if (level > 1) tooltip.append(Component.literal("\n"));
-            tooltip.append(titles.getLordTitle(level, IPlayableFaction.TitleGender.MALE))
-                    .append(Component.literal(" --> "))
-                    .append(titles.getLordTitle(level, IPlayableFaction.TitleGender.FEMALE));
-        }
-        return Tooltip.create(tooltip);
+    private Component titlePreview() {        int level = VampirePlayer.get(player()).getPlayerLord().map(ILordPlayer::getLordLevel).orElse(0);
+        if (level < 1) return Component.empty();
+        return Component.translatable("gui.vampirism.appearance.title_preview", new LordTitles.VampireTitles().getLordTitle(level, titleGender ? IPlayableFaction.TitleGender.FEMALE : IPlayableFaction.TitleGender.MALE)).withStyle(ChatFormatting.GRAY);
     }
 }
