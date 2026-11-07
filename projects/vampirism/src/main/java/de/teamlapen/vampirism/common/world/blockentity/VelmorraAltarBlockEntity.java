@@ -201,8 +201,12 @@ public class VelmorraAltarBlockEntity extends BlockEntity {
     }
 
     private void closePortal(ServerLevel level) {
-        VelmorraPortalShape.findActivePortalShape(level, this.worldPosition).ifPresent(shape -> shape.deactivate(level));
-        this.portalPos = null;
+        if (this.portalPos != null) {
+            VelmorraPortalShape.removePortalBlocks(level, this.portalPos, 6);
+            this.portalPos = null;
+        } else {
+            VelmorraPortalShape.findActivePortalShape(level, this.worldPosition).ifPresent(shape -> shape.deactivate(level));
+        }
     }
 
     /**
