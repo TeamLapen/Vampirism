@@ -51,6 +51,7 @@ public class MigrationData {
     private static void fixBlockEntities(@NotNull Mapping mapping) {
         mapping.remap("vampirism:garlic_beacon", "vampirism:garlic_diffuser");
         mapping.remap("vampirism:sieve", "vampirism:blood_sieve");
+        mapping.remap("vampirism:totem", "factionapi:totem");
     }
 
     private static void fixItems(@NotNull Mapping mapping) {
@@ -59,8 +60,8 @@ public class MigrationData {
         mapping.remap("vampirism:garlic_beacon_core", "vampirism:garlic_diffuser_core");
         mapping.remap("vampirism:garlic_beacon_core_improved", "vampirism:garlic_diffuser_core_strong");
         mapping.remap("vampirism:garlic_beacon_normal", "vampirism:garlic_diffuser_normal");
-        mapping.remap("vampirism:garlic_beacon_weak", "vampirism:garlic_diffuser_weak");
-        mapping.remap("vampirism:garlic_beacon_improved", "vampirism:garlic_diffuser_improved");
+        mapping.remap("vampirism:garlic_beacon_weak", "vampirism:garlic_diffuser_long");
+        mapping.remap("vampirism:garlic_beacon_improved", "vampirism:garlic_diffuser_strong");
         mapping.remap("vampirism:church_altar", "vampirism:altar_cleansing");
         mapping.remap("vampirism:item_med_chair", "vampirism:injection_chair");
         mapping.remap("vampirism:bloody_spruce_log", "vampirism:cursed_spruce_log");
@@ -100,13 +101,24 @@ public class MigrationData {
         mapping.remap("vampirism:crossbow_arrow_bleeding", "vampirism:quarrel_bleeding");
         mapping.remap("vampirism:tech_crossbow_ammo_package", "vampirism:quarrel_pouch");
         mapping.remap("vampirism:garlic_diffuser_core_improved", "vampirism:garlic_diffuser_core_strong");
+        mapping.remap("vampirism:garlic_diffuser_weak", "vampirism:garlic_diffuser_long");
+        mapping.remap("vampirism:garlic_diffuser_improved", "vampirism:garlic_diffuser_strong");
+        mapping.remap("vampirism:heart_seeker_normal", "vampirism:iron_heart_seeker");
+        mapping.remap("vampirism:heart_seeker_enhanced", "vampirism:diamond_heart_seeker");
+        mapping.remap("vampirism:heart_seeker_ultimate", "vampirism:netherite_heart_seeker");
+        mapping.remap("vampirism:heart_striker_normal", "vampirism:iron_heart_striker");
+        mapping.remap("vampirism:heart_striker_enhanced", "vampirism:diamond_heart_striker");
+        mapping.remap("vampirism:heart_striker_ultimate", "vampirism:netherite_heart_striker");
+        mapping.remap("vampirism:totem_base", "factionapi:totem_base");
+        mapping.remap("vampirism:totem_top", "factionapi:totem_top");
+        mapping.remap("vampirism:totem_top_crafted", "factionapi:totem_top_crafted");
     }
 
     private static void fixBlocks(@NotNull Mapping mapping) {
         mapping.remap("vampirism:blood_potion_table", "vampirism:vapor_still");
         mapping.remap("vampirism:garlic_beacon_normal", "vampirism:garlic_diffuser_normal");
-        mapping.remap("vampirism:garlic_beacon_weak", "vampirism:garlic_diffuser_weak");
-        mapping.remap("vampirism:garlic_beacon_improved", "vampirism:garlic_diffuser_improved");
+        mapping.remap("vampirism:garlic_beacon_weak", "vampirism:garlic_diffuser_long");
+        mapping.remap("vampirism:garlic_beacon_improved", "vampirism:garlic_diffuser_strong");
         mapping.remap("vampirism:church_altar", "vampirism:altar_cleansing");
         mapping.remap("vampirism:vampire_spruce_leaves", "vampirism:dark_spruce_leaves");
         mapping.remap("vampirism:bloody_spruce_leaves", "vampirism:dark_spruce_leaves");
@@ -131,9 +143,9 @@ public class MigrationData {
         mapping.remap("vampirism:candelabra_wall", "vampirism:wall_candelabra_normal");
         mapping.remap("vampirism:cursed_spruce_log_cured", "vampirism:cursed_spruce_log");
         mapping.remap("vampirism:cursed_spruce_wood_cured", "vampirism:cursed_spruce_wood");
-        mapping.remap("vampirism:totem_base", "factions:totem_base");
-        mapping.remap("vampirism:totem_top", "factions:totem_top");
-        mapping.remap("vampirism:totem_top_crafted", "factions:totem_top_crafted");
+        mapping.remap("vampirism:totem_base", "factionapi:totem_base");
+        mapping.remap("vampirism:totem_top", "factionapi:totem_top");
+        mapping.remap("vampirism:totem_top_crafted", "factionapi:totem_top_crafted");
         mapping.remap("vampirism:med_chair", "vampirism:injection_chair");
         mapping.remap("vampirism:potion_table", "vampirism:vapor_still");
         mapping.remap("vampirism:tombstone1", "vampirism:tombstone_short");
@@ -142,6 +154,8 @@ public class MigrationData {
         mapping.remap("vampirism:fire_place", "minecraft:campfire");
         mapping.remap("vampirism:garlic_diffuser_core_improved", "vampirism:garlic_diffuser_core_strong");
         mapping.remap("vampirism:garlic_diffuser_core_weak", "vampirism:garlic_diffuser_core_long");
+        mapping.remap("vampirism:garlic_diffuser_weak", "vampirism:garlic_diffuser_long");
+        mapping.remap("vampirism:garlic_diffuser_improved", "vampirism:garlic_diffuser_strong");
     }
 
     private static void fixEntityTypes(@NotNull Mapping mapping) {
