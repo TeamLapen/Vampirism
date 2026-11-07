@@ -92,6 +92,6 @@ public class VampirePlayerHeadLayer<T extends AvatarRenderState, Q extends Playe
     }
 
     private static void vertex(VertexConsumer vertexBuilder, PoseStack.Pose pose, float x, float y, float z, float u, float v, int packedLight) {
-        vertexBuilder.addVertex(pose, x, y, z).setColor(-1).setUv(u, v).setOverlay(OverlayTexture.NO_OVERLAY).setLight(packedLight).setNormal(0, 0, -1);
+        vertexBuilder.addVertex(pose, x, y, z).setColor(-1).setUv(u, v).setOverlay(OverlayTexture.NO_OVERLAY).setLight(packedLight).setNormal(pose, 0, 0, -1);
     }
 }
