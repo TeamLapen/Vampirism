@@ -95,7 +95,6 @@ public class ModCreativeTabs {
 
 
             add(RITUAL_KNIFE);
-            add(new ItemStack(RITUAL_KNIFE, 1, DataComponentPatch.builder().set(ModDataComponents.CHARGED_RITUAL_KNIFE.get(), true).build()));
             for (RitualKnifeType type : RitualKnifeType.values()) {
                 add(RitualKnifeItem.create(type));
             }

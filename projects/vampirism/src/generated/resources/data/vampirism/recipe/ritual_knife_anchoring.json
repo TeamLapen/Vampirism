@@ -7,7 +7,6 @@
     "K": {
       "neoforge:ingredient_type": "neoforge:components",
       "components": {
-        "!vampirism:charged_ritual_knife": {},
         "!vampirism:ritual_knife_type": {}
       },
       "items": "vampirism:ritual_knife"

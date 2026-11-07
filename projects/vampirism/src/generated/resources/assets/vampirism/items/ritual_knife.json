@@ -26,18 +26,8 @@
     ],
     "component": "vampirism:ritual_knife_type",
     "fallback": {
-      "type": "minecraft:condition",
-      "on_false": {
-        "type": "minecraft:model",
-        "model": "vampirism:item/ritual_knife"
-      },
-      "on_true": {
-        "type": "minecraft:model",
-        "model": "vampirism:item/ritual_knife_charged"
-      },
-      "predicate": "vampirism:charged_ritual_knife",
-      "property": "minecraft:component",
-      "value": {}
+      "type": "minecraft:model",
+      "model": "vampirism:item/ritual_knife"
     },
     "property": "minecraft:component"
   }

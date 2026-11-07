@@ -1,5 +1,9 @@
 package de.teamlapen.vampirism.data.provider.models;
 
+import net.minecraft.client.renderer.block.dispatch.VariantMutator;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import de.teamlapen.vampirism.common.world.items.component.RitualKnifeType;
+import de.teamlapen.vampirism.common.world.blocks.VelmorraAltarBlock;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Quadrant;
 import de.teamlapen.faction.data.provider.model.FactionsModelTemplates;
@@ -557,9 +561,29 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
     }
 
     protected void createVelmorraAltar() {
-        this.blockStateOutput.accept(MultiVariantGenerator.dispatch(ModBlocks.VELMORRA_ALTAR.get())
-                        .with(PropertyDispatch.initial(VelmorraAltarBlock.HAS_BLOOD)
-                                .select(false, plainVariant(VIdentifier.mod("block/velmorra_altar")))
-                                .select(true, plainVariant(ModModelTemplates.VELMORRA_ALTAR.createWithSuffix(ModBlocks.VELMORRA_ALTAR.get(), "bloody" ,new TextureMapping().put(ModTextureSlots.TOP, new Material(mod("block/velmorra_altar_bloody"))), this.modelOutput)))));
+        VelmorraAltarBlock block = ModBlocks.VELMORRA_ALTAR.get();
+        MultiVariant base = plainVariant(VIdentifier.mod("block/velmorra_altar"));
+        MultiVariant bloody = plainVariant(ModModelTemplates.VELMORRA_ALTAR.createWithSuffix(block, "bloody", new TextureMapping().put(ModTextureSlots.TOP, new Material(mod("block/velmorra_altar_bloody"))), this.modelOutput));
+        MultiPartGenerator generator = MultiPartGenerator.multiPart(block)
+                .with(condition(VelmorraAltarBlock.HAS_BLOOD, false), base)
+                .with(condition(VelmorraAltarBlock.HAS_BLOOD, true), bloody);
+        for (RitualKnifeType type : RitualKnifeType.values()) {
+            String suffix = "_knife_" + type.getSerializedName();
+            TextureMapping texture = new TextureMapping().put(ModTextureSlots.KNIFE, new Material(mod("item/ritual_knife_" + type.getSerializedName())));
+            VariantMutator rotation = switch (type) {
+                case SEEKING -> NOP;
+                case PASSAGE -> Y_ROT_90;
+                case ANCHORING -> Y_ROT_270;
+            };
+            MultiVariant half = plainVariant(ModModelTemplates.VELMORRA_ALTAR_KNIFE.createWithSuffix(block, suffix, texture, this.modelOutput)).with(rotation);
+            MultiVariant glowing = plainVariant(ModModelTemplates.VELMORRA_ALTAR_KNIFE_GLOWING.createWithSuffix(block, suffix + "_glowing", texture, this.modelOutput)).with(rotation);
+            MultiVariant inserted = plainVariant(ModModelTemplates.VELMORRA_ALTAR_KNIFE_INSERTED.createWithSuffix(block, suffix + "_inserted", texture, this.modelOutput)).with(rotation);
+            BooleanProperty knife = VelmorraAltarBlock.knifeProperty(type);
+            // halfway inserted while the portal is closed, glowing during the ritual, fully inserted while the portal is open
+            generator.with(condition(knife, true).term(VelmorraAltarBlock.CHANNELING, false).term(VelmorraAltarBlock.OPEN, false), half);
+            generator.with(condition(knife, true).term(VelmorraAltarBlock.CHANNELING, true), glowing);
+            generator.with(condition(knife, true).term(VelmorraAltarBlock.CHANNELING, false).term(VelmorraAltarBlock.OPEN, true), inserted);
+        }
+        this.blockStateOutput.accept(generator);
     }
 }

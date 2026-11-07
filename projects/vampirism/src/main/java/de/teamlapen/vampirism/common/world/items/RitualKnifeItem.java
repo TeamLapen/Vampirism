@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.common.world.items;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.world.items.component.RitualKnifeType;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -45,9 +44,6 @@ public class RitualKnifeItem extends Item {
         RitualKnifeType type = itemStack.get(ModDataComponents.RITUAL_KNIFE_TYPE);
         if (type != null) {
             builder.accept(Component.translatable(type.getTooltipKey()).withStyle(type.getColor()));
-        }
-        if (itemStack.getOrDefault(ModDataComponents.CHARGED_RITUAL_KNIFE, false)) {
-            builder.accept(Component.translatable("tooltip.vampirism.ritual_knife.infused").withStyle(ChatFormatting.DARK_RED));
         }
     }
 }

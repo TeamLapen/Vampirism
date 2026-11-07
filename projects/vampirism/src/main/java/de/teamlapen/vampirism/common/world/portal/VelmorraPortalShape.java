@@ -35,6 +35,17 @@ public class VelmorraPortalShape {
         return this.bottom;
     }
 
+    /**
+     * @return a position inside the portal frame that holds a portal block while the portal is active
+     */
+    public BlockPos getInnerPos() {
+        return this.bottom.above(1).relative(this.direction, 1);
+    }
+
+    public boolean isActive() {
+        return this.isActive;
+    }
+
     public void activate(ServerLevel level) {
         if (!this.isActive) {
             BlockState blockState = ModBlocks.VELMORRA_PORTAL.get().defaultBlockState().setValue(VelmorraPortalBlock.AXIS, this.direction.getAxis());

@@ -31,7 +31,6 @@ import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -714,7 +713,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('Y', Items.STICK)
                 .unlockedBy("has_ingor", has(Items.IRON_INGOT))
                 .save(output);
-        Ingredient plainRitualKnife = DataComponentIngredient.of(false, DataComponentPatch.builder().remove(ModDataComponents.RITUAL_KNIFE_TYPE.get()).remove(ModDataComponents.CHARGED_RITUAL_KNIFE.get()).build(), ModItems.RITUAL_KNIFE.get());
+        Ingredient plainRitualKnife = DataComponentIngredient.of(false, DataComponentPatch.builder().remove(ModDataComponents.RITUAL_KNIFE_TYPE.get()).build(), ModItems.RITUAL_KNIFE.get());
         ritualKnife(RitualKnifeType.SEEKING, plainRitualKnife, Items.RECOVERY_COMPASS, Items.AMETHYST_SHARD, Items.SCULK_SHRIEKER);
         ritualKnife(RitualKnifeType.PASSAGE, plainRitualKnife, Items.DRAGON_BREATH, Items.ENDER_PEARL, Items.END_STONE);
         ritualKnife(RitualKnifeType.ANCHORING, plainRitualKnife, Items.WITHER_ROSE, Items.GHAST_TEAR, Items.LODESTONE);
@@ -1650,16 +1649,6 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
         for (int i = 0; i < 6; i++) {
             smithingPure(ModItems.HEART_SEEKER_ENHANCED, i, ModItems.HEART_SEEKER_ULTIMATE);
             smithingPure(ModItems.HEART_STRIKER_ENHANCED, i, ModItems.HEART_STRIKER_ULTIMATE);
-        }
-
-        for (int i = 0; i < 4; i++) {
-            infuser(new ItemStackTemplate(ModItems.RITUAL_KNIFE, DataComponentPatch.builder().set(ModDataComponents.CHARGED_RITUAL_KNIFE.get(), true).build()))
-                    .ingredient(i, Ingredient.of(ModItems.MOTHER_CORE))
-                    .input(Ingredient.of(ModItems.RITUAL_KNIFE))
-                    .burnTime(600)
-                    .unlockedBy("has_mother_core", has(ModItems.MOTHER_CORE))
-                    .unlockedBy("has_ritual_knife", has(ModItems.RITUAL_KNIFE))
-                    .save(this.output, ResourceKey.create(Registries.RECIPE, getDefaultRecipeId(new ItemStackTemplate(ModItems.RITUAL_KNIFE)).identifier().withSuffix("_charged_" + i)));
         }
     }
 

@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:block/velmorra_altar_knife_inserted",
+  "textures": {
+    "knife": "vampirism:item/ritual_knife_seeking"
+  }
+}

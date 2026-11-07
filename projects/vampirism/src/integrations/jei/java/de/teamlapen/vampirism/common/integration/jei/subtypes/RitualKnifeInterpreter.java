@@ -17,8 +17,7 @@ public class RitualKnifeInterpreter implements ISubtypeInterpreter<ItemStack> {
     @Override
     @Nullable
     public Object getSubtypeData(ItemStack ingredient, UidContext context) {
-        boolean charged = ingredient.getOrDefault(ModDataComponents.CHARGED_RITUAL_KNIFE, false);
         RitualKnifeType type = ingredient.get(ModDataComponents.RITUAL_KNIFE_TYPE);
-        return charged + "|" + (type == null ? "none" : type.getSerializedName());
+        return type == null ? null : type.getSerializedName();
     }
 }
