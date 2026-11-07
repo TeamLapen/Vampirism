@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": "minecraft:lodestone",
+    "C": "minecraft:ghast_tear",
+    "K": {
+      "neoforge:ingredient_type": "neoforge:components",
+      "components": {
+        "!vampirism:charged_ritual_knife": {},
+        "!vampirism:ritual_knife_type": {}
+      },
+      "items": "vampirism:ritual_knife"
+    },
+    "T": "minecraft:wither_rose"
+  },
+  "pattern": [
+    "CTC",
+    " K ",
+    "CBC"
+  ],
+  "result": {
+    "components": {
+      "vampirism:ritual_knife_type": "anchoring"
+    },
+    "id": "vampirism:ritual_knife"
+  }
+}

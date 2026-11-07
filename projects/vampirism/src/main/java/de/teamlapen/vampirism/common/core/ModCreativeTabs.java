@@ -7,7 +7,9 @@ import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.util.ColorListsUtil;
 import de.teamlapen.vampirism.common.util.ItemDataUtils;
 import de.teamlapen.vampirism.common.world.items.BaseDisplayItemGenerator;
+import de.teamlapen.vampirism.common.world.items.RitualKnifeItem;
 import de.teamlapen.vampirism.common.world.items.SerumInjectionItem;
+import de.teamlapen.vampirism.common.world.items.component.RitualKnifeType;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentPatch;
@@ -94,6 +96,9 @@ public class ModCreativeTabs {
 
             add(RITUAL_KNIFE);
             add(new ItemStack(RITUAL_KNIFE, 1, DataComponentPatch.builder().set(ModDataComponents.CHARGED_RITUAL_KNIFE.get(), true).build()));
+            for (RitualKnifeType type : RitualKnifeType.values()) {
+                add(RitualKnifeItem.create(type));
+            }
 
             addItemGen(BLOOD_INFUSED_RAW_IRON);
             addItemGen(BLOOD_INFUSED_RAW_GOLD);

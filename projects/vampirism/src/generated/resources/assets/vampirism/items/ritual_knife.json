@@ -1,16 +1,44 @@
 {
   "model": {
-    "type": "minecraft:condition",
-    "on_false": {
-      "type": "minecraft:model",
-      "model": "vampirism:item/ritual_knife"
+    "type": "minecraft:select",
+    "cases": [
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "vampirism:item/ritual_knife_seeking"
+        },
+        "when": "seeking"
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "vampirism:item/ritual_knife_passage"
+        },
+        "when": "passage"
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "vampirism:item/ritual_knife_anchoring"
+        },
+        "when": "anchoring"
+      }
+    ],
+    "component": "vampirism:ritual_knife_type",
+    "fallback": {
+      "type": "minecraft:condition",
+      "on_false": {
+        "type": "minecraft:model",
+        "model": "vampirism:item/ritual_knife"
+      },
+      "on_true": {
+        "type": "minecraft:model",
+        "model": "vampirism:item/ritual_knife_charged"
+      },
+      "predicate": "vampirism:charged_ritual_knife",
+      "property": "minecraft:component",
+      "value": {}
     },
-    "on_true": {
-      "type": "minecraft:model",
-      "model": "vampirism:item/ritual_knife_charged"
-    },
-    "predicate": "vampirism:charged_ritual_knife",
-    "property": "minecraft:component",
-    "value": {}
+    "property": "minecraft:component"
   }
 }

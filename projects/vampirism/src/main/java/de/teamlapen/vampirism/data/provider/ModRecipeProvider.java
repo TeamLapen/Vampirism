@@ -13,13 +13,16 @@ import de.teamlapen.vampirism.common.util.ItemDataUtils;
 import de.teamlapen.vampirism.common.util.RegUtil;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.world.items.PureBloodItem;
+import de.teamlapen.vampirism.common.world.items.RitualKnifeItem;
 import de.teamlapen.vampirism.common.world.items.VampireCloakItem;
 import de.teamlapen.vampirism.common.world.items.component.PureLevel;
+import de.teamlapen.vampirism.common.world.items.component.RitualKnifeType;
 import de.teamlapen.vampirism.common.world.items.recipes.*;
 import de.teamlapen.vampirism.data.ModBlockFamilies;
 import de.teamlapen.vampirism.data.provider.base.VampirismRecipeProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
@@ -32,6 +35,7 @@ import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
@@ -710,6 +714,31 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('Y', Items.STICK)
                 .unlockedBy("has_ingor", has(Items.IRON_INGOT))
                 .save(output);
+        Ingredient plainRitualKnife = DataComponentIngredient.of(false, DataComponentPatch.builder().remove(ModDataComponents.RITUAL_KNIFE_TYPE.get()).remove(ModDataComponents.CHARGED_RITUAL_KNIFE.get()).build(), ModItems.RITUAL_KNIFE.get());
+        ritualKnife(RitualKnifeType.SEEKING, plainRitualKnife, Items.RECOVERY_COMPASS, Items.AMETHYST_SHARD, Items.SCULK_SHRIEKER);
+        ritualKnife(RitualKnifeType.PASSAGE, plainRitualKnife, Items.DRAGON_BREATH, Items.ENDER_PEARL, Items.END_STONE);
+        ritualKnife(RitualKnifeType.ANCHORING, plainRitualKnife, Items.WITHER_ROSE, Items.GHAST_TEAR, Items.LODESTONE);
+    }
+
+    /**
+     * Shaped recipe with the knife in the center, the corner item in all four corners, the top item above and the bottom item below the knife
+     */
+    private void ritualKnife(RitualKnifeType type, Ingredient knife, Item top, Item corner, Item bottom) {
+        shaped(RecipeCategory.MISC, RitualKnifeItem.template(type))
+                .pattern("CTC")
+                .pattern(" K ")
+                .pattern("CBC")
+                .define('K', knife)
+                .define('T', top)
+                .define('C', corner)
+                .define('B', bottom)
+                .unlockedBy("has_ritual_knife", has(ModItems.RITUAL_KNIFE))
+                .unlockedBy("has_" + BuiltInRegistries.ITEM.getKey(top).getPath(), has(top))
+                .save(output, ritualKnifeId(type));
+    }
+
+    private static ResourceKey<Recipe<?>> ritualKnifeId(RitualKnifeType type) {
+        return ResourceKey.create(Registries.RECIPE, VIdentifier.mod("ritual_knife_" + type.getSerializedName()));
     }
 
     protected void vampireCloak(Item item, Item wool) {

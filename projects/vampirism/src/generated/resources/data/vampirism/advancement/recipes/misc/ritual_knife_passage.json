@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_dragon_breath": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:dragon_breath"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_ritual_knife": {
+      "conditions": {
+        "items": [
+          {
+            "items": "vampirism:ritual_knife"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "vampirism:ritual_knife_passage"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_ritual_knife",
+      "has_dragon_breath"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "vampirism:ritual_knife_passage"
+    ]
+  }
+}

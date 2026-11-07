@@ -403,6 +403,9 @@
   "item.vampirism.ghost_spawn_egg": "Ghost Spawn Egg",
   "item.vampirism.ritual_knife": "Ritual Knife",
   "item.vampirism.ritual_knife_heart": "Infused Ritual Knife",
+  "item.vampirism.ritual_knife.seeking": "Knife of Seeking",
+  "item.vampirism.ritual_knife.passage": "Knife of Passage",
+  "item.vampirism.ritual_knife.anchoring": "Knife of Anchoring",
   "item.vampirism.golden_heart": "Golden Heart",
   "item.vampirism.enchanted_golden_heart": "Enchanted Golden Heart",
 
@@ -1303,6 +1306,9 @@
   "tooltip.vampirism.active": "Active",
   "tooltip.vampirism.bat_cage.contains_bat": "Contains: %s",
   "tooltip.vampirism.ritual_knife.infused": "Infused",
+  "tooltip.vampirism.ritual_knife.seeking": "Finds the way to Velmorra",
+  "tooltip.vampirism.ritual_knife.passage": "Tears a passage through the void",
+  "tooltip.vampirism.ritual_knife.anchoring": "Anchors the portal in place",
   "tooltip.vampirism.heart_seeker.consume": "Consumes %s blood per hit",
   "tooltip.vampirism.shattered_armor.desc": "Shattered. Repair on an anvil with:",
 
