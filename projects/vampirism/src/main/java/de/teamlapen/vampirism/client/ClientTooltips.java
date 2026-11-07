@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.client;
 
+import de.teamlapen.vampirism.client.renderer.tooltips.ClientLordTitlesTooltip;
+import de.teamlapen.vampirism.client.renderer.tooltips.LordTitlesTooltip;
 import de.teamlapen.vampirism.client.renderer.tooltips.QuarrelPouchClientTooltip;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.world.items.tooltip.QuarrelPouchTooltip;
@@ -11,6 +13,7 @@ public class ClientTooltips {
 
     public void registerTooltipRenderer(RegisterClientTooltipComponentFactoriesEvent event) {
         event.register(QuarrelPouchTooltip.class, QuarrelPouchClientTooltip::new);
+        event.register(LordTitlesTooltip.class, ClientLordTitlesTooltip::new);
     }
 
     @SubscribeEvent

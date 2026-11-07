@@ -26,7 +26,7 @@ public class ServerPayloadHandler {
     public static void handleAppearancePacket(ServerboundAppearancePacket msg, IPayloadContext context) {
         context.enqueueWork(() -> {
             Entity entity1 = context.player().level().getEntity(msg.entityId());
-            if (entity1 instanceof Player player) {
+            if (entity1 instanceof Player player && player == context.player()) {
                 VampirePlayer vampirePlayer = VampirePlayer.get(player);
                 msg.data().data().forEach((k, v) -> vampirePlayer.setAppearanceData((de.teamlapen.faction.common.world.entities.appearance.AppearanceKey) k, v));
                 vampirePlayer.sync();

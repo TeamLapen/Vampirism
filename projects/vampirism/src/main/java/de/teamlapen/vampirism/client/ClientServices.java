@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.client.renderer.AuraOfDarknessStateTracker;
 import de.teamlapen.vampirism.client.renderer.MistStateTracker;
 import de.teamlapen.vampirism.client.renderer.MistRenderer;
 import de.teamlapen.vampirism.client.renderer.RenderHandler;
+import de.teamlapen.vampirism.client.renderer.VampireFaceOverlay;
 import de.teamlapen.vampirism.client.renderer.VelmorraCollapseHandler;
 import de.teamlapen.vampirism.common.util.PlayerSkinHelper;
 import de.teamlapen.vampirism.data.reloadlistener.vampirebook.VampireBooks;
@@ -109,6 +110,7 @@ public class ClientServices extends Services {
     @Override
     protected void registerModBus(IEventBus bus) {
         bus.register(this.vampireBooks);
+        bus.addListener(VampireFaceOverlay::registerReloadListener);
         bus.addListener(this.clientTooltips::registerTooltipRenderer);
         bus.addListener(this.modKeys::registerKeyMapping);
         bus.addListener(ModEntitiesRender::onRegisterRenderers);
