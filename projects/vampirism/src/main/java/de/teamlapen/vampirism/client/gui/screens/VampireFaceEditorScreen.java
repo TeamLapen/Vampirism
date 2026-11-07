@@ -17,7 +17,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Checkbox;
-import net.minecraft.client.gui.components.StringWidget;
+import net.minecraft.client.gui.components.MultiLineTextWidget;
+import net.minecraft.client.gui.layouts.FrameLayout;
 import net.minecraft.client.gui.layouts.LayoutElement;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -45,6 +46,11 @@ public class VampireFaceEditorScreen extends AppearanceScreen<Player> {
     private static final int GRID_SIZE = CELL * VampireFaceOverlay.FACE_SIZE;
     private static final int MARKER_COLOR = 0xFFFF3333;
     private static final int FACE_COLOR = 0xFF9C7A5B;
+    private static final int CONTROLS_WIDTH = 120;
+    private static final int COLUMN_HEIGHT = 110;
+    private static final int COLUMN_SPACING = 8;
+    private static final int HINT_WIDTH = 260;
+    private static final int HINT_MAX_ROWS = 2;
 
     private final ILastScreenProvider backScreen;
     private final boolean editingEyes;
@@ -59,11 +65,8 @@ public class VampireFaceEditorScreen extends AppearanceScreen<Player> {
     private Identifier hoveredType;
     private int eyePosition = Customization.DEFAULT_POSITION;
     private int fangPosition = Customization.DEFAULT_POSITION;
-    private boolean showHint = true;
     @UnknownNullability
     private DropdownWidget<Identifier> typeDropdown;
-    @UnknownNullability
-    private StringWidget hint;
 
     public VampireFaceEditorScreen(@Nullable ILastScreenProvider backScreen) {
         this(backScreen, true);
@@ -105,35 +108,73 @@ public class VampireFaceEditorScreen extends AppearanceScreen<Player> {
     @NotNull
     @Override
     protected LayoutElement createLayout() {
-        LinearLayout vertical = LinearLayout.vertical();
-        vertical.spacing(4);
+        LinearLayout columns = LinearLayout.horizontal().spacing(COLUMN_SPACING);
+        columns.addChild(createControlsColumn());
+        columns.addChild(createFaceColumn());
+        return columns;
+    }
 
-        String mode = this.editingEyes ? "edit_eyes" : "edit_fangs";
-        vertical.addChild(new ExtendedButton(0, 0, 120, 20, Component.translatable("gui.vampirism.appearance." + mode), _ -> this.minecraft.setScreen(new VampireFaceEditorScreen(this.backScreen, !this.editingEyes))));
+    private LayoutElement createControlsColumn() {
+        FrameLayout frame = new FrameLayout(CONTROLS_WIDTH, COLUMN_HEIGHT);
+        frame.defaultChildLayoutSetting().alignHorizontallyLeft().alignVerticallyTop();
+
+        LinearLayout controls = frame.addChild(LinearLayout.vertical().spacing(4));
+
+        LinearLayout modeButtons = controls.addChild(LinearLayout.horizontal());
+        modeButtons.addChild(modeButton(true));
+        modeButtons.addChild(modeButton(false));
 
         this.typeDropdown = DropdownWidget.<Identifier>builder(0, 0)
-                .width(120)
+                .width(CONTROLS_WIDTH)
                 .itemHeight(20)
                 .maxVisibleItems(5)
-                .initialSelection(this.editingEyes ? this.eyeType : this.fangType)
+                .initialSelection(selectedType())
                 .onSelect(this::selectType)
                 .onHover(this::hoverType)
                 .items(typeItems())
                 .build();
-        vertical.addChild(this.typeDropdown);
+        controls.addChild(this.typeDropdown);
 
         if (this.editingEyes) {
-            vertical.addChild(Checkbox.builder(Component.translatable("gui.vampirism.appearance.glowing_eye"), this.font)
+            controls.addChild(Checkbox.builder(Component.translatable("gui.vampirism.appearance.glowing_eye"), this.font)
                     .selected(VampirePlayer.get(player()).getGlowingEyes())
                     .onValueChange((_, selected) -> VampirePlayer.get(player()).setGlowingEyes(selected))
                     .build());
         }
+        return frame;
+    }
 
-        vertical.addChild(new FaceGridWidget());
-        this.hint = new StringWidget(Component.translatable(this.editingEyes ? "gui.vampirism.appearance.position_eyes" : "gui.vampirism.appearance.position_fangs"), this.font);
-        this.hint.visible = this.showHint;
-        vertical.addChild(this.hint);
-        return vertical;
+    private ExtendedButton modeButton(boolean eyes) {
+        Component label = Component.translatable(eyes ? "gui.vampirism.appearance.edit_eyes" : "gui.vampirism.appearance.edit_fangs");
+        ExtendedButton button = new ExtendedButton(0, 0, CONTROLS_WIDTH / 2, 20, label, _ -> this.minecraft.setScreen(new VampireFaceEditorScreen(this.backScreen, eyes)));
+        button.active = eyes != this.editingEyes;
+        return button;
+    }
+
+    private LayoutElement createFaceColumn() {
+        FrameLayout frame = new FrameLayout(GRID_SIZE, COLUMN_HEIGHT);
+        frame.defaultChildLayoutSetting().alignHorizontallyCenter().alignVerticallyTop();
+
+        LinearLayout face = frame.addChild(LinearLayout.vertical().spacing(4));
+        face.defaultCellSetting().alignHorizontallyCenter();
+        face.addChild(new FaceGridWidget());
+        return frame;
+    }
+
+    @Override
+    protected int entityPreviewWidth() {
+        return 60;
+    }
+
+    @Override
+    protected LayoutElement createFooter() {
+        // Fixed size so a hint that wraps into a second line in some languages does not resize the screen.
+        FrameLayout frame = new FrameLayout(HINT_WIDTH, HINT_MAX_ROWS * this.font.lineHeight);
+        frame.addChild(new MultiLineTextWidget(Component.translatable(this.editingEyes ? "gui.vampirism.appearance.position_eyes" : "gui.vampirism.appearance.position_fangs"), this.font)
+                .setMaxWidth(HINT_WIDTH)
+                .setMaxRows(HINT_MAX_ROWS)
+                .setCentered(true));
+        return frame;
     }
 
     private List<DropdownWidget.Value<Identifier>> typeItems() {
@@ -281,8 +322,6 @@ public class VampireFaceEditorScreen extends AppearanceScreen<Player> {
         private void place(double mouseX, double mouseY) {
             int cellX = Math.max(0, Math.min(VampireFaceOverlay.FACE_SIZE - 1, (int) Math.floor((mouseX - getX()) / CELL)));
             int cellY = Math.max(0, Math.min(VampireFaceOverlay.FACE_SIZE - 1, (int) Math.floor((mouseY - getY()) / CELL)));
-            showHint = false;
-            hint.visible = false;
             placeFeature(cellX, cellY);
         }
 

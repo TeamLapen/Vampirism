@@ -67,9 +67,14 @@ public abstract class AppearanceScreen<T extends LivingEntity> extends Screen im
         innerGrid.addChild(new StringWidget(this.title, this.font),0,0,1,2, innerGrid.newCellSettings().paddingLeft(8).paddingTop(8));
 
         innerGrid.addChild(createLayout(), 1,0, innerGrid.newCellSettings().alignHorizontallyCenter().padding(8));
-        innerGrid.addChild(new EntityWidget(100, 110),1,1, innerGrid.newCellSettings().alignHorizontallyCenter().padding(8));
+        innerGrid.addChild(new EntityWidget(entityPreviewWidth(), 110),1,1, innerGrid.newCellSettings().alignHorizontallyCenter().padding(8));
 
-        GridLayout buttonsLayout = innerGrid.addChild(new GridLayout(),2,0,1,2, rowHelper.newCellSettings().alignHorizontallyCenter().padding(4));
+        LayoutElement footer = createFooter();
+        if (footer != null) {
+            innerGrid.addChild(footer, 2, 0, 1, 2, innerGrid.newCellSettings().alignHorizontallyCenter().paddingHorizontal(8));
+        }
+
+        GridLayout buttonsLayout = innerGrid.addChild(new GridLayout(),3,0,1,2, rowHelper.newCellSettings().alignHorizontallyCenter().padding(4));
         buttonsLayout.columnSpacing(50);
         buttonsLayout.addChild(new ExtendedButton(0,0, 80, 20,  Component.translatable("gui.back"), x -> {
             if (this.backScreen != null){
@@ -93,6 +98,21 @@ public abstract class AppearanceScreen<T extends LivingEntity> extends Screen im
 
     @NotNull
     protected abstract LayoutElement createLayout();
+
+    /**
+     * @return the width of the entity preview on the right side
+     */
+    protected int entityPreviewWidth() {
+        return 100;
+    }
+
+    /**
+     * @return an optional row spanning the full width below the content and the entity preview, above the back/done buttons
+     */
+    @Nullable
+    protected LayoutElement createFooter() {
+        return null;
+    }
 
     private class EntityWidget extends AbstractWidget {
 
