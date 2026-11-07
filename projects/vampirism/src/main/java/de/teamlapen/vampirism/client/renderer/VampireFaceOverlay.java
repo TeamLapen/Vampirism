@@ -1,8 +1,12 @@
 package de.teamlapen.vampirism.client.renderer;
 
 import com.mojang.blaze3d.platform.NativeImage;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
+import net.minecraft.util.Mth;
+import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -108,11 +112,15 @@ public final class VampireFaceOverlay {
     }
 
     private static int clamp(int value, int max) {
-        return Math.max(0, Math.min(Math.max(0, max), value));
+        return Math.clamp(value, 0, Math.max(0, max));
     }
 
     public static void clearCache() {
         CACHE.clear();
+    }
+
+    public static void registerReloadListener(AddClientReloadListenersEvent event) {
+        event.addListener(VIdentifier.mod("vampire_face_overlay"), (ResourceManagerReloadListener) _ -> clearCache());
     }
 
     @Nullable

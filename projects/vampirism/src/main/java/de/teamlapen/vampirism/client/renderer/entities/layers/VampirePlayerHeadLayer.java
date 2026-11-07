@@ -20,6 +20,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.SequencedMap;
 
 public class VampirePlayerHeadLayer<T extends AvatarRenderState, Q extends PlayerModel> extends RenderLayer<T, Q> {
@@ -46,14 +47,14 @@ public class VampirePlayerHeadLayer<T extends AvatarRenderState, Q extends Playe
             Identifier eyeType = renderState.getRenderData(ModEntityRenderStates.VAMPIRE_EYE_TYPE);
             Identifier fangType = renderState.getRenderData(ModEntityRenderStates.VAMPIRE_FANG_TYPE);
             ModelPart head = this.getParentModel().head;
-            boolean glowing = renderState.getRenderDataOrDefault(ModEntityRenderStates.VAMPIRE_GLOWING_EYES, false);
 
-            if (!Customization.NONE.equals(eyeType)) {
+            if (!Objects.equals(Customization.NONE, eyeType)) {
                 Identifier eye = this.eyeOverlays.getOrDefault(eyeType, FALLBACK_EYE);
+                boolean glowing = renderState.getRenderDataOrDefault(ModEntityRenderStates.VAMPIRE_GLOWING_EYES, false);
                 RenderType type = glowing ? RenderTypes.eyes(eye) : RenderTypes.entityTranslucentEmissive(eye);
                 submitOverlay(poseStack, nodeCollector, head, eye, true, type, renderState.getRenderDataOrDefault(ModEntityRenderStates.VAMPIRE_EYE_POSITION, Customization.DEFAULT_POSITION), packedLight);
             }
-            if (!Customization.NONE.equals(fangType)) {
+            if (!Objects.equals(Customization.NONE, fangType)) {
                 Identifier fang = this.fangOverlays.getOrDefault(fangType, FALLBACK_FANG);
                 submitOverlay(poseStack, nodeCollector, head, fang, false, RenderTypes.entityTranslucentEmissive(fang), renderState.getRenderDataOrDefault(ModEntityRenderStates.VAMPIRE_FANG_POSITION, Customization.DEFAULT_POSITION), packedLight);
             }
