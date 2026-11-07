@@ -13,18 +13,22 @@ import de.teamlapen.vampirism.util.LordTitles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Checkbox;
-import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
+import de.teamlapen.vampirism.client.renderer.tooltips.LordTitlesTooltip;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
 
     private static final Component NAME = Component.translatable("gui.vampirism.appearance");
+    private static final Component TITLES_HEADER = Component.translatable("gui.vampirism.appearance.title_table");
     private static final int PREVIEW_LEFT = 190;
     private static final int PREVIEW_TOP = 30;
     private static final int PREVIEW_RIGHT = 250;
@@ -35,6 +39,8 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
     private float[] color;
     private boolean titleGender;
     private boolean openingFaceEditor;
+    @Nullable
+    private Checkbox titleGenderBox;
 
     public VampirePlayerAppearanceScreen(@Nullable Screen backScreen) {
         super(NAME, Minecraft.getInstance().player, backScreen);
@@ -61,15 +67,14 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
                 Component.translatable("gui.vampirism.appearance.edit_eyes"), button -> this.openFaceEditor(true)));
         this.addRenderableWidget(new ExtendedButton(this.guiLeft + 20, this.guiTop + 67, 100, 20,
                 Component.translatable("gui.vampirism.appearance.edit_fangs"), button -> this.openFaceEditor(false)));
-        Checkbox titleGenderButton = Checkbox.builder(Component.translatable("gui.vampirism.appearance.title_gender"), this.font)
+        this.titleGenderBox = Checkbox.builder(Component.translatable("gui.vampirism.appearance.title_gender"), this.font)
                 .pos(this.guiLeft + 20, this.guiTop + 99)
                 .selected(this.titleGender)
                 .onValueChange((button, selected) -> {
                     this.titleGender = selected;
                     FactionPlayerHandler.get(this.entity).setTitleGender(selected);
                 }).build();
-        titleGenderButton.setTooltip(this.createTitleGenderTooltip());
-        this.addRenderableWidget(titleGenderButton);
+        this.addRenderableWidget(this.titleGenderBox);
     }
 
     @Override
@@ -80,15 +85,22 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
                 PREVIEW_SCALE, PREVIEW_Y_OFFSET, mouseX, mouseY, this.entity);
     }
 
-    private Tooltip createTitleGenderTooltip() {
-        MutableComponent tooltip = Component.empty();
+    private LordTitlesTooltip lordTitlesTooltip() {
+        List<Component> defaultTitles = new ArrayList<>();
+        List<Component> femaleTitles = new ArrayList<>();
         for (int level = 1; level <= REFERENCE.HIGHEST_VAMPIRE_LORD; level++) {
-            if (level > 1) tooltip.append(Component.literal("\n"));
-            tooltip.append(LordTitles.getVampireTitle(level, IPlayableFaction.TitleGender.MALE))
-                    .append(Component.literal(" --> "))
-                    .append(LordTitles.getVampireTitle(level, IPlayableFaction.TitleGender.FEMALE));
+            defaultTitles.add(LordTitles.getVampireTitle(level, IPlayableFaction.TitleGender.MALE));
+            femaleTitles.add(LordTitles.getVampireTitle(level, IPlayableFaction.TitleGender.FEMALE));
         }
-        return Tooltip.create(tooltip);
+        return new LordTitlesTooltip(defaultTitles, femaleTitles, FactionPlayerHandler.get(this.entity).getLordLevel(), this.titleGender);
+    }
+
+    @Override
+    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(graphics, mouseX, mouseY, partialTicks);
+        if (this.titleGenderBox != null && this.titleGenderBox.isHovered()) {
+            graphics.renderTooltip(this.font, List.of(TITLES_HEADER), Optional.of(this.lordTitlesTooltip()), mouseX, mouseY);
+        }
     }
 
     @Override
