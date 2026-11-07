@@ -32,6 +32,7 @@ public class BalanceConfig {
     public final ModConfigSpec.BooleanValue skeletonIgnoreVampire;
     public final ModConfigSpec.BooleanValue creeperIgnoreVampire;
     public final ModConfigSpec.DoubleValue bleedingEffectDamage;
+    public final ModConfigSpec.DoubleValue velmorraAltarKnifeDamage;
     public final ModConfigSpec.IntValue diffuserBootTime;
     public final ModConfigSpec.IntValue hunterTentMaxSpawn;
     public final ModConfigSpec.DoubleValue crossbowDamageMult;
@@ -261,6 +262,9 @@ public class BalanceConfig {
         bleedingEffectDamage = builder
                 .comment("Damage dealt by the bleeding effect per damaging tick.")
                 .defineInRange("bleedingEffectDamage", 0.1, 0, Double.MAX_VALUE);
+        velmorraAltarKnifeDamage = builder
+                .comment("Damage dealt to a lord when inserting a ritual knife into the Velmorra altar. Never lethal.")
+                .defineInRange("velmorraAltarKnifeDamage", 6.0, 0, 1000);
         diffuserBootTime = builder
                 .comment("Time in seconds before a diffuser's effect becomes active after placement.")
                 .defineInRange("diffuserBootTime", 15, 1, Integer.MAX_VALUE / 20);

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.common.world.portal;
 
 import de.teamlapen.vampirism.common.core.ModBlocks;
+import de.teamlapen.vampirism.common.world.blockentity.VelmorraPortalBlockEntity;
 import de.teamlapen.vampirism.common.world.blocks.PortalGatewayBlock;
 import de.teamlapen.vampirism.common.world.blocks.VelmorraPortalBlock;
 import de.teamlapen.vampirism.common.world.dimensions.velmorra.VelmorraDimension;
@@ -15,8 +16,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Predicate;
 
 public class VelmorraPortalShape {
@@ -35,19 +38,30 @@ public class VelmorraPortalShape {
         return this.bottom;
     }
 
+    /**
+     * @return a position inside the portal frame that holds a portal block while the portal is active
+     */
+    public BlockPos getInnerPos() {
+        return this.bottom.above(1).relative(this.direction, 1);
+    }
+
+    public boolean isActive() {
+        return this.isActive;
+    }
+
     public void activate(ServerLevel level) {
         if (!this.isActive) {
             BlockState blockState = ModBlocks.VELMORRA_PORTAL.get().defaultBlockState().setValue(VelmorraPortalBlock.AXIS, this.direction.getAxis());
-            executeInner(level, blockState);
+            DraculaFightData data = DraculaFightData.get(VelmorraDimension.createDimension(level.getServer()));
+            executeInner(level, blockState, data.getInstanceId());
             this.isActive = true;
-            DraculaFightData.getOpt(VelmorraDimension.createDimension(level.getServer()))
-                    .ifPresent(data -> data.registerPortal(new GlobalPos(level.dimension(), this.bottom)));
+            data.registerPortal(new GlobalPos(level.dimension(), this.bottom));
         }
     }
 
     public void deactivate(ServerLevel level) {
         if (this.isActive) {
-            executeInner(level, Blocks.AIR.defaultBlockState());
+            executeInner(level, Blocks.AIR.defaultBlockState(), null);
             this.isActive = false;
         }
     }
@@ -75,19 +89,32 @@ public class VelmorraPortalShape {
         level.setBlockAndUpdate(start.above(5).relative(clockWise, 3), ModBlocks.VELMORRA_PORTAL_ARCH.get().defaultBlockState().setValue(PortalGatewayBlock.TYPE, PortalGatewayBlock.Type.FIFTH).setValue(PortalGatewayBlock.FACING, facing.getOpposite()));
     }
 
-    private void executeInner(ServerLevel level, BlockState blockState) {
-        level.setBlockAndUpdate(this.bottom.above(1).relative(this.direction, 1), blockState);
-        level.setBlockAndUpdate(this.bottom.above(1).relative(this.direction, 2), blockState);
-        level.setBlockAndUpdate(this.bottom.above(1).relative(this.direction, 3), blockState);
-        level.setBlockAndUpdate(this.bottom.above(2).relative(this.direction, 1), blockState);
-        level.setBlockAndUpdate(this.bottom.above(2).relative(this.direction, 2), blockState);
-        level.setBlockAndUpdate(this.bottom.above(2).relative(this.direction, 3), blockState);
-        level.setBlockAndUpdate(this.bottom.above(3).relative(this.direction, 1), blockState);
-        level.setBlockAndUpdate(this.bottom.above(3).relative(this.direction, 2), blockState);
-        level.setBlockAndUpdate(this.bottom.above(3).relative(this.direction, 3), blockState);
-        level.setBlockAndUpdate(this.bottom.above(4).relative(this.direction, 1), blockState);
-        level.setBlockAndUpdate(this.bottom.above(4).relative(this.direction, 2), blockState);
-        level.setBlockAndUpdate(this.bottom.above(4).relative(this.direction, 3), blockState);
+    /**
+     * @param velmorraId the Velmorra instance the placed portal blocks lead to
+     */
+    private void executeInner(ServerLevel level, BlockState blockState, @Nullable UUID velmorraId) {
+        for (int height = 1; height <= 4; height++) {
+            for (int width = 1; width <= 3; width++) {
+                BlockPos pos = this.bottom.above(height).relative(this.direction, width);
+                level.setBlockAndUpdate(pos, blockState);
+                if (velmorraId != null && level.getBlockEntity(pos) instanceof VelmorraPortalBlockEntity portal) {
+                    portal.setVelmorraId(velmorraId);
+                }
+            }
+        }
+    }
+
+    /**
+     * Removes all velmorra portal blocks around the given position, regardless of whether the portal frame is still intact.
+     *
+     * @param radius the search radius. A radius of 6 around the frame's bottom corner or any portal block covers the whole portal.
+     */
+    public static void removePortalBlocks(ServerLevel level, BlockPos center, int radius) {
+        BlockPos.betweenClosed(center.offset(-radius, -radius, -radius), center.offset(radius, radius, radius)).forEach(pos -> {
+            if (level.getBlockState(pos).getBlock() instanceof VelmorraPortalBlock) {
+                level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+            }
+        });
     }
 
 

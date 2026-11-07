@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.common.world.blocks;
 
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.common.core.ModAttachments;
+import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModDimensions;
 import de.teamlapen.vampirism.common.world.blockentity.VelmorraPortalBlockEntity;
 import de.teamlapen.vampirism.common.world.dimensions.velmorra.VelmorraDimension;
@@ -23,6 +24,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Portal;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -58,6 +61,11 @@ public class VelmorraPortalBlock extends BaseEntityBlock implements Portal {
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new VelmorraPortalBlockEntity(pos, state);
+    }
+
+    @Override
+    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+        return level.isClientSide() ? null : createTickerHelper(blockEntityType, ModBlockEntities.VELMORRA_PORTAL.get(), VelmorraPortalBlockEntity::serverTick);
     }
 
     @Override

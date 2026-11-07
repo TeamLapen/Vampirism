@@ -20,6 +20,7 @@ import net.minecraft.core.GlobalPos;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -45,7 +46,6 @@ import org.slf4j.LoggerFactory;
 import java.lang.ref.WeakReference;
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class DraculaFightData implements ValueIOSerializable {
 
@@ -72,6 +72,10 @@ public class DraculaFightData implements ValueIOSerializable {
     private WeakReference<Dracula> dracula;
     private int deathTicks = 0;
     private int warningsSend = 0;
+    /**
+     * Identifies this Velmorra instance. Portals store it to detect a destroyed or recreated Velmorra.
+     */
+    private UUID instanceId = UUID.randomUUID();
 
     public static DraculaFightData get(ServerLevel level) {
         return level.getData(ModAttachments.DRACULA_FIGHT_DATA);
@@ -83,6 +87,10 @@ public class DraculaFightData implements ValueIOSerializable {
 
     public DraculaFightData(ServerLevel level) {
         this.level = level;
+    }
+
+    public UUID getInstanceId() {
+        return this.instanceId;
     }
 
     public ServerDraculaEvent getEvent() {
@@ -173,22 +181,27 @@ public class DraculaFightData implements ValueIOSerializable {
             player.teleport(new TeleportTransition(targetLevel, data.pos().getBottomCenter(), Vec3.ZERO, 0, 0, Set.of(), TeleportTransition.PLAY_PORTAL_SOUND.then(TeleportTransition.PLACE_PORTAL_TICKET)));
         });
 
-        var positions= portalLocations.stream().collect(Collectors.groupingBy(GlobalPos::dimension));
-
-        for (var pos : positions.entrySet()) {
-            ServerLevel portalLevel = level.getServer().getLevel(pos.getKey());
-            if (portalLevel == null) {
-                continue;
-            }
-            for (GlobalPos globalPos : pos.getValue()) {
-                VelmorraPortalShape.findActivePortalShape(portalLevel, globalPos.pos()).ifPresent(x -> x.deactivate(portalLevel));
-            }
-        }
+        closeAllPortals();
 
         this.event.clear();
 
         DimensionManager manager = DimensionManager.INSTANCE;
         manager.markDimensionForUnregistration(level.getServer(), ModDimensions.VELMORRA_LEVEL, true);
+    }
+
+    /**
+     * Closes all portals leading to this Velmorra.
+     * Registered portals are removed immediately, any other portal removes itself on its next tick, because this Velmorra no longer exists.
+     */
+    public void closeAllPortals() {
+        MinecraftServer server = this.level.getServer();
+        for (GlobalPos globalPos : this.portalLocations) {
+            ServerLevel portalLevel = server.getLevel(globalPos.dimension());
+            if (portalLevel != null) {
+                VelmorraPortalShape.removePortalBlocks(portalLevel, globalPos.pos(), 6);
+            }
+        }
+        this.portalLocations.clear();
     }
 
     public static List<Marker> findMarkers(ServerLevel level, Identifier markerType) {
@@ -304,6 +317,7 @@ public class DraculaFightData implements ValueIOSerializable {
         output.putInt("death_ticks", this.deathTicks);
         output.putInt("warnings_send", this.warningsSend);
         output.store("portals", GlobalPos.CODEC.listOf(), List.copyOf(this.portalLocations));
+        output.store("instance_id", UUIDUtil.CODEC, this.instanceId);
         output.store("chalices", BlockPos.CODEC.listOf(), List.copyOf(this.chaliceReferences.keySet()));
     }
 
@@ -314,6 +328,7 @@ public class DraculaFightData implements ValueIOSerializable {
         this.deathTicks = input.getIntOr("death_ticks", 0);
         this.warningsSend = input.getIntOr("warnings_send", 0);
         input.read("portals", GlobalPos.CODEC.listOf()).ifPresent(this.portalLocations::addAll);
+        input.read("instance_id", UUIDUtil.CODEC).ifPresent(id -> this.instanceId = id);
         // block states cannot be read while the level is loading, re-validate on the first tick
         input.read("chalices", BlockPos.CODEC.listOf()).ifPresent(this.pendingChalices::addAll);
     }

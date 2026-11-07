@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": "minecraft:sculk_shrieker",
+    "C": "minecraft:amethyst_shard",
+    "K": {
+      "neoforge:ingredient_type": "neoforge:components",
+      "components": {
+        "!vampirism:ritual_knife_type": {}
+      },
+      "items": "vampirism:ritual_knife"
+    },
+    "T": "minecraft:recovery_compass"
+  },
+  "pattern": [
+    "CTC",
+    " K ",
+    "CBC"
+  ],
+  "result": {
+    "components": {
+      "vampirism:ritual_knife_type": "seeking"
+    },
+    "id": "vampirism:ritual_knife"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": "minecraft:end_stone",
+    "C": "minecraft:ender_pearl",
+    "K": {
+      "neoforge:ingredient_type": "neoforge:components",
+      "components": {
+        "!vampirism:ritual_knife_type": {}
+      },
+      "items": "vampirism:ritual_knife"
+    },
+    "T": "minecraft:dragon_breath"
+  },
+  "pattern": [
+    "CTC",
+    " K ",
+    "CBC"
+  ],
+  "result": {
+    "components": {
+      "vampirism:ritual_knife_type": "passage"
+    },
+    "id": "vampirism:ritual_knife"
+  }
+}

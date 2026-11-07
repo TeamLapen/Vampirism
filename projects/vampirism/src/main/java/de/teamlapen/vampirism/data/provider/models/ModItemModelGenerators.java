@@ -10,23 +10,23 @@ import de.teamlapen.vampirism.client.models.items.properties.ClipFilled;
 import de.teamlapen.vampirism.client.models.items.properties.HunterCrossbowCharging;
 import de.teamlapen.vampirism.client.models.items.properties.HunterCrossbowPull;
 import de.teamlapen.vampirism.client.models.items.properties.StrongOil;
-import de.teamlapen.vampirism.common.components.predicates.ChargedRitualKnifePredicate;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModItems;
+import de.teamlapen.vampirism.common.world.items.component.RitualKnifeType;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.model.*;
 import net.minecraft.client.renderer.item.ItemModel;
-import net.minecraft.client.renderer.item.properties.conditional.ComponentMatches;
 import net.minecraft.client.renderer.item.properties.select.Charge;
+import net.minecraft.client.renderer.item.properties.select.ComponentContents;
 import net.minecraft.client.resources.model.sprite.Material;
-import net.minecraft.core.component.predicates.DataComponentPredicate;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -210,10 +210,10 @@ public class ModItemModelGenerators extends ItemModelGenerators {
     }
 
     protected void createRitualKnife() {
-        var model = ItemModelUtils.conditional(new ComponentMatches(new DataComponentPredicate.Single<>(ModDataComponents.CHARGED_RITUAL_KNIFE_PREDICATE.get(), ChargedRitualKnifePredicate.INSTANCE)),
-                ItemModelUtils.plainModel(ModModelTemplates.FLAT_ITEM.create(ModelLocationUtils.getModelLocation(ModItems.RITUAL_KNIFE.asItem(), "_charged"), new TextureMapping().put(TextureSlot.LAYER0, new Material(VIdentifier.mod("item/ritual_knife_heart"))), this.modelOutput)),
-                ItemModelUtils.plainModel(ModModelTemplates.FLAT_ITEM.create(ModItems.RITUAL_KNIFE.asItem(), new TextureMapping().put(TextureSlot.LAYER0, new Material(VIdentifier.mod("item/ritual_knife"))), this.modelOutput)));
-        this.itemModelOutput.accept(ModItems.RITUAL_KNIFE.get(), model);
+        var model = ItemModelUtils.plainModel(ModModelTemplates.FLAT_ITEM.create(ModItems.RITUAL_KNIFE.asItem(), new TextureMapping().put(TextureSlot.LAYER0, new Material(VIdentifier.mod("item/ritual_knife"))), this.modelOutput));
+        var cases = Arrays.stream(RitualKnifeType.values()).map(type -> ItemModelUtils.when(type,
+                ItemModelUtils.plainModel(ModModelTemplates.FLAT_ITEM.create(ModelLocationUtils.getModelLocation(ModItems.RITUAL_KNIFE.asItem(), "_" + type.getSerializedName()), new TextureMapping().put(TextureSlot.LAYER0, new Material(VIdentifier.mod("item/ritual_knife_" + type.getSerializedName()))), this.modelOutput)))).toList();
+        this.itemModelOutput.accept(ModItems.RITUAL_KNIFE.get(), ItemModelUtils.select(new ComponentContents<>(ModDataComponents.RITUAL_KNIFE_TYPE.get()), model, cases));
     }
 
     protected void createShatteredArmor() {

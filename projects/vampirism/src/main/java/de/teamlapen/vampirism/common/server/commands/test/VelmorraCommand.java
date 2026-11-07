@@ -163,6 +163,10 @@ public class VelmorraCommand extends BasicCommand {
     }
 
     private static int removeVelmorra(MinecraftServer server) {
+        ServerLevel velmorra = server.getLevel(ModDimensions.VELMORRA_LEVEL);
+        if (velmorra != null) {
+            DraculaFightData.getOpt(velmorra).ifPresent(DraculaFightData::closeAllPortals);
+        }
         DimensionManager manager = DimensionManager.INSTANCE;
         manager.markDimensionForUnregistration(server, ModDimensions.VELMORRA_LEVEL, true);
         return 0;

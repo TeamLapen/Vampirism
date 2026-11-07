@@ -76,6 +76,7 @@ public class ModBlocksRender {
     public static void registerBlockEntityRenderers(EntityRenderersEvent.@NotNull RegisterRenderers event) {
         event.registerBlockEntityRenderer(ModBlockEntities.COFFIN.get(), CoffinRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.ALTAR_INFUSION.get(), AltarInfusionRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.VELMORRA_ALTAR.get(), VelmorraAltarRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.BLOOD_PEDESTAL.get(), PedestalRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.BAT_CAGE.get(), BatCageRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.MOTHER_TROPHY.get(), MotherTrophyRenderer::new);

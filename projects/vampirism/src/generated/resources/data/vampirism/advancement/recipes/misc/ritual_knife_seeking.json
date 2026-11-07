@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_mother_core": {
+    "has_recovery_compass": {
       "conditions": {
         "items": [
           {
-            "items": "vampirism:mother_core"
+            "items": "minecraft:recovery_compass"
           }
         ]
       },
@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "vampirism:ritual_knife_charged_1"
+        "recipe": "vampirism:ritual_knife_seeking"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -31,13 +31,13 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_mother_core",
-      "has_ritual_knife"
+      "has_ritual_knife",
+      "has_recovery_compass"
     ]
   ],
   "rewards": {
     "recipes": [
-      "vampirism:ritual_knife_charged_1"
+      "vampirism:ritual_knife_seeking"
     ]
   }
 }

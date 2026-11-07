@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_mother_core": {
+    "has_dragon_breath": {
       "conditions": {
         "items": [
           {
-            "items": "vampirism:mother_core"
+            "items": "minecraft:dragon_breath"
           }
         ]
       },
@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "vampirism:ritual_knife_charged_0"
+        "recipe": "vampirism:ritual_knife_passage"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -31,13 +31,13 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_mother_core",
-      "has_ritual_knife"
+      "has_ritual_knife",
+      "has_dragon_breath"
     ]
   ],
   "rewards": {
     "recipes": [
-      "vampirism:ritual_knife_charged_0"
+      "vampirism:ritual_knife_passage"
     ]
   }
 }
