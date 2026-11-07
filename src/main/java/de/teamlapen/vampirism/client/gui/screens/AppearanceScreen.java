@@ -35,8 +35,12 @@ public class AppearanceScreen<T extends LivingEntity> extends Screen {
         super.render(graphics, mouseX, mouseY, partialTicks);
         this.drawTitle(graphics);
 
-        InventoryScreen.renderEntityInInventoryFollowsMouse(graphics, this.guiLeft + 150, this.guiTop + 30,this.guiLeft + 250, this.guiTop + 30 + 110,50, 0.0625F, mouseX, mouseY, this.entity);
+        this.renderEntityPreview(graphics, mouseX, mouseY);
 
+    }
+
+    protected void renderEntityPreview(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
+        InventoryScreen.renderEntityInInventoryFollowsMouse(graphics, this.guiLeft + 150, this.guiTop + 30, this.guiLeft + 250, this.guiTop + 140, 50, 0.0625F, mouseX, mouseY, this.entity);
     }
 
     @Override
