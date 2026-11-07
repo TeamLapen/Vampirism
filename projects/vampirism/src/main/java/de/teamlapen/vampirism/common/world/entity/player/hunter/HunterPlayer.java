@@ -120,6 +120,7 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
     @Override
     public void onUpdate() {
         super.onUpdate();
+        this.disguise.tick();
         int level = getLevel();
         if (level > 0) {
             if (!isRemote()) {

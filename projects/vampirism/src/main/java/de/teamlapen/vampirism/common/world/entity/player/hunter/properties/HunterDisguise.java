@@ -12,9 +12,21 @@ import org.jetbrains.annotations.Nullable;
 public class HunterDisguise implements IDisguise {
 
     private final HunterPlayer player;
+    private boolean wasDisguised;
 
     public HunterDisguise(HunterPlayer hunterPlayer) {
         this.player = hunterPlayer;
+    }
+
+    /**
+     * The disguise is driven by a mob effect, so the cached display name has to be refreshed when the effect is added or removed
+     */
+    public void tick() {
+        boolean disguised = isDisguised();
+        if (disguised != this.wasDisguised) {
+            this.wasDisguised = disguised;
+            this.player.asEntity().refreshDisplayName();
+        }
     }
 
     @Override

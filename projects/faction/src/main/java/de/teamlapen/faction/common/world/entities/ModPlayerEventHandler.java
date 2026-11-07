@@ -2,6 +2,7 @@ package de.teamlapen.faction.common.world.entities;
 
 import com.google.common.collect.ImmutableList;
 import de.teamlapen.faction.FactionsMod;
+import de.teamlapen.faction.api.factions.IDisguise;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.common.components.FactionRestriction;
@@ -45,9 +46,11 @@ public class ModPlayerEventHandler {
         //noinspection ConstantValue
         if (FactionConfig.server().factionColorInChat.get() && (!(event.getEntity() instanceof ServerPlayer serverPlayer) || serverPlayer.connection != null)) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(event.getEntity());
-            Holder<? extends IFaction<?>> f = handler.factionPlayer().getDisguise().getViewedFaction(Optional.ofNullable(FactionsMod.proxy.getClientPlayer()).map(FactionPlayerHandler::get).map(FactionPlayerHandler::getFaction).orElse(null));
+            IDisguise disguise = handler.factionPlayer().getDisguise();
+            Holder<? extends IFaction<?>> f = disguise.getViewedFaction(Optional.ofNullable(FactionsMod.proxy.getClientPlayer()).map(FactionPlayerHandler::get).map(FactionPlayerHandler::getFaction).orElse(null));
 
-            var title = handler.factionPlayer().getChatDisplay();
+            // a disguised player must not reveal their actual faction through their title
+            var title = disguise.isDisguised() ? null : handler.factionPlayer().getChatDisplay();
 
             MutableComponent name;
 
