@@ -71,11 +71,11 @@ public class ModItems {
     // Weapons
     public static final DeferredItem<HeartSeekerItem> HEART_SEEKER_NORMAL = ITEMS.registerItem("iron_heart_seeker",  props -> new HeartSeekerItem(HeartSeekerItem.IRON, IItemWithTier.Tier.NORMAL, 1.3f, props));
     public static final DeferredItem<HeartSeekerItem> HEART_SEEKER_ENHANCED = ITEMS.registerItem("diamond_heart_seeker",  props -> new HeartSeekerItem(HeartSeekerItem.DIAMOND, IItemWithTier.Tier.ENHANCED, 1.4f, props));
-    public static final DeferredItem<HeartSeekerItem> HEART_SEEKER_ULTIMATE = ITEMS.registerItem("netherite_heart_seeker",  props -> new HeartSeekerItem(HeartSeekerItem.NETHERITE, IItemWithTier.Tier.ULTIMATE, 1.5f, props));
+    public static final DeferredItem<HeartSeekerItem> HEART_SEEKER_ULTIMATE = ITEMS.registerItem("netherite_heart_seeker",  props -> new HeartSeekerItem(HeartSeekerItem.NETHERITE, IItemWithTier.Tier.ULTIMATE, 1.5f, props.fireResistant()));
 
     public static final DeferredItem<HeartStrikerItem> HEART_STRIKER_NORMAL = ITEMS.registerItem("iron_heart_striker", props -> new HeartStrikerItem(HeartStrikerItem.IRON, IItemWithTier.Tier.NORMAL,1.25f, props));
     public static final DeferredItem<HeartStrikerItem> HEART_STRIKER_ENHANCED = ITEMS.registerItem("diamond_heart_striker",  props -> new HeartStrikerItem(HeartStrikerItem.DIAMOND, IItemWithTier.Tier.ENHANCED, 1.3f, props));
-    public static final DeferredItem<HeartStrikerItem> HEART_STRIKER_ULTIMATE = ITEMS.registerItem("netherite_heart_striker",  props -> new HeartStrikerItem(HeartStrikerItem.NETHERITE, IItemWithTier.Tier.ULTIMATE, 1.35f, props));
+    public static final DeferredItem<HeartStrikerItem> HEART_STRIKER_ULTIMATE = ITEMS.registerItem("netherite_heart_striker",  props -> new HeartStrikerItem(HeartStrikerItem.NETHERITE, IItemWithTier.Tier.ULTIMATE, 1.35f, props.fireResistant()));
 
     public static final DeferredItem<HunterAxeItem> HUNTER_AXE_NORMAL = ITEMS.registerItem("hunter_axe_normal", props -> new HunterAxeItem(HunterAxeItem.NORMAL, IItemWithTier.Tier.NORMAL, props));
     public static final DeferredItem<HunterAxeItem> HUNTER_AXE_ENHANCED = ITEMS.registerItem("hunter_axe_enhanced",  props -> new HunterAxeItem(HunterAxeItem.ENHANCED, IItemWithTier.Tier.ENHANCED, props));
