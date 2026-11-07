@@ -80,9 +80,8 @@ public class VelmorraAltarBlockEntity extends BlockEntity {
             }
             setChanged();
         } else if (level.getGameTime() % PORTAL_CHECK_INTERVAL == 0 && getBlockState().getValue(VelmorraAltarBlock.OPEN)) {
-            if (this.portalPos == null || (level.isLoaded(this.portalPos) && !(level.getBlockState(this.portalPos).getBlock() instanceof VelmorraPortalBlock))) {
+            if (!isPortalOpen(level)) {
                 // portal was closed elsewhere, raise the knives again
-                this.portalPos = null;
                 level.playSound(null, this.worldPosition, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 1f, 1f);
                 updateState();
                 setChanged();
@@ -124,19 +123,22 @@ public class VelmorraAltarBlockEntity extends BlockEntity {
     }
 
     /**
-     * Returns the last knife (anchoring, passage, seeking) to the player's hand. Closes the portal if it is open.
+     * Returns the last knife (anchoring, passage, seeking) to the player's hand. Knives cannot be removed while the portal is open.
      *
      * @return if a knife was removed
      */
     public boolean removeKnife(Player player) {
         if (!(this.level instanceof ServerLevel serverLevel) || !player.getMainHandItem().isEmpty()) return false;
+        if (isPortalOpen(serverLevel)) {
+            player.sendOverlayMessage(Component.translatable("message.vampirism.velmorra_altar.knives_locked"));
+            return false;
+        }
         for (int i = this.knives.size() - 1; i >= 0; i--) {
             ItemStack knife = this.knives.get(i);
             if (!knife.isEmpty()) {
                 this.knives.set(i, ItemStack.EMPTY);
                 player.setItemInHand(InteractionHand.MAIN_HAND, knife);
                 cancelChannel();
-                closePortal(serverLevel);
                 serverLevel.playSound(null, this.worldPosition, SoundEvents.TRIDENT_RETURN, SoundSource.BLOCKS, 1f, 1f);
                 updateState();
                 setChanged();
@@ -203,6 +205,16 @@ public class VelmorraAltarBlockEntity extends BlockEntity {
         this.portalPos = null;
     }
 
+    /**
+     * Checks if the portal opened by this altar still exists. Forgets the portal if it was closed elsewhere (e.g. after Dracula was defeated).
+     */
+    private boolean isPortalOpen(ServerLevel level) {
+        if (this.portalPos != null && level.isLoaded(this.portalPos) && !(level.getBlockState(this.portalPos).getBlock() instanceof VelmorraPortalBlock)) {
+            this.portalPos = null;
+        }
+        return this.portalPos != null;
+    }
+
     private void spawnChannelParticles(ServerLevel level) {
         double x = this.worldPosition.getX() + 0.5;
         double y = this.worldPosition.getY() + 1.2;
@@ -242,7 +254,8 @@ public class VelmorraAltarBlockEntity extends BlockEntity {
             anyKnife |= present;
             state = state.setValue(VelmorraAltarBlock.knifeProperty(type), present);
         }
-        state = state.setValue(VelmorraAltarBlock.HAS_BLOOD, anyKnife)
+        // once blood was offered the altar stays bloody
+        state = state.setValue(VelmorraAltarBlock.HAS_BLOOD, anyKnife || state.getValue(VelmorraAltarBlock.HAS_BLOOD))
                 .setValue(VelmorraAltarBlock.CHANNELING, this.channelTicks > 0)
                 .setValue(VelmorraAltarBlock.OPEN, this.portalPos != null && this.channelTicks <= 0);
         if (state != getBlockState()) {

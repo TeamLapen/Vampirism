@@ -18,5 +18,4 @@ public class ModTextureSlots {
     public static final TextureSlot STRING = TextureSlot.create("string");
     public static final TextureSlot ARROW = TextureSlot.create("arrow");
     public static final TextureSlot TOP = TextureSlot.create("top");
-    public static final TextureSlot KNIFE = TextureSlot.create("knife");
 }

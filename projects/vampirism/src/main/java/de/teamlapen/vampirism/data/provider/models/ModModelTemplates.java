@@ -38,9 +38,6 @@ public class ModModelTemplates extends ModelTemplates {
     public static final ModelTemplate TECH_CROSSBOW_UNLOADED = createItem(mod("tech_crossbow_unloaded"), TextureSlot.TEXTURE, ModTextureSlots.STRING);
     public static final ModelTemplate[] TECH_CROSSBOW_PULLING = pullingStages("tech_crossbow");
     public static final ModelTemplate VELMORRA_ALTAR = create(mod("velmorra_altar"), ModTextureSlots.TOP);
-    public static final ModelTemplate VELMORRA_ALTAR_KNIFE = create(mod("velmorra_altar_knife"), ModTextureSlots.KNIFE);
-    public static final ModelTemplate VELMORRA_ALTAR_KNIFE_GLOWING = create(mod("velmorra_altar_knife_glowing"), ModTextureSlots.KNIFE);
-    public static final ModelTemplate VELMORRA_ALTAR_KNIFE_INSERTED = create(mod("velmorra_altar_knife_inserted"), ModTextureSlots.KNIFE);
 
     private static ModelTemplate[] pullingStages(String name) {
         ModelTemplate[] stages = new ModelTemplate[3];

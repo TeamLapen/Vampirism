@@ -1218,6 +1218,7 @@
   "message.vampirism.velmorra_altar.too_weak": "You are too weak to offer your blood",
   "message.vampirism.velmorra_altar.already_open": "The portal is already open",
   "message.vampirism.velmorra_altar.no_portal": "There is no portal frame near the altar",
+  "message.vampirism.velmorra_altar.knives_locked": "The knives are held fast while the portal is open",
   "message.vampirism.chalice_empty": "The sound of an empty Chalice echoes loudly",
 
   "message.vampirism.village_raid.attacked.vampire": "%s attacked a nearby vampire village",
