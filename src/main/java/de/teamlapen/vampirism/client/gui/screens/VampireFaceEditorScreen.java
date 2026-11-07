@@ -28,7 +28,8 @@ public class VampireFaceEditorScreen extends AppearanceScreen<Player> {
 
     private static final Component NAME = Component.translatable("gui.vampirism.appearance.face_editor");
     private static final int FACE_GRID_SIZE = 8;
-    private static final int FACE_PIXEL_SIZE = 8;
+    private static final int FACE_PIXEL_SIZE = 7;
+    private static final int EDITOR_WIDTH = 290;
 
     private final VampirePlayerAppearanceScreen parent;
     private boolean editingEyes;
@@ -41,9 +42,9 @@ public class VampireFaceEditorScreen extends AppearanceScreen<Player> {
     private int fangY;
     private int faceGridX;
     private int faceGridY;
-    private boolean showFacePositionHint = true;
     private boolean draggingFaceFeature;
-    private ExtendedButton modeButton;
+    private ExtendedButton eyesModeButton;
+    private ExtendedButton fangsModeButton;
     private ExtendedButton typeButton;
     private Checkbox glowingEyesButton;
     private HoverList<?> eyeList;
@@ -58,6 +59,7 @@ public class VampireFaceEditorScreen extends AppearanceScreen<Player> {
 
     @Override
     protected void init() {
+        this.xSize = EDITOR_WIDTH;
         this.restoreHoveredPreview();
         super.init();
         VampirismPlayerAttributes attributes = VampirismPlayerAttributes.get(this.entity);
@@ -72,28 +74,30 @@ public class VampireFaceEditorScreen extends AppearanceScreen<Player> {
         this.fangY = vampireAttributes.fangY;
         this.clampPositionForType(true);
         this.clampPositionForType(false);
-        this.faceGridX = this.guiLeft + 125;
-        this.faceGridY = this.guiTop + 47;
+        this.faceGridX = this.guiLeft + 115;
+        this.faceGridY = this.guiTop + 42;
 
-        this.modeButton = this.addRenderableWidget(new ExtendedButton(this.guiLeft + 20, this.guiTop + 30, 100, 20,
-                Component.empty(), button -> this.switchMode()));
-        this.typeButton = this.addRenderableWidget(new ExtendedButton(this.guiLeft + 20, this.guiTop + 55, 100, 20,
+        this.eyesModeButton = this.addRenderableWidget(new ExtendedButton(this.guiLeft + 12, this.guiTop + 30, 46, 20,
+                Component.translatable("gui.vampirism.appearance.edit_eyes"), button -> this.setMode(true)));
+        this.fangsModeButton = this.addRenderableWidget(new ExtendedButton(this.guiLeft + 58, this.guiTop + 30, 46, 20,
+                Component.translatable("gui.vampirism.appearance.edit_fangs"), button -> this.setMode(false)));
+        this.typeButton = this.addRenderableWidget(new ExtendedButton(this.guiLeft + 12, this.guiTop + 55, 92, 20,
                 Component.empty(), button -> this.setTypeListVisibility(!this.isTypeListVisible())));
         this.glowingEyesButton = this.addRenderableWidget(Checkbox.builder(
                         Component.translatable("gui.vampirism.appearance.glowing_eye"), this.font)
-                .pos(this.guiLeft + 20, this.guiTop + 124)
+                .pos(this.guiLeft + 12, this.guiTop + 124)
                 .selected(vampireAttributes.glowingEyes)
                 .onValueChange((button, selected) -> VampirePlayer.get(this.entity).setGlowingEyes(selected))
                 .build());
 
-        this.eyeList = this.addRenderableWidget(HoverList.builder(this.guiLeft + 20, this.guiTop + 76, 100, 70)
-                .componentsWithClickAndHover(IntStream.rangeClosed(0, REFERENCE.EYE_TYPE_COUNT)
+        this.eyeList = this.addRenderableWidget(HoverList.builder(this.guiLeft + 12, this.guiTop + 76, 92, 70)
+                        .componentsWithClickAndHover(IntStream.rangeClosed(0, REFERENCE.EYE_TYPE_COUNT)
                         .mapToObj(index -> index == REFERENCE.EYE_TYPE_COUNT
                                 ? Component.translatable("gui.vampirism.appearance.no_eyes")
                                 : Component.translatable("gui.vampirism.appearance.eye").append(" " + (index + 1)))
                         .toList(), this::selectEyeType, (index, hovered) -> {})
                 .build());
-        this.fangList = this.addRenderableWidget(HoverList.builder(this.guiLeft + 20, this.guiTop + 76, 100, 70)
+        this.fangList = this.addRenderableWidget(HoverList.builder(this.guiLeft + 12, this.guiTop + 76, 92, 70)
                 .componentsWithClickAndHover(IntStream.rangeClosed(0, REFERENCE.FANG_TYPE_COUNT)
                         .mapToObj(index -> index == REFERENCE.FANG_TYPE_COUNT
                                 ? Component.translatable("gui.vampirism.appearance.no_fangs")
@@ -118,7 +122,6 @@ public class VampireFaceEditorScreen extends AppearanceScreen<Player> {
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
         if (button == 0 && this.draggingFaceFeature) {
-            this.showFacePositionHint = false;
             this.positionFeatureAt(mouseX, mouseY);
             return true;
         }
@@ -136,7 +139,6 @@ public class VampireFaceEditorScreen extends AppearanceScreen<Player> {
         if (button == 0 && mouseX >= this.faceGridX && mouseX < this.faceGridX + FACE_GRID_SIZE * FACE_PIXEL_SIZE
                 && mouseY >= this.faceGridY && mouseY < this.faceGridY + FACE_GRID_SIZE * FACE_PIXEL_SIZE) {
             this.draggingFaceFeature = true;
-            this.showFacePositionHint = false;
             this.positionFeatureAt(mouseX, mouseY);
             this.setTypeListVisibility(false);
             return true;
@@ -162,8 +164,8 @@ public class VampireFaceEditorScreen extends AppearanceScreen<Player> {
     protected void renderEntityPreview(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
         this.updateHoveredPreview();
         net.minecraft.client.gui.screens.inventory.InventoryScreen.renderEntityInInventoryFollowsMouse(graphics,
-                this.guiLeft + 190, this.guiTop + 30, this.guiLeft + 250, this.guiTop + 140,
-                36, 0.0625F, mouseX, mouseY, this.entity);
+                this.guiLeft + 228, this.guiTop + 30, this.guiLeft + 280, this.guiTop + 140,
+                30, 0.0625F, mouseX, mouseY, this.entity);
     }
 
     @Override
@@ -173,10 +175,10 @@ public class VampireFaceEditorScreen extends AppearanceScreen<Player> {
         graphics.setColor(1, 1, 1, 1);
     }
 
-    private void switchMode() {
+    private void setMode(boolean eyes) {
+        if (this.editingEyes == eyes) return;
         this.restoreHoveredPreview();
-        this.editingEyes = !this.editingEyes;
-        this.showFacePositionHint = true;
+        this.editingEyes = eyes;
         this.setTypeListVisibility(false);
     }
 
@@ -185,8 +187,8 @@ public class VampireFaceEditorScreen extends AppearanceScreen<Player> {
         this.eyeList.visible = visible && this.editingEyes;
         this.fangList.visible = visible && !this.editingEyes;
         this.glowingEyesButton.visible = this.editingEyes && !visible;
-        this.modeButton.setMessage(Component.translatable(this.editingEyes
-                ? "gui.vampirism.appearance.edit_eyes" : "gui.vampirism.appearance.edit_fangs"));
+        this.eyesModeButton.active = !this.editingEyes;
+        this.fangsModeButton.active = this.editingEyes;
         this.typeButton.setMessage(this.editingEyes ? this.eyeTypeLabel() : this.fangTypeLabel());
     }
 
@@ -333,10 +335,10 @@ public class VampireFaceEditorScreen extends AppearanceScreen<Player> {
     }
 
     private void renderFaceEditor(@NotNull GuiGraphics graphics) {
-        if (this.showFacePositionHint) {
-            graphics.drawWordWrap(this.font, Component.translatable(this.editingEyes
+        if (!this.isTypeListVisible()) {
+            graphics.drawCenteredString(this.font, Component.translatable(this.editingEyes
                             ? "gui.vampirism.appearance.position_eyes" : "gui.vampirism.appearance.position_fangs"),
-                    this.faceGridX, this.guiTop + 7, 125, 0xFFFFFFFF);
+                    this.guiLeft + this.xSize / 2, this.guiTop + 142, 0xFFFFFFFF);
         }
 
         ResourceLocation skin = Minecraft.getInstance().getSkinManager()

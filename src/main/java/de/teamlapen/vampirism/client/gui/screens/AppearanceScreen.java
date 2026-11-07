@@ -17,7 +17,7 @@ public class AppearanceScreen<T extends LivingEntity> extends Screen {
     private static final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/appearance.png");
 
     protected final T entity;
-    protected final int xSize = 256;
+    protected int xSize = 256;
     protected final int ySize = 177;
     @Nullable
     private final Screen backScreen;
