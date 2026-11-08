@@ -23,13 +23,8 @@ Then, and only then, report an issue on Github or Discord describing the issue a
 Please also report on any findings.
 
 ## Known issues
-### Game crashes on player death
-Some mod is likely messing with Forge capabilities/player entities.
-#### Mohist (1.16)
-Certain version of Mohist `1.16#700-740` are bugged.
-
-
-
+### "It seems like the permission plugin used is not properly set up"
+This message is shown on a server that has `usePermissions` enabled when the player lacks the `vampirism.check` permission. See [Permissions](permissions.md).
 
 ## Crash report
 **If your game crashes or does not start, we do NEED a crash-report**
@@ -37,7 +32,7 @@ Certain version of Mohist `1.16#700-740` are bugged.
 _Without a crash-report file, we can do absolutely nothing to help you._  
 _So please follow the following steps (If you have questions about the steps themselves, feel free to ask):_
 
-1. Find the Minecraft crash report file. If you use the standard Minecraft launcher, the folder can be found [here](https://minecraft.gamepedia.com/.minecraft). The interesting file is inside the _crash-reports_, choose the latest file. If you use another launcher, it might have a function to easily upload or locate log files.
+1. Find the Minecraft crash report file. If you use the standard Minecraft launcher, the folder can be found [here](https://minecraft.wiki/w/.minecraft). The interesting file is inside the _crash-reports_, choose the latest file. If you use another launcher, it might have a function to easily upload or locate log files.
 2. Create an issue here, describe the problem and include the log either within a spoiler or as a [Paste](http://paste.ee) of it. Alternatively you can post it on our Discord.
 
 There is a helpful guide [here](https://hypixel.net/threads/guide-how-to-post-a-crash-report.577718/)

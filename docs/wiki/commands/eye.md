@@ -3,19 +3,25 @@ title: Eye
 sidebar_position: 0
 ---
 
-As a vampire, you can select from various eye types, which are rendered above your skin. Currently, there are 16 different eye types available. If you do not want to have an eye overlay, you can select eye type 13, which will not render any eyes.
+:::caution
+
+This command is deprecated in the mod.
+
+:::
+
+Sets the eye texture of the executing vampire player (`vampirism:eye<type>`).
 
 ## Syntax
 
 ```
-/vampirism eye <type>
+/vampirism appearance eye <type>
 ```
 
 ## Arguments
 
-| Parameter | Type      | Description         |
-|:----------|:----------|:--------------------|
-| type      | `Integer` | The eye texture id |
+| Parameter | Type      | Description                  |
+|:----------|:----------|:-----------------------------|
+| type      | `Integer` | The eye texture id (0 to 16) |
 
 ## Permissions
 

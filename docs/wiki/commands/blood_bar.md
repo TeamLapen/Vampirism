@@ -3,27 +3,27 @@ title: Blood Bar
 sidebar_position: 11
 ---
 
-Manipulates the blood bar of given players or yourself if `<players>` is not given.
+Fills, empties or sets the blood bar of vampire players. Players that are not vampires are ignored. If no players are given, the command is executed on you.
 
 ## Syntax
 
 ```
-/vampirism bloodBar <status> [<players>]
+/vampirism bloodBar fill [<players>]
+/vampirism bloodBar empty [<players>]
 /vampirism bloodBar set <amount> [<players>]
 ```
 
 ## Arguments
 
-| Parameter | Type              | Description              |
-|:----------|:------------------|:-------------------------|
-| status    | `empty / fill`    | empty the bar or fill it |
-| amount    | `integer`         | Blood amount             |
-| players   | `player_selector` | A player target selector |
+| Parameter | Type              | Description                  |
+|:----------|:------------------|:-----------------------------|
+| amount    | `integer`         | The blood amount (minimum 0) |
+| players   | `player_selector` | A player target selector. If not given, the command is executed on you |
 
 ## Permissions
 
 :::info
 
-These commands can only be used with cheat permissions
+Requires permission level 2 (gamemaster/cheats)
 
 :::

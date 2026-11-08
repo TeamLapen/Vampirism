@@ -42,6 +42,9 @@ content.
 * **Mod developers:** add it as a Gradle dependency. See [Depending on FactionApi](./gradle-setup),
   then the [API documentation](../api/intro) and [data pack documentation](../data/intro).
 
+* **Server admins:** commands, permissions and config options are listed in
+  [Commands, permissions & config](./commands-and-config).
+
 ## Links
 
 * [Source & issues](https://github.com/TeamLapen/Vampirism)

@@ -1,21 +1,21 @@
 ---
 title: Title Gender
-sidebar_position: 3
+sidebar_position: 17
 ---
 
-Change the gender of your lord title.
+Sets the gender used for your lord title.
 
 ## Syntax
 
 ```
-/vampirism title-gender <female>
+/factions customization gender <gender>
 ```
 
 ## Arguments
 
-| Parameter | Type      | Description                       | 
-|:----------|:----------|:----------------------------------|
-| female    | `boolean` | Turn female lord titles on or off |
+| Parameter | Type   | Description                                       |
+|:----------|:-------|:--------------------------------------------------|
+| gender    | `enum` | `unknown`, `male` or `female` (use autocomplete) |
 
 ## Permissions
 

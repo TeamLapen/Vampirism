@@ -34,6 +34,7 @@ Every entry's id is derived from its file location, e.g.
 | [Tasks](./tasks)                             | `factionapi:tasks`         | `data/<namespace>/factionapi/tasks/`         |
 | [Skill Trees](./skilltrees)                  | `factionapi:skill_tree`    | `data/<namespace>/factionapi/skill_tree/`    |
 | [Skill Segments](./skilltrees#skill-segment) | `factionapi:skill_segment` | `data/<namespace>/factionapi/skill_segment/` |
+| [Other data](./other)                        | tags, minion loot tables, damage types | various                                      |
 
 * **Tasks** – objectives handed out to faction players by a Faction Representative, with requirements,
   a reward and optional unlock conditions.
@@ -45,5 +46,6 @@ JSON schemas for editor validation are linked at the top of each page.
 
 ## Other customization
 
-The Faction API also reuses a number of vanilla data pack systems (tags, loot,
-advancements, the `minecraft:custom_stat` registry used by task stat requirements, …).
+Tags, minion loot tables and damage types are covered on [Other data](./other): action HUD tags,
+minion tool tags, `collect_*` minion loot tables, village profession / POI tags and the `minion` /
+`leave_faction` damage types. The task `stat` requirement uses the vanilla `minecraft:custom_stat` registry.

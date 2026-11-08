@@ -1,28 +1,29 @@
 ---
 title: Set Lord Level
-sidebar_position: 6
+sidebar_position: 5
 ---
 
-Only works for players who are max level and their faction allows lord player.  
-This command can be used to set the lord level of a player. The player is optional, if not specified, the command uses the executing player.****
+Sets the player to the maximum level of the faction and sets the given lord level. If no lord level is given, lord level 1 is used. If no players are given, the command is executed on you.
 
 ## Syntax
 
 ```
-/vampirism lord-level <level> [<player>]
+/factions faction set <faction> lord [<level> [<players>]]
 ```
 
 ## Arguments
 
-| Parameter | Type               | Description              |
-|:----------|:-------------------|:-------------------------|
-| level     | `integer`          | the target level         | 
-| player    | `player_selector`  | A player target selector | 
+| Parameter | Type              | Description                                  |
+|:----------|:------------------|:---------------------------------------------|
+| faction   | `faction`         | A playable faction id, e.g. `vampirism:vampire` |
+| level     | `integer`         | The target lord level (minimum 1)            |
+| players   | `player_selector` | A player target selector. If not given, the command is executed on you |
+
 
 ## Permissions
 
 :::info
 
-These commands can only be used with cheat permissions
+Requires permission level 2 (gamemaster/cheats)
 
 :::

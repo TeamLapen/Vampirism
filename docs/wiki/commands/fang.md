@@ -1,21 +1,27 @@
 ---
-title: Fangs
+title: Fang
 sidebar_position: 1
 ---
 
-As a vampire, you can select from various fang types, which are rendered above your skin. Currently, there are seven different eye types available. If you do not want to have an eye overlay, you can select eye type 6, which will not render any fangs.
+:::caution
+
+This command is deprecated in the mod.
+
+:::
+
+Sets the fang texture of the executing vampire player (`vampirism:fang<type>`).
 
 ## Syntax
 
 ```
-/vampirism fang <type>
+/vampirism appearance fang <type>
 ```
 
 ## Arguments
 
-| Parameter | Type      | Description                        |
-|:----------|:----------|:-----------------------------------|
-| type      | `Integer` | The fang texture id (zero indexed) |
+| Parameter | Type      | Description                 |
+|:----------|:----------|:----------------------------|
+| type      | `Integer` | The fang texture id (0 to 6) |
 
 ## Permissions
 
