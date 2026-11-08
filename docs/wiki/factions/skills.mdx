@@ -6,36 +6,42 @@ title: Skills
 import { Skill, Action } from "./_skills";
 import { UnlockAction, SkillBranch, UnlocksVision, UpgradesSkill } from "../_components/Skills";
 
-When leveling up you will get some skill points which you can use to unlock some useful skills. This can be done in the Skill Menu.
+Skills are provided by the [FactionApi](../../api/intro) skill system and are unlocked in the skill screen. Levelling up gives you skill points that you spend on skills.
 
-How to open the Skill menu:
+How to open the skill screen:
 
-Press `P` (Check your key-bindings) to open the Vampirism menu and then press the Skill menu button
+- Open the faction menu with `P` (check your key bindings) and press the skill button, or
+- bind the **Open Skill Screen** key (unbound by default; category *FactionApi*).
+
+### Unlocking skills
+
+Skills are arranged in trees made of connected segments. A skill can only be unlocked if its parent segment is unlocked and you have enough skill points. Only one skill per segment can be unlocked, so some choices exclude each other.  
+To unlock a skill **hold the left mouse button** on it until the progress is complete. A skill that is the only one you can unlock is unlocked automatically on level-up.
 
 ### Skill points
 
-Skill points are awarded each level. Without modification, you will get 14 skill points (-1 for the initial skill)
-When you become Lord you can acquire additional 5 skill points.
+- Each level after the first gives you 2 skill points (`factionSkillPointsPerLevel`).
+- Each lord level after the first gives you 2 additional skill points for the lord skills (`factionSkillPointsPerLordLevel`).
+- Some trees use their own points: the Dracula tree uses Dracula marks, the Marshall tree uses research points.
 
-##### More Skill points
-More skill points can only be gained by changing the configurations.
+Server admins can change this:
+- Increase `factionSkillPointsPerLevel` / `factionSkillPointsPerLordLevel` in the FactionApi server config. Other values than 2 are unbalanced.
+- Enable `factionUnlockAllSkills` to be able to unlock all skills at the maximum level.
 
-There are tree ways of doing this:
-###### Unlock all skills on max level
-Therefor you must edit the `allSkillsAtMaxLevel` option in the server config to true.
+### Forgetting skills
 
-###### Get multiple skill points on levelup
-Here you can increase the `skillPointsPerLevel` value in the balance config.
-
-###### Install Vampirism Godly
-You can install [Godly Vampirism](https://www.curseforge.com/minecraft/mc-mods/godly-vampirism), it automatically increases the `skillPointsPerLevel` value.
+Skills cannot be forgotten one by one in survival. In creative mode **hold the right mouse button** on a skill to forget it (this also forgets the skills that depend on it).  
+In survival you can reset all skills with a **Potion of Oblivion** using the *Reset skills* button in the skill screen. Resetting consumes one potion, and you cannot unlock skills while the Oblivion effect is active.
 
 ## Actions
-Some of these skills will allow you to use "Actions", if you have unlocked one (e.g. "Regeneration") hold `R` down and keep it pressed.
-A "skill rose" will pop up, move the mouse in the direction of the desired skill until it's highlighted and release the button. If you don't want so select any skill either release the mouse when nothing is selected or select the red cross.  
-I can really recommend you to switch the key binding to the middle mouse button, because it is a lot easier to use, but conflicts with the Vanilla pick block.  
+Some skills unlock "Actions" (e.g. "Regeneration"). There are two ways to use them:
 
-All skills have a cooldown time, you can only activate it if it is not in cooldown mode. Some skills also have a duration, then you can deactivate the skill if you do not need it anymore by selecting it again to decrease the cooldown time.
+**Action radial menu:** Press `R` (**Open Action Radial Menu**) to open the menu, move the mouse to the desired action and left-click it. Right-click closes the menu without selecting. You can also press a number key to select a slice.  
+Pressing `R` again while the menu is open switches to the [minion radial menu](./vampire-hunter-lord-and-minions#controlling-minions) (and back).
+
+**Action keys:** There are 9 bindable keys (**Action 1** to **Action 9**). By default Action 1 to 3 are `Alt+1` to `Alt+3`, the others are unbound. Which action is bound to which key is configured in the *Edit Actions* screen of the faction menu (`P`). There you can also reorder the radial menu and exclude actions from it.
+
+All actions have a cooldown, you can only activate them if they are not on cooldown. Some actions also have a duration, then you can deactivate them early by using them again.
 
 ## Faction specific Skills
 
@@ -44,10 +50,19 @@ All skills have a cooldown time, you can only activate it if it is not in cooldo
 
 ## Lord Skills
 
+The skills of the lord tree are unlocked with the skill points you get per lord level.
+
 <Skill title="Minion Recovery" icon="minion_recovery.png">
 
 Reduces the time minions require to recover after they die.
 </Skill>
+
+- **Blood Collection** (vampire) / **Supply Collection** (hunter): Send your minions out to collect blood / resources.
+- **Resource Diversity:** Send your minions out to collect specific kinds of resources (wood, ores, fish, plants, mob loot). Better tools yield better resources.
+- **Better Minions** (vampire and hunter version): Improves the stats of your minions.
+- **Minion Technology** (hunter): Allows your minions to wield semi-auto crossbows.
+
+See [Lord & Minions](./vampire-hunter-lord-and-minions) for the minion tasks. 
 
 <Action title="Lord Movement Speed" icon="lord_speed.png">
 <UnlockAction/>

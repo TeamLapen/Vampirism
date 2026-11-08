@@ -2,6 +2,11 @@
 title: Configured Skill Tree
 sidebar_position: 3
 ---
+:::danger Outdated
+This page describes the pre-FactionApi configured skill tree format (`data/<modid>/vampirism/…`), which is no longer loaded.
+Skill trees and skill segments are now FactionApi data pack registries – see
+[Skill Trees](/factionapi/data/skilltrees).
+:::
 
 When you have a [skill tree](./skill_tree) and created a few [skill nodes](./skill_nodes) you can create a configured skill tree assigning skill nodes to the skill tree.
 

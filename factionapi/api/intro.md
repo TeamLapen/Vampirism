@@ -26,8 +26,13 @@ not part of the contract and may change without notice.
 | [Object model](./object-model)               | `IFaction` / `IPlayableFaction`, the player handler, faction extensions.       |
 | [Registries](./registries)                   | Every Faction API registry and what it is used for.                           |
 | [Registering content](./registering-content) | Adding factions, skills, actions, task types, minions and JSON callbacks.     |
-| [Utilities](./utilities)                     | Faction-specific tags, target selectors, item data components.               |
-| [Events](./events)                           | The game- and mod-bus events the API fires.                                   |
+| [Utilities](./utilities)                     | Faction / skill tree tags, faction-specific tags, default targets, target selectors, item data components. |
+| [Events](./events)                           | The game- and mod-bus events the API fires, incl. all `FactionVillageEvent`s and `RegisterItemBarsEvent`. |
+| [Lords](./lords)                             | `ILordPlayer`, lord titles and the lord builder.                              |
+| [Refinements](./refinements)                 | `IRefinement`, `IRefinementSet`, accessory items, rarity and the handler.     |
+| [Villages](./villages)                       | Totems, banners, capture entity interfaces and village configuration.        |
+| [Minions](./minions)                         | Minion entries, data, stats, appearances, tasks and task categories.         |
+| [Misc](./misc)                               | Descriptions, customization, disguise, food, sync API, attachment / data component key lists, interface injection, utilities. |
 
 ## Entry points
 

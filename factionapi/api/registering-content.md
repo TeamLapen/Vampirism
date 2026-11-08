@@ -17,7 +17,7 @@ public static final DeferredFaction<IMyPlayer, IPlayableFaction<IMyPlayer>> MY_F
         .maxLevel(14)
         .lord(5)                                       // enable lord levels + titles
         .enableTasks().taskMaster(MOD_ENTITIES.MY_TASKMASTER)
-        .refinements(new RefinementItems(RING, AMULET, BELT))
+        .refinements(new RefinementItems(AMULET, RING, BELT))
         .badOmen(MOD_EFFECTS.MY_BAD_OMEN)
         .totem(FRAGILE_TOTEM, CRAFTED_TOTEM)
         .banner(MyVillage.create())
@@ -68,6 +68,8 @@ from a task `consumer` reward / `boolean` requirement, or from a skill's enable/
 
 ## Minions
 
-Register an `IMinionEntry` (`factionapi:minion`) via `MinionEntryBuilder` to give your faction a
-minion (entity type + data + `/minion` command arguments), and `IMinionTask`s
-(`factionapi:miniontasks`) for the jobs a lord can assign.
+Register an `IMinionEntry` (`factionapi:minion`) to give your faction a minion. The implementation class
+`MinionEntry` (module `FactionApi`) is configured with `MinionEntryProperties`
+(entity type, data provider, stats, appearances, max level), and `IMinionTask`s
+(`factionapi:miniontasks`, via `DeferredMinionTaskRegister#registerTask`) define the jobs a lord can assign.
+See [Minions](./minions) for the full picture.

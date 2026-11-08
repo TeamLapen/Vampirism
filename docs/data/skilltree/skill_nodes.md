@@ -2,6 +2,11 @@
 title: Skill Tree Nodes
 sidebar_position: 2
 ---
+:::danger Outdated
+This page describes the pre-FactionApi skill nodes format (`data/<modid>/vampirism/…`), which is no longer loaded.
+Skill trees and skill segments are now FactionApi data pack registries – see
+[Skill Trees](/factionapi/data/skilltrees).
+:::
 
 Skill tree nodes are the nodes in a skill tree
 

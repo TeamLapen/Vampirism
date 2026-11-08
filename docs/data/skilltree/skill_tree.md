@@ -2,6 +2,11 @@
 title: Skill Tree
 sidebar_position: 1
 ---
+:::danger Outdated
+This page describes the pre-FactionApi skill tree format (`data/<modid>/vampirism/…`), which is no longer loaded.
+Skill trees and skill segments are now FactionApi data pack registries – see
+[Skill Trees](/factionapi/data/skilltrees).
+:::
 
 A skill tree is a collection of skill nodes that can be unlocked by skill points the player gets each level.
 

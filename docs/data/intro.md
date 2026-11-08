@@ -33,6 +33,8 @@ top of each page) for editor auto-completion and validation.
 | [Blood Values](./bloodvalues)       | Item / entity / fluid blood via data maps.                          |
 | [Convertibles](./convertibles)      | Which creatures can be turned vampiric, and how.                    |
 | [Sun Damage](./sundamage)           | Biomes / dimensions exempt from vampire sun damage.                 |
+| [Diffuser Fuel & Liquid Colors](./diffuser-fuel) | Fuel items and burn times of the garlic / fog diffuser; liquid colours of items in the alchemical cauldron. |
+| [Wings](./wings)                    | `wings.json`: which players unlock special vampire wing textures (shipped in the mod jar, not a data pack). |
 | [Recipes](./recipes/intro)          | Weapon Table, Alchemical Cauldron, Alchemy Table, Infuser.          |
 | [Loot Conditions](./lootconditions/intro) | `vampirism:*` loot conditions.                                |
 | [Loot Functions](./lootfunctions/intro)   | `vampirism:*` loot functions + the smelting loot modifier.    |

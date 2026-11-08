@@ -1,31 +1,37 @@
 ---
 title: Skills
-sidebar_position: 8
+sidebar_position: 13
 ---
 
-Unlock skills by command instead of the skill gui. If force is set, skill point cap is ignored.
+Enable, disable or toggle skills by command instead of the skill gui. If `force` is set, the skill requirements (e.g. skill points, parent skills) are ignored.
 
-The `enableall` option will unlock every visible skill. That includes skills that are mutually exclusive with other skills.
+`enable all` unlocks every skill of the player's faction. `disable all` locks all skills and resets the refinements. If no player is given, the command is executed on you.
 
 ## Syntax
 
 ```
-/vampirism skills <skill> [<force>]
-/vampirism skills disableall
-/vampirism skills enableall
+/factions skills enable <skill> [<player>] [force]
+/factions skills enable <skill> force
+/factions skills enable all [<players>]
+/factions skills disable <skill> [<player>]
+/factions skills disable all [<players>]
+/factions skills toggle <skill> [<player>] [force]
+/factions skills toggle <skill> force
 ```
 
 ## Arguments
 
-| Parameter | Type      | Description            |
-|:----------|:----------|:-----------------------|
-| skill     | `Skill`   | the skill id           |
-| force     | `boolean` | Ignore skill point cap |
+| Parameter | Type              | Description                                  |
+|:----------|:------------------|:---------------------------------------------|
+| skill     | `Skill`           | The skill id                                 |
+| player    | `player_selector` | A single player target selector              |
+| players   | `player_selector` | A player target selector (for `all`)         |
+| force     | literal           | Ignore the skill requirements                |
 
 ## Permissions
 
 :::info
 
-Following commands requires the player to be admin
+Requires permission level 3 (admin)
 
 :::

@@ -1,72 +1,52 @@
 ---
 title: Config
-sidebar_position: 10
+sidebar_position: 18
 ---
 
-With this command you can change some config values without editing the file. Rerun the command to undo a blacklist. Available commands are the following:
+With this command you can change some server config values without editing the file. Rerun the command to undo a blacklist (the entry is removed again). Available commands are the following:
 
-## Base Syntax
+## Entity Blood Values
 
-```
-/vampirism config
-```
-
-### Entity Bloodvalues
-
-Entities can be blacklisted by looking at them while executing the command or searched for in the suggestions. Which means that vampires can no longer get blood from them. (Works for newly spawned entities)
-
-#### Syntax
+Entities can be blacklisted by looking at them while executing the command or by choosing one from the suggestions. Vampires can then no longer get blood from them (`blacklistedBloodEntities` in the server config).
 
 ```
-/vampirism config bloodvalues entity [<entityid>]
+/vampirism config bloodvalues blacklist entity [<entity>]
 ```
 
-#### Arguments
+| Parameter | Type          | Description                                                 |
+|:----------|:--------------|:------------------------------------------------------------|
+| entity    | `entity_type` | Instead of the current target, the specified entity is used |
 
-| Parameter | Type               | Description                                                 |
-|:----------|:-------------------|:------------------------------------------------------------|
-| entityid  | `ResourceLocation` | Instead of the current target, the specified entity is used | 
+## Sun Damage
 
-### Sundamage
-
-#### Blacklist
-Dimensions and Biomes can be blacklisted for vampire sundamage.
-
-##### Syntax
+Biomes and dimensions can be blacklisted for vampire sun damage (`noSundamageBiomes` / `noSundamageDimensions` in the server config).
 
 ```
 /vampirism config sundamage blacklist biome [<biome>]
 /vampirism config sundamage blacklist dimension [<dimension>]
 ```
 
+| Parameter | Type        | Description                                               |
+|:----------|:------------|:----------------------------------------------------------|
+| biome     | `biome`     | Instead of the current biome, the specified biome is used |
+| dimension | `dimension` | Instead of the current dimension, the specified one is used |
 
-##### Arguments
+## Bat Dimension Blacklist
 
-| Parameter | Type               | Description                                                       |
-|:----------|:-------------------|:------------------------------------------------------------------|
-| biome     | `ResourceLocation` | Instead of the current biome, the specified biome is used         |
-| dimension | `ResourceLocation` | Instead of the current dimension, the specified dimension is used |
-
-### Enforcing
-Dimensions can be enforced to deliver sundamage to vampires.
-
-#### Syntax
+Toggles a dimension in `batDimensionBlacklist`, in which vampires cannot transform into a bat.
 
 ```
-/vampirism config sundamage enforce dimension [<dimension>]
+/vampirism config bat-dimension-blacklist <dimension>
 ```
 
-#### Arguments
-
-| Parameter | Type               | Description                                                       |
-|:----------|:-------------------|:------------------------------------------------------------------|
-| dimension | `ResourceLocation` | Instead of the current dimension, the specified dimension is used |
-
+| Parameter | Type        | Description               |
+|:----------|:------------|:--------------------------|
+| dimension | `dimension` | The dimension to toggle   |
 
 ## Permissions
 
 :::info
 
-Following commands requires the player to be admin
+Requires permission level 3 (admin)
 
 :::

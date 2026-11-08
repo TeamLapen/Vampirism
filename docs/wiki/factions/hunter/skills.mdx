@@ -4,143 +4,196 @@ sidebar_label: Skills
 title: Hunter Skills
 ---
 
-import { SkillBranch, UnlockAction} from "../../_components/Skills";
-import { Skill, Action } from "../_skills";
+import { SkillBranch, SkillOrAction, UnlockAction } from "../../_components/Skills";
+
+export const tex = "https://raw.githubusercontent.com/TeamLapen/Vampirism/c38d004de91c807f1cc639dcbd3731c57dc84693/projects/vampirism/src/main/resources/assets/vampirism/textures/";
 
 Main article [here](../skills)
 
-<Skill title="How to use a Stake" icon="stake1.png">
-    Instantly kill any vampire that has below 35 percent of its max health with a stake
+Hunters have three skill trees, opened with the skill screen (faction menu, `P` by default): **Level Skills**, **Lord Skills** and, for the Marshall only, **Marshall Skills**.  
+The costs below are skill points. Many hunter items and workstations need a skill before you can craft or use them. Missing skills are marked red in the item tooltip.
 
-</Skill>
-<Skill title="Weapon Table" icon="weapon_table.png">
-    Learn how to use the Hunter Weapon Table
+## Level Skills
 
-</Skill>
-<Action title="Disguise" icon="disguise_hunter.png">
-<UnlockAction/>
+<SkillOrAction title="Becoming a Hunter" iconPath={`${tex}skills/hunter_root.png`}>
+The root of the Level tree.
 
-Temporarily significantly reduce your the radius in which mobs and players can see and detect you.
+</SkillOrAction>
+<SkillOrAction title="How to Use a Stake" iconPath={`${tex}skills/how_to_use_stake.png`}>
+Cost: 2. Instantly kill any vampire below 35 percent health with a stake (default; the percentage and whether it also works on players are configurable).
 
-</Action>
+</SkillOrAction>
+<SkillOrAction title="Camouflage" iconPath={`${tex}actions/camouflage.png`}>
+<UnlockAction action="Camouflage"/>  
+Cost: 1. Drastically reduce the range at which mobs and players notice you.
+
+</SkillOrAction>
+
+<SkillBranch title="Alchemy and Crucifixes">
+<SkillOrAction title="Apprentice Alchemy" iconPath={`${tex}skills/apprentice_alchemy.png`}>
+Cost: 1. Learn how to use the Alchemical Cauldron.
+
+</SkillOrAction>
+<SkillOrAction title="Vampire Repelling" iconPath={`${tex}skills/vampire_repelling.png`}>
+Cost: 1. Learn to craft garlic diffusers to repel nearby vampires.
+
+</SkillOrAction>
+<SkillOrAction title="Refined Garlic" iconPath={`${tex}skills/refined_garlic.png`}>
+Cost: 2. Purify garlic to strengthen its effect to boost diffusers.
+
+</SkillOrAction>
+<SkillOrAction title="Augmented Diffusers" iconPath={`${tex}skills/augmented_diffusers.png`}>
+Cost: 2. Learn to craft garlic diffusers with a greater range.
+
+</SkillOrAction>
+<SkillOrAction title="Crucifix Wielder" iconPath={`${tex}skills/crucifix_wielder.png`}>
+Cost: 1. Learn to properly wield a crucifix against vampires. Needed for the Wooden and Iron Crucifix.
+
+</SkillOrAction>
+<SkillOrAction title="Sixth Sense" iconPath={`${tex}actions/sixth_sense.png`}>
+<UnlockAction action="Sixth Sense"/>  
+Cost: 2. Detect nearby vampires and vampire entities.
+
+</SkillOrAction>
+<SkillOrAction title="Crucifixion" iconPath={`${tex}skills/crucifixion.png`}>
+Cost: 2. Gain access to the most powerful crucifix (the Golden Crucifix).
+
+</SkillOrAction>
+<SkillOrAction title="Crucifix Repelling" iconPath={`${tex}skills/crucifix_repelling.png`}>
+Cost: 2. Right-click your crucifix to knock back nearby vampires and undead, instead of only slowing those that approach you.
+
+</SkillOrAction>
+<SkillOrAction title="Greater Blessing" iconPath={`${tex}skills/greater_blessing.png`}>
+Cost: 2. Produce more powerful items through blessing (enhanced Holy Water).
+
+</SkillOrAction>
+</SkillBranch>
 
 <SkillBranch title="Weapon Smith">
-<Skill title="Attack Speed" icon="hunter_attack_speed.png">
-    Increase your attack speed
+<SkillOrAction title="Basic Technology" iconPath={`${tex}skills/basic_technology.png`}>
+Cost: 2. Learn how to use the Hunter Weapon Table. Also needed for the basic crossbows and the normal Hunter Coat and Armor of Swiftness.
 
-</Skill>
-<Skill title="Attack Damage" icon="hunter_attack_damage.png">
-    Increase your attack damage
+</SkillOrAction>
+<SkillOrAction title="Near-Breach Reforging" iconPath={`${tex}skills/near_breach_reforging.png`}>
+Cost: 2. Prevent worn armor from breaking completely; it remains as Shattered Armor until repaired.
 
-</Skill>
-<Skill title="Double It" icon="double_crossbow.png">
-    Unlocks Double Crossbow
+</SkillOrAction>
+<SkillOrAction title="Attack Heavy as a Hammer" iconPath={`${tex}skills/attack_heavy_as_hammer.png`}>
+Cost: 2. Increase your attack damage.
 
-</Skill>
-<Skill title="Attack Swift as the Wind" icon="hunter_attack_speed_advanced.png">
-    Reduce your attack cooldown even further
+</SkillOrAction>
+<SkillOrAction title="Attack Swift as the Wind" iconPath={`${tex}skills/attack_swift_as_wind.png`}>
+Cost: 2. Reduce your attack cooldown.
 
-</Skill>
-<Skill title="Enhanced Weapons" icon="enhanced_weapons.png">
-    Allow crafting enhanced weapons including crossbows
+</SkillOrAction>
+<SkillOrAction title="Armor-Bound Swiftness" iconPath={`${tex}skills/armor_bound_swiftness.png`}>
+Cost: 2. Move faster when wearing a full set of hunter armor.
 
-</Skill>
-<Skill title="Enhanced Armor" icon="enhanced_armor.png">
-    Unlock crafting enhanced versions of hunter armors
+</SkillOrAction>
+<SkillOrAction title="Armor-Bound Highvault" iconPath={`${tex}skills/armor_bound_highvault.png`}>
+Cost: 2. Jump higher when wearing a full set of hunter armor.
 
-</Skill>
-<Skill title="Technology" icon="tech_weapons.png">
-    Learn how to build some advanced weapons
+</SkillOrAction>
+<SkillOrAction title="Crossbow Technique" iconPath={`${tex}skills/crossbow_technique.png`}>
+Cost: 2. Increase your crossbow reload and shooting speed.
 
-</Skill>
-<Skill title="How to Actually use a Stake" icon="stake2.png">
-    Instantly kill any vampire NPC from behind with a stake as long as its max health is below 200
+</SkillOrAction>
+<SkillOrAction title="Double It / Dual Wielding" iconPath={`${tex}skills/double_it.png`}>
+Choose one of the two, cost 2 each.
 
-</Skill>
+- **Double It**: craft and use double crossbows.
+- **Dual Wielding**: wield two crossbows simultaneously.
+
+</SkillOrAction>
+<SkillOrAction title="Master Craftsmanship" iconPath={`${tex}skills/master_craftsmanship.png`}>
+Cost: 2. Craft and equip enhanced weapons and armor.
+
+</SkillOrAction>
+<SkillOrAction title="How to Actually Use an Axe" iconPath={`${tex}skills/how_to_actually_use_axe.png`}>
+Cost: 3. Cause vampires to bleed when struck with a hunter axe.
+
+</SkillOrAction>
+<SkillOrAction title="How to Actually Use a Stake" iconPath={`${tex}skills/how_to_actually_use_stake.png`}>
+Cost: 2. Cause vampires to bleed heavily when struck with a stake.
+
+</SkillOrAction>
+<SkillOrAction title="Artisan Craftsmanship" iconPath={`${tex}skills/artisan_craftsmanship.png`}>
+Cost: 3. Craft and equip ultimate weapons and armor.
+
+</SkillOrAction>
 </SkillBranch>
 
 <SkillBranch title="Brewing Master">
-<Skill title="Multitask Brewing" icon="multitask_brewing.png">
-    Brew 5 instead of 3 potions with the potion table at once
+<SkillOrAction title="Multitask Brewing" iconPath={`${tex}skills/multitask_brewing.png`}>
+Cost: 2. Brew 5 potions at once instead of 3 in a batch at the Vapor Still.
 
-</Skill>
-<Skill title="Durable Brewing" icon="durable_brewing.png">
-   Learn expensive recipes to brew very long lasting potions
+</SkillOrAction>
+<SkillOrAction title="Concentrated / Durable Brewing" iconPath={`${tex}skills/concentrated_brewing.png`}>
+Choose one of the two, cost 2 each.
 
-</Skill>
-<Skill title="Concentrated Brewing" icon="concentrated_brewing.png">
-    Learn expensive recipes to brew very strong potions
+- **Concentrated Brewing**: unlock high-potency variants of existing potion recipes.
+- **Durable Brewing**: unlock long-lasting variants of existing potion recipes.
 
-</Skill>
-<Skill title="Swift Brewing" icon="swift_brewing.png">
-    Speed up your brewing process
+</SkillOrAction>
+<SkillOrAction title="Swift / Efficient Brewing" iconPath={`${tex}skills/swift_brewing.png`}>
+Choose one of the two, cost 2 each.
 
-</Skill>
-<Skill title="Efficient Brewing" icon="efficient_brewing.png">
-    Less is more
+- **Swift Brewing**: reduce the time needed to brew potions.
+- **Efficient Brewing**: consume fewer reagents when brewing potions.
 
-</Skill>
-<Skill title="Master Brewer" icon="master_brewer.png">
-    Master some completely new potions
+</SkillOrAction>
+<SkillOrAction title="Forgotten Formulary" iconPath={`${tex}skills/forgotten_formulary.png`}>
+Cost: 3. Unlock entirely new potion recipes.
 
-</Skill>
-<Action title="Potion Resistance" icon="potion_resistance_hunter.png">
+</SkillOrAction>
+<SkillOrAction title="Potion Resistance" iconPath={`${tex}actions/potion_resistance.png`}>
+<UnlockAction action="Potion Resistance"/>  
+Cost: 2. Remove certain negative potion effects from yourself.
 
-<UnlockAction/>
+</SkillOrAction>
+<SkillOrAction title="Concentrated and Durable Brewing" iconPath={`${tex}skills/concentrated_durable_brewing.png`}>
+Cost: 2. Unlock variants of existing potion recipes that are both long-lasting and highly potent.
 
-Remove certain negative potion effects applied to you
-
-</Action>
-<Skill title="Concentrated and Durable Resistance" icon="concentrated_durable_brewing.png">
-    Long and Strong is finally possible
-
-</Skill>
-</SkillBranch>
-
-<SkillBranch title="Alchemy">
-<Skill title="Basic Alchemy" icon="basic_alchemy.png">
-    Learn how to use the Alchemical Cauldron to craft awesome things.
-
-</Skill>
-<Skill title="Vampire Repelling" icon="garlic_beacon.png">
-    Learn how to craft a garlic diffuser to keep those vampires away.
-
-</Skill>
-<Skill title="Purified Garlic" icon="purified_garlic.png">
-    Learn how to craft a garlic diffuser to keep those vampires away.
-
-</Skill>
-<Skill title="Enhanced Holy Water" icon="holy_water_enhanced.png">
-    Create enhanced Holy Water instead of normal one.
-
-</Skill>
-<Skill title="Improved Diffuser" icon="garlic_beacon_improved.png">
-    Learn how to craft a garlic diffuser with a higher range
-
-</Skill>
-<Action title="Vampire Awareness" icon="awareness_hunter.png">
-
-<UnlockAction/>
-
-Sense the existence of nearby vampire players or entities
-
-</Action>
-
+</SkillOrAction>
 </SkillBranch>
 
 ## Lord Skills
 
-<Skill title="Equipment Collect" icon="hunter_minion_collect.png">
+Available once you are a Hunter Lord.
 
-Enables the Equipment Collect task for minions.
-</Skill>
+<SkillOrAction title="Becoming a Hunter Lord" iconPath={`${tex}skills/hunter_lord_root.png`}>
+The root of the Lord tree.
 
-<Skill title="Better Minions" icon="hunter_minion_stats_increase.png">
+</SkillOrAction>
+<SkillOrAction title="Better Minions" iconPath={`${tex}skills/hunter_better_minions.png`}>
+Cost: 3. Improve the stats of your minions.
 
-Increase basic stats of hunter minions
-</Skill>
+</SkillOrAction>
+<SkillOrAction title="Minion Technology" iconPath={`${tex}skills/minion_technology.png`}>
+Cost: 1. Allow your minions to wield semi-auto crossbows.
 
-<Skill title="Technology" icon="minion_tech_crossbows.png">
+</SkillOrAction>
 
-Allows hunter minions to use semi-automatic crossbows
-</Skill>
+Further Lord skills come from shared lord skills and FactionApi:
+
+- **Lord Movement Speed / Lord Attack Speed** (choose one): boost the movement speed or attack speed of nearby faction members (action).
+- **Resource Collection**: send your minions out to collect resources.
+- **Resource Diversity**: send your minions out to collect specific kinds of resources. Better tools yield better resources.
+- **Minion Recovery**: speeds up the time your minions need to recover.
+
+## Marshall Skills
+
+The Marshall is the top hunter rank, see [Marshall](./hunter-player#marshall). It has its own tree, paid for with research points instead of skill points.
+
+<SkillOrAction title="Becoming the Marshall" iconPath={`${tex}skills/marshall_root.png`}>
+"Dracula is dead. The paperwork is yours now."
+
+</SkillOrAction>
+<SkillOrAction title="Master Alchemist" iconPath={`${tex}skills/master_alchemist.png`}>
+Cost: 1. Learn to imbue items with sovereign blood.
+
+</SkillOrAction>
+<SkillOrAction title="Ultimate Brewer" iconPath={`${tex}skills/ultimate_brewer.png`}>
+Cost: 1. Unlock the ability to combine sovereign blood with hunter potions.
+
+</SkillOrAction>

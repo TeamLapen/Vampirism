@@ -3,27 +3,29 @@ title: Set Level
 sidebar_position: 4
 ---
 
-This command can be used to set the faction level of a player. The player is optional, if not specified the command uses the executing player.
-
+Sets the faction and faction level of players. The faction is part of the command (e.g. `vampirism:vampire`, use autocomplete). If no level is given, level 1 is used. If the level exceeds the highest reachable level of the faction, it is capped. If no players are given, the command is executed on you.
 
 ## Syntax
 
 ```
-/vampirism level <faction> <level> [<player>]
+/factions faction set <faction>
+/factions faction set <faction> level [<level> [<players>]]
 ```
 
 ## Arguments
 
-| Parameter | Type              | Description              |
-|:----------|:------------------|:-------------------------|
-| faction   | `faction`         | The target faction id    |
-| level     | `integer`         | the target level         |
-| player    | `player_selector` | A player target selector |
+| Parameter | Type              | Description                                  |
+|:----------|:------------------|:---------------------------------------------|
+| faction   | `faction`         | A playable faction id, e.g. `vampirism:vampire` |
+| level     | `integer`         | The target level (minimum 1)                 |
+| players   | `player_selector` | A player target selector. If not given, the command is executed on you |
+
+In dev builds there is also the shorter [`/level`](./dev_commands.md) command.
 
 ## Permissions
 
 :::info
 
-These commands can only be used with cheat permissions
+Requires permission level 2 (gamemaster/cheats)
 
 :::

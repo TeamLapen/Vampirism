@@ -2,13 +2,13 @@
 title: Level Selector
 ---
 
-The faction selector selects all players of a given level, assuming they have the faction.
+The level selector selects all players with a given faction level (in whatever faction they currently are).
 
 ## Syntax
 
 ```
-@a["vampirism:level"="<level>"]
-@a["vampirism:level"="<level_range>"]
+@a[vampirism_level=<level>]
+@a[vampirism_level=<level_range>]
 ```
 
 ## Arguments
@@ -21,11 +21,11 @@ The faction selector selects all players of a given level, assuming they have th
 ## Examples
 
 ```
-/kill @a["vampirism:level"=5,"vampirism:faction"="vampirism:vampire"]
+/kill @a[vampirism_level=5]
 ```
-Kills all vampire players on level 5.
+Kills all players on faction level 5.
 
 ```
-/kill @a["vampirism:level"=5..8,"vampirism:faction"="vampirism:vampire"]
+/kill @a[vampirism_level=5..8]
 ```
-For a range of levels use `5..8` 
+For a range of levels use `5..8`

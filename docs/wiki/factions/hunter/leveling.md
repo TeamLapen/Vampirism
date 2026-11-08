@@ -3,47 +3,62 @@ sidebar_position: 2
 title: Leveling
 ---
 
-After becoming a hunter (see [Getting Started](../getting-started#first-steps---hunter)) you probably want to reach higher levels. To level up you have to train yourself somehow.  
-_The declared item amounts might not be up-to-date_  
+After becoming a hunter (see [Getting Started](../getting-started#first-steps---hunter)) you can reach level 14. Higher levels give you skill points for the [skill tree](./skills) and let you use stronger gear (e.g. Hunter Axes need level 4, 9 and 14).
 
 ## To reach level 2-4
-To reach higher levels you have collect some vampire blood (Kill normal vampire NPCs with a stake).  
-If you got enough look around for a normal hunter NPC. Interact with him and a GUI will open.  
-Current required counts to reach  
+Collect Vampire Blood (kill vampire NPCs with a stake). Find a normal hunter NPC, interact with him and put the Vampire Blood bottles into his GUI.
 
-| For Level | Vampire Blood|
-|-----------|--------------------------------------------------------|
-| 2         | 4                                                      |
-| 3         | 8                                                      |
-| 4         | 12                                                     |
+| For Level | Vampire Blood |
+|-----------|---------------|
+| 2         | 1             |
+| 3         | 5             |
+| 4         | 12            |
 
 ## To reach level 5+
-To level up further you have to do some research first. Craft yourself a Hunter Table and open its GUI. By inspecting some special items you will get some intel/research about vampires which you can use to level up at a Vampire Hunter Trainer in a village.  
-For higher tiers of hunter intel you will need to upgrade the hunter table by placing certain blocks adjacent to it.
-These blocks are: Weapon Table, Vapor Still and Alchemical Cauldron.  
-For the highest tier you will need all three blocks placed adjacent to the hunter table.  
+Further levels need two steps: first craft **Hunter Intel** at a Hunter Table, then hand it, together with iron and gold, to a **Hunter Trainer** (found in villages).
 
-#### Requirements
-| For Level | Pure Blood  | Vampire Fangs |
-|-----------|-------------|---------------|
-| 5         | 0           | 5             |
-| 6         | 1 Purity(1) | 0             |
-| 7         | 1 Purity(1) | 5             |
-| 8         | 1 Purity(2) | 0             |
-| 9         | 1 Purity(2) | 5             |
-| 10        | 1 Purity(3) | 5             |
-| 11        | 1 Purity(3) | 10            |
-| 12        | 1 Purity(4) | 10            |
-| 13        | 2 Purity(4) | 0             |
-| 14        | 2 Purity(5) | 0             |
+### 1. Hunter Table
+Craft a Hunter (Research) Table and open its GUI. For each Intel you have to put in:
+* 1 Book
+* Vampire Fangs
+* Pure Blood of at least the listed purity (the purity is shown in the item tooltip)
+* 1 Vampire Book
 
-#### Training
-With the Intel you got visit a Hunter Trainer. He will be able to train you for the next level, but you will have to pay him a fee for that. Just open his GUI and take a look.
+For higher levels the table needs workstations next to it (north, east, south or west): Weapon Table, Alchemical Cauldron and Vapor Still. Each of them counts once, so the table tier is 0 to 3. The GUI tells you what is missing.
+
+| For Level | Table tier | Vampire Fangs | Pure Blood        |
+|-----------|------------|---------------|-------------------|
+| 5         | 0          | 10            | -                 |
+| 6         | 0          | -             | 1x Purity 1       |
+| 7         | 0          | 10            | 1x Purity 1       |
+| 8         | 1          | -             | 1x Purity 2       |
+| 9         | 1          | 15            | 1x Purity 2       |
+| 10        | 2          | 20            | 1x Purity 3       |
+| 11        | 2          | 20            | 1x Purity 3       |
+| 12        | 3          | 20            | 1x Purity 4       |
+| 13        | 3          | 25            | 2x Purity 4       |
+| 14        | 3          | 25            | 2x Purity 5       |
+
+### 2. Training
+Visit a Hunter Trainer with the Intel for your next level. He trains you for the fee below. After the training you get a short Saturation effect.
+
+| For Level | Iron Ingots | Gold Ingots |
+|-----------|-------------|-------------|
+| 5         | 5           | -           |
+| 6         | 10          | -           |
+| 7         | 15          | -           |
+| 8         | 40          | -           |
+| 9         | 20          | 10          |
+| 10        | 20          | 20          |
+| 11        | 20          | 10          |
+| 12        | 30          | 10          |
+| 13        | 40          | 20          |
+| 14        | 40          | 40          |
 
 ## Leaving the Faction
 
-If you want to leave the Hunter faction behind you can do so by crafting a Sanguinare Injection and inject it at an Injection Chair.
-
+If you want to leave the Hunter faction behind you can do so by crafting a Sanguinare Injection and using it at an Injection Chair.
 
 ## Tutorial video
+The video was made for an older version, so the numbers and some names differ.  
 https://youtu.be/ht-GZyjwSTw
