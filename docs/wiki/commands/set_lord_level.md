@@ -19,7 +19,6 @@ Sets the player to the maximum level of the faction and sets the given lord leve
 | level     | `integer`         | The target lord level (minimum 1)            |
 | players   | `player_selector` | A player target selector. If not given, the command is executed on you |
 
-In dev builds there is also the shorter [`/lord`](./dev_commands.md) command.
 
 ## Permissions
 

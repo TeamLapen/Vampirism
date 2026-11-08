@@ -1,45 +1,34 @@
 ---
-title: Skill Tree Nodes
+title: Skill Segments
 sidebar_position: 2
 ---
-:::danger Outdated
-This page describes the pre-FactionApi skill nodes format (`data/<modid>/vampirism/…`), which is no longer loaded.
-Skill trees and skill segments are now FactionApi data pack registries – see
-[Skill Trees](/factionapi/data/skilltrees).
-:::
 
-Skill tree nodes are the nodes in a skill tree
+The nodes of a skill tree are **skill segments**, a [FactionApi data pack registry](/factionapi/data/skilltrees#skill-segment) (`factionapi:skill_segment`). A segment holds one skill, or several skills the player has to choose between, and the segments it follows.
 
-
-## Creating skill nodes
-
-A skill nodes has the following structure:
-
-```json title="data/<modid>/vampirism/skill_nodes/<skill-node-path>.json"
-{
-  "skills": <skill-array>,
-}
+```
+data/<namespace>/factionapi/skill_segment/<path>.json
 ```
 
-| Field    | Type                   | Description                                   |
-|----------|------------------------|-----------------------------------------------|
-| `skills` | ResourceLocation array | The registry names of the skills in the node. |
+Schema: [`skill_segment.schema.json`](https://raw.githubusercontent.com/TeamLapen/Vampirism/refs/heads/dev/schemas/skill_segment.schema.json).
 
+| Field | Description |
+|-------|-------------|
+| `tree` | The [skill tree](./skill_tree) the segment belongs to, e.g. `vampirism:vampire/level`. |
+| `skills` | The skill ids in the segment. More than one means the player can only take one of them. |
+| `parents` | Segments of which at least one has to be unlocked first. Without parents the segment is a root. |
 
-### Examples
-```json title="data/vampirism/vampirism/skill_nodes/hunter/alchemy1.json"
+See the [FactionApi page](/factionapi/data/skilltrees#skill-segment) for the remaining fields (`locking_segments`, `placement`).
+
+## Built-in segments
+
+Vampirism's segments are generated into `vampirism/factionapi/skill_segment/vampire/` and `.../hunter/`, one file per skill or choice. Segments that offer a choice are named `a_or_b`, for example `vampirism:vampire/fast_recovery_or_swift_resurrection` (Fast Recovery or Swift Resurrection) or `vampirism:hunter/double_it_or_dual_wielding`.
+
+## Example
+
+```json title="data/vampirism/factionapi/skill_segment/vampire/fast_recovery_or_swift_resurrection.json"
 {
-  "skills": [
-    "vampirism:basic_alchemy"
-  ]
-}
-```
-
-```json title="data/vampirism/vampirism/skill_nodes/hunter/lord_3.json"
-{
-  "skills": [
-    "vampirism:lord_speed",
-    "vampirism:lord_attack_speed"
-  ]
+  "parents": [ "vampirism:vampire/disguise" ],
+  "skills": [ "vampirism:fast_recovery", "vampirism:swift_resurrection" ],
+  "tree": "vampirism:vampire/level"
 }
 ```

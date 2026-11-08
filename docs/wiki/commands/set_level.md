@@ -20,7 +20,6 @@ Sets the faction and faction level of players. The faction is part of the comman
 | level     | `integer`         | The target level (minimum 1)                 |
 | players   | `player_selector` | A player target selector. If not given, the command is executed on you |
 
-In dev builds there is also the shorter [`/level`](./dev_commands.md) command.
 
 ## Permissions
 

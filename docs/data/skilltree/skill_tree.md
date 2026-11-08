@@ -2,72 +2,42 @@
 title: Skill Tree
 sidebar_position: 1
 ---
-:::danger Outdated
-This page describes the pre-FactionApi skill tree format (`data/<modid>/vampirism/…`), which is no longer loaded.
-Skill trees and skill segments are now FactionApi data pack registries – see
-[Skill Trees](/factionapi/data/skilltrees).
-:::
 
-A skill tree is a collection of skill nodes that can be unlocked by skill points the player gets each level.
+Skill trees are the tabs of the skill screen. They are a [FactionApi data pack registry](/factionapi/data/skilltrees#skill-tree) (`factionapi:skill_tree`), so Vampirism's trees are ordinary data pack files:
 
-![](../assets/skill_tree.png)
-
-
-## Built-in Skill Trees
-- `vampirism:vampire/level`
-- `vampirism:vampire/lord`
-- `vampirism:hunter/level`
-- `vampirism:hunter/lord`
-
-The both level skill trees are unlocked by joining the faction, while both lord skill trees are unlocked by reaching the first lord level of the faction.
-
-## Creating a skill tree
-
-A skill tree has the following structure:
-
-```json title="data/<modid>/vampirism/skill_trees/<skill-tree-path>.json"
-{
-  "display": <item-stack>,
-  "faction": {
-    "id": "<faction-id>"
-  },
-  "name": <Component>,
-  "unlock_predicate": <entity-predicate>,
-}
+```
+data/<namespace>/factionapi/skill_tree/<path>.json
 ```
 
-| Field              | Type             | Description                                                            |
-|--------------------|------------------|------------------------------------------------------------------------|
-| `display`          | itemstack        | The item stack that is used to display the skill tree in the GUI.      |
-| `faction`          | ResourceLocation | The faction the skill tree belongs to.                                 |
-| `name`             | Component        | The display name of the skill tree.                                    |
-| `unlock_predicate` | entity-predicate | The predicate that is used to determine if the skill tree is unlocked. |
+Schema: [`skill_tree.schema.json`](https://raw.githubusercontent.com/TeamLapen/Vampirism/refs/heads/dev/schemas/skill_tree.schema.json). The format is documented in the FactionApi docs.
 
+## Built-in skill trees
 
-### Example
+| Id | Faction | Unlocked for | Skill points |
+|----|---------|--------------|--------------|
+| `vampirism:vampire/level` | Vampire | every vampire | normal skill points |
+| `vampirism:vampire/lord` | Vampire | lord level 1+ | normal skill points |
+| `vampirism:vampire/dracula` | Vampire | players with the Dracula rank (`vampirism:dracula`) | `vampirism:dracula` pool (Dracula marks) |
+| `vampirism:hunter/level` | Hunter | every hunter | normal skill points |
+| `vampirism:hunter/lord` | Hunter | lord level 1+ | normal skill points |
+| `vampirism:hunter/marshall` | Hunter | players with the Marshall rank (`vampirism:marshall`) | `vampirism:marshall` pool (research points) |
 
-```json title="data/vampirism/vampirism/skill_trees/vampire/lord.json"
+The Dracula and Marshall trees use Vampirism's own unlock predicates (`vampirism:dracula`, `vampirism:marshall`) and skill point pools. Trees are ordered with `order_after`: level, then lord, then the rank tree.
+
+## Example
+
+```json title="data/vampirism/factionapi/skill_tree/vampire/dracula.json"
 {
-  "display": {
-    "Count": 1,
-    "id": "vampirism:vampire_minion_binding"
-  },
-  "faction": {
-    "id": "vampirism:vampire"
-  },
-  "name": {
-    "translate": "text.vampirism.skills.lord"
-  },
+  "background": "vampirism:block/dark_stone_bricks",
+  "display": { "id": "vampirism:vampire_clothing_hat" },
+  "faction": "vampirism:vampire",
+  "name": { "translate": "gui.vampirism.skills.dracula" },
+  "order_after": [ "vampirism:vampire/lord" ],
+  "skill_point_tag": "vampirism:dracula",
   "unlock_predicate": {
-    "type_specific": {
-      "type": "vampirism:faction",
-      "faction": {
-        "id": "vampirism:vampire"
-      },
-      "lord_level": 1
-    }
+    "type_specific": { "type": "vampirism:dracula" }
   }
 }
 ```
 
-The vampire lord skill tree is unlocked when the player has the vampire faction and a minimum lord level of 1. With the Vampire Minion Binding as item and the translation of `text.vampirism.skills.lord` as name.
+To add skills to a tree, add [skill segments](./skill_nodes) that reference it.
