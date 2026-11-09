@@ -19,8 +19,21 @@ public class REFERENCE {
     public static final int HIGHEST_HUNTER_LEVEL = 14;
     public static final int HIGHEST_VAMPIRE_LORD = 5;
     public static final int HIGHEST_HUNTER_LORD = 5;
-    public static final int EYE_TYPE_COUNT = 17;
-    public static final int FANG_TYPE_COUNT = 7;
+    /** Texture suffixes for the distinct eye designs, in appearance menu order. */
+    private static final int[] EYE_TEXTURE_IDS = {0, 1, 2, 3, 5, 15, 16};
+    private static final int[] LEGACY_EYE_TYPES = {
+            0, 1, 2, 3, 2, 4, 0, 0, 1, 1, 2, 2, 4, -1, -1, 5, 6
+    };
+    public static final int EYE_TYPE_COUNT = EYE_TEXTURE_IDS.length;
+    public static final int FANG_TYPE_COUNT = 6;
+
+    public static int eyeTextureId(int type) {
+        return EYE_TEXTURE_IDS[type];
+    }
+
+    public static int mapLegacyEyeType(int type) {
+        return type >= 0 && type < LEGACY_EYE_TYPES.length ? LEGACY_EYE_TYPES[type] : -1;
+    }
     /**
      * Check for vampire garlic damage every n ticks
      * Must be higher than 1, due to implementation

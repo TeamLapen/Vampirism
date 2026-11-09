@@ -27,6 +27,9 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
+import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
+import de.teamlapen.vampirism.client.renderer.tooltips.ClientLordTitlesTooltip;
+import de.teamlapen.vampirism.client.renderer.tooltips.LordTitlesTooltip;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
@@ -81,6 +84,11 @@ public class VampirismModClient {
     @SubscribeEvent
     public void onAddReloadListenerEvent(@NotNull RegisterClientReloadListenersEvent event) {
         event.registerReloadListener(this.renderHandler);
+    }
+
+    @SubscribeEvent
+    public void registerTooltipComponents(@NotNull RegisterClientTooltipComponentFactoriesEvent event) {
+        event.register(LordTitlesTooltip.class, ClientLordTitlesTooltip::new);
     }
 
     public static VampirismModClient getINSTANCE() {
