@@ -27,13 +27,18 @@ Release versions look like `<minecraft_version>-<factionapi_version>`, e.g. `26.
 * the second part (`1.0.0`, …) is FactionApi's own semantic version.
 
 Mods that depend on FactionApi declare a minimum of the second part; keep FactionApi at or above the
-version your other mods ask for.
+version your other mods ask for. Vampirism currently requires a `1.0.0-beta.1` build or newer, so pre-release
+builds may be needed until the final `1.0.0` is available.
 
 ## Configuration
 
-FactionApi has no gameplay config of its own. On its own it adds the faction framework but no
-playable factions – those come from Vampirism or another faction mod. Installing FactionApi alone
-does nothing player-visible.
+On its own FactionApi adds the faction framework but no playable factions – those come from Vampirism
+or another faction mod. Installing FactionApi alone gives players no faction to join (the only built-in faction is
+the neutral "Human" one every player starts in).
+
+FactionApi does have its own options (village, raid, faction, minion and task settings on the server; HUD
+options on the client). They apply to every faction mod using it and are listed in
+[Commands, permissions & config](./commands-and-config#config).
 
 ## Servers
 

@@ -19,10 +19,23 @@ API surface is marked with `@ApiStatus` annotations. Types/methods tagged `@ApiS
 not part of the contract and may change without notice.
 :::
 
+## New here?
+
+If you want to **create your own faction**, start with the guides, in this order:
+
+1. [Concepts](./getting-started/concepts) – the mental model, glossary and what is required vs optional.
+2. [Your first faction](./getting-started/first-faction) – a complete minimal faction, step by step.
+3. [Skills and actions](./getting-started/skills-and-actions) – a skill tree and an ability.
+4. [Optional features](./getting-started/optional-features) – lords, tasks, refinements, villages, minions, faction mobs.
+5. [Troubleshooting](./getting-started/troubleshooting) – checklist and symptom → cause table.
+
+The remaining pages are the reference.
+
 ## Documentation map
 
 | Page                                         | Contents                                                                        |
 |----------------------------------------------|------------------------------------------------------------------------------|
+| [Getting started](./getting-started/concepts) | Concepts, tutorial for a first faction, skills and actions, optional features, troubleshooting. |
 | [Object model](./object-model)               | `IFaction` / `IPlayableFaction`, the player handler, faction extensions.       |
 | [Registries](./registries)                   | Every Faction API registry and what it is used for.                           |
 | [Registering content](./registering-content) | Adding factions, skills, actions, task types, minions and JSON callbacks.     |
