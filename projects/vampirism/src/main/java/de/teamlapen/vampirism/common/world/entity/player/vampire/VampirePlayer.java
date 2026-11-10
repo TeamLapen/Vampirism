@@ -78,6 +78,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
@@ -911,7 +912,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     }
 
     private boolean isSensitiveToSun() {
-        return getLevel() > 0 && !skillProperties.mist;
+        return getLevel() > 0 && !skillProperties.mist && asEntity().level().dimensionType().skybox() == DimensionType.Skybox.OVERWORLD;
     }
 
     /**
