@@ -82,6 +82,9 @@ side = "BOTH"
 
 ## 4. Next steps
 
+* **Creating a new faction?** Follow [Your first faction](../api/getting-started/first-faction). It needs
+  the full `FactionApi` artifact (not only `FactionApi-api`), because the base classes you extend live in the
+  implementation module.
 * [API documentation](../api/intro) – registries, builders, events.
 * [Data pack documentation](../data/intro) – tasks and skill trees.
 

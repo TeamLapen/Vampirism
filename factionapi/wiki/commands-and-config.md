@@ -37,6 +37,9 @@ without a requirement is available to everyone.
 | `/factions minion inventory <minion> add <item> [count]`      | 3     | Adds items to a minion's inventory. |
 | `/factions minion inventory <minion> remove <item> [count]`   | 3     | Removes items and gives them to you. |
 
+The faction ids offered by `faction set` also include `factionapi:neutral` (its highest level defaults to `1`, so this
+puts you into the neutral faction at level 1). Use it only for testing.
+
 `<minion>` uses the custom `factionapi:minion_id` argument (`<player>:<id>`, optionally with `| name`). The
 suggestions are sent to the client at login, so minions created afterwards only show up after rejoining or
 reloading. `<faction id>` tab-completes registered faction ids.

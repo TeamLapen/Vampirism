@@ -1,9 +1,11 @@
 ---
-sidebar_position: 4
+sidebar_position: 5
 title: Registering content
 ---
 
-See [Registries](./registries) for the full list of registry keys.
+New to FactionApi? The [step-by-step guide](./getting-started/first-faction) walks through a complete faction;
+this page is the reference for the individual registrations. See [Registries](./registries) for the full list of
+registry keys.
 
 ## Register a faction
 
