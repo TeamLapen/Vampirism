@@ -224,7 +224,7 @@ public class CrucifixItem extends Item implements IItemWithTier, IDescriptionPro
                 case NORMAL -> (distance < 25 && degrees < 45);
             };
             if (effect) {
-                VampirePlayer.get(player).effectCrucifixSuppression();
+                VampirePlayer.get(player).effectCrucifixSuppression(tier);
             }
         }
     }

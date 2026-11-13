@@ -22,7 +22,7 @@ public class VampireRageAction extends DefaultVampireAction implements ILastingA
     }
 
     @Override
-    public IActionResult canBeUsedBy(@NotNull IVampirePlayer vampire) {
+    protected IActionResult canBeUsedByVampire(@NotNull IVampirePlayer vampire) {
         return IActionResult.otherAction(vampire.getActionHandler(), VampireActions.BAT_FORM);
     }
 

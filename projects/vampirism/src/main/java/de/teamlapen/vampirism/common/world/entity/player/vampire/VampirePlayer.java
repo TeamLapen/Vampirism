@@ -21,6 +21,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismApi;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.api.util.VIdentifier;
+import de.teamlapen.vampirism.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.common.events.VampirismEventFactory;
 import de.teamlapen.vampirism.api.world.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.world.entity.IExtendedCreatureVampirism;
@@ -34,6 +35,7 @@ import de.teamlapen.vampirism.common.integration.PlayerReviveHelper;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundSimpleInputEvent;
 import de.teamlapen.vampirism.common.particles.FlyingBloodEntityParticleOptions;
 import de.teamlapen.vampirism.common.particles.GenericParticleOptions;
+import de.teamlapen.vampirism.common.tags.ModActionTags;
 import de.teamlapen.vampirism.common.util.*;
 import de.teamlapen.vampirism.common.world.attachments.ModDamageSources;
 import de.teamlapen.vampirism.common.world.effects.SanguinareMobEffect;
@@ -61,6 +63,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -117,6 +120,8 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     private boolean wasDead = false;
     private int feed_victim = -1;
     private int crucifixTicks = 0;
+    /** Highest crucifix tier (ordinal of {@link IItemWithTier.Tier}) the player is currently suppressed by */
+    private int crucifixTier = 0;
     /** Holds a sound reference (client side only) for the feeding sound while feed_victim!=-1 */
     private @Nullable ISoundReference feedingSoundReference;
     private @Nullable BITE_TYPE feed_victim_bite_type;
@@ -879,7 +884,14 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         if (crucifixTicks > 0) {
             --crucifixTicks;
             if (this.player.tickCount % 10 == 8 && crucifixTicks > 30) {
-                this.player.addEffect(new MobEffectInstance(ModEffects.CRUCIFIX_SUPPRESSION, 20));
+                this.player.addEffect(new MobEffectInstance(ModEffects.CRUCIFIX_SUPPRESSION, 20, crucifixTier));
+                var disabledActions = ModActionTags.disabledByCrucifix(crucifixTier);
+                var actionHandler = getActionHandler();
+                //noinspection rawtypes,unchecked
+                actionHandler.getActiveActions().stream().filter(action -> action.is((TagKey) disabledActions)).toList().forEach(actionHandler::deactivateAction);
+            }
+            if (crucifixTicks == 0) {
+                crucifixTier = 0;
             }
         }
     }
@@ -1354,8 +1366,12 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         }
     }
 
-    public void effectCrucifixSuppression() {
+    /**
+     * @param tier the tier of the crucifix, determines which actions are disabled. See {@link ModActionTags#disabledByCrucifix(int)}
+     */
+    public void effectCrucifixSuppression(IItemWithTier.Tier tier) {
         this.crucifixTicks = Math.clamp(this.crucifixTicks + 15, 0, 45);
+        this.crucifixTier = Math.max(this.crucifixTier, tier.ordinal());
     }
 
     public static double getNaturalArmorValue(int lvl) {

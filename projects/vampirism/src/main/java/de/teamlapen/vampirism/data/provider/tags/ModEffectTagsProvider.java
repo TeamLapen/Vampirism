@@ -35,8 +35,7 @@ public class ModEffectTagsProvider extends KeyTagProvider<MobEffect> {
         this.tag(ModEffectTags.DISABLES_ACTIONS_HUNTER)
                 .addTag(FactionEffectTags.DISABLES_ACTIONS);
         this.tag(ModEffectTags.DISABLES_ACTIONS_VAMPIRE)
-                .addTag(FactionEffectTags.DISABLES_ACTIONS)
-                .add(ModEffects.CRUCIFIX_SUPPRESSION.getKey());
+                .addTag(FactionEffectTags.DISABLES_ACTIONS);
         this.tag(ModEffectTags.SELF_HARM_SERUMS)
                 .add(MobEffects.INSTANT_DAMAGE.getKey());
     }

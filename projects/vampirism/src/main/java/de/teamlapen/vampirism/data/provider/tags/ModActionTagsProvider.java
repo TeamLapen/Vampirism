@@ -33,6 +33,14 @@ public class ModActionTagsProvider extends KeyTagProvider<IAction<?>> {
         tag(ModActionTags.DISABLE_BY_ENHANCED_HOLY_WATER).add((ResourceKey) VampireActions.BAT_FORM.getKey(), (ResourceKey) VampireActions.REGENERATION.getKey(), (ResourceKey) VampireActions.SUN_PROTECTION.getKey());
         tag(ModActionTags.DISABLE_BY_ULTIMATE_HOLY_WATER).add((ResourceKey) VampireActions.DAMAGE_LIMITER.getKey(), (ResourceKey) VampireActions.VAMPIRE_RAGE.getKey());
 
+        tag(ModActionTags.DISABLE_BY_CRUCIFIX).addTags(ModActionTags.DISABLE_BY_NORMAL_CRUCIFIX, ModActionTags.DISABLE_BY_ENHANCED_CRUCIFIX, ModActionTags.DISABLE_BY_ULTIMATE_CRUCIFIX);
+        tag(ModActionTags.DISABLE_BY_ENHANCED_CRUCIFIX).addTag(ModActionTags.DISABLE_BY_NORMAL_CRUCIFIX);
+        tag(ModActionTags.DISABLE_BY_ULTIMATE_CRUCIFIX).addTag(ModActionTags.DISABLE_BY_ENHANCED_CRUCIFIX);
+
+        tag(ModActionTags.DISABLE_BY_NORMAL_CRUCIFIX).add((ResourceKey) VampireActions.DISGUISE.getKey(), (ResourceKey) VampireActions.INVISIBILITY.getKey(), (ResourceKey) VampireActions.DARK_STALKER.getKey(), (ResourceKey) VampireActions.HISSING.getKey());
+        tag(ModActionTags.DISABLE_BY_ENHANCED_CRUCIFIX).add((ResourceKey) VampireActions.BAT_FORM.getKey(), (ResourceKey) VampireActions.TELEPORT.getKey(), (ResourceKey) VampireActions.SUMMON_BATS.getKey(), (ResourceKey) VampireActions.REGENERATION.getKey());
+        tag(ModActionTags.DISABLE_BY_ULTIMATE_CRUCIFIX).add((ResourceKey) VampireActions.VAMPIRE_RAGE.getKey(), (ResourceKey) VampireActions.DAMAGE_LIMITER.getKey(), (ResourceKey) VampireActions.FREEZE.getKey(), (ResourceKey) VampireActions.DARK_BLOOD_PROJECTILE.getKey(), (ResourceKey) VampireActions.AURA_OF_DARKNESS.getKey());
+
         tag(FactionActionTags.SHOW_COOLDOWN_IN_HUD)
                 .add((ResourceKey) HunterActions.SIXTH_SENSE.getKey())
                 .add(HunterActions.POTION_RESISTANCE.getKey())

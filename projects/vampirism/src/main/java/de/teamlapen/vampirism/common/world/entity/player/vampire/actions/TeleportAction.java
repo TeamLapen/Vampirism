@@ -72,7 +72,7 @@ public class TeleportAction extends DefaultVampireAction {
     }
 
     @Override
-    public IActionResult canBeUsedBy(@NotNull IVampirePlayer vampire) {
+    protected IActionResult canBeUsedByVampire(@NotNull IVampirePlayer vampire) {
         return IActionResult.otherAction(vampire.getActionHandler(), VampireActions.BAT_FORM);
     }
 

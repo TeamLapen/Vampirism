@@ -55,7 +55,7 @@ public class InfectAction extends DefaultVampireAction {
 
 
     @Override
-    public IActionResult canBeUsedBy(IVampirePlayer player) {
+    protected IActionResult canBeUsedByVampire(IVampirePlayer player) {
         if (player.asEntity().level().getDifficulty() == Difficulty.PEACEFUL) {
             return IActionResult.fail(Component.translatable("message.vampirism.action.infect.peaceful"));
         }

@@ -43,7 +43,7 @@ public class SummonBatsAction extends DefaultVampireAction {
     }
 
     @Override
-    public IActionResult canBeUsedBy(@NotNull IVampirePlayer player) {
+    protected IActionResult canBeUsedByVampire(@NotNull IVampirePlayer player) {
         var res = player.getActionHandler().isActionActive(VampireActions.BAT_FORM) || player.getRefinementHandler().isRefinementEquipped(ModRefinements.SUMMON_BATS);
         if (res) {
             return IActionResult.SUCCESS;

@@ -51,7 +51,7 @@ public class BatFormAction extends DefaultVampireAction implements ILastingActio
     }
 
     @Override
-    public IActionResult canBeUsedBy(IVampirePlayer vampire) {
+    protected IActionResult canBeUsedByVampire(IVampirePlayer vampire) {
         Player player = vampire.asEntity();
         if (vampire.isGettingSundamage(player.level())) {
             return IActionResult.fail(Component.translatable("message.vampirism.action.bat.in_sun"));
