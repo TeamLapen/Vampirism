@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.common.core;
 
-import de.teamlapen.faction.common.advancements.criterion.FactionSubPredicate;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismDataComponents;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.tags.ModEnchantmentTags;
+import de.teamlapen.vampirism.common.tags.ModEntityTags;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
 import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.core.HolderGetter;
@@ -14,6 +14,7 @@ import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.ConditionalEffect;
@@ -23,7 +24,6 @@ import net.minecraft.world.item.enchantment.LevelBasedValue;
 import net.minecraft.world.item.enchantment.effects.AddValue;
 import net.minecraft.world.item.enchantment.effects.EnchantmentValueEffect;
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.predicates.AnyOfCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -48,6 +48,7 @@ public class ModEnchantments {
     static void createEnchantments(BootstrapContext<Enchantment> context) {
         HolderGetter<Enchantment> enchantments = context.lookup(Registries.ENCHANTMENT);
         HolderGetter<Item> items = context.lookup(Registries.ITEM);
+        HolderGetter<EntityType<?>> entityTypes = context.lookup(Registries.ENTITY_TYPE);
 
         context.register(VAMPIRE_SLAYER,
                 new Enchantment.Builder(
@@ -65,19 +66,15 @@ public class ModEnchantments {
                         .withEffect(
                                 EnchantmentEffectComponents.DAMAGE,
                                 new AddValue(LevelBasedValue.perLevel(1F)),
-                                AnyOfCondition.anyOf(
-                                        LootItemEntityPropertyCondition.hasProperties(
-                                                LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().subPredicate(FactionSubPredicate.faction(ModFactions.VAMPIRE))
-                                        ),LootItemEntityPropertyCondition.hasProperties(
-                                                LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().subPredicate(FactionSubPredicate.faction(ModFactions.VAMPIRE))
-                                        )
+                                // only vampire creatures, not vampire players
+                                LootItemEntityPropertyCondition.hasProperties(
+                                        LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().of(entityTypes, ModEntityTags.VAMPIRE)
                                 )
-
                         ).withEffect(
                                 EnchantmentEffectComponents.DAMAGE,
                                 new AddValue(LevelBasedValue.constant(2F)),
                                 LootItemEntityPropertyCondition.hasProperties(
-                                        LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().subPredicate(FactionSubPredicate.faction(ModFactions.VAMPIRE))
+                                        LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().of(entityTypes, ModEntityTags.VAMPIRE)
                                 )
                         )
                         .build(VAMPIRE_SLAYER.identifier()));
