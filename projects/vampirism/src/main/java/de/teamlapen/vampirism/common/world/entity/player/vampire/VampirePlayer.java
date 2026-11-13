@@ -1355,7 +1355,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     }
 
     public void effectCrucifixSuppression() {
-        this.crucifixTicks = Math.max(this.crucifixTicks + 15, 45);
+        this.crucifixTicks = Math.clamp(this.crucifixTicks + 15, 0, 45);
     }
 
     public static double getNaturalArmorValue(int lvl) {

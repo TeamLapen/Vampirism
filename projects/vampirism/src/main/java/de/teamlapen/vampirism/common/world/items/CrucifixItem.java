@@ -21,6 +21,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -214,9 +215,9 @@ public class CrucifixItem extends Item implements IItemWithTier, IDescriptionPro
                 }
             }
             var viewVector = owner.getViewVector(1.0F).normalize();
-            var targetVector = owner.position().subtract(entity.position());
+            var targetVector = entity.getBoundingBox().getCenter().subtract(owner.getEyePosition()); // from the crucifix holder towards the vampire
             double distance = targetVector.lengthSqr();
-            double degrees = Math.toDegrees(Math.cos(viewVector.dot(targetVector.normalize())));
+            double degrees = Math.toDegrees(Math.acos(Mth.clamp(viewVector.dot(targetVector.normalize()), -1, 1)));
             boolean effect = switch (tier) {
                 case ULTIMATE -> (distance < 100 && degrees < 20) || (distance < 56 && degrees < 55) || (distance < 25 && degrees < 70);
                 case ENHANCED -> (distance < 56 && degrees < 45) || (distance < 25 && degrees < 55);
