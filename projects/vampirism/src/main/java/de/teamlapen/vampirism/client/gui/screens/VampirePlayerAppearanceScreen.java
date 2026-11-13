@@ -88,7 +88,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
                     .width(120)
                     .itemHeight(20)
                     .maxVisibleItems(5)
-                    .initialSelection(this.wingsTexture.ordinal())
+                    .initialSelection(Math.max(0, this.availableWingsTextures.indexOf(this.wingsTexture)))
                     .onSelect(this::wingsTexture)
                     .simpleItems(availableWingsTextures.stream().map(x -> (Component)Component.translatable("gui.vampirism.wings", x.name)).toList())
                     .build());
