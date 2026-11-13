@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.api.factions.IFactionHelper;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
@@ -79,7 +80,11 @@ public class FactionSubPredicate implements EntitySubPredicate {
                     && (level.isEmpty() || fph.getCurrentLevel() >= level.get())
                     && (lordLevel.isEmpty() || fph.getPlayerLord().map(ILordPlayer::getLordLevel).orElse(0) >= lordLevel.get());
         }
-        return false;
+        // non-player entities have no level or lord level, so they can only match a pure faction predicate
+        if (faction == null || level.isPresent() || lordLevel.isPresent()) {
+            return false;
+        }
+        return IFaction.is(IFactionHelper.get().getFaction(pEntity), faction);
     }
 
     @Override
