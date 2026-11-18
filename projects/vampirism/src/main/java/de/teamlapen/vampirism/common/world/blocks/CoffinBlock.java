@@ -16,6 +16,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.attribute.BedRule;
 import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.entity.EntityType;
@@ -134,6 +135,17 @@ public class CoffinBlock extends BaseContainerBlock {
     @Override
     public boolean isBed(BlockState state, BlockGetter world, BlockPos pos, LivingEntity sleeper) {
         return !state.getValue(CLOSED) || state.getValue(BedBlock.OCCUPIED);
+    }
+
+    /**
+     * NeoForge's default returns empty for every block that is not a {@link BedBlock}, so without this the respawn point set by {@link de.teamlapen.vampirism.common.world.entity.player.ModPlayerEventHandler#checkVampireCanSleep} is never usable.
+     */
+    @Override
+    public Optional<ServerPlayer.RespawnPosAngle> getRespawnPosition(BlockState state, EntityType<?> type, LevelReader levelReader, BlockPos pos, float orientation) {
+        if (levelReader instanceof Level level && !level.environmentAttributes().getValue(EnvironmentAttributes.BED_RULE, pos).canSetSpawn(level)) {
+            return Optional.empty();
+        }
+        return findStandUpPosition(type, levelReader, pos, orientation).map(standUpPos -> ServerPlayer.RespawnPosAngle.of(standUpPos, pos, 0.0F));
     }
 
     @Override
@@ -313,13 +325,37 @@ public class CoffinBlock extends BaseContainerBlock {
         return optional.isPresent() ? optional : findStandUpPositionAtOffset(entityType, collisionGetter, pos, offsets, false);
     }
 
-    // TODO: The player appears on top of the coffin even when it's vertical for some reason. On top of that, placing blocks on top makes it obscured
+    /**
+     * The head of a vertical coffin is the upper block, so positions next to it have no floor. Search around the foot block instead, starting in front of the opening.
+     */
     private static Optional<Vec3> findStandUpPositionVertical(EntityType<?> entityType, CollisionGetter collisionGetter, BlockPos pos, Direction facing, float yRot) {
+        BlockState state = collisionGetter.getBlockState(pos);
+        BlockPos footPos = state.getValue(PART) == CoffinPart.HEAD ? pos.below() : pos;
         Direction clockwise = facing.getClockWise();
         Direction bestDir = clockwise.isFacingAngle(yRot) ? clockwise.getOpposite() : clockwise;
-        int[][] offsets = coffinStandUpOffsets(facing, bestDir);
-        Optional<Vec3> optional = findStandUpPositionAtOffset(entityType, collisionGetter, pos, offsets, true);
-        return optional.isPresent() ? optional : findStandUpPositionAtOffset(entityType, collisionGetter, pos, offsets, false);
+        int[][] offsets = verticalCoffinStandUpOffsets(facing.getOpposite(), bestDir);
+        for (BlockPos searchPos : new BlockPos[]{footPos, footPos.above()}) {
+            Optional<Vec3> optional = findStandUpPositionAtOffset(entityType, collisionGetter, searchPos, offsets, true);
+            if (optional.isPresent()) return optional;
+        }
+        for (BlockPos searchPos : new BlockPos[]{footPos, footPos.above()}) {
+            Optional<Vec3> optional = findStandUpPositionAtOffset(entityType, collisionGetter, searchPos, offsets, false);
+            if (optional.isPresent()) return optional;
+        }
+        return Optional.empty();
+    }
+
+    private static int[][] verticalCoffinStandUpOffsets(Direction front, Direction side) {
+        return new int[][]{
+                {front.getStepX(), front.getStepZ()},
+                {front.getStepX() + side.getStepX(), front.getStepZ() + side.getStepZ()},
+                {front.getStepX() - side.getStepX(), front.getStepZ() - side.getStepZ()},
+                {side.getStepX(), side.getStepZ()},
+                {-side.getStepX(), -side.getStepZ()},
+                {-front.getStepX() + side.getStepX(), -front.getStepZ() + side.getStepZ()},
+                {-front.getStepX() - side.getStepX(), -front.getStepZ() - side.getStepZ()},
+                {-front.getStepX(), -front.getStepZ()}
+        };
     }
 
     private static Optional<Vec3> findStandUpPositionAtOffset(EntityType<?> entityType, CollisionGetter collisionGetter, BlockPos pos, int[][] offsets, boolean simulate) {
