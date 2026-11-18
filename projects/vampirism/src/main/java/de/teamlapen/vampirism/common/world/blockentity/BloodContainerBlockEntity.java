@@ -50,7 +50,7 @@ public class BloodContainerBlockEntity extends NetworkedBlockEntity {
                 this.fluidInventory.extract(resource, amount, transaction);
             }
             if (!fluid.isEmpty()) {
-                this.fluidInventory.insert(FluidResource.of(fluid), fluidInventory.getAmount(), transaction);
+                this.fluidInventory.insert(FluidResource.of(fluid), fluid.getAmount(), transaction);
             }
             transaction.commit();
         }
