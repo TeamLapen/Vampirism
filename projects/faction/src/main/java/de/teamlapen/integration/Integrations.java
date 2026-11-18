@@ -1,6 +1,7 @@
 package de.teamlapen.integration;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.ListMultimap;
 import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.IEventBus;
@@ -39,7 +40,7 @@ public class Integrations {
     private static final Marker INTEGRATIONS_MARKER = MarkerManager.getMarker("INTEGRATIONS");
     private static final Logger LOGGER = LogManager.getLogger();
     @Nullable
-    private static ImmutableMap<Identifier, IntegrationInstance> integrations;
+    private static ImmutableListMultimap<Identifier, IntegrationInstance> integrations;
 
     private static List<IntegrationProvider> scanForIntegrations()  {
         Function<FMLModContainer, Optional<ModFileScanData>> scanProvider = scanDataProvider();
@@ -82,8 +83,8 @@ public class Integrations {
         return f;
     }
 
-    private static ImmutableMap<Identifier, IntegrationInstance> loadIntegrations(List<IntegrationProvider> providers) {
-        var builder = ImmutableMap.<Identifier, IntegrationInstance>builder();
+    private static ImmutableListMultimap<Identifier, IntegrationInstance> loadIntegrations(List<IntegrationProvider> providers) {
+        var builder = ImmutableListMultimap.<Identifier, IntegrationInstance>builder();
         for (IntegrationProvider provider : providers) {
             ModList.get().getModContainerById(provider.owningModId).ifPresent(container -> {
                 Type type = provider.type;
@@ -98,7 +99,7 @@ public class Integrations {
         return builder.build();
     }
 
-    private static Map<Identifier, IntegrationInstance> init() {
+    private static ListMultimap<Identifier, IntegrationInstance> init() {
         var providers = scanForIntegrations();
         return Integrations.integrations = loadIntegrations(providers);
     }
@@ -107,7 +108,7 @@ public class Integrations {
     public static void register(NewRegistryEvent event) {
         List<Identifier> loadedIntegrations = new ArrayList<>();
         LOGGER.trace(INTEGRATIONS_MARKER, "Start loading Integrations");
-        for (Map.Entry<Identifier, IntegrationInstance> integration : init().entrySet()) {
+        for (Map.Entry<Identifier, IntegrationInstance> integration : init().entries()) {
             LOGGER.trace(INTEGRATIONS_MARKER, "Registering integration {} for class {}", integration.getKey(), integration.getValue().integration.getName());
             IEventBus eventBus = integration.getValue().container().getEventBus();
             if (eventBus != null) {
@@ -131,6 +132,7 @@ public class Integrations {
                         }
                     }
 
+                    instantiate(integration.getValue().integration, integration.getValue().container(), eventBus);
                 } catch (Throwable e) {
                     if (FMLLoader.getCurrent().isProduction()) {
                         LOGGER.error(INTEGRATIONS_MARKER, "Failed to register integration {}", integration.getValue().integration.getName(), e);
@@ -145,6 +147,47 @@ public class Integrations {
         }
         LOGGER.info(INTEGRATIONS_MARKER, "Completed loading {} integrations: {}", loadedIntegrations.size(), loadedIntegrations.stream().map(Identifier::toString).collect(Collectors.joining(", ")));
         LOGGER.trace(INTEGRATIONS_MARKER, "Completed loading Integrations");
+    }
+
+    /// Instantiates the integration class using the constructor with the most supported parameters.
+    /// Supported constructor parameters are the {@link IEventBus} (mod event bus) and the {@link ModContainer} of the owning mod, in any order.
+    /// A constructor without parameters is also accepted.
+    private static Object instantiate(Class<?> clazz, ModContainer container, IEventBus modBus) {
+        Constructor<?> selected = null;
+        Object[] selectedArgs = null;
+        for (Constructor<?> constructor : clazz.getDeclaredConstructors()) {
+            Class<?>[] parameterTypes = constructor.getParameterTypes();
+            Object[] args = new Object[parameterTypes.length];
+            boolean supported = true;
+            boolean hasBus = false;
+            boolean hasContainer = false;
+            for (int i = 0; i < parameterTypes.length; i++) {
+                if (parameterTypes[i] == IEventBus.class && !hasBus) {
+                    args[i] = modBus;
+                    hasBus = true;
+                } else if (parameterTypes[i] == ModContainer.class && !hasContainer) {
+                    args[i] = container;
+                    hasContainer = true;
+                } else {
+                    supported = false;
+                    break;
+                }
+            }
+            if (supported && (selected == null || parameterTypes.length > selected.getParameterCount())) {
+                selected = constructor;
+                selectedArgs = args;
+            }
+        }
+        if (selected == null) {
+            throw new IllegalArgumentException("Integration " + clazz.getName() + " must declare a constructor without parameters or taking an IEventBus and/or ModContainer");
+        }
+        LOGGER.trace(INTEGRATIONS_MARKER, "Instantiating integration {} with constructor {}", clazz.getName(), selected);
+        try {
+            selected.setAccessible(true);
+            return selected.newInstance(selectedArgs);
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalStateException("Failed to instantiate integration " + clazz.getName(), e);
+        }
     }
 
     private record IntegrationProvider(String owningModId, String integrationModId, Type type) {
