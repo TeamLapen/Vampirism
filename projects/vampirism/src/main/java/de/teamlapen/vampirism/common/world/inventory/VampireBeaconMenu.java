@@ -132,7 +132,14 @@ public class VampireBeaconMenu extends BaseContainerMenu {
     }
 
     public boolean isUpgraded() {
-        return this.beaconData.get(VampireBeaconBlockEntity.DATA_UPGRADED) > 0;
+        return getUpgradeLevel() > 0;
+    }
+
+    /**
+     * @return the amplifier bonus from the beacon base (0 = normal, 1 = enhanced, 2 = refined blocks)
+     */
+    public int getUpgradeLevel() {
+        return this.beaconData.get(VampireBeaconBlockEntity.DATA_UPGRADED);
     }
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")

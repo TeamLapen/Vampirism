@@ -190,7 +190,7 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
         protected MutableComponent createEffectDescription(Holder<MobEffect> pEffect, int amplifier) {
             MutableComponent component = Component.translatable(pEffect.value().getDescriptionId());
             if (!VampireBeaconBlockEntity.NO_AMPLIFIER_EFFECTS.contains(pEffect)) {
-                amplifier += VampireBeaconScreen.this.menu.isUpgraded() ? 1 : 0;
+                amplifier += VampireBeaconScreen.this.menu.getUpgradeLevel();
             }
             if (amplifier <= 0) {
                 return component;
