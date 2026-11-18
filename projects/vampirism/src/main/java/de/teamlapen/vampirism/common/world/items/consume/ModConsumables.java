@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.world.items.consume;
 
 import de.teamlapen.faction.common.world.items.consume.FactionBasedConsumeEffect;
-import de.teamlapen.vampirism.api.world.EnumStrength;
+import de.teamlapen.library.api.world.EnumStrength;
 import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModFactions;
@@ -9,7 +9,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.item.component.Consumables;
-import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.item.consume_effects.RemoveStatusEffectsConsumeEffect;
 
 import java.util.List;

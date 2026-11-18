@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.common.world.entity.vampire;
 
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.world.entities.goals.LookAtClosestVisibleGoal;
-import de.teamlapen.vampirism.api.world.EnumStrength;
-import de.teamlapen.vampirism.api.difficulty.Difficulty;
+import de.teamlapen.library.api.world.EnumStrength;
+import de.teamlapen.library.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IWingsEntity;
 import de.teamlapen.vampirism.api.world.entity.vampire.IVampireBaron;
 import de.teamlapen.vampirism.common.config.BalanceMobProps;

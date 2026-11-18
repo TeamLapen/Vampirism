@@ -7,8 +7,8 @@
     "segment": "vampirism:vampire/vampire_better_minions"
   },
   "skills": [
-    "vampirism:lord_speed",
-    "vampirism:lord_attack_speed"
+    "factionapi:lord_speed",
+    "factionapi:lord_attack_speed"
   ],
   "tree": "vampirism:vampire/lord"
 }

@@ -11,6 +11,13 @@
 
   "effect.factionapi.oblivion": "Oblivion",
   "effect.factionapi.resurrection_fatigue": "Resurrection Fatigue",
+  "effect.factionapi.lord_speed": "Speed",
+  "effect.factionapi.lord_attack_speed": "Attack Speed",
+
+  "action.factionapi.lord_speed": "Lord Movement Speed",
+  "action.factionapi.lord_speed.desc": "Boost the movement speed of nearby faction members",
+  "action.factionapi.lord_attack_speed": "Lord Attack Speed",
+  "action.factionapi.lord_attack_speed.desc": "Boost the attack speed of nearby faction members",
 
   "stat_type.factionapi.action_used": "Action Activated",
   "stat_type.factionapi.action_time": "Action Active",
@@ -171,6 +178,7 @@
   "message.factionapi.action.conflicts_with": "You cannot use this action while %s is active",
   "message.factionapi.action.on_cooldown": "This action is still on cooldown",
   "message.factionapi.action.cancelled": "This action could not be activated",
+  "message.factionapi.action.lord_range.no_target": "No entities in range",
 
   "message.factionapi.village_raid.defended": "Village successfully defended",
   "message.factionapi.village_raid.attacked.neutral": "%s attacked a nearby neutral village",
@@ -274,6 +282,7 @@
   "factionapi.configuration.raid": "Raid",
   "factionapi.configuration.faction": "Faction",
   "factionapi.configuration.minions": "Minions",
+  "factionapi.configuration.lordActions": "Lord Actions",
   "factionapi.configuration.tasks": "Tasks",
   "factionapi.configuration.admin": "Admin",
 
@@ -362,6 +371,18 @@
   "factionapi.configuration.usePermissions.tooltip": "When enabled, uses the Forge permission system for certain actions. See the wiki for more information.",
   "factionapi.configuration.enableFactionLogging": "Enable Faction Logging",
   "factionapi.configuration.enableFactionLogging.tooltip": "When enabled, writes a custom log file for specific faction actions. Only applies to dedicated servers. Requires a server restart.",
+  "factionapi.configuration.lordSpeedEnabled": "Lord Speed Enabled",
+  "factionapi.configuration.lordSpeedEnabled.tooltip": "When enabled, lords can use the speed action.",
+  "factionapi.configuration.lordSpeedDuration": "Lord Speed Duration",
+  "factionapi.configuration.lordSpeedDuration.tooltip": "Duration of the lord speed action, in seconds.",
+  "factionapi.configuration.lordSpeedCooldown": "Lord Speed Cooldown",
+  "factionapi.configuration.lordSpeedCooldown.tooltip": "Cooldown for the lord speed action, in seconds.",
+  "factionapi.configuration.lordAttackSpeedEnabled": "Lord Attack Speed Enabled",
+  "factionapi.configuration.lordAttackSpeedEnabled.tooltip": "When enabled, lords can use the attack speed action.",
+  "factionapi.configuration.lordAttackSpeedDuration": "Lord Attack Speed Duration",
+  "factionapi.configuration.lordAttackSpeedDuration.tooltip": "Duration of the lord attack speed action, in seconds.",
+  "factionapi.configuration.lordAttackSpeedCooldown": "Lord Attack Speed Cooldown",
+  "factionapi.configuration.lordAttackSpeedCooldown.tooltip": "Cooldown for the lord attack speed action, in seconds.",
 
   "attribute.factionapi.resource_efficiency": "Resource Efficiency"
 }

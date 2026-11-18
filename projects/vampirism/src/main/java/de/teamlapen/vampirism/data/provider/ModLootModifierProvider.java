@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModLootTables;
 import de.teamlapen.vampirism.common.core.ModOils;
-import de.teamlapen.vampirism.data.loot.conditions.FactionCondition;
+import de.teamlapen.faction.data.loot.conditions.FactionCondition;
 import de.teamlapen.vampirism.data.loot.conditions.OilItemCondition;
 import de.teamlapen.vampirism.data.loot.modifiers.SmeltItemLootModifier;
 import net.minecraft.core.HolderLookup;

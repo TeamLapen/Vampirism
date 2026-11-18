@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.tags;
 
+import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.core.registries.Registries;
@@ -8,7 +9,7 @@ import net.minecraft.world.level.biome.Biome;
 
 public class ModBiomeTags {
     public static class HasFaction {
-        public static final TagKey<Biome> IS_FACTION_BIOME = tag("has_faction");
+        public static final TagKey<Biome> IS_FACTION_BIOME = faction("has_faction");
         public static final TagKey<Biome> IS_VAMPIRE_BIOME = tag("has_faction/vampire");
         public static final TagKey<Biome> IS_HUNTER_BIOME = tag("has_faction/hunter");
     }
@@ -46,5 +47,9 @@ public class ModBiomeTags {
 
     private static TagKey<Biome> tag(String name) {
         return TagKey.create(Registries.BIOME, VIdentifier.mod(name));
+    }
+
+    private static TagKey<Biome> faction(String name) {
+        return TagKey.create(Registries.BIOME, FIdentifier.mod(name));
     }
 }

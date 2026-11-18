@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.api.world.entity.vampire;
 
 import de.teamlapen.faction.api.world.entities.IVillageCaptureEntity;
-import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
+import de.teamlapen.library.api.difficulty.IAdjustableLevel;
 import de.teamlapen.faction.api.world.entities.ICustomizationHolder;
 
 /**

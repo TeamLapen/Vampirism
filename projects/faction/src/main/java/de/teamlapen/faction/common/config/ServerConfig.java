@@ -33,6 +33,14 @@ public class ServerConfig implements FactionConfig.IConfigs {
     public final ModConfigSpec.IntValue minionCollectFailuresUntilFinished;
     public final ModConfigSpec.IntValue minionEquipmentRepairAmount;
 
+    // Lord Actions
+    public final ModConfigSpec.BooleanValue lordSpeedEnabled;
+    public final ModConfigSpec.IntValue lordSpeedDuration;
+    public final ModConfigSpec.IntValue lordSpeedCooldown;
+    public final ModConfigSpec.BooleanValue lordAttackSpeedEnabled;
+    public final ModConfigSpec.IntValue lordAttackSpeedDuration;
+    public final ModConfigSpec.IntValue lordAttackSpeedCooldown;
+
     // Tasks
     public final ModConfigSpec.IntValue taskDurationSinglePlayer;
     public final ModConfigSpec.IntValue taskDurationDedicatedServer;
@@ -43,6 +51,9 @@ public class ServerConfig implements FactionConfig.IConfigs {
     public final ModConfigSpec.BooleanValue preventDebugBoundingBoxes;
     public final ModConfigSpec.BooleanValue usePermissions;
     public final ModConfigSpec.BooleanValue enableFactionLogging;
+
+    // Util
+    public final ModConfigSpec.IntValue diffuserBootTime;
 
     public ServerConfig(ModConfigSpec.@NotNull Builder builder) {
         builder.push("world");
@@ -120,6 +131,27 @@ public class ServerConfig implements FactionConfig.IConfigs {
                 .defineInRange("minionEquipmentRepairAmount", 10, 1, Integer.MAX_VALUE);
         builder.pop();
 
+        builder.push("lordActions");
+        this.lordSpeedEnabled = builder
+                .comment("When enabled, lords can use the speed action.")
+                .define("lordSpeedEnabled", true);
+        this.lordSpeedDuration = builder
+                .comment("Duration of the lord speed action, in seconds.")
+                .defineInRange("lordSpeedDuration", 30, 0, Integer.MAX_VALUE);
+        this.lordSpeedCooldown = builder
+                .comment("Cooldown for the lord speed action, in seconds.")
+                .defineInRange("lordSpeedCooldown", 120, 0, Integer.MAX_VALUE);
+        this.lordAttackSpeedEnabled = builder
+                .comment("When enabled, lords can use the attack speed action.")
+                .define("lordAttackSpeedEnabled", true);
+        this.lordAttackSpeedDuration = builder
+                .comment("Duration of the lord attack speed action, in seconds.")
+                .defineInRange("lordAttackSpeedDuration", 30, 0, Integer.MAX_VALUE);
+        this.lordAttackSpeedCooldown = builder
+                .comment("Cooldown for the lord attack speed action, in seconds.")
+                .defineInRange("lordAttackSpeedCooldown", 120, 0, Integer.MAX_VALUE);
+        builder.pop();
+
         builder.push("tasks");
         this.taskDurationSinglePlayer = builder
                 .comment("Duration in minutes within which a task must be completed in a singleplayer world.")
@@ -148,6 +180,14 @@ public class ServerConfig implements FactionConfig.IConfigs {
                 .comment("When enabled, writes a custom log file for specific faction actions. Only applies to dedicated servers. Requires a server restart.")
                 .worldRestart()
                 .define("enableFactionLogging", false);
+        builder.pop();
+
+        builder.push("util");
+
+        diffuserBootTime = builder
+                .comment("Time in seconds before a diffuser's effect becomes active after placement.")
+                .defineInRange("diffuserBootTime", 15, 1, Integer.MAX_VALUE / 20);
+
         builder.pop();
     }
 

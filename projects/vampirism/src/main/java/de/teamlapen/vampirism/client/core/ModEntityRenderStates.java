@@ -4,7 +4,7 @@ import de.teamlapen.faction.api.util.SafeCast;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IDraculaPlayer;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IWingsEntity;
-import de.teamlapen.vampirism.api.world.items.IItemWithTier;
+import de.teamlapen.library.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.client.renderer.MistStateTracker;
 import de.teamlapen.vampirism.client.renderer.entities.DualSplitBipedRenderer;

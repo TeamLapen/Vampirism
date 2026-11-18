@@ -2,9 +2,11 @@ package de.teamlapen.vampirism.common.world.entity.vampire;
 
 import de.teamlapen.faction.api.factions.IFactionPredicate;
 import de.teamlapen.faction.api.world.ICaptureAttributes;
+import de.teamlapen.faction.common.world.entities.goals.AttackVillageGoal;
+import de.teamlapen.faction.common.world.entities.goals.DefendVillageGoal;
 import de.teamlapen.faction.common.world.entities.goals.LookAtClosestVisibleGoal;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.difficulty.Difficulty;
+import de.teamlapen.library.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.world.entity.VampireBookLootProvider;
 import de.teamlapen.vampirism.api.world.entity.vampire.IAdvancedVampire;
 import de.teamlapen.vampirism.api.world.items.components.IVampireBook;

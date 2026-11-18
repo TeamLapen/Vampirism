@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.client.gui.screens.diffuser;
 
+import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.client.IMinecraftAccessor;
-import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.gui.components.ProgressBar;
-import de.teamlapen.vampirism.common.network.packets.common.PlayerOwnedBlockEntityLockPacket;
-import de.teamlapen.vampirism.common.world.blockentity.PlayerOwnedBlockEntity;
-import de.teamlapen.vampirism.common.world.inventory.diffuser.DiffuserMenu;
+import de.teamlapen.library.common.network.packets.PlayerOwnedBlockEntityLockPacket;
+import de.teamlapen.library.common.world.blockentity.PlayerOwnedBlockEntity;
+import de.teamlapen.vampirism.common.world.inventory.DiffuserMenu;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.LockIconButton;
 import net.minecraft.client.gui.components.Tooltip;
@@ -17,8 +17,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 
 public abstract class DiffuserScreen<T extends DiffuserMenu> extends AbstractContainerScreen<T> implements IMinecraftAccessor {
-    private static final Identifier BACKGROUND = VIdentifier.mod("textures/gui/container/diffuser.png");
-    private static final Identifier LIT_PROGRESS_SPRITE = VIdentifier.mc("container/furnace/lit_progress");
+    private static final Identifier BACKGROUND = FIdentifier.mod("textures/gui/container/diffuser.png");
+    private static final Identifier LIT_PROGRESS_SPRITE = FIdentifier.mc("container/furnace/lit_progress");
 
     protected final int xSize = 176;
     protected final int ySize = 166;

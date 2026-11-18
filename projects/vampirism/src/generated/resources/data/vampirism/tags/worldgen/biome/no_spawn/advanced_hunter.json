@@ -1,5 +1,5 @@
 {
   "values": [
-    "#vampirism:has_faction"
+    "#factionapi:has_faction"
   ]
 }

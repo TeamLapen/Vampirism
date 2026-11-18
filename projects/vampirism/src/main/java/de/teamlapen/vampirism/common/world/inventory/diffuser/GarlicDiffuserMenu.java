@@ -1,8 +1,9 @@
 package de.teamlapen.vampirism.common.world.inventory.diffuser;
 
+import de.teamlapen.vampirism.common.world.inventory.DiffuserMenu;
 import de.teamlapen.vampirism.common.core.ModDataMaps;
 import de.teamlapen.vampirism.common.core.ModMenus;
-import de.teamlapen.vampirism.common.world.blockentity.PlayerOwnedBlockEntity;
+import de.teamlapen.library.common.world.blockentity.PlayerOwnedBlockEntity;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;

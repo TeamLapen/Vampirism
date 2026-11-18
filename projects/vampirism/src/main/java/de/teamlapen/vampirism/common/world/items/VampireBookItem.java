@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.world.items;
 
+import de.teamlapen.library.common.world.items.BaseDisplayItemGenerator;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
 import de.teamlapen.vampirism.common.core.ModItems;

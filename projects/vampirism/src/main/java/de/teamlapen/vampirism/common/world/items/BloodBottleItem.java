@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.world.items;
 
+import de.teamlapen.library.common.world.items.BaseDisplayItemGenerator;
 import de.teamlapen.vampirism.api.world.items.components.IBottleBlood;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModFluids;

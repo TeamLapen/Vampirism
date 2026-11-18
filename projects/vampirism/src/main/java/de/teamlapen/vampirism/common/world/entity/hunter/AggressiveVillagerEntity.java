@@ -10,7 +10,7 @@ import de.teamlapen.vampirism.common.core.ModEntities;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.util.UtilLib;
 import de.teamlapen.vampirism.common.world.entity.VampirismVillagerEntity;
-import de.teamlapen.vampirism.common.world.entity.ai.goals.DefendVillageGoal;
+import de.teamlapen.faction.common.world.entities.goals.DefendVillageGoal;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;

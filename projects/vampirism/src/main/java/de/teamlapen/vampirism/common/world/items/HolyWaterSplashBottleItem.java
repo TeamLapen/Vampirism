@@ -61,7 +61,7 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
                 if (thrower instanceof Player source && entity instanceof Player target && !source.canHarmPlayer(target)) {
                     continue;
                 }
-                DamageHandler.affectEntityHolyWaterSplash(entity, getStrength(getVampirismTier()), bottleEntity.distanceToSqr(entity), impact.getType() == HitResult.Type.ENTITY, thrower instanceof LivingEntity ? (LivingEntity) thrower : null);
+                DamageHandler.affectEntityHolyWaterSplash(entity, getStrength(getTier()), bottleEntity.distanceToSqr(entity), impact.getType() == HitResult.Type.ENTITY, thrower instanceof LivingEntity ? (LivingEntity) thrower : null);
             }
         }
     }
@@ -71,7 +71,7 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
         if (level.getBiome(bottleEntity.blockPosition()).is(ModBiomeTags.HasFaction.IS_FACTION_BIOME)) {
             return;
         }
-        int size = switch (getVampirismTier()) {
+        int size = switch (getTier()) {
             case NORMAL -> 1;
             case ENHANCED -> 2;
             case ULTIMATE -> 3;
@@ -81,7 +81,7 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
             BlockState state = level.getBlockState(pos);
             Block block = state.getBlock();
             if (block instanceof HolyWaterEffectConsumer consumer) {
-                consumer.onHolyWaterEffect(level, state, pos, stack, getVampirismTier());
+                consumer.onHolyWaterEffect(level, state, pos, stack, getTier());
             }
         });
     }

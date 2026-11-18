@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.renderer.entities;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.client.models.entities.ClothedModel;
+import de.teamlapen.library.client.models.entities.ClothedModel;
 import de.teamlapen.vampirism.common.world.entity.vampire.BasicVampireEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;

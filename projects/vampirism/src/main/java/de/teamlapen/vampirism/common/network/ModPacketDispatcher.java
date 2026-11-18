@@ -1,9 +1,7 @@
 package de.teamlapen.vampirism.common.network;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.network.ClientPayloadHandler;
 import de.teamlapen.vampirism.common.network.packets.client.*;
-import de.teamlapen.vampirism.common.network.packets.common.PlayerOwnedBlockEntityLockPacket;
 import de.teamlapen.vampirism.common.network.packets.server.*;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -39,7 +37,6 @@ public class ModPacketDispatcher {
         registrar.playToServer(ServerboundSetVampireBeaconPacket.TYPE, ServerboundSetVampireBeaconPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleSetVampireBeaconPacket(msg, context));
         registrar.playToServer(ServerboundSimpleInputEvent.TYPE, ServerboundSimpleInputEvent.CODEC, (msg, context) -> ServerPayloadHandler.handleSimpleInputEvent(msg, context));
 
-        registrar.playBidirectional(PlayerOwnedBlockEntityLockPacket.TYPE, PlayerOwnedBlockEntityLockPacket.CODEC, (msg, context) -> CommonPayloadHandler.handlePlayerOwnedBlockEntityLockPacket(msg, context), (msg, context) -> CommonPayloadHandler.handlePlayerOwnedBlockEntityLockPacket(msg, context));
 
     }
 

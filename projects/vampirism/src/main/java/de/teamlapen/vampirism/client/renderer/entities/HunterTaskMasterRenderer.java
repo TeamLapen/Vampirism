@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.client.renderer.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import de.teamlapen.faction.client.core.FactionEntitiesRenderer;
 import de.teamlapen.vampirism.api.util.VIdentifier;
-import de.teamlapen.vampirism.client.core.ModEntitiesRender;
-import de.teamlapen.vampirism.client.renderer.entities.layers.TaskMasterTypeLayer;
-import de.teamlapen.vampirism.client.renderer.entities.state.TaskMasterRenderState;
+import de.teamlapen.faction.client.renderer.entities.layers.TaskMasterTypeLayer;
+import de.teamlapen.faction.client.renderer.entities.state.TaskMasterRenderState;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.entity.hunter.HunterTaskMasterEntity;
 import net.minecraft.client.model.npc.VillagerModel;
@@ -26,7 +26,7 @@ public class HunterTaskMasterRenderer extends MobRenderer<HunterTaskMasterEntity
     private final static Identifier overlay = VIdentifier.mod("textures/entity/hunter_task_master_overlay.png");
 
     public HunterTaskMasterRenderer(EntityRendererProvider.Context context) {
-        super(context, new VillagerModel(context.bakeLayer(ModEntitiesRender.TASK_MASTER)), 0.5F);
+        super(context, new VillagerModel(context.bakeLayer(FactionEntitiesRenderer.TASK_MASTER)), 0.5F);
         this.addLayer(new TaskMasterTypeLayer<>(this, overlay));
         this.addLayer(new HelmetLayer(this));
     }

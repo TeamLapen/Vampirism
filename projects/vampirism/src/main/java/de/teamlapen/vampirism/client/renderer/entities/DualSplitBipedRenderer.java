@@ -1,8 +1,9 @@
 package de.teamlapen.vampirism.client.renderer.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import de.teamlapen.library.client.renderer.DualBipedRenderer;
 import de.teamlapen.vampirism.client.core.ModEntityRenderStates;
-import de.teamlapen.vampirism.client.renderer.entities.state.AvatarLikeRenderState;
+import de.teamlapen.library.client.renderer.entities.state.AvatarLikeRenderState;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;

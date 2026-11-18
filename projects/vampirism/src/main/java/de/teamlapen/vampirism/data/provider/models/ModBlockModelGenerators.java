@@ -146,11 +146,11 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.GARLIC_DIFFUSER_NORMAL.get(), plainVariant(defaultModel)));
         createDefaultBlockItem(ModBlocks.GARLIC_DIFFUSER_NORMAL.get(), defaultModel);
 
-        Identifier strongModel = ModModelTemplates.GARLIC_DIFFUSER.create(ModBlocks.GARLIC_DIFFUSER_STRONG.get(), new TextureMapping().put(ModTextureSlots.CORE, new Material(mod("block/garlic_diffuser_core_strong"))), this.modelOutput);
+        Identifier strongModel = ModModelTemplates.DIFFUSER.create(ModBlocks.GARLIC_DIFFUSER_STRONG.get(), new TextureMapping().put(ModTextureSlots.CORE, new Material(mod("block/garlic_diffuser_core_strong"))), this.modelOutput);
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.GARLIC_DIFFUSER_STRONG.get(), plainVariant(strongModel)));
         createDefaultBlockItem(ModBlocks.GARLIC_DIFFUSER_STRONG.get(), strongModel);
 
-        Identifier longModel = ModModelTemplates.GARLIC_DIFFUSER.create(ModBlocks.GARLIC_DIFFUSER_LONG.get(), new TextureMapping().put(ModTextureSlots.CORE, new Material(mod("block/garlic_diffuser_core_long"))), this.modelOutput);
+        Identifier longModel = ModModelTemplates.DIFFUSER.create(ModBlocks.GARLIC_DIFFUSER_LONG.get(), new TextureMapping().put(ModTextureSlots.CORE, new Material(mod("block/garlic_diffuser_core_long"))), this.modelOutput);
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.GARLIC_DIFFUSER_LONG.get(), plainVariant(longModel)));
         createDefaultBlockItem(ModBlocks.GARLIC_DIFFUSER_LONG.get(), longModel);
 
@@ -158,12 +158,12 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         registerSimpleItemModel(ModBlocks.GARLIC_DIFFUSER_CORE.get(), mod("item/garlic_diffuser_core"));
         createFlatItemModel(ModBlocks.GARLIC_DIFFUSER_CORE.asItem());
 
-        Identifier strongCoreModel = ModModelTemplates.GARLIC_DIFFUSER_CORE.create(ModBlocks.GARLIC_DIFFUSER_CORE_STRONG.get(), new TextureMapping().put(ModTextureSlots.CORE, new Material(mod("block/garlic_diffuser_core_strong"))), this.modelOutput);
+        Identifier strongCoreModel = ModModelTemplates.DIFFUSER_CORE.create(ModBlocks.GARLIC_DIFFUSER_CORE_STRONG.get(), new TextureMapping().put(ModTextureSlots.CORE, new Material(mod("block/garlic_diffuser_core_strong"))), this.modelOutput);
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.GARLIC_DIFFUSER_CORE_STRONG.get(), plainVariant(strongCoreModel)));
         registerSimpleItemModel(ModBlocks.GARLIC_DIFFUSER_CORE_STRONG.get(), mod("item/garlic_diffuser_core_strong"));
         createFlatItemModel(ModBlocks.GARLIC_DIFFUSER_CORE_STRONG.asItem());
 
-        Identifier longCoreModel = ModModelTemplates.GARLIC_DIFFUSER_CORE.create(ModBlocks.GARLIC_DIFFUSER_CORE_LONG.get(), new TextureMapping().put(ModTextureSlots.CORE, new Material(mod("block/garlic_diffuser_core_long"))), this.modelOutput);
+        Identifier longCoreModel = ModModelTemplates.DIFFUSER_CORE.create(ModBlocks.GARLIC_DIFFUSER_CORE_LONG.get(), new TextureMapping().put(ModTextureSlots.CORE, new Material(mod("block/garlic_diffuser_core_long"))), this.modelOutput);
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.GARLIC_DIFFUSER_CORE_LONG.get(), plainVariant(longCoreModel)));
         registerSimpleItemModel(ModBlocks.GARLIC_DIFFUSER_CORE_LONG.get(), mod("item/garlic_diffuser_core_long"));
         createFlatItemModel(ModBlocks.GARLIC_DIFFUSER_CORE_LONG.asItem());

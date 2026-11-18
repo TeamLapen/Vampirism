@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.common.core;
 
 import com.mojang.serialization.MapCodec;
+import de.teamlapen.faction.data.loot.functions.RefinementSetFunction;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.common.world.items.loot.BiomeMapFunction;
 import de.teamlapen.vampirism.data.loot.conditions.*;
@@ -23,16 +24,13 @@ public class ModLoot {
 
     public static final DeferredHolder<MapCodec<? extends LootItemFunction>, MapCodec<SetVampireBookFunction>> SET_VAMPIRE_BOOK = LOOT_FUNCTION_TYPES.register("set_vampire_book", () -> SetVampireBookFunction.CODEC);
     public static final DeferredHolder<MapCodec<? extends LootItemFunction>, MapCodec<SetItemBloodChargeFunction>> SET_ITEM_BLOOD_CHARGE = LOOT_FUNCTION_TYPES.register("set_item_blood_charge", () -> SetItemBloodChargeFunction.CODEC);
-    public static final DeferredHolder<MapCodec<? extends LootItemFunction>, MapCodec<RefinementSetFunction>> ADD_REFINEMENT_SET = LOOT_FUNCTION_TYPES.register("add_refinement_set", () -> RefinementSetFunction.CODEC);
     public static final DeferredHolder<MapCodec<? extends LootItemFunction>, MapCodec<SetOilFunction>> SET_OIL = LOOT_FUNCTION_TYPES.register("set_oil", () -> SetOilFunction.CODEC);
     public static final DeferredHolder<MapCodec<? extends LootItemFunction>, MapCodec<SetBloodFunction>> SET_BLOOD = LOOT_FUNCTION_TYPES.register("set_blood", () -> SetBloodFunction.CODEC);
     public static final DeferredHolder<MapCodec<? extends LootItemFunction>, MapCodec<BiomeMapFunction>> BIOME_MAP = LOOT_FUNCTION_TYPES.register("biome_map", () -> BiomeMapFunction.MAP_CODEC);
 
     public static final DeferredHolder<MapCodec<? extends LootItemCondition>, MapCodec<StakeCondition>> WITH_STAKE = LOOT_CONDITION_TYPES.register("with_stake", () -> StakeCondition.CODEC);
-    public static final DeferredHolder<MapCodec<? extends LootItemCondition>, MapCodec<AdjustableLevelCondition>> ADJUSTABLE_LEVEL = LOOT_CONDITION_TYPES.register("adjustable_level", () -> AdjustableLevelCondition.CODEC);
     public static final DeferredHolder<MapCodec<? extends LootItemCondition>, MapCodec<TentSpawnerCondition>> IS_TENT_SPAWNER = LOOT_CONDITION_TYPES.register("is_tent_spawner", () -> TentSpawnerCondition.CODEC);
     public static final DeferredHolder<MapCodec<? extends LootItemCondition>, MapCodec<OilItemCondition>> WITH_OIL_ITEM = LOOT_CONDITION_TYPES.register("with_oil_item", () -> OilItemCondition.CODEC);
-    public static final DeferredHolder<MapCodec<? extends LootItemCondition>, MapCodec<FactionCondition>> FACTION = LOOT_CONDITION_TYPES.register("faction", () -> FactionCondition.CODEC);
 
     /**
      * Global loot modifier {@see src/main/resource/data/vampirism/loot_modifiers/smelting.json

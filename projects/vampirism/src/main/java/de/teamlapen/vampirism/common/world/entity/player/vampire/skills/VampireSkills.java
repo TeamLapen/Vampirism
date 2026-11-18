@@ -22,7 +22,6 @@ import de.teamlapen.vampirism.common.core.ModConsumer;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.tags.ModSkillTreeTags;
-import de.teamlapen.vampirism.common.world.entity.player.lord.skills.LordSkills;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.actions.VampireActions;
 import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.core.Holder;
@@ -242,7 +241,7 @@ public class VampireSkills {
             lord(KEY_VAMPIRE_BETTER_MINIONS, VAMPIRE_BETTER_MINIONS)
                     .parents(KEY_VAMPIRE_LORD_ROOT)
                     .register(context);
-            lord(KEY_LORD_MOVEMENT_OR_ATTACK_SPEED, LordSkills.LORD_SPEED, LordSkills.LORD_ATTACK_SPEED)
+            lord(KEY_LORD_MOVEMENT_OR_ATTACK_SPEED, FactionSkills.LORD_SPEED, FactionSkills.LORD_ATTACK_SPEED)
                     .parents(KEY_VAMPIRE_LORD_ROOT)
                     .after(KEY_VAMPIRE_BETTER_MINIONS)
                     .register(context);

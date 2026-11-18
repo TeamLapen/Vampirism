@@ -7,6 +7,7 @@ import de.teamlapen.faction.api.tags.FactionSkillTreeTags;
 import de.teamlapen.faction.api.tags.FactionTags;
 import de.teamlapen.faction.api.util.REFERENCE;
 import de.teamlapen.faction.common.factions.skills.Skill;
+import net.minecraft.core.Holder;
 import net.neoforged.bus.api.IEventBus;
 
 public class FactionSkills {
@@ -17,6 +18,8 @@ public class FactionSkills {
     public static final DeferredSkill<?, ISkill<?>> MINION_RECOVERY = SKILLS.registerGenericSkill("minion_recovery", props -> new Skill<>(props.cost(2).tree(FactionSkillTreeTags.LORD).factions(FactionTags.HAS_LORD_SKILLS)));
     public static final DeferredSkill<?, ISkill<?>> MINION_COLLECT = SKILLS.registerGenericSkill("minion_collect", props -> new Skill<>(props.cost(1).withDescription().tree(FactionSkillTreeTags.LORD).factions(FactionTags.HAS_LORD_SKILLS)));
     public static final DeferredSkill<?, ISkill<?>> RESOURCE_DIVERSITY = SKILLS.registerGenericSkill("resource_diversity", props -> new Skill<>(props.cost(1).withDescription().tree(FactionSkillTreeTags.LORD).factions(FactionTags.HAS_LORD_SKILLS)));
+    public static final DeferredSkill<?, ISkill<?>> LORD_SPEED = SKILLS.registerGenericSkill("lord_speed", props -> new Skill<>(props.cost(1).withDescription().actionSkill((Holder) FactionActions.LORD_SPEED).tree(FactionSkillTreeTags.LORD).factions(FactionTags.HAS_LORD_SKILLS)));
+    public static final DeferredSkill<?, ISkill<?>> LORD_ATTACK_SPEED = SKILLS.registerGenericSkill("lord_attack_speed", props -> new Skill<>(props.cost(1).withDescription().actionSkill((Holder) FactionActions.LORD_ATTACK_SPEED).tree(FactionSkillTreeTags.LORD).factions(FactionTags.HAS_LORD_SKILLS)));
 
 
     static void register(IEventBus bus) {

@@ -6,7 +6,7 @@
       "#vampirism:has_structure/hunter_tent",
       {
         "type": "neoforge:not",
-        "value": "#vampirism:has_faction"
+        "value": "#factionapi:has_faction"
       }
     ]
   },

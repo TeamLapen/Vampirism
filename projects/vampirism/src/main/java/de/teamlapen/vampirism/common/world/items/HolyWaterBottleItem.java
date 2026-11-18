@@ -2,9 +2,9 @@ package de.teamlapen.vampirism.common.world.items;
 
 import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.common.components.FactionRestriction;
-import de.teamlapen.vampirism.api.world.EnumStrength;
+import de.teamlapen.library.api.world.EnumStrength;
 import de.teamlapen.vampirism.api.VampirismTags;
-import de.teamlapen.vampirism.api.world.items.IItemWithTier;
+import de.teamlapen.library.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.common.core.ModItems;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -77,7 +77,7 @@ public class HolyWaterBottleItem extends BlessableItem implements IItemWithTier 
     }
 
     @Override
-    public Tier getVampirismTier() {
+    public Tier getTier() {
         return tier;
     }
 

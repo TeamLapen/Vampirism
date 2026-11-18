@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.common.core;
 import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.refinements.IRefinement;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.common.world.entity.player.refinements.Refinement;
+import de.teamlapen.faction.common.world.refinements.Refinement;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.neoforged.bus.api.IEventBus;

@@ -47,7 +47,7 @@
           "functions": [
             {
               "faction": "vampirism:vampire",
-              "function": "vampirism:add_refinement_set"
+              "function": "factionapi:add_refinement_set"
             }
           ],
           "name": "vampirism:amulet"
@@ -57,7 +57,7 @@
           "functions": [
             {
               "faction": "vampirism:vampire",
-              "function": "vampirism:add_refinement_set"
+              "function": "factionapi:add_refinement_set"
             }
           ],
           "name": "vampirism:ring"
@@ -67,7 +67,7 @@
           "functions": [
             {
               "faction": "vampirism:vampire",
-              "function": "vampirism:add_refinement_set"
+              "function": "factionapi:add_refinement_set"
             }
           ],
           "name": "vampirism:obi_belt"

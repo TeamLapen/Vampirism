@@ -7,7 +7,7 @@
     },
     {
       "type": "faction",
-      "condition": "vampirism:faction",
+      "condition": "factionapi:faction",
       "faction": "vampirism:hunter"
     }
   ]

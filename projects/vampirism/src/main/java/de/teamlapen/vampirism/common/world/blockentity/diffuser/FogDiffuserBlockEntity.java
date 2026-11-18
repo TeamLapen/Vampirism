@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModDataMaps;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.world.attachments.LevelFog;
-import de.teamlapen.vampirism.common.world.inventory.diffuser.DiffuserMenu;
+import de.teamlapen.vampirism.common.world.inventory.DiffuserMenu;
 import de.teamlapen.vampirism.common.world.inventory.diffuser.FogDiffuserMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;

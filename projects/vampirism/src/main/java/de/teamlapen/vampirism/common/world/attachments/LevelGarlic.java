@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.common.world.attachments;
 import com.google.common.collect.Maps;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.vampirism.api.world.EnumStrength;
+import de.teamlapen.library.api.world.EnumStrength;
 import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
 import de.teamlapen.vampirism.common.core.ModAttachments;
 import net.minecraft.commands.CommandSourceStack;

@@ -4,7 +4,7 @@ import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.faction.common.components.FactionSlayer;
 import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.vampirism.api.VampirismTags;
-import de.teamlapen.vampirism.api.world.items.IItemWithTier;
+import de.teamlapen.library.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import net.minecraft.ChatFormatting;
@@ -42,7 +42,7 @@ public class HunterAxeItem extends VampirismSwordItem implements IItemWithTier {
     }
 
     @Override
-    public Tier getVampirismTier() {
+    public Tier getTier() {
         return tier;
     }
 

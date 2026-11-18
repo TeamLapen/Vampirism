@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.common.util;
 
 import de.teamlapen.vampirism.common.core.*;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.skills.VampireSkills;
 import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -13,6 +14,8 @@ public class MigrationData {
     public static void fix(NewRegistryEvent event) {
         fixSkillsVampire(new Mapping(VampireSkills.SKILLS));
         fixSkillsHunter(new Mapping(HunterSkills.SKILLS));
+        fixSkillsFaction(new Mapping(VampireSkills.SKILLS));
+        fixActions(new Mapping(VampireActions.ACTIONS));
         fixPotions(new Mapping(ModPotions.POTIONS));
         fixBlockEntities(new Mapping(ModBlockEntities.BLOCK_ENTITY_TYPES));
         fixItems(new Mapping(ModItems.ITEMS));
@@ -42,6 +45,22 @@ public class MigrationData {
         consumer.remap("vampirism:garlic_beacon_improved", "vampirism:garlic_diffuser_improved");
         consumer.remap("vampirism:garlic_beacon", "vampirism:garlic_diffuser");
         consumer.remap("vampirism:holy_water_enhanced", "vampirism:enhanced_blessing");
+    }
+
+    /**
+     * Skills moved to factionapi. Aliases are applied per registry, so the vampire skill register is used for all of them
+     */
+    private static void fixSkillsFaction(@NotNull Mapping consumer) {
+        consumer.remap("vampirism:lord_speed", "factionapi:lord_speed");
+        consumer.remap("vampirism:lord_attack_speed", "factionapi:lord_attack_speed");
+    }
+
+    /**
+     * Aliases are applied per registry, so the vampire action register is used for all of them
+     */
+    private static void fixActions(@NotNull Mapping consumer) {
+        consumer.remap("vampirism:lord_speed", "factionapi:lord_speed");
+        consumer.remap("vampirism:lord_attack_speed", "factionapi:lord_attack_speed");
     }
 
     private static void fixPotions(@NotNull Mapping mapping) {
@@ -170,6 +189,8 @@ public class MigrationData {
     private static void fixEffects(@NotNull Mapping mapping) {
         mapping.remap("vampirism:thirst", "hunger");
         mapping.remap("vampirism:poison", "vampirism:toxicant");
+        mapping.remap("vampirism:lord_speed", "factionapi:lord_speed");
+        mapping.remap("vampirism:lord_attack_speed", "factionapi:lord_attack_speed");
     }
 
     private static void fixPoiTypes(@NotNull Mapping mapping) {

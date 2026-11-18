@@ -1,9 +1,8 @@
 package de.teamlapen.vampirism.common.world.items;
 
-import de.teamlapen.vampirism.api.VEnums;
+import de.teamlapen.library.common.world.items.BaseDisplayItemGenerator;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.world.items.component.PureLevel;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;

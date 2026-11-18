@@ -1,15 +1,9 @@
 package de.teamlapen.vampirism.client.renderer.entities.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.faction.client.gui.components.ColoredImageWidget;
-import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.util.VIdentifier;
-import de.teamlapen.vampirism.client.core.ModRenderPipelines;
-import de.teamlapen.vampirism.client.models.entities.ClothedModel;
+import de.teamlapen.library.client.models.entities.ClothedModel;
 import de.teamlapen.vampirism.client.renderer.TextureLoader;
 import de.teamlapen.vampirism.client.renderer.entities.AdvancedVampireRenderer;
-import it.unimi.dsi.fastutil.objects.AbstractObject2ObjectFunction;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;

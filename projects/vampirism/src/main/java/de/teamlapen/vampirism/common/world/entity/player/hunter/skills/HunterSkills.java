@@ -22,7 +22,6 @@ import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.tags.ModSkillTreeTags;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.actions.HunterActions;
-import de.teamlapen.vampirism.common.world.entity.player.lord.skills.LordSkills;
 import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.data.worldgen.BootstrapContext;
@@ -262,7 +261,7 @@ public class HunterSkills {
             lord(KEY_MINION_TECHNOLOGY, MINION_TECHNOLOGY)
                     .parents(KEY_HUNTER_BETTER_MINIONS)
                     .register(context);
-            lord(KEY_LORD_MOVEMENT_OR_ATTACK_SPEED, LordSkills.LORD_SPEED, LordSkills.LORD_ATTACK_SPEED)
+            lord(KEY_LORD_MOVEMENT_OR_ATTACK_SPEED, FactionSkills.LORD_SPEED, FactionSkills.LORD_ATTACK_SPEED)
                     .parents(KEY_HUNTER_LORD_ROOT)
                     .after(KEY_HUNTER_BETTER_MINIONS)
                     .register(context);

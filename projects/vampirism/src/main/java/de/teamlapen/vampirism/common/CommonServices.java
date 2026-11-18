@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.common;
 
 import de.teamlapen.faction.Services;
 import de.teamlapen.faction.api.event.AddFactionTagEvent;
+import de.teamlapen.library.common.network.LibraryPacketDispatcher;
 import de.teamlapen.vampirism.api.IVampirismServices;
 import de.teamlapen.vampirism.api.world.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.common.core.ModCreativeTabs;
@@ -116,6 +117,7 @@ public class CommonServices extends Services implements IVampirismServices {
         bus.addListener(AddFactionTagEvent.class, ModFactions::registerFactionTags);
         bus.addListener(ModCreativeTabs::addToExistingCreativeTabs);
         bus.addListener(ModPacketDispatcher::registerHandler);
+        bus.addListener(LibraryPacketDispatcher::registerHandler);
         bus.addListener(MigrationData::fix);
         bus.register(this.wingsManager);
     }

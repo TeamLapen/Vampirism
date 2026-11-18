@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.blockentity.diffuser;
 
-import de.teamlapen.vampirism.api.world.EnumStrength;
+import de.teamlapen.library.api.world.EnumStrength;
 import de.teamlapen.vampirism.api.datamaps.IGarlicDiffuserFuel;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModDataMaps;
@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.util.DamageHandler;
 import de.teamlapen.vampirism.common.world.attachments.LevelGarlic;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.common.world.inventory.diffuser.DiffuserMenu;
+import de.teamlapen.vampirism.common.world.inventory.DiffuserMenu;
 import de.teamlapen.vampirism.common.world.inventory.diffuser.GarlicDiffuserMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;

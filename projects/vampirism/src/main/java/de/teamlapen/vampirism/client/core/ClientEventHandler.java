@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
 import de.teamlapen.vampirism.common.util.Helper;
-import de.teamlapen.vampirism.common.world.entity.player.LevelAttributeModifier;
+import de.teamlapen.faction.common.world.entities.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.common.world.items.component.AppliedOilContent;
 import de.teamlapen.vampirism.common.world.potions.BasePotion;
 import net.minecraft.ChatFormatting;

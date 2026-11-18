@@ -1,9 +1,8 @@
 package de.teamlapen.vampirism.client.renderer.entities;
 
 import de.teamlapen.faction.api.world.entities.minion.MinionAppearance;
-import de.teamlapen.faction.common.core.FactionDataComponents;
-import de.teamlapen.vampirism.client.models.entities.ClothedModel;
-import de.teamlapen.vampirism.client.renderer.entities.state.MinionRenderState;
+import de.teamlapen.library.client.models.entities.ClothedModel;
+import de.teamlapen.faction.client.renderer.entities.state.MinionRenderState;
 import de.teamlapen.vampirism.common.world.entity.minion.VampireMinionEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelLayers;

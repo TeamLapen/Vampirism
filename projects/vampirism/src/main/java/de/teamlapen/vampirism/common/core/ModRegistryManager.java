@@ -4,8 +4,6 @@ import de.teamlapen.vampirism.common.util.serialization.CodecModifications;
 import de.teamlapen.vampirism.common.world.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
-import de.teamlapen.vampirism.common.world.entity.player.lord.actions.LordActions;
-import de.teamlapen.vampirism.common.world.entity.player.lord.skills.LordSkills;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirismVampireVisions;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.skills.VampireSkills;
@@ -53,8 +51,6 @@ public class ModRegistryManager {
         VampireActions.register(eventBus);
         HunterActions.register(eventBus);
         MinionTasks.register(eventBus);
-        LordActions.register(eventBus);
-        LordSkills.register(eventBus);
         VampireSkills.register(eventBus);
         HunterSkills.register(eventBus);
         ModCommands.register(eventBus);

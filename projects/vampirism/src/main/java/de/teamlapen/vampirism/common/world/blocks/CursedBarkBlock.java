@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.world.blocks;
 
 import de.teamlapen.vampirism.api.world.blocks.HolyWaterEffectConsumer;
-import de.teamlapen.vampirism.api.world.items.IItemWithTier;
+import de.teamlapen.library.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.common.world.entity.ExtendedCreature;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import net.minecraft.core.BlockPos;

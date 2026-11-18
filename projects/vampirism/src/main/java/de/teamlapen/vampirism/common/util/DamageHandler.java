@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.util;
 
 import de.teamlapen.faction.api.factions.actions.IActionHandler;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.world.EnumStrength;
+import de.teamlapen.library.api.world.EnumStrength;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.world.entity.vampire.IVampire;
 import de.teamlapen.vampirism.common.config.ModConfig;

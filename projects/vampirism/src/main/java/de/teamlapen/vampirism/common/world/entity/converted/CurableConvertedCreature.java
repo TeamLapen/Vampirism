@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.world.entity.converted;
 
 import de.teamlapen.faction.api.factions.IFactionPredicate;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.world.EnumStrength;
+import de.teamlapen.library.api.world.EnumStrength;
 import de.teamlapen.vampirism.api.VampirismApi;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.common.events.VampirismEventFactory;

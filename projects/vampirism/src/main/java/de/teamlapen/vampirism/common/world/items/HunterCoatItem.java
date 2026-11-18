@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.world.items;
 
 import de.teamlapen.faction.api.factions.skills.ISkill;
-import de.teamlapen.vampirism.api.world.items.IItemWithTier;
+import de.teamlapen.library.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterSkillProperties;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -39,14 +39,14 @@ public class HunterCoatItem extends HunterArmorItem implements IItemWithTier {
             if (stack.isEmpty() || !(stack.getItem() instanceof HunterCoatItem)) {
                 return null;
             } else {
-                minLevel = Math.min(minLevel, ((HunterCoatItem) stack.getItem()).getVampirismTier().ordinal());
+                minLevel = Math.min(minLevel, ((HunterCoatItem) stack.getItem()).getTier().ordinal());
             }
         }
         return Tier.values()[minLevel];
     }
 
     @Override
-    public Tier getVampirismTier() {
+    public Tier getTier() {
         return tier;
     }
 

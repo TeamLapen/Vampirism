@@ -6,7 +6,7 @@ import de.teamlapen.faction.api.world.IDescriptionProvider;
 import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.util.VIdentifier;
-import de.teamlapen.vampirism.api.world.items.IItemWithTier;
+import de.teamlapen.library.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModRefinements;
 import de.teamlapen.vampirism.common.util.Helper;
@@ -57,7 +57,7 @@ public class CrucifixItem extends Item implements IItemWithTier, IDescriptionPro
     }
 
     @Override
-    public Tier getVampirismTier() {
+    public Tier getTier() {
         return tier;
     }
 
@@ -205,7 +205,7 @@ public class CrucifixItem extends Item implements IItemWithTier, IDescriptionPro
 
     protected void applyEffect(LivingEntity owner, ServerLevel level, LivingEntity entity, ItemStack stack) {
         if (entity instanceof Player player && Helper.isVampire(player)) {
-            Tier tier = getVampirismTier();
+            Tier tier = getTier();
             if (IRefinementHandler.get(player).filter(s -> s.isRefinementEquipped(ModRefinements.CRUCIFIX_RESISTANT)).isPresent()) {
                 int i = UtilLib.indexOf(Tier.values(), tier);
                 if (i > 0) {

@@ -17,7 +17,7 @@ import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.util.OilUtils;
 import de.teamlapen.vampirism.common.util.ScoreboardUtil;
 import de.teamlapen.vampirism.common.world.entity.player.CommonFactionPlayer;
-import de.teamlapen.vampirism.common.world.entity.player.LevelAttributeModifier;
+import de.teamlapen.faction.common.world.entities.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.properties.HunterDisguise;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;

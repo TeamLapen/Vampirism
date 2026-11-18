@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.items;
 
-import de.teamlapen.vampirism.api.VampirismRegistries;
+import de.teamlapen.library.common.world.items.BaseDisplayItemGenerator;
 import de.teamlapen.vampirism.api.world.items.IOilItem;
 import de.teamlapen.vampirism.api.world.items.oil.IOil;
 import de.teamlapen.vampirism.common.core.ModDataComponents;

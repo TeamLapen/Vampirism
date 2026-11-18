@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.world.items;
 
 import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.vampirism.api.util.VIdentifier;
-import de.teamlapen.vampirism.api.world.items.IItemWithTier;
+import de.teamlapen.library.api.world.items.IItemWithTier;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -51,7 +51,7 @@ public class ArmorOfSwiftnessItem extends HunterArmorItem implements IItemWithTi
     }
 
     @Override
-    public Tier getVampirismTier() {
+    public Tier getTier() {
         return tier;
     }
 
@@ -67,7 +67,7 @@ public class ArmorOfSwiftnessItem extends HunterArmorItem implements IItemWithTi
 
                 for (var armorStack : Arrays.stream(EquipmentSlot.values()).filter(x -> x.getType() == EquipmentSlot.Type.HUMANOID_ARMOR).map(player::getItemBySlot).toList()) {
                     if (!armorStack.isEmpty() && armorStack.getItem() instanceof ArmorOfSwiftnessItem) {
-                        int b = getJumpBoost(getVampirismTier());
+                        int b = getJumpBoost(getTier());
                         if (b < boost) {
                             boost = b;
                         }

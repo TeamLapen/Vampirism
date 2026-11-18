@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.gui.components;
 
-import de.teamlapen.vampirism.api.util.VIdentifier;
+import de.teamlapen.faction.api.util.FIdentifier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -17,8 +17,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class ProgressBar extends AbstractWidget {
 
-    private static final WidgetSprites SPRITES = new WidgetSprites(VIdentifier.mod("widget/progress_bar"), VIdentifier.mod("widget/progress_bar_inactive"), VIdentifier.mod("widget/progress_bar_highlighted"));
-    private static final Identifier PROGRESS = VIdentifier.mod("widget/progress_bar_progress");
+    private static final WidgetSprites SPRITES = new WidgetSprites(FIdentifier.mod("widget/progress_bar"), FIdentifier.mod("widget/progress_bar_inactive"), FIdentifier.mod("widget/progress_bar_highlighted"));
+    private static final Identifier PROGRESS = FIdentifier.mod("widget/progress_bar_progress");
     private float progress = 0;
     private int color = 0xFFFFFF;
 

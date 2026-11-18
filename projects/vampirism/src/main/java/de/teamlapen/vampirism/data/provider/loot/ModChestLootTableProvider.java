@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.data.provider.loot;
 
 import de.teamlapen.faction.common.core.FactionItems;
 import de.teamlapen.faction.common.util.MapUtil;
+import de.teamlapen.faction.data.loot.functions.RefinementSetFunction;
 import de.teamlapen.vampirism.api.world.items.components.IBottleBlood;
 import de.teamlapen.vampirism.common.core.*;
 import de.teamlapen.vampirism.common.tags.ModStructureTags;

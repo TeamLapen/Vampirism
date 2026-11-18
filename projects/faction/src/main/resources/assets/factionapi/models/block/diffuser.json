@@ -1,0 +1,51 @@
+{
+  "credit": "Designed by Zozozrob",
+  "parent": "block/block",
+  "render_type": "minecraft:cutout",
+  "texture_size": [32, 32],
+  "textures": {
+    "diffuser": "factionapi:block/diffuser",
+    "particle": "block/obsidian"
+  },
+  "elements": [
+    {
+      "from": [1, 0, 1],
+      "to": [15, 3, 15],
+      "rotation": {"angle": 0, "axis": "y", "origin": [1, 0, 1]},
+      "faces": {
+        "north": {"uv": [0.5, 6.5, 7.5, 8], "texture": "#diffuser"},
+        "east": {"uv": [0.5, 6.5, 7.5, 8], "texture": "#diffuser"},
+        "south": {"uv": [0.5, 6.5, 7.5, 8], "texture": "#diffuser"},
+        "west": {"uv": [0.5, 6.5, 7.5, 8], "texture": "#diffuser"},
+        "up": {"uv": [8.5, 0.5, 15.5, 7.5], "texture": "#diffuser"},
+        "down": {"uv": [8.5, 0.5, 15.5, 7.5], "texture": "#diffuser"}
+      }
+    },
+    {
+      "from": [2, 3, 2],
+      "to": [14, 12, 14],
+      "rotation": {"angle": 0, "axis": "y", "origin": [2, 3, 2]},
+      "faces": {
+        "north": {"uv": [1, 2, 7, 6.5], "texture": "#diffuser"},
+        "east": {"uv": [1, 2, 7, 6.5], "texture": "#diffuser"},
+        "south": {"uv": [1, 2, 7, 6.5], "texture": "#diffuser"},
+        "west": {"uv": [1, 2, 7, 6.5], "texture": "#diffuser"},
+        "up": {"uv": [1, 9, 7, 15], "texture": "#diffuser"},
+        "down": {"uv": [0, 16, 0, 16], "texture": "#diffuser"}
+      }
+    },
+    {
+      "from": [5, 3, 5],
+      "to": [11, 10, 11],
+      "rotation": {"angle": 0, "axis": "y", "origin": [7, 3, 7]},
+      "faces": {
+        "north": {"uv": [5, 8, 11, 15], "texture": "#core"},
+        "east": {"uv": [5, 8, 11, 15], "texture": "#core"},
+        "south": {"uv": [5, 8, 11, 15], "texture": "#core"},
+        "west": {"uv": [5, 8, 11, 15], "texture": "#core"},
+        "up": {"uv": [5, 1, 11, 7], "texture": "#core"},
+        "down": {"uv": [5, 1, 11, 7], "texture": "#core"}
+      }
+    }
+  ]
+}

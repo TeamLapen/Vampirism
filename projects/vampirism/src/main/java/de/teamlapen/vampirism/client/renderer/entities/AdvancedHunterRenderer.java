@@ -1,8 +1,7 @@
 package de.teamlapen.vampirism.client.renderer.entities;
 
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.util.VIdentifier;
-import de.teamlapen.vampirism.client.renderer.entities.state.AvatarLikeRenderState;
+import de.teamlapen.library.client.renderer.entities.state.AvatarLikeRenderState;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.ClientAsset;
 import net.minecraft.world.entity.Mob;

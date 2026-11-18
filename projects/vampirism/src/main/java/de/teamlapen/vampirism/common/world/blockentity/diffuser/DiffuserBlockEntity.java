@@ -3,10 +3,10 @@ package de.teamlapen.vampirism.common.world.blockentity.diffuser;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IFactionHelper;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
-import de.teamlapen.vampirism.common.config.ModConfig;
-import de.teamlapen.vampirism.common.world.blockentity.PlayerOwnedBlockEntity;
-import de.teamlapen.vampirism.common.world.blocks.diffuser.DiffuserBlock;
-import de.teamlapen.vampirism.common.world.inventory.diffuser.DiffuserMenu;
+import de.teamlapen.faction.common.config.FactionConfig;
+import de.teamlapen.library.common.world.blockentity.PlayerOwnedBlockEntity;
+import de.teamlapen.vampirism.common.world.blocks.DiffuserBlock;
+import de.teamlapen.vampirism.common.world.inventory.DiffuserMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
@@ -170,7 +170,7 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
             blockEntity.items.set(SLOT_FUEL, fuelStack);
             hasChanged = true;
         } else {
-            int maxBootTimer = ModConfig.balance().diffuserBootTime.get() * 20;
+            int maxBootTimer = FactionConfig.server().diffuserBootTime.get() * 20;
             if (blockEntity.bootTimer == 0) {
                 blockEntity.deactivateEffect(level, blockPos, blockState);
                 blockEntity.bootTimer = maxBootTimer;

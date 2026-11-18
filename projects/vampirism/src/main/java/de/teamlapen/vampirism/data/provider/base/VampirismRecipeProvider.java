@@ -16,6 +16,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceKey;
@@ -278,16 +279,26 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
         }
     }
 
+    protected void upToThreeQuarrelRecipe(ItemLike quarrel, Holder<IOil> oil, String name) {
+        for (int i = 1; i <= 3; i++) {
+            quarrelRecipe(quarrel, oil, i, name);
+        }
+    }
+
     /**
      * Generates a recipe for a quarrel with an oil effect. {@code quantity} refers to the number of quarrels in the recipe for one oil item. It is recommended to make three recipes for one, two and three quarrels (use {@link #upToThreeQuarrelRecipe(net.minecraft.world.level.ItemLike, net.minecraft.core.Holder)}), although it depends on the oil value. Teleport quarrel, for example, only allows one quarrel for one oil bottle.
      */
     protected void quarrelRecipe(ItemLike quarrel, Holder<IOil> oil, int quantity) {
+        quarrelRecipe(quarrel, oil, quantity, BuiltInRegistries.ITEM.getKey(quarrel.asItem()).toString());
+    }
+
+    protected void quarrelRecipe(ItemLike quarrel, Holder<IOil> oil, int quantity, String name) {
         shapelessWeaponTable(RecipeCategory.COMBAT, quarrel, quantity)
                 .requires(ModItems.QUARREL_NORMAL, quantity)
                 .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(oil), ModItems.OIL_BOTTLE))
                 .unlockedBy("has_quarrel_normal", has(ModItems.QUARREL_NORMAL))
                 .lava(0)
-                .save(output, RegUtil.id(quarrel) + "_" + quantity);
+                .save(output, name + "_" + quantity);
     }
 
     protected void nineBlockStorageRecipes(RecipeCategory unpackedCategory, ItemStackTemplate unpacked, RecipeCategory packedCategory, ItemStackTemplate packed, String pathSuffix) {

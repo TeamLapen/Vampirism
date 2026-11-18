@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.world.items;
 
+import de.teamlapen.library.common.world.items.BaseDisplayItemGenerator;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
 import net.minecraft.tags.BlockTags;
@@ -19,17 +20,17 @@ public class HeartStrikerItem extends VampireSwordItem implements BaseDisplayIte
 
     @Override
     public float getXpRepairRatio(ItemStack stack) {
-        return this.getVampirismTier() == Tier.ULTIMATE ? super.getXpRepairRatio(stack) / 2f : super.getXpRepairRatio(stack);
+        return this.getTier() == Tier.ULTIMATE ? super.getXpRepairRatio(stack) / 2f : super.getXpRepairRatio(stack);
     }
 
     @Override
     protected float getChargeUsage(ItemStack stack) {
-        return (float) ((ModConfig.balance().vampireSwordBloodUsageFactor.get() / 100f) * (getVampirismTier().ordinal() + 2) / 2f) * getPurityChargeUsageModifier(stack);
+        return (float) ((ModConfig.balance().vampireSwordBloodUsageFactor.get() / 100f) * (getTier().ordinal() + 2) / 2f) * getPurityChargeUsageModifier(stack);
     }
 
     @Override
     protected float getChargingFactor(ItemStack stack) {
-        return (float) (ModConfig.balance().vampireSwordChargingFactor.get() * 2f / (getVampirismTier().ordinal() + 2f)) * getPurityChargeSpeedModifier(stack);
+        return (float) (ModConfig.balance().vampireSwordChargingFactor.get() * 2f / (getTier().ordinal() + 2f)) * getPurityChargeSpeedModifier(stack);
     }
 
     @Override

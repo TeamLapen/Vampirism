@@ -33,7 +33,6 @@ public class BalanceConfig {
     public final ModConfigSpec.BooleanValue creeperIgnoreVampire;
     public final ModConfigSpec.DoubleValue bleedingEffectDamage;
     public final ModConfigSpec.DoubleValue velmorraAltarKnifeDamage;
-    public final ModConfigSpec.IntValue diffuserBootTime;
     public final ModConfigSpec.IntValue hunterTentMaxSpawn;
     public final ModConfigSpec.DoubleValue crossbowDamageMult;
     public final ModConfigSpec.IntValue garlicDiffuserStartupTime;
@@ -197,14 +196,6 @@ public class BalanceConfig {
     // Effects
     public final ModConfigSpec.DoubleValue efExposedPerLevelMultiplier;
 
-    // Lord Actions
-    public final ModConfigSpec.BooleanValue laLordSpeedEnabled;
-    public final ModConfigSpec.IntValue laLordSpeedCooldown;
-    public final ModConfigSpec.IntValue laLordSpeedDuration;
-    public final ModConfigSpec.BooleanValue laLordAttackSpeedEnabled;
-    public final ModConfigSpec.IntValue laLordAttackSpeedCooldown;
-    public final ModConfigSpec.IntValue laLordAttackSpeedDuration;
-
     public BalanceConfig(BalanceBuilder builder) {
         boolean iceAndFire = ModList.get().isLoaded("iceandfire");
         if (iceAndFire) {
@@ -265,9 +256,6 @@ public class BalanceConfig {
         velmorraAltarKnifeDamage = builder
                 .comment("Damage dealt to a lord when inserting a ritual knife into the Velmorra altar. Never lethal.")
                 .defineInRange("velmorraAltarKnifeDamage", 6.0, 0, 1000);
-        diffuserBootTime = builder
-                .comment("Time in seconds before a diffuser's effect becomes active after placement.")
-                .defineInRange("diffuserBootTime", 15, 1, Integer.MAX_VALUE / 20);
 
 
         builder.category("hunterActions", "ha");
@@ -717,26 +705,5 @@ public class BalanceConfig {
         efExposedPerLevelMultiplier = builder
                 .comment("Damage multiplier applied per level of the Exposed effect. For instance, a value of 0.25 means the entity will receive 25% more damage at level I, 50% at level II, 75% at level III, and so on.")
                 .defineInRange("exposedPerLevelMultiplier", 0.25, 0.0, Double.MAX_VALUE);
-
-        builder.category("lordActions", "la");
-
-        laLordSpeedEnabled = builder
-                .comment("When enabled, vampire lords can use the speed action.")
-                .define("lordSpeedEnabled", true);
-        laLordSpeedDuration = builder
-                .comment("Duration of the vampire lord speed action, in seconds.")
-                .defineInRange("lordSpeedDuration", 30, 0, Integer.MAX_VALUE);
-        laLordSpeedCooldown = builder
-                .comment("Cooldown for the vampire lord speed action, in seconds.")
-                .defineInRange("lordSpeedCooldown", 120, 0, Integer.MAX_VALUE);
-        laLordAttackSpeedEnabled = builder
-                .comment("When enabled, vampire lords can use the attack speed action.")
-                .define("lordAttackSpeedEnabled", true);
-        laLordAttackSpeedDuration = builder
-                .comment("Duration of the vampire lord attack speed action, in seconds.")
-                .defineInRange("lordAttackSpeedDuration", 30, 0, Integer.MAX_VALUE);
-        laLordAttackSpeedCooldown = builder
-                .comment("Cooldown for the vampire lord attack speed action, in seconds.")
-                .defineInRange("lordAttackSpeedCooldown", 120, 0, Integer.MAX_VALUE);
     }
 }

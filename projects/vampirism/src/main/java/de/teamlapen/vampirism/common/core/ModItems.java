@@ -4,13 +4,14 @@ import de.teamlapen.faction.api.world.items.IRefinementItem;
 import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.util.BlockDescription;
+import de.teamlapen.faction.common.world.items.RefinementItem;
 import de.teamlapen.faction.common.world.items.consume.FactionFoodEntry;
 import de.teamlapen.faction.common.world.items.consume.FactionFoodList;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VEnums;
 import de.teamlapen.vampirism.api.VampirismTags;
-import de.teamlapen.vampirism.api.world.items.IItemWithTier;
+import de.teamlapen.library.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.api.world.items.QuarrelProperties;
 import de.teamlapen.vampirism.api.world.items.components.IBottleBlood;
 import de.teamlapen.vampirism.common.world.blocks.CoffinBlock;
@@ -162,7 +163,7 @@ public class ModItems {
     public static final DeferredItem<VampireCloakItem> VAMPIRE_CLOAK_RED = ITEMS.registerItem("vampire_cloak_red",  props -> new VampireCloakItem(DyeColor.RED, props));
     public static final DeferredItem<VampireCloakItem> VAMPIRE_CLOAK_BLACK = ITEMS.registerItem("vampire_cloak_black",  props -> new VampireCloakItem(DyeColor.BLACK, props));
 
-    public static final DeferredItem<RefinementItem> AMULET = ITEMS.registerItem("amulet",  props -> new RefinementItem(FactionRestriction.builder(VampirismTags.Factions.IS_VAMPIRE).message(VampireClothingItem.MASSAGE_RESTRICTION_VAMPIRE_CLOTHING).apply(props), IRefinementItem.AccessorySlotType.AMULET));
+    public static final DeferredItem<RefinementItem> AMULET = ITEMS.registerItem("amulet", props -> new RefinementItem(FactionRestriction.builder(VampirismTags.Factions.IS_VAMPIRE).message(VampireClothingItem.MASSAGE_RESTRICTION_VAMPIRE_CLOTHING).apply(props), IRefinementItem.AccessorySlotType.AMULET));
     public static final DeferredItem<RefinementItem> RING = ITEMS.registerItem("ring",  props -> new RefinementItem(FactionRestriction.builder(VampirismTags.Factions.IS_VAMPIRE).message(VampireClothingItem.MASSAGE_RESTRICTION_VAMPIRE_CLOTHING).apply(props), IRefinementItem.AccessorySlotType.RING));
     public static final DeferredItem<RefinementItem> OBI_BELT = ITEMS.registerItem("obi_belt",  props -> new RefinementItem(FactionRestriction.builder(VampirismTags.Factions.IS_VAMPIRE).message(VampireClothingItem.MASSAGE_RESTRICTION_VAMPIRE_CLOTHING).apply(props), IRefinementItem.AccessorySlotType.OBI_BELT));
 

@@ -17,7 +17,7 @@ import de.teamlapen.vampirism.common.util.DamageHandler;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.attachments.ModDamageSources;
 import de.teamlapen.vampirism.common.world.effects.SanguinareMobEffect;
-import de.teamlapen.vampirism.common.world.entity.player.LevelAttributeModifier;
+import de.teamlapen.faction.common.world.entities.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;

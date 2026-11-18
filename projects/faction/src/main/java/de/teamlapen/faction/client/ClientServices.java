@@ -48,6 +48,7 @@ public class ClientServices extends Services {
             this.itemBars.init();
         });
         bus.addListener(FactionParticleFactories::registerFactories);
+        bus.addListener(FactionEntitiesRenderer::onRegisterLayers);
     }
 
     @Override

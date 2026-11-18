@@ -5,6 +5,7 @@ import de.teamlapen.faction.client.network.FactionClientPayloadHandler;
 import de.teamlapen.faction.common.network.packets.client.*;
 import de.teamlapen.faction.common.network.packets.server.*;
 import de.teamlapen.faction.common.server.ServerPayloadHandler;
+import de.teamlapen.library.common.network.packets.PlayerOwnedBlockEntityLockPacket;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;

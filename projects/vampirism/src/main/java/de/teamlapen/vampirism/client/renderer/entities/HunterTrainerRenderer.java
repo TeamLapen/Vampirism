@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.client.renderer.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.api.util.VIdentifier;
-import de.teamlapen.vampirism.client.models.entities.ClothedModel;
-import de.teamlapen.vampirism.client.renderer.entities.state.AvatarLikeRenderState;
+import de.teamlapen.library.client.models.entities.ClothedModel;
+import de.teamlapen.library.client.renderer.entities.state.AvatarLikeRenderState;
 import de.teamlapen.vampirism.common.world.entity.VampirismEntity;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.SubmitNodeCollector;

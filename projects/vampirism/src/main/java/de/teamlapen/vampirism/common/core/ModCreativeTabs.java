@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.util.ColorListsUtil;
 import de.teamlapen.vampirism.common.util.ItemDataUtils;
-import de.teamlapen.vampirism.common.world.items.BaseDisplayItemGenerator;
+import de.teamlapen.library.common.world.items.BaseDisplayItemGenerator;
 import de.teamlapen.vampirism.common.world.items.RitualKnifeItem;
 import de.teamlapen.vampirism.common.world.items.SerumInjectionItem;
 import de.teamlapen.vampirism.common.world.items.component.RitualKnifeType;

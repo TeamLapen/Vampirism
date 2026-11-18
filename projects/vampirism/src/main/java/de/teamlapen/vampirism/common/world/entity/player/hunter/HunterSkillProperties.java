@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.world.entity.player.hunter;
 
 import de.teamlapen.faction.common.sounds.ISoundReference;
-import de.teamlapen.vampirism.api.world.items.IItemWithTier;
+import de.teamlapen.library.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.actions.CamouflageAction;
 import de.teamlapen.vampirism.common.world.items.HunterCoatItem;
 import org.jetbrains.annotations.Nullable;

@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.world.blocks;
 
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.api.world.blocks.HolyWaterEffectConsumer;
-import de.teamlapen.vampirism.api.world.items.IItemWithTier;
+import de.teamlapen.library.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.common.core.ModBiomes;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.world.features.VampirismFeatures;

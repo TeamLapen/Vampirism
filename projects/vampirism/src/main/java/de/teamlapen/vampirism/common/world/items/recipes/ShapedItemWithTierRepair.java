@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.world.items.recipes;
 
 import com.mojang.serialization.MapCodec;
-import de.teamlapen.vampirism.api.world.items.IItemWithTier;
+import de.teamlapen.library.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.common.core.ModRecipes;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;

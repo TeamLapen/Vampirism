@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.renderer.entities;
 
-import de.teamlapen.vampirism.client.models.entities.ClothedModel;
+import de.teamlapen.library.client.models.entities.ClothedModel;
+import de.teamlapen.library.client.renderer.DualBipedRenderer;
 import de.teamlapen.vampirism.common.world.entity.hunter.BasicHunterEntity;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayers;

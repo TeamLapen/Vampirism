@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.renderer.bloodvision;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.faction.client.IMinecraftAccessor;
+import de.teamlapen.library.client.renderer.NoOpOutlineBufferSource;
 import de.teamlapen.vampirism.client.ShaderHandler;
 import de.teamlapen.vampirism.client.core.ModEntityRenderStates;
 import de.teamlapen.vampirism.client.core.ModRenderPipelines;

@@ -10,7 +10,7 @@ import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.world.items.IBloodChargeable;
-import de.teamlapen.vampirism.api.world.items.IItemWithTier;
+import de.teamlapen.library.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModParticles;
@@ -27,7 +27,6 @@ import de.teamlapen.vampirism.common.world.entity.player.vampire.skills.VampireS
 import de.teamlapen.vampirism.common.world.items.component.BloodCharged;
 import de.teamlapen.vampirism.common.world.items.component.PureLevel;
 import de.teamlapen.vampirism.common.world.items.component.SwordTraining;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;
@@ -120,7 +119,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IIt
     }
 
     @Override
-    public IItemWithTier.Tier getVampirismTier() {
+    public IItemWithTier.Tier getTier() {
         return tier;
     }
 
@@ -176,7 +175,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IIt
             if (skillHandler.isSkillEnabled(VampireSkills.FINISHER) && !(target instanceof Player) || ModConfig.balance().vsSwordFinisherOnPlayer.get()) {
                 relTh = ModConfig.balance().vsSwordFinisherMaxHealth.get() * (refinementHandler.isRefinementEquipped(ModRefinements.SWORD_FINISHER) ? ModConfig.balance().vrSwordFinisherThresholdMod.get() : 1d);
             }
-            List<IItemWithTier.Tier> hunterCoatArmor = Arrays.stream(EquipmentSlot.values()).filter(EquipmentSlot::isArmor).map(target::getItemBySlot).filter(s -> s.getItem() instanceof HunterCoatItem).map(s -> ((HunterCoatItem) s.getItem()).getVampirismTier()).toList();
+            List<IItemWithTier.Tier> hunterCoatArmor = Arrays.stream(EquipmentSlot.values()).filter(EquipmentSlot::isArmor).map(target::getItemBySlot).filter(s -> s.getItem() instanceof HunterCoatItem).map(s -> ((HunterCoatItem) s.getItem()).getTier()).toList();
             if (hunterCoatArmor.size() == 4) {
                 var level = hunterCoatArmor.stream().min(Comparator.comparingInt(IItemWithTier.Tier::ordinal)).orElse(IItemWithTier.Tier.NORMAL);
                 relTh *= (1- switch (level) {

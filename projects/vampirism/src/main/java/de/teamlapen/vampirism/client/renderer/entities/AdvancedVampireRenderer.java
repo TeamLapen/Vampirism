@@ -1,11 +1,9 @@
 package de.teamlapen.vampirism.client.renderer.entities;
 
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.util.VIdentifier;
-import de.teamlapen.vampirism.api.world.entity.vampire.IAdvancedVampire;
 import de.teamlapen.vampirism.client.renderer.entities.layers.AdvancedVampireEyeLayer;
 import de.teamlapen.vampirism.client.renderer.entities.layers.AdvancedVampireFangLayer;
-import de.teamlapen.vampirism.client.renderer.entities.state.AvatarLikeRenderState;
+import de.teamlapen.library.client.renderer.entities.state.AvatarLikeRenderState;
 import de.teamlapen.vampirism.common.util.supporter.Supporter;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.ClientAsset;

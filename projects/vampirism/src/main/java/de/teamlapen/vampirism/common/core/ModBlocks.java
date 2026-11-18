@@ -5,8 +5,9 @@ import de.teamlapen.faction.common.world.blocks.base.BaseHorizontalBlock;
 import de.teamlapen.faction.common.world.blocks.base.BaseSplitBlock;
 import de.teamlapen.faction.common.world.blocks.base.WaterloggedHorizontalBlock;
 import de.teamlapen.faction.common.world.blocks.base.WaterloggedSplitBlock;
+import de.teamlapen.library.common.core.LibraryBlockRegisterHelper;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.world.EnumStrength;
+import de.teamlapen.library.api.world.EnumStrength;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.util.VampirismVoxelShapes;
 import de.teamlapen.vampirism.common.world.blocks.*;
@@ -18,7 +19,6 @@ import de.teamlapen.vampirism.common.world.blocks.mother.ActiveVulnerableRemains
 import de.teamlapen.vampirism.common.world.blocks.mother.MotherBlock;
 import de.teamlapen.vampirism.common.world.blocks.mother.RemainsBlock;
 import de.teamlapen.vampirism.common.world.features.ModTreeGrower;
-import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffects;
@@ -27,7 +27,6 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
@@ -42,6 +41,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static de.teamlapen.library.common.core.LibraryBlockRegisterHelper.setFlammable;
 
 /**
  * Handles all block registrations and reference.
@@ -122,10 +123,10 @@ public class ModBlocks {
     public static final DeferredBlock<CursedEarthBlock> CURSED_EARTH = BLOCKS.registerBlock("cursed_earth", CursedEarthBlock::new, () -> copyProperties(Blocks.DIRT).mapColor(MapColor.TERRACOTTA_BROWN));
     public static final DeferredBlock<CursedEarthPathBlock> CURSED_EARTH_PATH = BLOCKS.registerBlock("cursed_earth_path", CursedEarthPathBlock::new, () -> copyProperties(Blocks.DIRT_PATH).mapColor(MapColor.COLOR_GRAY));
 
-    public static final DeferredBlock<RotatedPillarBlock> DARK_SPRUCE_LOG = BLOCKS.registerBlock("dark_spruce_log", RotatedPillarBlock::new, logProperties(MapColor.COLOR_BLACK, MapColor.COLOR_BLACK));
-    public static final DeferredBlock<RotatedPillarBlock> DARK_SPRUCE_WOOD = BLOCKS.registerBlock("dark_spruce_wood", RotatedPillarBlock::new, logProperties(MapColor.COLOR_BLACK, MapColor.COLOR_BLACK));
-    public static final DeferredBlock<RotatedPillarBlock> STRIPPED_DARK_SPRUCE_LOG = BLOCKS.registerBlock("stripped_dark_spruce_log", RotatedPillarBlock::new, logProperties(MapColor.COLOR_BLACK, MapColor.COLOR_GRAY));
-    public static final DeferredBlock<RotatedPillarBlock> STRIPPED_DARK_SPRUCE_WOOD = BLOCKS.registerBlock("stripped_dark_spruce_wood", RotatedPillarBlock::new, logProperties(MapColor.COLOR_BLACK, MapColor.COLOR_GRAY));
+    public static final DeferredBlock<RotatedPillarBlock> DARK_SPRUCE_LOG = BLOCKS.registerBlock("dark_spruce_log", RotatedPillarBlock::new, LibraryBlockRegisterHelper.logProperties(MapColor.COLOR_BLACK, MapColor.COLOR_BLACK));
+    public static final DeferredBlock<RotatedPillarBlock> DARK_SPRUCE_WOOD = BLOCKS.registerBlock("dark_spruce_wood", RotatedPillarBlock::new, LibraryBlockRegisterHelper.logProperties(MapColor.COLOR_BLACK, MapColor.COLOR_BLACK));
+    public static final DeferredBlock<RotatedPillarBlock> STRIPPED_DARK_SPRUCE_LOG = BLOCKS.registerBlock("stripped_dark_spruce_log", RotatedPillarBlock::new, LibraryBlockRegisterHelper.logProperties(MapColor.COLOR_BLACK, MapColor.COLOR_GRAY));
+    public static final DeferredBlock<RotatedPillarBlock> STRIPPED_DARK_SPRUCE_WOOD = BLOCKS.registerBlock("stripped_dark_spruce_wood", RotatedPillarBlock::new, LibraryBlockRegisterHelper.logProperties(MapColor.COLOR_BLACK, MapColor.COLOR_GRAY));
 
     public static final DeferredBlock<Block> DARK_SPRUCE_PLANKS = BLOCKS.registerBlock("dark_spruce_planks", Block::new, () -> copyProperties(Blocks.SPRUCE_PLANKS).mapColor(MapColor.COLOR_GRAY));
     public static final DeferredBlock<StairBlock> DARK_SPRUCE_STAIRS = BLOCKS.registerBlock("dark_spruce_stairs", props -> new StairBlock(DARK_SPRUCE_PLANKS.get().defaultBlockState(), props), () -> copyProperties(Blocks.SPRUCE_STAIRS, DARK_SPRUCE_PLANKS));
@@ -141,10 +142,10 @@ public class ModBlocks {
     public static final DeferredBlock<CeilingHangingSignBlock> DARK_SPRUCE_HANGING_SIGN = registerBlock("dark_spruce_hanging_sign", props -> new CeilingHangingSignBlock(WoodTypes.DARK_SPRUCE, props), () -> copyProperties(Blocks.SPRUCE_HANGING_SIGN, DARK_SPRUCE_PLANKS));
     public static final DeferredBlock<WallHangingSignBlock> DARK_SPRUCE_WALL_HANGING_SIGN = registerBlock("dark_spruce_wall_hanging_sign", props -> new WallHangingSignBlock(WoodTypes.DARK_SPRUCE, props), () -> copyProperties(Blocks.SPRUCE_WALL_HANGING_SIGN, DARK_SPRUCE_PLANKS).overrideLootTable(DARK_SPRUCE_HANGING_SIGN.get().getLootTable()));
 
-    public static final DeferredBlock<CursedSpruceBlock> CURSED_SPRUCE_LOG = BLOCKS.registerBlock("cursed_spruce_log", CursedSpruceBlock::new, logProperties(MapColor.COLOR_BLACK, MapColor.CRIMSON_HYPHAE));
-    public static final DeferredBlock<CursedSpruceBlock> CURSED_SPRUCE_WOOD = BLOCKS.registerBlock("cursed_spruce_wood", CursedSpruceBlock::new, logProperties(MapColor.COLOR_BLACK, MapColor.CRIMSON_HYPHAE));
-    public static final DeferredBlock<RotatedPillarBlock> STRIPPED_CURSED_SPRUCE_LOG = BLOCKS.registerBlock("stripped_cursed_spruce_log", RotatedPillarBlock::new, logProperties(MapColor.COLOR_BLACK, MapColor.CRIMSON_HYPHAE));
-    public static final DeferredBlock<RotatedPillarBlock> STRIPPED_CURSED_SPRUCE_WOOD = BLOCKS.registerBlock("stripped_cursed_spruce_wood", RotatedPillarBlock::new, logProperties(MapColor.COLOR_BLACK, MapColor.CRIMSON_HYPHAE));
+    public static final DeferredBlock<CursedSpruceBlock> CURSED_SPRUCE_LOG = BLOCKS.registerBlock("cursed_spruce_log", CursedSpruceBlock::new, LibraryBlockRegisterHelper.logProperties(MapColor.COLOR_BLACK, MapColor.CRIMSON_HYPHAE));
+    public static final DeferredBlock<CursedSpruceBlock> CURSED_SPRUCE_WOOD = BLOCKS.registerBlock("cursed_spruce_wood", CursedSpruceBlock::new, LibraryBlockRegisterHelper.logProperties(MapColor.COLOR_BLACK, MapColor.CRIMSON_HYPHAE));
+    public static final DeferredBlock<RotatedPillarBlock> STRIPPED_CURSED_SPRUCE_LOG = BLOCKS.registerBlock("stripped_cursed_spruce_log", RotatedPillarBlock::new, LibraryBlockRegisterHelper.logProperties(MapColor.COLOR_BLACK, MapColor.CRIMSON_HYPHAE));
+    public static final DeferredBlock<RotatedPillarBlock> STRIPPED_CURSED_SPRUCE_WOOD = BLOCKS.registerBlock("stripped_cursed_spruce_wood", RotatedPillarBlock::new, LibraryBlockRegisterHelper.logProperties(MapColor.COLOR_BLACK, MapColor.CRIMSON_HYPHAE));
 
     public static final DeferredBlock<Block> CURSED_SPRUCE_PLANKS = BLOCKS.registerBlock("cursed_spruce_planks", Block::new, () -> copyProperties(Blocks.SPRUCE_PLANKS).mapColor(MapColor.CRIMSON_HYPHAE));
     public static final DeferredBlock<StairBlock> CURSED_SPRUCE_STAIRS = BLOCKS.registerBlock("cursed_spruce_stairs", props -> new StairBlock(CURSED_SPRUCE_PLANKS.get().defaultBlockState(), props), () -> copyProperties(Blocks.SPRUCE_STAIRS, CURSED_SPRUCE_PLANKS));
@@ -420,10 +421,6 @@ public class ModBlocks {
         return copyProperties(block).mapColor(copyMapColorBlock.get().defaultMapColor());
     }
 
-    private static Supplier<BlockBehaviour.Properties> logProperties(MapColor sideColor, MapColor topColor) {
-        return () -> basicProperties().mapColor(state -> state.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? sideColor : topColor).instrument(NoteBlockInstrument.BASS).strength(2.0F).sound(SoundType.WOOD).ignitedByLava();
-    }
-
     private static Supplier<BlockBehaviour.Properties> coffinProperties() {
         return () -> basicProperties().mapColor(MapColor.WOOD).strength(0.2f).noOcclusion().pushReaction(PushReaction.DESTROY).ignitedByLava();
     }
@@ -477,7 +474,4 @@ public class ModBlocks {
         setFlammable(DARK_SPRUCE_LEAVES, 30, 60);
     }
 
-    private static void setFlammable(DeferredBlock<?> block, int encouragement, int flammability) {
-        ((FireBlock) Blocks.FIRE).setFlammable(block.get(), encouragement, flammability);
-    }
 }

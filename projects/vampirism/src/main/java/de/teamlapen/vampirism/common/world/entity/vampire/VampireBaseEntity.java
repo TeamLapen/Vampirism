@@ -1,15 +1,14 @@
 package de.teamlapen.vampirism.common.world.entity.vampire;
 
-import de.teamlapen.faction.common.util.StructureUtil;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.world.EnumStrength;
+import de.teamlapen.library.api.world.EnumStrength;
 import de.teamlapen.vampirism.api.VampirismApi;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.common.events.VampirismEventFactory;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IDrinkBloodContext;
 import de.teamlapen.vampirism.api.world.entity.vampire.IVampireMob;
-import de.teamlapen.vampirism.api.world.items.IItemWithTier;
+import de.teamlapen.library.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.common.config.BalanceMobProps;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.*;
@@ -27,7 +26,6 @@ import de.teamlapen.vampirism.common.world.items.HunterCoatItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.StructureTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
@@ -185,9 +183,9 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
             for (ItemStack e : Arrays.stream(EquipmentSlot.values()).filter(x -> x.getType() == EquipmentSlot.Type.HUMANOID_ARMOR).map(living::getItemBySlot).toList()) {
                 if (e.getItem() instanceof HunterCoatItem) {
                     int j = 1;
-                    if (((HunterCoatItem) e.getItem()).getVampirismTier().equals(IItemWithTier.Tier.ENHANCED)) {
+                    if (((HunterCoatItem) e.getItem()).getTier().equals(IItemWithTier.Tier.ENHANCED)) {
                         j = 2;
-                    } else if (((HunterCoatItem) e.getItem()).getVampirismTier().equals(IItemWithTier.Tier.ULTIMATE)) {
+                    } else if (((HunterCoatItem) e.getItem()).getTier().equals(IItemWithTier.Tier.ULTIMATE)) {
                         j = 3;
                     }
                     if (getRandom().nextInt((4 - j) * 2) == 0) {

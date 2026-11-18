@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.core;
 
 import com.mojang.math.Axis;
+import de.teamlapen.faction.client.core.FactionEntitiesRenderer;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.models.armor.*;
 import de.teamlapen.vampirism.client.models.blocks.BloodSphereModel;
@@ -56,7 +57,6 @@ public class ModEntitiesRender {
     public static final ModelLayerLocation HUNTER_HAT_BROAD = new ModelLayerLocation(VIdentifier.mod("hunter_hat_broad"), "main");
     public static final ModelLayerLocation HUNTER_EQUIPMENT = new ModelLayerLocation(VIdentifier.mod("hunter_equipment"), "main");
     public static final ModelLayerLocation VILLAGER_WITH_ARMS = new ModelLayerLocation(VIdentifier.mod("villager_with_arms"), "main");
-    public static final ModelLayerLocation TASK_MASTER = new ModelLayerLocation(VIdentifier.mod("task_master"), "main");
     public static final ModelLayerLocation REMAINS_DEFENDER = new ModelLayerLocation(VIdentifier.mod("remains_defender"), "main");
     public static final ModelLayerLocation GHOST = new ModelLayerLocation(VIdentifier.mod("ghost"), "main");
     public static final ModelLayerLocation DARK_SPRUCE_BOAT = new ModelLayerLocation(VIdentifier.mod("boat/dark_spruce"), "main");
@@ -126,7 +126,6 @@ public class ModEntitiesRender {
         event.registerLayerDefinition(HUNTER_HAT_TALL, VampirismArmorLayerDefinitions::hunterTallHatDefinition);
         event.registerLayerDefinition(HUNTER_HAT_BROAD, VampirismArmorLayerDefinitions::hunterBroadHatLayer);
         event.registerLayerDefinition(VILLAGER_WITH_ARMS, () -> VillagerWithArmsModel.createLayer(0));
-        event.registerLayerDefinition(TASK_MASTER, () -> LayerDefinition.create(VillagerModel.createBodyModel(), 64, 64));
         event.registerLayerDefinition(REMAINS_DEFENDER, RemainsDefenderModel::createBodyLayer);
         event.registerLayerDefinition(GHOST, GhostModel::createMesh);
         LayerDefinition boatDefinition = BoatModel.createBoatModel();

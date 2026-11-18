@@ -5,7 +5,7 @@ import de.teamlapen.faction.common.world.inventory.TaskBoardMenu;
 import de.teamlapen.vampirism.common.config.BalanceMobProps;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.util.Helper;
-import de.teamlapen.vampirism.common.world.entity.IDefaultTaskMasterEntity;
+import de.teamlapen.faction.common.world.entities.IDefaultTaskMasterEntity;
 import de.teamlapen.vampirism.common.world.entity.VampirismEntity;
 import de.teamlapen.vampirism.common.world.entity.vampire.VampireBaseEntity;
 import net.minecraft.core.RegistryAccess;

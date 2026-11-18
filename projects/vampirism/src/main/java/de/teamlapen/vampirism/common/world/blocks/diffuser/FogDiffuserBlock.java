@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.common.world.blocks.diffuser;
 
 import com.mojang.serialization.MapCodec;
+import de.teamlapen.vampirism.common.world.blocks.DiffuserBlock;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModStats;
 import de.teamlapen.vampirism.common.world.blockentity.diffuser.DiffuserBlockEntity;

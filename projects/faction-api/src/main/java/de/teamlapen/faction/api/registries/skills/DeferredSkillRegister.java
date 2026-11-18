@@ -16,6 +16,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 @SuppressWarnings("unused")
 public class DeferredSkillRegister extends DeferredRegister<ISkill<?>> {
@@ -37,6 +38,10 @@ public class DeferredSkillRegister extends DeferredRegister<ISkill<?>> {
     @SuppressWarnings({"unchecked", "RedundantCast"})
     public <T extends IFactionPlayer<T> & ISkillPlayer<T>, I extends ISkill<T>> DeferredSkill<T, I> registerSkill(String name, Function<SkillProperties<T>,? extends I> sup) {
         return (DeferredSkill<T, I>) (Object) super.register(name, key -> sup.apply(new SkillProperties<T>().setId(ResourceKey.create(FactionRegistries.Keys.SKILL, key))));
+    }
+
+    public <T extends IFactionPlayer<T> & ISkillPlayer<T>, I extends ISkill<T>> DeferredSkill<T, I> registerSkill(String name, Function<SkillProperties<T>,? extends I> sup, UnaryOperator<SkillProperties<T>> properties) {
+        return registerSkill(name, x -> sup.apply(properties.apply(x)));
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
