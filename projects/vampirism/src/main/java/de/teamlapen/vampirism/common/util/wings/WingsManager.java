@@ -15,6 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -41,7 +42,19 @@ public class WingsManager {
         if (!FMLEnvironment.isProduction()) {
             return Stream.of(IWingsEntity.Texture.values());
         }
-        return Stream.concat(Stream.of(IWingsEntity.Texture.DEFAULT), getWings(player).map(PlayerWings::textures).stream().flatMap(Collection::stream)).distinct();
+        return Stream.of(Stream.of(IWingsEntity.Texture.DEFAULT), getSeasonalWings(), getWings(player).map(PlayerWings::textures).stream().flatMap(Collection::stream)).flatMap(Function.identity()).distinct();
+    }
+
+    /**
+     * @return seasonal wing textures that are currently available for every player
+     */
+    public Stream<IWingsEntity.Texture> getSeasonalWings() {
+        LocalDate now = LocalDate.now();
+        return Stream.of(IWingsEntity.Texture.values()).filter(texture -> texture.isInSeason(now));
+    }
+
+    public boolean isAvailable(Player player, IWingsEntity.Texture texture) {
+        return getAvailableWings(player).anyMatch(texture::equals);
     }
 
     private CompletableFuture<Map<UUID, PlayerWings>> loadFromFile() {

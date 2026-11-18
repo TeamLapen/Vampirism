@@ -8,8 +8,6 @@ import de.teamlapen.vampirism.api.world.entity.player.vampire.IWingsEntity;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import net.minecraft.resources.Identifier;
 
-import java.util.stream.Collectors;
-
 public class Customization extends PropertyParentSync {
 
     public static final Identifier NONE = VIdentifier.mod("none");
@@ -38,7 +36,11 @@ public class Customization extends PropertyParentSync {
         registerProperty(VIdentifier.mod("eye_position")).simple(DEFAULT_POSITION, this::eyePosition, this::setEyePosition);
         registerProperty(VIdentifier.mod("fang_position")).simple(DEFAULT_POSITION, this::fangPosition, this::setFangPosition);
         registerProperty(VIdentifier.mod("glowing_eyes")).simple(false, this::glowingEyes, this::setGlowingEyes);
-        registerProperty(VIdentifier.mod("wings_texture")).simple(IWingsEntity.Texture.DEFAULT, this::wingsTexture, this::setWingsTexture);
+        registerProperty(VIdentifier.mod("wings_texture")).simple(IWingsEntity.Texture.CODEC).defaultValue(IWingsEntity.Texture.DEFAULT).provider(() -> this.wingsTexture).clientLoader(x -> {
+            var diff = this.wingsTexture == x;
+            this.wingsTexture = x;
+            return diff;
+        }).serverLoader(this::loadWingsTexture);
     }
 
     public void setEyeType(Identifier eyeType) {
@@ -92,8 +94,14 @@ public class Customization extends PropertyParentSync {
     }
 
     public void setWingsTexture(IWingsEntity.Texture wingsTexture) {
-        var wings = VampirismMod.services().wingsManager().getAvailableWings(this.player.asEntity()).collect(Collectors.toSet());
-        if (!wings.contains(wingsTexture)) return;
+        if (!VampirismMod.services().wingsManager().isAvailable(this.player.asEntity(), wingsTexture)) return;
         this.wingsTexture = wingsTexture;
+    }
+
+    /**
+     * Loads the saved wings texture. Falls back to {@link IWingsEntity.Texture#DEFAULT} if the texture is no longer available (e.g. a seasonal texture out of season)
+     */
+    private void loadWingsTexture(IWingsEntity.Texture wingsTexture) {
+        this.wingsTexture = VampirismMod.services().wingsManager().isAvailable(this.player.asEntity(), wingsTexture) ? wingsTexture : IWingsEntity.Texture.DEFAULT;
     }
 }

@@ -12,7 +12,7 @@
       "texture": {
         "type": "string",
         "description": "Wing texture variant, matched against the IWingsEntity.Texture enum (serialized as lowercase enum name). A value outside this set fails to parse and the whole entry is dropped with a warning.",
-        "enum": ["default", "dev", "castle_contest"]
+        "enum": ["default", "dev", "castle_contest", "halloween", "pride"]
       },
       "players": {
         "type": "array",
