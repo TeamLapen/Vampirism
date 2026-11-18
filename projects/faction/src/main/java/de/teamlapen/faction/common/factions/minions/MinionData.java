@@ -204,14 +204,18 @@ public class MinionData extends SimpleMutableDataComponentMap implements IMinion
             if (minionStat instanceof MinionStat.AttributeBased attributeBased) {
                 AttributeInstance attribute = entity.getAttribute(attributeBased.getAttribute());
                 if (attribute != null) {
-                    attribute.addOrReplacePermanentModifier(new AttributeModifier(STATS, getStatBonus(attributeBased), AttributeModifier.Operation.ADD_VALUE));
+                    attribute.addOrReplacePermanentModifier(new AttributeModifier(STATS, getStatBonus(attributeBased, attribute.getBaseValue()), AttributeModifier.Operation.ADD_VALUE));
                 }
             }
         }
     }
 
-    private double getStatBonus(MinionStat.AttributeBased stat) {
-        return stat.perLevelValue() * stat.currentLevel(this) * (hasIncreasedStats() ? 1.2 : 1);
+    /**
+     * @return the amount added to the attribute's base value. The lord's increased stats multiply the whole value (base + level bonus), not only the level bonus
+     */
+    private double getStatBonus(MinionStat.AttributeBased stat, double baseValue) {
+        double value = baseValue + stat.perLevelValue() * stat.currentLevel(this);
+        return value * (hasIncreasedStats() ? 1.2 : 1) - baseValue;
     }
 
     /**
@@ -224,7 +228,7 @@ public class MinionData extends SimpleMutableDataComponentMap implements IMinion
         double value = attribute.value().getDefaultValue();
         for (MinionStat minionStat : this.minionEntry.minionStats()) {
             if (minionStat instanceof MinionStat.AttributeBased attributeBased && attributeBased.getAttribute().value() == attribute.value()) {
-                value += getStatBonus(attributeBased);
+                value += getStatBonus(attributeBased, attribute.value().getDefaultValue());
             }
         }
         return attribute.value().sanitizeValue(value);
