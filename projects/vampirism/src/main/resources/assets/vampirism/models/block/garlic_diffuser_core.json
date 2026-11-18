@@ -1,5 +1,5 @@
 {
-  "parent": "factionapi:block/diffuser_core",
+  "parent": "vampirism:block/diffuser_core",
   "textures": {
     "core": "vampirism:block/garlic_diffuser_core"
   }

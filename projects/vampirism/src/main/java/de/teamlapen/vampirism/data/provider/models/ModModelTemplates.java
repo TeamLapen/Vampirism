@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.data.provider.models;
 
-import de.teamlapen.faction.api.util.FIdentifier;
 import net.minecraft.client.data.models.model.ModelTemplate;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureSlot;
@@ -10,8 +9,8 @@ import static de.teamlapen.vampirism.api.util.VIdentifier.mod;
 
 public class ModModelTemplates extends ModelTemplates {
 
-    public static final ModelTemplate DIFFUSER = create(FIdentifier.mod("diffuser"), ModTextureSlots.CORE);
-    public static final ModelTemplate DIFFUSER_CORE = create(FIdentifier.mod("diffuser_core"), ModTextureSlots.CORE);
+    public static final ModelTemplate DIFFUSER = create(mod("diffuser"), ModTextureSlots.CORE);
+    public static final ModelTemplate DIFFUSER_CORE = create(mod("diffuser_core"), ModTextureSlots.CORE);
     public static final ModelTemplate ALTAR_PILLAR_FILLED = create(mod("altar_pillar_filled"), TextureSlot.SIDE);
     public static final ModelTemplate CANDLE_STICK_FILLED = create(mod("candle_stick_filled"), ModTextureSlots.CANDLE);
     public static final ModelTemplate WALL_CANDLE_STICK_FILLED = create(mod("wall_candle_stick_filled"), ModTextureSlots.CANDLE);
