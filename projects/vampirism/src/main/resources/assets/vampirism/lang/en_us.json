@@ -1257,9 +1257,6 @@
 
   "misc.vampirism.unknown": "Unknown",
 
-  "tooltip.vampirism.tier.normal": "Normal",
-  "tooltip.vampirism.tier.enhanced": "Enhanced",
-  "tooltip.vampirism.tier.ultimate": "Ultimate",
   "tooltip.vampirism.minion_upgrade": "One Level-Up",
   "tooltip.vampirism.for_to_levels": "For Levels %1$s To %2$s",
   "tooltip.vampirism.quarrel_effect": "On Impact:",
