@@ -3,6 +3,10 @@
   "block.factionapi.totem_top": "Крихка верхівка сільського тотема",
   "block.factionapi.totem_top_crafted": "Верхівка сільського тотема",
   "effect.factionapi.oblivion": "Забуття",
+  "effect.factionapi.lord_speed": "Швидкість",
+  "effect.factionapi.lord_attack_speed": "Швидкість атаки",
+  "action.factionapi.lord_speed": "Швидкість Володаря",
+  "action.factionapi.lord_attack_speed": "Швидкість атаки Володаря",
   "stat_type.factionapi.action_used": "Дія активована",
   "stat_type.factionapi.action_time": "Дія активна",
   "stat_type.factionapi.action_cooldown_time": "Дія перезаряджується",
@@ -11,6 +15,7 @@
   "minion_task.factionapi.follow_lord": "Стеж",
   "minion_task.factionapi.protect_lord": "Захищай Володаря",
   "minion_task.factionapi.nothing": "Нічого",
+  "minion_task.factionapi.collect_resources.start": "Я вирушаю за ресурсами",
   "minion_task.factionapi.call_single": "Покликати одного",
   "minion_task.factionapi.call_all": "Покликати всіх",
   "minion_task.factionapi.respawn": "Відродження",
@@ -60,6 +65,7 @@
   "gui.factionapi.minion_screen.reset_stats": "Скинути характеристики. Це витратить %s",
   "gui.factionapi.minion_stats": "Характеристики посіпак",
   "gui.factionapi.minion_stats.level": "Рівень",
+  "gui.factionapi.minion_stats.inventory_level": "Розмір інвентарю",
   "gui.factionapi.radial_menu.place_exclude": "Розмістіть тут, щоб виключити",
   "gui.factionapi.action_radial.no_actions": "Нема призначених дій",
   "gui.factionapi.minion_radial.no_minion_tasks": "Немає призначених завдань посіпакам",
@@ -123,5 +129,6 @@
   "command.factionapi.test.skill.all_locked": "Усі навички тепер заблоковано",
   "command.factionapi.failed_to_execute": "Не вдалося виконати команду. Внутрішня помилка.",
   "command.factionapi.failed_to_execute.players": "Не вдалося виконати команду для %s. Внутрішня помилка.",
-  "factionapi.configuration.world": "Світ"
+  "factionapi.configuration.world": "Світ",
+  "attribute.factionapi.resource_efficiency": "Ефективність використання ресурсів"
 }
