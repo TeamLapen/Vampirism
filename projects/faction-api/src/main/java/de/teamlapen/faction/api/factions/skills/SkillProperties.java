@@ -179,6 +179,7 @@ public class SkillProperties<T extends ISkillPlayer<T>> {
                     if (i != null && i < 0) {
                         throw new IllegalStateException("Skill cost must be positive for: " + key);
                     }
+                    builder.set(FactionDataComponents.SKILL_COST, 1);
                 });
     }
 
