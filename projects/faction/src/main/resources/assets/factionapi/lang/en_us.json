@@ -11,13 +11,6 @@
 
   "effect.factionapi.oblivion": "Oblivion",
   "effect.factionapi.resurrection_fatigue": "Resurrection Fatigue",
-  "effect.factionapi.lord_speed": "Speed",
-  "effect.factionapi.lord_attack_speed": "Attack Speed",
-
-  "action.factionapi.lord_speed": "Lord Movement Speed",
-  "action.factionapi.lord_speed.desc": "Boost the movement speed of nearby faction members",
-  "action.factionapi.lord_attack_speed": "Lord Attack Speed",
-  "action.factionapi.lord_attack_speed.desc": "Boost the attack speed of nearby faction members",
 
   "stat_type.factionapi.action_used": "Action Activated",
   "stat_type.factionapi.action_time": "Action Active",
@@ -53,25 +46,9 @@
   "minion_task.factionapi.follow_lord": "Follow",
   "minion_task.factionapi.protect_lord": "Defend Lord",
   "minion_task.factionapi.nothing": "Nothing",
-  "minion_task.factionapi.collect_resources": "Collect resources",
-  "minion_task.factionapi.collect_resources.start": "I will head out and search for resources",
-  "minion_task.factionapi.collect_wood": "Collect wood",
-  "minion_task.factionapi.collect_wood.start": "I will head out and gather wood",
-  "minion_task.factionapi.collect_ores": "Collect ores",
-  "minion_task.factionapi.collect_ores.start": "I will head out and mine for ores",
-  "minion_task.factionapi.collect_fish": "Catch fish",
-  "minion_task.factionapi.collect_fish.start": "I will head out and catch some fish",
-  "minion_task.factionapi.collect_plants": "Gather plants",
-  "minion_task.factionapi.collect_plants.start": "I will head out and gather plants",
-  "minion_task.factionapi.collect_mob_loot": "Hunt creatures",
-  "minion_task.factionapi.collect_mob_loot.start": "I will head out and hunt some creatures",
   "minion_task.factionapi.call_single": "Call single",
   "minion_task.factionapi.call_all": "Call all",
   "minion_task.factionapi.respawn": "Respawn dead",
-  "minion_task_category.factionapi.collect_resources": "Collect resources",
-  "minion_task_category.factionapi.defend": "Defend",
-  "minion_task_category.factionapi.movement": "Movement",
-  "minion_task_category.factionapi.recall": "Recall",
 
   "task_reward.factionapi.lord_level": "Lord Level %s",
 
@@ -83,10 +60,6 @@
 
   "skill.factionapi.minion_recovery": "Minion Recovery",
   "skill.factionapi.minion_recovery.desc": "Speeds up the time your minions need to recover",
-  "skill.factionapi.minion_collect": "Resource Collection",
-  "skill.factionapi.minion_collect.desc": "Send your minions out to collect resources",
-  "skill.factionapi.resource_diversity": "Resource Diversity",
-  "skill.factionapi.resource_diversity.desc": "Send your minions out to collect specific kinds of resources. Better tools yield better resources",
 
   "gui.factionapi.faction_menu.appearance_menu": "Appearance Menu",
   "gui.factionapi.faction_menu.locate_taskmaster": "Last Known Position",
@@ -145,7 +118,6 @@
   "gui.factionapi.minion_stats.level": "Level",
   "gui.factionapi.minion_stats.stat_level": "Lvl %1$s/%2$s",
   "gui.factionapi.select_minion": "Select Minion",
-  "gui.factionapi.minion_stats.inventory_level": "Inventory Size",
 
   "gui.factionapi.radial_menu.excluded_actions": "Excluded Actions",
   "gui.factionapi.radial_menu.place_exclude": "Place here to exclude",
@@ -178,7 +150,6 @@
   "message.factionapi.action.conflicts_with": "You cannot use this action while %s is active",
   "message.factionapi.action.on_cooldown": "This action is still on cooldown",
   "message.factionapi.action.cancelled": "This action could not be activated",
-  "message.factionapi.action.lord_range.no_target": "No entities in range",
 
   "message.factionapi.village_raid.defended": "Village successfully defended",
   "message.factionapi.village_raid.attacked.neutral": "%s attacked a nearby neutral village",
@@ -212,8 +183,6 @@
 
   "dialogue.factionapi.minion.can_respawn": "%s: My Lord, I have recovered",
   "dialogue.factionapi.minion.died": "%s: My Lord, I have died",
-  "dialogue.factionapi.minion.task_finished": "%s: My Lord, I have finished my task: %s",
-  "dialogue.factionapi.minion.finished_collecting": "%s: My Lord, I cannot carry any more. I have finished collecting resources",
   "dialogue.factionapi.minion.died_on_task": "My Lord, I am sorry, but I died while fulfilling your task",
 
   "subtitles.factionapi.task_complete": "Task completed",
@@ -282,7 +251,6 @@
   "factionapi.configuration.raid": "Raid",
   "factionapi.configuration.faction": "Faction",
   "factionapi.configuration.minions": "Minions",
-  "factionapi.configuration.lordActions": "Lord Actions",
   "factionapi.configuration.tasks": "Tasks",
   "factionapi.configuration.admin": "Admin",
 
@@ -346,10 +314,6 @@
   "factionapi.configuration.minionPerLordLevel.tooltip": "Number of minions a player may have per lord level.",
   "factionapi.configuration.minionOfflineResourceCooldownMultiplier": "Offline Resource Cooldown Multiplier",
   "factionapi.configuration.minionOfflineResourceCooldownMultiplier.tooltip": "Cooldown multiplier for collect resource task types while the owning player is offline.",
-  "factionapi.configuration.minionResourceCooldown": "Resource Cooldown",
-  "factionapi.configuration.minionResourceCooldown.tooltip": "Cooldown in ticks before new resources are generated by a minion's collect resource task.",
-  "factionapi.configuration.minionCollectFailuresUntilFinished": "Collect Failures Until Finished",
-  "factionapi.configuration.minionCollectFailuresUntilFinished.tooltip": "Number of consecutive resource collections whose items do not fit into the minion inventory after which a collect resource task is finished.",
   "factionapi.configuration.minionEquipmentRepairAmount": "Equipment Repair Amount",
   "factionapi.configuration.minionEquipmentRepairAmount.tooltip": "Amount by which minion equipment is repaired when completing resource tasks.",
 
@@ -370,19 +334,5 @@
   "factionapi.configuration.usePermissions": "Use Permissions",
   "factionapi.configuration.usePermissions.tooltip": "When enabled, uses the Forge permission system for certain actions. See the wiki for more information.",
   "factionapi.configuration.enableFactionLogging": "Enable Faction Logging",
-  "factionapi.configuration.enableFactionLogging.tooltip": "When enabled, writes a custom log file for specific faction actions. Only applies to dedicated servers. Requires a server restart.",
-  "factionapi.configuration.lordSpeedEnabled": "Lord Speed Enabled",
-  "factionapi.configuration.lordSpeedEnabled.tooltip": "When enabled, lords can use the speed action.",
-  "factionapi.configuration.lordSpeedDuration": "Lord Speed Duration",
-  "factionapi.configuration.lordSpeedDuration.tooltip": "Duration of the lord speed action, in seconds.",
-  "factionapi.configuration.lordSpeedCooldown": "Lord Speed Cooldown",
-  "factionapi.configuration.lordSpeedCooldown.tooltip": "Cooldown for the lord speed action, in seconds.",
-  "factionapi.configuration.lordAttackSpeedEnabled": "Lord Attack Speed Enabled",
-  "factionapi.configuration.lordAttackSpeedEnabled.tooltip": "When enabled, lords can use the attack speed action.",
-  "factionapi.configuration.lordAttackSpeedDuration": "Lord Attack Speed Duration",
-  "factionapi.configuration.lordAttackSpeedDuration.tooltip": "Duration of the lord attack speed action, in seconds.",
-  "factionapi.configuration.lordAttackSpeedCooldown": "Lord Attack Speed Cooldown",
-  "factionapi.configuration.lordAttackSpeedCooldown.tooltip": "Cooldown for the lord attack speed action, in seconds.",
-
-  "attribute.factionapi.resource_efficiency": "Resource Efficiency"
+  "factionapi.configuration.enableFactionLogging.tooltip": "When enabled, writes a custom log file for specific faction actions. Only applies to dedicated servers. Requires a server restart."
 }
