@@ -1,6 +1,7 @@
 {
   "minion_task.factionapi.follow_lord": "seguace",
   "minion_task.factionapi.nothing": "Nulla",
+  "minion_task.factionapi.collect_resources.start": "Andrò fuori e cercherò le risorse",
   "minion_task.factionapi.call_single": "Chiamata individuale",
   "minion_task.factionapi.call_all": "Chiama tutti",
   "minion_task.factionapi.respawn": "respawna i morti",
@@ -28,6 +29,7 @@
   "gui.factionapi.minion.name": "Nome: ",
   "gui.factionapi.minion_stats": "Statistiche minion",
   "gui.factionapi.minion_stats.level": "Livello",
+  "gui.factionapi.minion_stats.inventory_level": "Dimensione Inventario",
   "gui.factionapi.level": "Livello",
   "message.factionapi.village_raid.abandoned": "Un villaggio vicino è stato abbandonato",
   "message.factionapi.village_totem.fail_other_component": "Non è possibile distruggere i componenti del villaggio di un villaggio di un'altra fazione",
@@ -59,5 +61,6 @@
   "command.factionapi.test.skill.disabled": "Disabilità Abilità",
   "command.factionapi.test.skill.locked": "Bloccato da un altro nodo abilità",
   "command.factionapi.failed_to_execute": "Fallimento nell'esecuzione del comando. Errore Interno.",
-  "command.factionapi.failed_to_execute.players": "Esecuzione del comando per %snon riuscita. Errore interno, azz."
+  "command.factionapi.failed_to_execute.players": "Esecuzione del comando per %snon riuscita. Errore interno, azz.",
+  "attribute.factionapi.resource_efficiency": "Efficienza Delle Risorse"
 }
