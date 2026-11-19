@@ -3,6 +3,7 @@
   "effect.factionapi.oblivion": "Zapomnienie",
   "minion_task.factionapi.follow_lord": "Śledź",
   "minion_task.factionapi.nothing": "Nic",
+  "minion_task.factionapi.collect_resources.start": "Będę wychodzić i szukać zasobów",
   "minion_task.factionapi.call_single": "Pojedyncze połączenie",
   "minion_task.factionapi.call_all": "Zadzwoń do wszystkich",
   "minion_task.factionapi.respawn": "Odrodzenie martwe",
@@ -44,6 +45,7 @@
   "gui.factionapi.minion_screen.reset_stats": "Zresetuj statystyki. Zużywa to %s",
   "gui.factionapi.minion_stats": "Statystyki sług",
   "gui.factionapi.minion_stats.level": "Poziom",
+  "gui.factionapi.minion_stats.inventory_level": "Rozmiar ekwipunku",
   "gui.factionapi.level": "Poziom",
   "message.factionapi.action.not_bound": "Żadna akcja nie jest przypisana do tego klawisza. Zobacz %s.",
   "message.factionapi.village_raid.almost_captured": "Wioska prawie przejęta. Zostało %s obrońców",
@@ -88,5 +90,6 @@
   "command.factionapi.test.skill.locked_player_state": "Zablokowane przez status gracza",
   "command.factionapi.failed_to_execute": "Nie można wykonać polecenia. Błąd wewnętrzny.",
   "command.factionapi.failed_to_execute.players": "Nie udało się wykonać polecenia dla %s. Błąd wewnętrzny.",
-  "factionapi.configuration.world": "Świat"
+  "factionapi.configuration.world": "Świat",
+  "attribute.factionapi.resource_efficiency": "Efektywność zasobów"
 }
