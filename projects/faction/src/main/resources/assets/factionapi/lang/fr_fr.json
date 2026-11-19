@@ -1,5 +1,9 @@
 {
   "effect.factionapi.oblivion": "Oblivion",
+  "effect.factionapi.lord_speed": "Vitesse",
+  "effect.factionapi.lord_attack_speed": "Vitesse d'attaque",
+  "action.factionapi.lord_speed": "Vitesse de déplacement du Seigneur",
+  "action.factionapi.lord_attack_speed": "Vitesse d'Attaque du Seigneur",
   "skill.factionapi.minion_recovery.desc": "Accélérer le temps de récupération de vos serviteurs",
   "gui.factionapi.faction_menu.appearance_menu": "Menu d'apparence",
   "gui.factionapi.faction_menu.last_known_pos.unknown": "Inconnu",
