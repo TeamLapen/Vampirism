@@ -8,5 +8,7 @@
   "gui.factionapi.minion.active_task": "Huidige taak",
   "gui.factionapi.minion_stats.level": "Niveau",
   "gui.factionapi.level": "Niveau",
+  "tooltip.factionapi.tier.normal": "Normaal",
+  "tooltip.factionapi.tier.enhanced": "Verbeterd",
   "command.factionapi.failed_to_execute": "Kan de opdracht niet uitvoeren. Interne fout."
 }
