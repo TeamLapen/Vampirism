@@ -236,8 +236,6 @@
   "dialogue.vampirism.hunter_minion.upgrade": "Merci pour l'équipement amélioré. Veuillez choisir dans quel domaine je dois me former.",
   "dialogue.vampirism.hunter_minion.wrong_upgrade": "Je ne peux pas utiliser cette amélioration",
   "misc.vampirism.unknown": "Inconnu",
-  "tooltip.vampirism.tier.normal": "Standard",
-  "tooltip.vampirism.tier.enhanced": "Amélioré",
   "tooltip.vampirism.alchemical_fire.desc1": "Ne se propage pas",
   "tooltip.vampirism.alchemical_fire.desc2": "Brûlures indéfiniment",
   "tooltip.vampirism.more_damage_against": "Cause %s pourcent de dégâts supplémentaires contre %s",
