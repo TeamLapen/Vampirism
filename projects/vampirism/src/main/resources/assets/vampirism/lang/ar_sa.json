@@ -101,8 +101,6 @@
   "message.vampirism.coffin.occupied": "التابوت هذا مشغول",
   "dialogue.vampirism.hunter.will_train_you": "حسنا، سيتم تدريب لك",
   "misc.vampirism.unknown": "‮غير معلوم",
-  "tooltip.vampirism.tier.normal": "عادي",
-  "tooltip.vampirism.tier.enhanced": "متطور",
   "tooltip.vampirism.alchemical_fire.desc1": "لا ينتشر",
   "tooltip.vampirism.alchemical_fire.desc2": "يحترق لوقت طويل الى الابد",
   "death.attack.vampirism.sun": "%1$s لم يحب الشمس",
