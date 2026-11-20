@@ -91,8 +91,6 @@
   "message.vampirism.coffin.occupied": "Αυτό το φέρετρο είναι κατειλημμένο",
   "dialogue.vampirism.hunter.will_train_you": "Εντάξει, θα σας εκπαιδεύσω",
   "misc.vampirism.unknown": "Άγνωστο",
-  "tooltip.vampirism.tier.normal": "Κανονικό",
-  "tooltip.vampirism.tier.enhanced": "Ενισχυμένο",
   "death.attack.vampirism.sun": "%1$s δεν του/της άρεσε ο ήλιος",
   "command.vampirism.failed_to_execute": "Απέτυχε η εκτέλεση της εντολής. Εσωτερικό σφάλμα.",
   "command.vampirism.base.vampire_biome.searching": "Ψάχνουμε για ένα Περιβάλλον Δάσος Βρικολάκων. Παρακαλώ περίμενε",
