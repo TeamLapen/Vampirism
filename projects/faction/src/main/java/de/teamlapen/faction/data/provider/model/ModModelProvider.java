@@ -10,9 +10,11 @@ import net.minecraft.core.Holder;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.stream.Stream;
 
+@ApiStatus.Internal
 public class ModModelProvider extends ModelProvider {
 
     public ModModelProvider(PackOutput output) {

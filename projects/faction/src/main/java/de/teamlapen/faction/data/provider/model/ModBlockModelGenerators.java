@@ -7,7 +7,9 @@ import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.world.level.block.Blocks;
+import org.jetbrains.annotations.ApiStatus;
 
+@ApiStatus.Internal
 public class ModBlockModelGenerators extends BlockModelGenerators {
 
     public ModBlockModelGenerators(BlockModelGenerators generators) {
