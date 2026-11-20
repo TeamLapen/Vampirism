@@ -10,6 +10,8 @@
   "gui.factionapi.level": "レベル",
   "message.factionapi.action.not_bound": "このキーにはアクションが割り当てられていません。%sを確認して下さい。",
   "message.factionapi.village_raid.almost_captured": "村はほぼ占領されました。残り %s 名の敵",
+  "tooltip.factionapi.tier.normal": "ノーマル",
+  "tooltip.factionapi.tier.enhanced": "強化済",
   "command.factionapi.base.bind_action.success": "アクション\"%s\"を[%s]キーに設定しました。",
   "command.factionapi.base.bind_action.not_existing": "アクション\"%s\"は存在しません。",
   "command.factionapi.argument.action.notfound": "アクション\"%s\"は存在しません。",
