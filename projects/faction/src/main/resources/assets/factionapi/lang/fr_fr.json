@@ -56,6 +56,8 @@
   "message.factionapi.minion.minions_recovering": "%s serviteurs sont toujours en train de se récupérer",
   "dialogue.factionapi.minion.died_on_task": "Mon seigneur, je suis navré, je suis mort en accomplissant votre tâche",
   "tooltip.factionapi.required_level": "Niveau requis : %s",
+  "tooltip.factionapi.tier.normal": "Standard",
+  "tooltip.factionapi.tier.enhanced": "Amélioré",
   "command.factionapi.base.bind_action.success": "Action %s liée avec succès à la clé d'action %s",
   "command.factionapi.base.bind_action.not_existing": "L'action mentionné %s n'existe pas",
   "command.factionapi.argument.action.notfound": "L'action mentionné %s n'existe pas",
