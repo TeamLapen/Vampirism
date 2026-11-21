@@ -182,6 +182,12 @@ public class ModAdvancementProvider extends AdvancementProvider {
                     .parent(first_blood)
                     .addCriterion("infected", ActionCriterionTrigger.TriggerInstance.of(VampireActions.INFECT))
                     .save(consumer, REFERENCE.MODID + ":vampire/plague_inc");
+            AdvancementHolder heritage_researched = Advancement.Builder.advancement()
+                    .display(ModItems.HERITAGE_BOOK.get(), Component.translatable("advancement.vampirism.heritage_researched"), Component.translatable("advancement.vampirism.heritage_researched.desc"), null, AdvancementType.TASK, true, true, false)
+                    .parent(first_blood)
+                    .addCriterion("researched", ModAdvancements.TRIGGER_HERITAGE_RESEARCHED.get().createCriterion(new PlayerTrigger.TriggerInstance(Optional.empty())))
+                    .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.VAMPIRE, 1))
+                    .save(consumer, REFERENCE.MODID + ":vampire/heritage_researched");
             AdvancementHolder texas_massacre = Advancement.Builder.advancement()
                     .display(ModItems.HUMAN_HEART.get(), Component.translatable("advancement.vampirism.texas_massacre"), Component.translatable("advancement.vampirism.texas_massacre.desc"), null, AdvancementType.TASK, true, true, false)
                     .parent(first_blood)

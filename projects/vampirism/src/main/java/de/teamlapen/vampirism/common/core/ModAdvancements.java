@@ -20,6 +20,7 @@ public class ModAdvancements {
     public static final DeferredHolder<CriterionTrigger<?>, PlayerTrigger> TRIGGER_MOTHER_WIN = TRIGGERS.register("mother_win", PlayerTrigger::new);
     public static final DeferredHolder<CriterionTrigger<?>, PlayerTrigger> TRIGGER_DRACULA_WIN = TRIGGERS.register("dracula_win", PlayerTrigger::new);
     public static final DeferredHolder<CriterionTrigger<?>, PlayerTrigger> TRIGGER_BLOOD_FOOD_CONSUMED = TRIGGERS.register("blood_food_consumed", PlayerTrigger::new);
+    public static final DeferredHolder<CriterionTrigger<?>, PlayerTrigger> TRIGGER_HERITAGE_RESEARCHED = TRIGGERS.register("heritage_researched", PlayerTrigger::new);
 
     static void register(IEventBus bus) {
         TRIGGERS.register(bus);

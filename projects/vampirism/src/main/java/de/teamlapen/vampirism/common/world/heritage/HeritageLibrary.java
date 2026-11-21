@@ -3,10 +3,9 @@ package de.teamlapen.vampirism.common.world.heritage;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.util.VIdentifier;
-import de.teamlapen.vampirism.common.core.ModDataComponents;
+import de.teamlapen.vampirism.common.core.ModAdvancements;
 import de.teamlapen.vampirism.common.core.ModParticles;
 import de.teamlapen.vampirism.common.world.items.HeritageBookItem;
-import de.teamlapen.vampirism.common.world.items.component.HeritageResearch;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -18,11 +17,13 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.EnchantingTableBlock;
 import net.minecraft.world.level.block.entity.LecternBlockEntity;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,6 +31,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
@@ -84,6 +86,17 @@ public final class HeritageLibrary {
     public static void onBookPlaced(LecternBlockEntity lectern) {
         if (lectern.getLevel() instanceof ServerLevel level && HeritageBookItem.getTargetName(lectern.getBook()) != null && !HeritageBookItem.isResearched(lectern.getBook())) {
             level.getDataStorage().computeIfAbsent(LibraryData.TYPE).addResearching(lectern.getBlockPos());
+        }
+    }
+
+    /**
+     * The player who placed a book for research gets the advancement once it is complete.
+     */
+    public static void onBookPlacedBy(LecternBlockEntity lectern, @Nullable Entity entity) {
+        ItemStack book = lectern.getBook();
+        if (entity instanceof ServerPlayer player && HeritageBookItem.getTargetName(book) != null && !HeritageBookItem.isResearched(book)) {
+            HeritageBookItem.setResearch(book, HeritageBookItem.getResearchProgress(book), Optional.of(player.getUUID()));
+            lectern.setChanged();
         }
     }
 
@@ -146,10 +159,11 @@ public final class HeritageLibrary {
         }
 
         progress = Math.min(progress + UPDATE_INTERVAL, RESEARCH_DURATION);
-        book.set(ModDataComponents.HERITAGE_RESEARCH, new HeritageResearch(subject, progress));
+        HeritageBookItem.setResearch(book, progress, Optional.empty());
         lectern.setChanged();
         if (progress >= RESEARCH_DURATION) {
             completeResearch(level, pos, shelves);
+            HeritageBookItem.getResearcher(book).map(level.getServer().getPlayerList()::getPlayer).ifPresent(ModAdvancements.TRIGGER_HERITAGE_RESEARCHED.get()::trigger);
             data.unread.add(pos);
             return false;
         }

@@ -18,6 +18,8 @@ import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 /**
@@ -42,16 +44,41 @@ public class HeritageBookItem extends Item {
     }
 
     /**
-     * @return research progress in ticks for the current name of the book. Research done under another name does not count
+     * @return the research for the current name of the book. Research done under another name does not count
+     */
+    private static Optional<HeritageResearch> getResearch(ItemStack stack) {
+        String targetName = getTargetName(stack);
+        return Optional.ofNullable(stack.get(ModDataComponents.HERITAGE_RESEARCH)).filter(research -> research.subject().equals(targetName));
+    }
+
+    /**
+     * @return research progress in ticks for the current name of the book
      */
     public static int getResearchProgress(ItemStack stack) {
-        String targetName = getTargetName(stack);
-        HeritageResearch research = stack.get(ModDataComponents.HERITAGE_RESEARCH);
-        return targetName != null && research != null && research.subject().equals(targetName) ? research.progress() : 0;
+        return getResearch(stack).map(HeritageResearch::progress).orElse(0);
     }
 
     public static boolean isResearched(ItemStack stack) {
         return getResearchProgress(stack) >= HeritageLibrary.RESEARCH_DURATION;
+    }
+
+    /**
+     * @return the player who placed the book on a lectern to research its current name
+     */
+    public static Optional<UUID> getResearcher(ItemStack stack) {
+        return getResearch(stack).flatMap(HeritageResearch::researcher);
+    }
+
+    /**
+     * Stores the research progress for the current name of the book.
+     *
+     * @param researcher replaces the stored researcher if present
+     */
+    public static void setResearch(ItemStack stack, int progress, Optional<UUID> researcher) {
+        String targetName = getTargetName(stack);
+        if (targetName != null) {
+            stack.set(ModDataComponents.HERITAGE_RESEARCH, new HeritageResearch(targetName, progress, researcher.or(() -> getResearcher(stack))));
+        }
     }
 
     @Override

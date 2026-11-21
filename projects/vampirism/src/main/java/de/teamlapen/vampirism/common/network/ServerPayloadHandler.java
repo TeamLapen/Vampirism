@@ -5,6 +5,7 @@ import de.teamlapen.faction.common.factions.minions.MinionEntity;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IDraculaPlayer;
 import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
+import de.teamlapen.vampirism.common.core.ModAdvancements;
 import de.teamlapen.vampirism.common.network.packets.client.ClientboundHeritagePacket;
 import de.teamlapen.vampirism.common.network.packets.server.*;
 import de.teamlapen.vampirism.common.util.supporter.Supporter;
@@ -151,6 +152,10 @@ public class ServerPayloadHandler {
                     String notice = HeritageBookItem.getResearchProgress(book) > 0 ? "gui.vampirism.heritage.researching" : "gui.vampirism.heritage.blank";
                     sendUnavailableHeritagePacket(player, List.of(), Component.translatable(notice));
                     return;
+                }
+                // in case the researcher was offline when the research completed
+                if (HeritageBookItem.getResearcher(book).filter(player.getUUID()::equals).isPresent()) {
+                    ModAdvancements.TRIGGER_HERITAGE_RESEARCHED.get().trigger(player);
                 }
 
                 Optional<UUID> namedPlayer = heritageData.findPlayerByName(bookName);

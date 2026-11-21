@@ -1,0 +1,35 @@
+{
+  "parent": "vampirism:vampire/first_blood",
+  "criteria": {
+    "main": {
+      "conditions": {
+        "faction": "vampirism:vampire",
+        "level": 1
+      },
+      "trigger": "factionapi:faction"
+    },
+    "researched": {
+      "trigger": "vampirism:heritage_researched"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.vampirism.heritage_researched.desc"
+    },
+    "icon": {
+      "id": "vampirism:heritage_book"
+    },
+    "title": {
+      "translate": "advancement.vampirism.heritage_researched"
+    }
+  },
+  "requirements": [
+    [
+      "researched"
+    ],
+    [
+      "main"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
