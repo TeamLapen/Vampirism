@@ -109,6 +109,10 @@ public class HeritageScreen extends Screen {
      * Stays set while the next heritage loads, so the number does not flicker
      */
     private @Nullable UUID shownHeritageId;
+    /**
+     * Names the founder of the shown heritage, if it has exactly one
+     */
+    private Component title = TITLE;
 
     public HeritageScreen(ILastScreenProvider backScreen) {
         this(backScreen, null);
@@ -248,7 +252,7 @@ public class HeritageScreen extends Screen {
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         this.extractContents(graphics, mouseX, mouseY);
         GuiRenderer.blit(graphics, WINDOW_LOCATION, this.guiLeft, this.guiTop, SCREEN_WIDTH, SCREEN_HEIGHT);
-        graphics.text(this.font, TITLE, this.guiLeft + 8, this.guiTop + 6, 0xff000000, false);
+        graphics.text(this.font, this.title, this.guiLeft + 8, this.guiTop + 6, 0xff000000, false);
         int index = this.getShownHeritageIndex();
         if (this.availableHeritageIds.size() > 1 && index >= 0) {
             String number = toRomanNumeral(index + 1);
@@ -539,6 +543,7 @@ public class HeritageScreen extends Screen {
             graphicalNodes.add(founder);
             roots = List.of(founder);
         }
+        this.title = roots.size() == 1 ? Component.translatable("gui.vampirism.heritage.title_of", roots.getFirst().name()) : TITLE;
 
         List<Node> lostHistoryNodes = new ArrayList<>();
         for (Node root : roots) {

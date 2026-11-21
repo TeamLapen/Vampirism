@@ -1079,6 +1079,7 @@
   "gui.vampirism.faction_menu.passive_leveling.desc": "Use the Altar of Inspiration to level up.\n\nBut no one stays a fledgling forever: drink from the living and you grow on your own, up to level 3, though slower and at the cost of more blood. Beyond that, only the altar can make you a mature vampire.\n\nCurrent progress: %1$s%%",
   "gui.vampirism.faction_menu.heritage": "Heritage",
   "gui.vampirism.heritage.title": "Heritage",
+  "gui.vampirism.heritage.title_of": "Heritage of %s",
   "gui.vampirism.heritage.empty": "No heritage has been recorded.",
   "gui.vampirism.heritage.blank": "The pages are still blank. Place this book on a lectern surrounded by bookshelves to research the heritage.",
   "gui.vampirism.heritage.researching": "The research is still in progress. Keep an eye on the bookshelves around the lectern.",
