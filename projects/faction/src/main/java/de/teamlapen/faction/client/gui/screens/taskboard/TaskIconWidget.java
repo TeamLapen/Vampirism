@@ -101,7 +101,12 @@ public class TaskIconWidget extends AbstractWidget {
                 .withStyle(ChatFormatting.UNDERLINE, ChatFormatting.GOLD);
 
         List<Component> tooltipLines = new ArrayList<>();
-        MutableComponent description = task.reward().description().plainCopy();
+        MutableComponent description;
+        if (taskInstance.getReward() instanceof IItemReward.Instance(ItemStackTemplate rewardStack)) {
+            description = rewardStack.create().getItemName().plainCopy();
+        } else {
+            description = task.reward().description().plainCopy();
+        }
         if (progressText != null) {
             description.append(" ").append(progressText);
         }

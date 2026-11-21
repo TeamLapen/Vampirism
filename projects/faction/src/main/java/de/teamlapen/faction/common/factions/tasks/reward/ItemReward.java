@@ -43,7 +43,7 @@ public class ItemReward implements IItemReward {
 
     @Override
     public Component description() {
-        return Component.translatable(this.reward.item().value().getDescriptionId());
+        return this.reward.create().getItemName();
     }
 
 }
