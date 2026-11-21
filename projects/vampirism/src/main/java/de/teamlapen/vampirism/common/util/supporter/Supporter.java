@@ -53,19 +53,16 @@ public record Supporter(Identifier faction, Component name, String player, Map<S
      * Predefined lineage information for a supporter. The supporter that owns the definition must be one of its
      * members, while members without a parent are roots of the lineage.
      */
-    public record Heritage(List<Component> lore, List<Member> members) {
+    public record Heritage(List<Member> members) {
         public static final Codec<Heritage> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                ComponentSerialization.CODEC.listOf().optionalFieldOf("lore", List.of()).forGetter(Heritage::lore),
                 Member.CODEC.listOf().optionalFieldOf("members", List.of()).forGetter(Heritage::members)
         ).apply(instance, Heritage::new));
         public static final StreamCodec<RegistryFriendlyByteBuf, Heritage> STREAM_CODEC = StreamCodec.composite(
-                ComponentSerialization.STREAM_CODEC.apply(ByteBufCodecs.collection(ArrayList::new)), Heritage::lore,
                 Member.STREAM_CODEC.apply(ByteBufCodecs.collection(ArrayList::new)), Heritage::members,
                 Heritage::new
         );
 
         public Heritage {
-            lore = List.copyOf(lore);
             members = List.copyOf(members);
 
             Map<String, Member> membersById = new HashMap<>();

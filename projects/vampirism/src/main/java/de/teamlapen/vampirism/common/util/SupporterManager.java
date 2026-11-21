@@ -9,7 +9,6 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.common.util.supporter.Supporter;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.util.RandomSource;
@@ -100,7 +99,7 @@ public class SupporterManager {
                     List<PredefinedHeritageMember> members = heritage.members().stream()
                             .map(member -> new PredefinedHeritageMember(member.id(), resolveHeritageMemberName(member, supportersByPlayer), member.parent().orElse(null), member.lostHistory()))
                             .toList();
-                    PredefinedHeritage predefinedHeritage = new PredefinedHeritage(supporter.player(), heritage.lore(), members);
+                    PredefinedHeritage predefinedHeritage = new PredefinedHeritage(supporter.player(), members);
                     heritagesById.put(supporter.player(), predefinedHeritage);
                     for (PredefinedHeritageMember member : members) {
                         PredefinedHeritage previous = heritagesByMember.putIfAbsent(member.id(), predefinedHeritage);
@@ -149,9 +148,8 @@ public class SupporterManager {
         return supporter.name().getString();
     }
 
-    public record PredefinedHeritage(String id, List<Component> lore, List<PredefinedHeritageMember> members) {
+    public record PredefinedHeritage(String id, List<PredefinedHeritageMember> members) {
         public PredefinedHeritage {
-            lore = List.copyOf(lore);
             members = List.copyOf(members);
         }
     }
