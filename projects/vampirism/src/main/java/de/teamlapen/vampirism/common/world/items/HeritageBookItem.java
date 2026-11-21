@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.world.heritage.HeritageLibrary;
 import de.teamlapen.vampirism.common.world.items.component.HeritageResearch;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -12,8 +13,12 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Consumer;
 
 /**
  * A heritage book shows the heritage of the player or vampire it is named after, once that heritage was researched on
@@ -63,5 +68,21 @@ public class HeritageBookItem extends Item {
             VampirismMod.proxy.displayHeritageBookScreen(targetName);
         }
         return InteractionResult.SUCCESS_SERVER;
+    }
+
+    @Override
+    public boolean isFoil(ItemStack stack) {
+        return isResearched(stack) || super.isFoil(stack);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        if (getTargetName(stack) == null) {
+            return;
+        }
+        int progress = getResearchProgress(stack);
+        String status = progress >= HeritageLibrary.RESEARCH_DURATION ? "researched" : progress > 0 ? "researching" : "blank";
+        tooltipComponents.accept(Component.translatable("tooltip.vampirism.heritage_book." + status).withStyle(ChatFormatting.GRAY));
     }
 }

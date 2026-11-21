@@ -1248,6 +1248,9 @@
 
   "tooltip.vampirism.tier.normal": "Normal",
   "tooltip.vampirism.heritage_book": "Name this book in an anvil after a player or named vampire, then research their heritage on a lectern surrounded by bookshelves.",
+  "tooltip.vampirism.heritage_book.blank": "Blank pages",
+  "tooltip.vampirism.heritage_book.researching": "Research in progress",
+  "tooltip.vampirism.heritage_book.researched": "Researched",
   "tooltip.vampirism.tier.enhanced": "Enhanced",
   "tooltip.vampirism.tier.ultimate": "Ultimate",
   "tooltip.vampirism.minion_upgrade": "One Level-Up",
