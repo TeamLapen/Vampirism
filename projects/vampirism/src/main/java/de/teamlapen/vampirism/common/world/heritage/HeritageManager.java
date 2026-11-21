@@ -54,6 +54,10 @@ public final class HeritageManager {
         getData(player).runAwayFromHeritage(player);
     }
 
+    public static void updatePlayerName(ServerPlayer player) {
+        getData(player).updatePlayerName(player);
+    }
+
     /**
      * Called when the player stops being a vampire.
      */

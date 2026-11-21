@@ -122,6 +122,13 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
+    public void onLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            HeritageManager.updatePlayerName(player);
+        }
+    }
+
+    @SubscribeEvent
     public void onLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
         HeritageLectern.forget(event.getEntity());
     }

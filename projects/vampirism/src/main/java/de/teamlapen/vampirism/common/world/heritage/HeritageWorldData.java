@@ -176,6 +176,24 @@ public final class HeritageWorldData extends SavedData implements ValueIOSeriali
         setDirty();
     }
 
+    /**
+     * Keeps the name of a player up to date in all heritages they were part of, after they changed their name.
+     */
+    void updatePlayerName(ServerPlayer player) {
+        String name = player.getGameProfile().name();
+        boolean changed = false;
+        for (HeritageRecord record : this.records.values()) {
+            HeritageMember member = record.members.get(player.getUUID());
+            if (member != null && !member.playerName().equals(name)) {
+                record.members.put(member.playerId(), new HeritageMember(member.playerId(), name, member.parentPlayerId(), member.parentNpcId(), member.origin(), member.recordedAt()));
+                changed = true;
+            }
+        }
+        if (changed) {
+            setDirty();
+        }
+    }
+
     @Override
     public void deserialize(ValueInput input) {
         this.records.clear();
