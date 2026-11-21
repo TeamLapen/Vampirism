@@ -51,6 +51,9 @@ public class HeritageScreen extends Screen {
     private static final int LOST_HISTORY_HEIGHT = 32;
     private static final double MIN_ZOOM = 0.25;
     private static final double MAX_ZOOM = 2;
+    private static final int HERITAGE_NUMBER_WIDTH = 40;
+    private static final int[] ROMAN_VALUES = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
+    private static final String[] ROMAN_SYMBOLS = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
 
     private static final Identifier WINDOW_LOCATION = FIdentifier.mod("textures/gui/skills/window.png");
     private static final List<PageTexture> CURRENT_PAGE_TEXTURES = List.of(
@@ -102,6 +105,10 @@ public class HeritageScreen extends Screen {
     private final Set<UUID> requestedPlayerSkins = new HashSet<>();
     private ExtendedButton previousHeritageButton;
     private ExtendedButton nextHeritageButton;
+    /**
+     * Stays set while the next heritage loads, so the number does not flicker
+     */
+    private @Nullable UUID shownHeritageId;
 
     public HeritageScreen(ILastScreenProvider backScreen) {
         this(backScreen, null);
@@ -159,9 +166,10 @@ public class HeritageScreen extends Screen {
             }));
             this.takeBookButton.visible = this.canTakeBook;
         }
-        int heritageButtonsLeft = this.guiLeft + SCREEN_WIDTH / 2 - 20 - 4 / 2;
-        this.previousHeritageButton = this.addRenderableWidget(new ExtendedButton(heritageButtonsLeft, this.guiTop + 194, 20, 20, Component.literal("<"), button -> this.cycleHeritage(-1)));
-        this.nextHeritageButton = this.addRenderableWidget(new ExtendedButton(heritageButtonsLeft + 20 + 4, this.guiTop + 194, 20, 20, Component.literal(">"), button -> this.cycleHeritage(1)));
+        // the number of the shown heritage goes between the buttons
+        int center = this.guiLeft + SCREEN_WIDTH / 2;
+        this.previousHeritageButton = this.addRenderableWidget(new ExtendedButton(center - HERITAGE_NUMBER_WIDTH / 2 - 20, this.guiTop + 194, 20, 20, Component.literal("<"), button -> this.cycleHeritage(-1)));
+        this.nextHeritageButton = this.addRenderableWidget(new ExtendedButton(center + HERITAGE_NUMBER_WIDTH / 2, this.guiTop + 194, 20, 20, Component.literal(">"), button -> this.cycleHeritage(1)));
         this.addRenderableWidget(new ExtendedButton(this.guiLeft + 168, this.guiTop + 194, 80, 20, Component.translatable("gui.done"), button -> this.minecraft.setScreen(null)));
         this.updateHeritageNavigation();
 
@@ -172,24 +180,31 @@ public class HeritageScreen extends Screen {
 
     public void setHeritage(ClientboundHeritagePacket heritage) {
         this.heritage = heritage;
+        this.shownHeritageId = heritage.heritageId();
         this.availableHeritageIds = heritage.heritageIds();
         this.updateHeritageNavigation();
         this.rebuildTree();
     }
 
+    /**
+     * @return position of the shown heritage in the chronologically ordered heritages, -1 if unknown
+     */
+    private int getShownHeritageIndex() {
+        return this.shownHeritageId == null ? -1 : this.availableHeritageIds.indexOf(this.shownHeritageId);
+    }
+
     private void cycleHeritage(int direction) {
-        if (this.heritage == null || this.availableHeritageIds.size() < 2) {
-            return;
+        int index = this.getShownHeritageIndex();
+        int nextIndex = index + direction;
+        if (index >= 0 && nextIndex >= 0 && nextIndex < this.availableHeritageIds.size()) {
+            this.requestHeritage(this.availableHeritageIds.get(nextIndex));
         }
-        int currentIndex = this.availableHeritageIds.indexOf(this.heritage.heritageId());
-        if (currentIndex < 0) {
-            return;
-        }
-        int nextIndex = Math.floorMod(currentIndex + direction, this.availableHeritageIds.size());
-        this.requestHeritage(this.availableHeritageIds.get(nextIndex));
     }
 
     private void requestHeritage(@Nullable UUID heritageId) {
+        if (heritageId != null) {
+            this.shownHeritageId = heritageId;
+        }
         this.heritage = null;
         this.nodes = List.of();
         this.lostHistoryNodes = List.of();
@@ -213,13 +228,19 @@ public class HeritageScreen extends Screen {
         return state.getBlock() instanceof LecternBlock && state.getValue(LecternBlock.HAS_BOOK) && this.minecraft.player.isWithinBlockInteractionRange(pos, 4.0);
     }
 
+    /**
+     * The heritages are ordered from oldest to newest and the navigation stops at both ends.
+     */
     private void updateHeritageNavigation() {
         boolean visible = this.availableHeritageIds.size() > 1;
+        int index = this.getShownHeritageIndex();
         if (this.previousHeritageButton != null) {
             this.previousHeritageButton.visible = visible;
+            this.previousHeritageButton.active = index > 0;
         }
         if (this.nextHeritageButton != null) {
             this.nextHeritageButton.visible = visible;
+            this.nextHeritageButton.active = index >= 0 && index < this.availableHeritageIds.size() - 1;
         }
     }
 
@@ -228,6 +249,11 @@ public class HeritageScreen extends Screen {
         this.extractContents(graphics, mouseX, mouseY);
         GuiRenderer.blit(graphics, WINDOW_LOCATION, this.guiLeft, this.guiTop, SCREEN_WIDTH, SCREEN_HEIGHT);
         graphics.text(this.font, TITLE, this.guiLeft + 8, this.guiTop + 6, 0xff000000, false);
+        int index = this.getShownHeritageIndex();
+        if (this.availableHeritageIds.size() > 1 && index >= 0) {
+            String number = toRomanNumeral(index + 1);
+            graphics.text(this.font, number, this.guiLeft + SCREEN_WIDTH / 2 - this.font.width(number) / 2, this.guiTop + 194 + (20 - this.font.lineHeight) / 2 + 1, 0xff000000, false);
+        }
         super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
 
         if (this.hoveredNode != null) {
@@ -651,6 +677,17 @@ public class HeritageScreen extends Screen {
             return "founder:" + this.name;
         }
 
+    }
+
+    private static String toRomanNumeral(int number) {
+        StringBuilder numeral = new StringBuilder();
+        for (int i = 0; i < ROMAN_VALUES.length; i++) {
+            while (number >= ROMAN_VALUES[i]) {
+                numeral.append(ROMAN_SYMBOLS[i]);
+                number -= ROMAN_VALUES[i];
+            }
+        }
+        return numeral.toString();
     }
 
     private record PageTexture(Identifier texture, int weight) {

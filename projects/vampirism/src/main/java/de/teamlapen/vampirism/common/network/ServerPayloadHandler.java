@@ -30,6 +30,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -169,22 +170,25 @@ public class ServerPayloadHandler {
     }
 
     /**
-     * Sends the requested one of the heritages a player was part of, by default the current one. A player without a
-     * current heritage, e.g. after leaving the vampire faction, gets their first previous one. The ids of all of them
-     * are sent along, so the screen can switch between them.
+     * Sends the requested one of the heritages a player was part of, by default the most recent one. The ids of all of
+     * them are sent along in chronological order, so the screen can switch between them.
      */
     private static void sendPlayerHeritages(ServerPlayer receiver, HeritageWorldData heritageData, UUID playerId, @Nullable UUID requestedHeritageId) {
         List<HeritageWorldData.HeritageHistory> history = heritageData.getHeritagesForPlayer(playerId);
         Optional<HeritageMembership> current = heritageData.getMembership(playerId);
-        List<UUID> heritageIds = new ArrayList<>();
-        current.map(HeritageMembership::heritageId).ifPresent(heritageIds::add);
-        history.stream()
+        UUID currentId = current.map(HeritageMembership::heritageId).orElse(null);
+        // the current heritage always comes last, also for members recorded before the time was stored
+        List<UUID> heritageIds = new ArrayList<>(history.stream()
+                .filter(heritage -> !heritage.heritageId().equals(currentId))
+                .sorted(Comparator.comparingLong((HeritageWorldData.HeritageHistory heritage) -> heritage.member().recordedAt())
+                        .thenComparing(HeritageWorldData.HeritageHistory::heritageId))
                 .map(HeritageWorldData.HeritageHistory::heritageId)
-                .filter(heritageId -> !heritageIds.contains(heritageId))
-                .sorted()
-                .forEach(heritageIds::add);
+                .toList());
+        if (currentId != null) {
+            heritageIds.add(currentId);
+        }
 
-        UUID selectedId = requestedHeritageId != null ? requestedHeritageId : heritageIds.isEmpty() ? null : heritageIds.getFirst();
+        UUID selectedId = requestedHeritageId != null ? requestedHeritageId : heritageIds.isEmpty() ? null : heritageIds.getLast();
         Optional<HeritageMembership> selected = current.filter(membership -> membership.heritageId().equals(selectedId))
                 .or(() -> history.stream()
                         .filter(heritage -> heritage.heritageId().equals(selectedId))

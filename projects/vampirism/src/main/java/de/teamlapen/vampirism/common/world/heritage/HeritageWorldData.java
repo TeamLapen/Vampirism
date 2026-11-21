@@ -172,7 +172,7 @@ public final class HeritageWorldData extends SavedData implements ValueIOSeriali
     void record(ServerPlayer player, HeritageMembership membership) {
         UUID playerId = player.getUUID();
         HeritageRecord record = this.records.computeIfAbsent(membership.heritageId(), _ -> new HeritageRecord(membership.namedNpc()));
-        record.members.put(playerId, new HeritageMember(playerId, player.getGameProfile().name(), membership.parentPlayerId(), membership.parentNpcId(), membership.origin()));
+        record.members.put(playerId, new HeritageMember(playerId, player.getGameProfile().name(), membership.parentPlayerId(), membership.parentNpcId(), membership.origin(), this.server.overworld().getGameTime()));
         setDirty();
     }
 
@@ -275,7 +275,12 @@ public final class HeritageWorldData extends SavedData implements ValueIOSeriali
         });
     }
 
-    public record HeritageMember(UUID playerId, String playerName, @Nullable UUID parentPlayerId, @Nullable String parentNpcId, HeritageOrigin origin) {
+    /**
+     * @param recordedAt game time of the overworld when the player was last recorded in the heritage, i.e. joined it or
+     *                   changed their level in it. Orders the heritages of a player, 0 for members recorded before this
+     *                   was stored
+     */
+    public record HeritageMember(UUID playerId, String playerName, @Nullable UUID parentPlayerId, @Nullable String parentNpcId, HeritageOrigin origin, long recordedAt) {
     }
 
     public record HeritageHistory(UUID heritageId, @Nullable String namedNpc, HeritageMember member) {
@@ -305,7 +310,8 @@ public final class HeritageWorldData extends SavedData implements ValueIOSeriali
                             memberInput.getString("name").orElse(""),
                             memberInput.read("parent", UUIDUtil.CODEC).orElse(null),
                             memberInput.getString("parent_npc").orElse(null),
-                            memberInput.read("origin", HeritageOrigin.CODEC).orElse(HeritageOrigin.INDEPENDENT)
+                            memberInput.read("origin", HeritageOrigin.CODEC).orElse(HeritageOrigin.INDEPENDENT),
+                            memberInput.getLongOr("recorded", 0L)
                     )))
             );
         }
@@ -324,6 +330,7 @@ public final class HeritageWorldData extends SavedData implements ValueIOSeriali
                     memberOutput.putString("parent_npc", member.parentNpcId());
                 }
                 memberOutput.store("origin", HeritageOrigin.CODEC, member.origin());
+                memberOutput.putLong("recorded", member.recordedAt());
             });
         }
     }
