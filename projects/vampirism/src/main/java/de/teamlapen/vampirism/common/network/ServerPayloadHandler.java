@@ -11,9 +11,7 @@ import de.teamlapen.vampirism.common.util.supporter.Supporter;
 import de.teamlapen.vampirism.common.world.heritage.HeritageLectern;
 import de.teamlapen.vampirism.common.world.heritage.HeritageMembership;
 import de.teamlapen.vampirism.common.world.heritage.HeritageWorldData;
-import de.teamlapen.vampirism.common.world.heritage.HeritageManager;
 import de.teamlapen.vampirism.common.world.items.HeritageBookItem;
-import de.teamlapen.faction.common.core.FactionItems;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.world.inventory.HunterBasicMenu;
 import de.teamlapen.vampirism.common.world.inventory.HunterTrainerMenu;
@@ -24,8 +22,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -107,20 +103,6 @@ public class ServerPayloadHandler {
                     }
                     handler.leaveFaction(!player.level().getServer().isHardcore());
                 }
-                case RUN_AWAY_FROM_HERITAGE -> {
-                    ItemStack potion = player.getMainHandItem();
-                    if (!potion.is(FactionItems.OBLIVION_POTION.get())) {
-                        potion = player.getOffhandItem();
-                    }
-                    if (potion.is(FactionItems.OBLIVION_POTION.get()) && HeritageManager.getMembership(player).isPresent()) {
-                        if (!player.getAbilities().instabuild) {
-                            potion.shrink(1);
-                        }
-                        HeritageManager.runAwayFromHeritage(player);
-                        player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 100));
-                        player.sendOverlayMessage(Component.translatable("message.vampirism.heritage_run_away.success"));
-                    }
-                }
                 case TOGGLE_VAMPIRE_VISION -> {
                     vampirePlayer.switchVision();
                     vampirePlayer.sync();
@@ -187,8 +169,9 @@ public class ServerPayloadHandler {
     }
 
     /**
-     * Sends the current heritage of a player, or the requested one of the heritages they were part of before running
-     * away. The ids of all of them are sent along, so the screen can switch between them.
+     * Sends the requested one of the heritages a player was part of, by default the current one. A player without a
+     * current heritage, e.g. after leaving the vampire faction, gets their first previous one. The ids of all of them
+     * are sent along, so the screen can switch between them.
      */
     private static void sendPlayerHeritages(ServerPlayer receiver, HeritageWorldData heritageData, UUID playerId, @Nullable UUID requestedHeritageId) {
         List<HeritageWorldData.HeritageHistory> history = heritageData.getHeritagesForPlayer(playerId);
@@ -201,11 +184,10 @@ public class ServerPayloadHandler {
                 .sorted()
                 .forEach(heritageIds::add);
 
-        Optional<HeritageMembership> selected = requestedHeritageId == null
-                ? current
-                : current.filter(membership -> requestedHeritageId.equals(membership.heritageId()))
+        UUID selectedId = requestedHeritageId != null ? requestedHeritageId : heritageIds.isEmpty() ? null : heritageIds.getFirst();
+        Optional<HeritageMembership> selected = current.filter(membership -> membership.heritageId().equals(selectedId))
                 .or(() -> history.stream()
-                        .filter(heritage -> heritage.heritageId().equals(requestedHeritageId))
+                        .filter(heritage -> heritage.heritageId().equals(selectedId))
                         .map(HeritageWorldData.HeritageHistory::membership)
                         .findFirst());
         selected.ifPresentOrElse(
@@ -221,6 +203,10 @@ public class ServerPayloadHandler {
 
     public static void handleTakeLecternBookPacket(ServerboundTakeLecternBookPacket msg, IPayloadContext context) {
         context.enqueueWork(() -> HeritageLectern.takeBook((ServerPlayer) context.player(), msg.pos()));
+    }
+
+    public static void handleRunAwayPacket(ServerboundRunAwayPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> HeritageLectern.runAway((ServerPlayer) context.player(), msg.pos()));
     }
 
     private static ItemStack findHeldHeritageBook(ServerPlayer player, String targetName) {

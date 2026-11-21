@@ -54,6 +54,13 @@ public final class HeritageManager {
         getData(player).runAwayFromHeritage(player);
     }
 
+    /**
+     * Called when the player stops being a vampire.
+     */
+    public static void leaveHeritage(ServerPlayer player) {
+        getData(player).leaveHeritage(player.getUUID());
+    }
+
     public static void prepareForVampireConversion(Player player, IVampire vampire) {
         if (!(player instanceof ServerPlayer serverPlayer)) {
             return;

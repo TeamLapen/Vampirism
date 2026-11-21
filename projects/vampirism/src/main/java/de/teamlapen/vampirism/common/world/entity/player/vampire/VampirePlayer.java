@@ -696,6 +696,9 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         this.removeEntityAttributes();
         this.vision.deactivate();
         IEffectInstanceWithSource.removePotionEffect(player, MobEffects.NIGHT_VISION, VReference.VAMPIRE_NIGHT_VISION_EFFECT);
+        if (this.player instanceof ServerPlayer serverPlayer) {
+            HeritageManager.leaveHeritage(serverPlayer);
+        }
         super.leaveFaction();
     }
 

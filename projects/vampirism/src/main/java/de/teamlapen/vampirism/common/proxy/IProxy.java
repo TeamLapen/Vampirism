@@ -31,9 +31,6 @@ public interface IProxy {
     default void displayRevertBackScreen() {
     }
 
-    default void displayHeritageRunAwayScreen() {
-    }
-
     default void displayHeritageBookScreen(String targetName) {
     }
 

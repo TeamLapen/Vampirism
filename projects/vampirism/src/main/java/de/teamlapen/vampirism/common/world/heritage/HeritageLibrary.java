@@ -9,11 +9,15 @@ import de.teamlapen.vampirism.common.world.items.HeritageBookItem;
 import de.teamlapen.vampirism.common.world.items.component.HeritageResearch;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.EnchantingTableBlock;
 import net.minecraft.world.level.block.entity.LecternBlockEntity;
@@ -28,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Heritage books are researched on a lectern surrounded by bookshelves, laid out like for an enchanting table. The
@@ -38,6 +43,9 @@ import java.util.Set;
  * for a lectern. Bookshelves that were already read send purple glyphs to the book like an enchanting table. Once the
  * research is complete, the lectern gives off the particles of an ender chest until someone reads the book or it is
  * taken away.
+ * <p>
+ * Running away from one's heritage at a lectern is a short ritual: darkness falls, the glyphs leave the book and the
+ * pages turn, until the connection breaks after {@value RUN_AWAY_DURATION} ticks.
  * <p>
  * Only lecterns with an unfinished or unread heritage book are tracked. They are checked every
  * {@value UPDATE_INTERVAL} ticks, in between they only spawn particles.
@@ -56,8 +64,18 @@ public final class HeritageLibrary {
      * Height above the lectern's position where the glyphs fly to
      */
     private static final double BOOK_HEIGHT = 1.1;
+    private static final int RUN_AWAY_DURATION = 100;
 
     private HeritageLibrary() {
+    }
+
+    /**
+     * Shows the ritual of running away from one's heritage at the lectern. The heritage has already changed.
+     */
+    public static void startRunAway(ServerLevel level, BlockPos pos, ServerPlayer player) {
+        player.addEffect(new MobEffectInstance(MobEffects.DARKNESS, RUN_AWAY_DURATION + 40));
+        level.playSound(null, pos.getX() + 0.5, pos.getY() + BOOK_HEIGHT, pos.getZ() + 0.5, SoundEvents.AMBIENT_CAVE, SoundSource.BLOCKS, 1.0F, 1.0F);
+        level.getDataStorage().computeIfAbsent(LibraryData.TYPE).runAways.add(new RunAway(pos.immutable(), player.getUUID()));
     }
 
     /**
@@ -99,6 +117,7 @@ public final class HeritageLibrary {
                 showUnread(level, pos, random);
             }
         });
+        data.runAways.removeIf(runAway -> !runAway.tick(level, random));
     }
 
     /**
@@ -229,9 +248,61 @@ public final class HeritageLibrary {
     }
 
     /**
+     * The ritual of running away from one's heritage, shown at a lectern for a few seconds.
+     */
+    private static final class RunAway {
+        private final BlockPos pos;
+        private final UUID playerId;
+        private int age;
+
+        private RunAway(BlockPos pos, UUID playerId) {
+            this.pos = pos;
+            this.playerId = playerId;
+        }
+
+        /**
+         * @return whether the ritual is still running
+         */
+        private boolean tick(ServerLevel level, RandomSource random) {
+            double x = this.pos.getX() + 0.5;
+            double y = this.pos.getY() + BOOK_HEIGHT;
+            double z = this.pos.getZ() + 0.5;
+            if (++this.age >= RUN_AWAY_DURATION) {
+                level.sendParticles(ParticleTypes.REVERSE_PORTAL, x, y, z, 60, 0.3, 0.3, 0.3, 0.15);
+                level.playSound(null, x, y, z, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 1.0F, 0.8F);
+                ServerPlayer player = level.getServer().getPlayerList().getPlayer(this.playerId);
+                if (player != null) {
+                    player.sendOverlayMessage(Component.translatable("message.vampirism.heritage_run_away.success"));
+                }
+                return false;
+            }
+
+            // the glyphs leave the book
+            for (int i = 0; i < 2; i++) {
+                double angle = random.nextDouble() * Mth.TWO_PI;
+                double distance = 2 + random.nextDouble();
+                double targetX = x + Math.cos(angle) * distance;
+                double targetY = y + random.nextDouble() * 1.5 - 0.5;
+                double targetZ = z + Math.sin(angle) * distance;
+                level.sendParticles(ModParticles.HERITAGE_GLYPH.get(), targetX, targetY, targetZ, 0, x - targetX, y - targetY, z - targetZ, 1.0);
+            }
+            if (this.age % 4 == 0) {
+                level.sendParticles(ParticleTypes.SOUL, x, y, z, 1, 0.2, 0.1, 0.2, 0.02);
+            }
+            if (random.nextInt(5) == 0) {
+                level.playSound(null, x, y, z, SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1.0F, 1.2F + random.nextFloat() * 0.4F);
+            }
+            if (this.age % 30 == 0) {
+                level.playSound(null, x, y, z, SoundEvents.SOUL_ESCAPE, SoundSource.BLOCKS, 1.0F, 0.8F + random.nextFloat() * 0.4F);
+            }
+            return true;
+        }
+    }
+
+    /**
      * Lecterns in a level that hold an unfinished heritage book, or a researched one nobody has read yet. Stored so
      * the research and the particles continue after a restart without looking at every lectern. The read bookshelves
-     * of lecterns that are currently researching are only kept in memory, for the particles between two updates.
+     * of lecterns that are currently researching and the running rituals are only kept in memory.
      */
     private static final class LibraryData extends SavedData {
         private static final Codec<LibraryData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -243,6 +314,7 @@ public final class HeritageLibrary {
         private final Set<BlockPos> researching;
         private final Set<BlockPos> unread;
         private final Map<BlockPos, List<BlockPos>> readShelves = new HashMap<>();
+        private final List<RunAway> runAways = new ArrayList<>();
 
         private LibraryData() {
             this(List.of(), List.of());
@@ -254,7 +326,7 @@ public final class HeritageLibrary {
         }
 
         private boolean isEmpty() {
-            return this.researching.isEmpty() && this.unread.isEmpty();
+            return this.researching.isEmpty() && this.unread.isEmpty() && this.runAways.isEmpty();
         }
 
         private void addResearching(BlockPos pos) {

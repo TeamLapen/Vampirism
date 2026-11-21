@@ -153,6 +153,22 @@ public final class HeritageWorldData extends SavedData implements ValueIOSeriali
         record(player, playerHeritage.membership);
     }
 
+    /**
+     * The player is no longer part of any heritage. Their previous heritages stay recorded, and a new one is chosen
+     * like for the first infection once they become a vampire again.
+     */
+    void leaveHeritage(UUID playerId) {
+        PlayerHeritage playerHeritage = this.playerHeritages.get(playerId);
+        if (playerHeritage == null) {
+            return;
+        }
+        playerHeritage.membership = null;
+        playerHeritage.pending = null;
+        playerHeritage.completingPendingTransition = false;
+        removeIfEmpty(playerId, playerHeritage);
+        setDirty();
+    }
+
     void record(ServerPlayer player, HeritageMembership membership) {
         UUID playerId = player.getUUID();
         HeritageRecord record = this.records.computeIfAbsent(membership.heritageId(), _ -> new HeritageRecord(membership.namedNpc()));

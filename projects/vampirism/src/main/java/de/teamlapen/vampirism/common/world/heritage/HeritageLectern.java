@@ -1,10 +1,14 @@
 package de.teamlapen.vampirism.common.world.heritage;
 
+import de.teamlapen.faction.common.core.FactionItems;
 import de.teamlapen.vampirism.common.core.ModItems;
+import de.teamlapen.vampirism.common.network.packets.client.ClientboundConfirmRunAwayPacket;
 import de.teamlapen.vampirism.common.network.packets.client.ClientboundOpenLecternHeritagePacket;
+import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.items.HeritageBookItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.Container;
@@ -28,6 +32,9 @@ import java.util.UUID;
  * independent of protection mods or plugins. Taking the book is only allowed after the normal lectern interaction went
  * through, because that is where protection mods and plugins block access. The server remembers that lectern for the
  * player, like the open menu does in vanilla.
+ * <p>
+ * A vampire who clicks the researched book of their own heritage with an oblivion potion can run away from their
+ * heritage instead of reading it (see {@link HeritageLibrary} for the ritual).
  */
 public final class HeritageLectern {
     private static final Map<UUID, GlobalPos> TAKEABLE_LECTERNS = new HashMap<>();
@@ -36,17 +43,29 @@ public final class HeritageLectern {
     }
 
     /**
-     * Opens the heritage screen in read-only mode. Sent by the client before the normal interaction, which arrives at
-     * the server right after this and may then allow taking the book.
+     * Opens the heritage screen in read-only mode, or asks to run away from the heritage if the player holds an
+     * oblivion potion. Sent by the client before the normal interaction, which arrives at the server right after this
+     * and may then allow taking the book.
      */
     public static void read(ServerPlayer player, BlockPos pos) {
         // every click has to pass the protection checks again before the book can be taken
         forget(player);
-        if (player.isWithinBlockInteractionRange(pos, 1.0) && getReadableLectern(player, pos).isPresent()) {
+        if (!player.isWithinBlockInteractionRange(pos, 1.0)) {
+            return;
+        }
+        getReadableLectern(player, pos).ifPresent(lectern -> {
+            if (isHoldingOblivionPotion(player)) {
+                if (canRunAway(player, lectern.getBook())) {
+                    player.connection.send(new ClientboundConfirmRunAwayPacket(pos));
+                } else {
+                    player.sendOverlayMessage(Component.translatable("message.vampirism.heritage_run_away.requirements"));
+                }
+                return;
+            }
             player.connection.send(new ClientboundOpenLecternHeritagePacket(pos, false));
             player.awardStat(Stats.INTERACT_WITH_LECTERN);
             HeritageLibrary.onBookRead(player.level(), pos);
-        }
+        });
     }
 
     /**
@@ -57,6 +76,10 @@ public final class HeritageLectern {
     public static boolean tryOpen(Level level, BlockPos pos, Player player) {
         if (!(player instanceof ServerPlayer serverPlayer) || !(level.getBlockEntity(pos) instanceof LecternBlockEntity lectern) || !lectern.getBook().is(ModItems.HERITAGE_BOOK)) {
             return false;
+        }
+        if (isHoldingOblivionPotion(serverPlayer)) {
+            // handled by read
+            return true;
         }
         TAKEABLE_LECTERNS.put(serverPlayer.getUUID(), GlobalPos.of(level.dimension(), pos));
         serverPlayer.connection.send(new ClientboundOpenLecternHeritagePacket(pos, true));
@@ -97,5 +120,36 @@ public final class HeritageLectern {
             forget(player);
             lectern.createMenu(0, player.getInventory(), player).clickMenuButton(player, LecternMenu.BUTTON_TAKE_BOOK);
         });
+    }
+
+    /**
+     * Runs away from the heritage after the player confirmed it. Costs the oblivion potion.
+     */
+    public static void runAway(ServerPlayer player, BlockPos pos) {
+        ItemStack potion = player.getMainHandItem().is(FactionItems.OBLIVION_POTION) ? player.getMainHandItem() : player.getOffhandItem();
+        if (!potion.is(FactionItems.OBLIVION_POTION)) {
+            return;
+        }
+        getReadableLectern(player, pos)
+                .filter(lectern -> canRunAway(player, lectern.getBook()))
+                .ifPresent(lectern -> {
+                    potion.consume(1, player);
+                    HeritageManager.runAwayFromHeritage(player);
+                    HeritageLibrary.startRunAway(player.level(), pos, player);
+                });
+    }
+
+    /**
+     * Only a vampire can run away from their heritage, with the researched book of their own heritage.
+     */
+    private static boolean canRunAway(ServerPlayer player, ItemStack book) {
+        return Helper.isVampire(player)
+                && HeritageManager.getMembership(player).isPresent()
+                && HeritageBookItem.isResearched(book)
+                && player.getGameProfile().name().equalsIgnoreCase(HeritageBookItem.getTargetName(book));
+    }
+
+    private static boolean isHoldingOblivionPotion(ServerPlayer player) {
+        return player.getMainHandItem().is(FactionItems.OBLIVION_POTION);
     }
 }

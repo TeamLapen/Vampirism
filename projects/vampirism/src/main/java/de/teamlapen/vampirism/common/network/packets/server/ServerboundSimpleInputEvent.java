@@ -26,7 +26,6 @@ public record ServerboundSimpleInputEvent(Event event) implements CustomPacketPa
     public enum Event {
         FINISH_SUCK_BLOOD,
         REVERT_BACK,
-        RUN_AWAY_FROM_HERITAGE,
         TOGGLE_VAMPIRE_VISION,
         TRAINER_LEVELUP,
         BASIC_HUNTER_LEVELUP,

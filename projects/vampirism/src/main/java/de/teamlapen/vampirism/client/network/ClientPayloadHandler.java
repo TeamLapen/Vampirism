@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.network;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.VampirismModClient;
+import de.teamlapen.vampirism.client.gui.screens.HeritageRunAwayScreen;
 import de.teamlapen.vampirism.client.gui.screens.HeritageScreen;
 import de.teamlapen.vampirism.client.gui.screens.VampireBookScreen;
 import de.teamlapen.vampirism.common.network.packets.client.*;
@@ -114,5 +115,9 @@ public class ClientPayloadHandler {
                 Minecraft.getInstance().setScreen(HeritageScreen.forLectern(msg.pos(), msg.canTakeBook()));
             }
         });
+    }
+
+    public static void handleConfirmRunAwayPacket(ClientboundConfirmRunAwayPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> Minecraft.getInstance().setScreen(new HeritageRunAwayScreen(msg.pos())));
     }
 }

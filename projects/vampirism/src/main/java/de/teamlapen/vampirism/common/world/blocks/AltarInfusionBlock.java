@@ -2,22 +2,17 @@ package de.teamlapen.vampirism.common.world.blocks;
 
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.faction.common.components.FactionRestriction;
-import de.teamlapen.faction.common.core.FactionItems;
 import de.teamlapen.faction.common.world.blocks.base.BaseContainerBlock;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModStats;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.blockentity.AltarInfusionBlockEntity;
-import de.teamlapen.vampirism.common.world.heritage.HeritageManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -96,17 +91,6 @@ public class AltarInfusionBlock extends BaseContainerBlock implements SimpleWate
         }
 
         return super.updateShape(state, level, scheduledTickAccess, pos, direction, neighborPos, neighborState, random);
-    }
-
-    @Override
-    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (stack.is(FactionItems.OBLIVION_POTION.get()) && (level.isClientSide() || HeritageManager.getMembership(player).isPresent())) {
-            if (level.isClientSide()) {
-                VampirismMod.proxy.displayHeritageRunAwayScreen();
-            }
-            return InteractionResult.SUCCESS;
-        }
-        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     @Override
