@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.common.network.packets.client.ClientboundHeritagePacket;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundRequestHeritagePacket;
+import de.teamlapen.vampirism.common.network.packets.server.ServerboundTakeLecternBookPacket;
 import de.teamlapen.vampirism.misc.extension.client.IGuiGraphicsExtractor;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -15,12 +16,15 @@ import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.PlayerSkin;
 import net.minecraft.world.item.component.ResolvableProfile;
+import net.minecraft.world.level.block.LecternBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.Nullable;
 
@@ -77,6 +81,9 @@ public class HeritageScreen extends Screen {
 
     private final ILastScreenProvider backScreen;
     private final @Nullable String targetName;
+    private final @Nullable BlockPos lecternPos;
+    private boolean canTakeBook;
+    private @Nullable ExtendedButton takeBookButton;
     private @Nullable ClientboundHeritagePacket heritage;
     private List<UUID> availableHeritageIds = List.of();
     private List<Node> nodes = List.of();
@@ -100,9 +107,36 @@ public class HeritageScreen extends Screen {
     }
 
     public HeritageScreen(ILastScreenProvider backScreen, @Nullable String targetName) {
+        this(backScreen, targetName, null, false);
+    }
+
+    private HeritageScreen(ILastScreenProvider backScreen, @Nullable String targetName, @Nullable BlockPos lecternPos, boolean canTakeBook) {
         super(GameNarrator.NO_TITLE);
         this.backScreen = backScreen;
         this.targetName = targetName;
+        this.lecternPos = lecternPos;
+        this.canTakeBook = canTakeBook;
+    }
+
+    /**
+     * Shows the heritage book on the lectern at the given position. The server reads the book from the lectern, and the
+     * screen closes once the book is gone or the player walks away, like the vanilla lectern screen.
+     *
+     * @param canTakeBook whether the server allows taking the book. Protection mods or plugins may only allow reading
+     */
+    public static HeritageScreen forLectern(BlockPos lecternPos, boolean canTakeBook) {
+        return new HeritageScreen(ILastScreenProvider.NONE, null, lecternPos, canTakeBook);
+    }
+
+    public boolean isShowingLectern(BlockPos pos) {
+        return pos.equals(this.lecternPos);
+    }
+
+    public void allowTakingBook() {
+        this.canTakeBook = true;
+        if (this.takeBookButton != null) {
+            this.takeBookButton.visible = true;
+        }
     }
 
     @Override
@@ -115,7 +149,15 @@ public class HeritageScreen extends Screen {
         this.guiLeft = (this.width - SCREEN_WIDTH) / 2;
         this.guiTop = (this.height - SCREEN_HEIGHT) / 2;
 
-        this.addRenderableWidget(new ExtendedButton(this.guiLeft + 4, this.guiTop + 194, 80, 20, Component.translatable("gui.back"), button -> this.backScreen.returnToLastScreen()));
+        if (this.lecternPos == null) {
+            this.addRenderableWidget(new ExtendedButton(this.guiLeft + 4, this.guiTop + 194, 80, 20, Component.translatable("gui.back"), button -> this.backScreen.returnToLastScreen()));
+        } else if (this.minecraft.player != null && this.minecraft.player.mayBuild()) {
+            this.takeBookButton = this.addRenderableWidget(new ExtendedButton(this.guiLeft + 4, this.guiTop + 194, 80, 20, Component.translatable("lectern.take_book"), button -> {
+                VampirismMod.proxy.sendToServer(new ServerboundTakeLecternBookPacket(this.lecternPos));
+                this.onClose();
+            }));
+            this.takeBookButton.visible = this.canTakeBook;
+        }
         int heritageButtonsLeft = this.guiLeft + SCREEN_WIDTH / 2 - 20 - 4 / 2;
         this.previousHeritageButton = this.addRenderableWidget(new ExtendedButton(heritageButtonsLeft, this.guiTop + 194, 20, 20, Component.literal("<"), button -> this.cycleHeritage(-1)));
         this.nextHeritageButton = this.addRenderableWidget(new ExtendedButton(heritageButtonsLeft + 20 + 4, this.guiTop + 194, 20, 20, Component.literal(">"), button -> this.cycleHeritage(1)));
@@ -151,7 +193,23 @@ public class HeritageScreen extends Screen {
         this.nodes = List.of();
         this.lostHistoryNodes = List.of();
         this.updateHeritageNavigation();
-        VampirismMod.proxy.sendToServer(new ServerboundRequestHeritagePacket(heritageId, this.targetName));
+        VampirismMod.proxy.sendToServer(new ServerboundRequestHeritagePacket(heritageId, this.targetName, this.lecternPos));
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (this.lecternPos != null && !this.canStillReadLectern(this.lecternPos)) {
+            this.onClose();
+        }
+    }
+
+    private boolean canStillReadLectern(BlockPos pos) {
+        if (this.minecraft.player == null || this.minecraft.level == null) {
+            return false;
+        }
+        BlockState state = this.minecraft.level.getBlockState(pos);
+        return state.getBlock() instanceof LecternBlock && state.getValue(LecternBlock.HAS_BOOK) && this.minecraft.player.isWithinBlockInteractionRange(pos, 4.0);
     }
 
     private void updateHeritageNavigation() {

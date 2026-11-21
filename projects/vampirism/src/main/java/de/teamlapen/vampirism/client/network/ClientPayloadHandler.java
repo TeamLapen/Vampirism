@@ -102,4 +102,17 @@ public class ClientPayloadHandler {
             }
         });
     }
+
+    public static void handleOpenLecternHeritagePacket(ClientboundOpenLecternHeritagePacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            // the read-only screen opens first; the normal lectern interaction may then allow taking the book
+            if (Minecraft.getInstance().screen instanceof HeritageScreen screen && screen.isShowingLectern(msg.pos())) {
+                if (msg.canTakeBook()) {
+                    screen.allowTakingBook();
+                }
+            } else {
+                Minecraft.getInstance().setScreen(HeritageScreen.forLectern(msg.pos(), msg.canTakeBook()));
+            }
+        });
+    }
 }

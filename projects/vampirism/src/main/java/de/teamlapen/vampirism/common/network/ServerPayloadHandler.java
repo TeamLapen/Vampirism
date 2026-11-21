@@ -8,10 +8,11 @@ import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
 import de.teamlapen.vampirism.common.network.packets.client.ClientboundHeritagePacket;
 import de.teamlapen.vampirism.common.network.packets.server.*;
 import de.teamlapen.vampirism.common.util.supporter.Supporter;
-import de.teamlapen.vampirism.common.core.ModItems;
+import de.teamlapen.vampirism.common.world.heritage.HeritageLectern;
 import de.teamlapen.vampirism.common.world.heritage.HeritageMembership;
 import de.teamlapen.vampirism.common.world.heritage.HeritageWorldData;
 import de.teamlapen.vampirism.common.world.heritage.HeritageManager;
+import de.teamlapen.vampirism.common.world.items.HeritageBookItem;
 import de.teamlapen.faction.common.core.FactionItems;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.world.inventory.HunterBasicMenu;
@@ -152,13 +153,16 @@ public class ServerPayloadHandler {
         context.enqueueWork(() -> {
             ServerPlayer player = (ServerPlayer) context.player();
             HeritageWorldData heritageData = HeritageWorldData.getData(player.level().getServer());
-            if (msg.targetName() != null) {
-                if (!hasNamedHeritageBook(player, msg.targetName())) {
+            if (msg.lecternPos() != null || msg.targetName() != null) {
+                String bookName = msg.lecternPos() != null
+                        ? HeritageLectern.getReadableLectern(player, msg.lecternPos()).map(lectern -> HeritageBookItem.getTargetName(lectern.getBook())).orElse(null)
+                        : hasNamedHeritageBook(player, msg.targetName()) ? msg.targetName() : null;
+                if (bookName == null) {
                     sendUnavailableHeritagePacket(player, List.of());
                     return;
                 }
 
-                findHeritageBookMembership(heritageData, msg.targetName()).ifPresentOrElse(
+                findHeritageBookMembership(heritageData, bookName).ifPresentOrElse(
                         membership -> sendHeritagePacket(player, heritageData, membership, List.of(membership.heritageId()), false),
                         () -> sendUnavailableHeritagePacket(player, List.of())
                 );
@@ -190,6 +194,14 @@ public class ServerPayloadHandler {
         });
     }
 
+    public static void handleReadLecternPacket(ServerboundReadLecternPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> HeritageLectern.read((ServerPlayer) context.player(), msg.pos()));
+    }
+
+    public static void handleTakeLecternBookPacket(ServerboundTakeLecternBookPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> HeritageLectern.takeBook((ServerPlayer) context.player(), msg.pos()));
+    }
+
     private static boolean hasNamedHeritageBook(ServerPlayer player, String targetName) {
         return hasHeritageBookName(player.getMainHandItem(), targetName)
                 || hasHeritageBookName(player.getOffhandItem(), targetName);
@@ -211,8 +223,7 @@ public class ServerPayloadHandler {
     }
 
     private static boolean hasHeritageBookName(ItemStack stack, String targetName) {
-        Component customName = stack.get(DataComponents.CUSTOM_NAME);
-        return stack.is(ModItems.HERITAGE_BOOK) && customName != null && customName.getString().equals(targetName);
+        return targetName.equals(HeritageBookItem.getTargetName(stack));
     }
 
     private static void sendUnavailableHeritagePacket(ServerPlayer player, List<UUID> heritageIds) {

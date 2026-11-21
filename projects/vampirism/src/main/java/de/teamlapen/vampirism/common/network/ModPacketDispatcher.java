@@ -32,6 +32,7 @@ public class ModPacketDispatcher {
         registrar.playToClient(ClientboundDraculaEventPacket.TYPE, ClientboundDraculaEventPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleDraculaEventPacket(msg, context));
         registrar.playToClient(ClientboundVelmorraCollapsePacket.TYPE, ClientboundVelmorraCollapsePacket.CODEC, (msg, context) -> ClientPayloadHandler.handleVelmorraCollapsePacket(msg, context));
         registrar.playToClient(ClientboundHeritagePacket.TYPE, ClientboundHeritagePacket.CODEC, (msg, context) -> ClientPayloadHandler.handleHeritagePacket(msg, context));
+        registrar.playToClient(ClientboundOpenLecternHeritagePacket.TYPE, ClientboundOpenLecternHeritagePacket.CODEC, (msg, context) -> ClientPayloadHandler.handleOpenLecternHeritagePacket(msg, context));
 
         registrar.playToServer(ServerboundAppearancePacket.TYPE, ServerboundAppearancePacket.CODEC, (msg, context) -> ServerPayloadHandler.handleAppearancePacket(msg, context));
         registrar.playToServer(ServerboundStartFeedingPacket.TYPE, ServerboundStartFeedingPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleStartFeedingPacket(msg, context));
@@ -40,6 +41,8 @@ public class ModPacketDispatcher {
         registrar.playToServer(ServerboundSetVampireBeaconPacket.TYPE, ServerboundSetVampireBeaconPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleSetVampireBeaconPacket(msg, context));
         registrar.playToServer(ServerboundSimpleInputEvent.TYPE, ServerboundSimpleInputEvent.CODEC, (msg, context) -> ServerPayloadHandler.handleSimpleInputEvent(msg, context));
         registrar.playToServer(ServerboundRequestHeritagePacket.TYPE, ServerboundRequestHeritagePacket.CODEC, (msg, context) -> ServerPayloadHandler.handleRequestHeritagePacket(msg, context));
+        registrar.playToServer(ServerboundReadLecternPacket.TYPE, ServerboundReadLecternPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleReadLecternPacket(msg, context));
+        registrar.playToServer(ServerboundTakeLecternBookPacket.TYPE, ServerboundTakeLecternBookPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleTakeLecternBookPacket(msg, context));
 
         registrar.playBidirectional(PlayerOwnedBlockEntityLockPacket.TYPE, PlayerOwnedBlockEntityLockPacket.CODEC, (msg, context) -> CommonPayloadHandler.handlePlayerOwnedBlockEntityLockPacket(msg, context), (msg, context) -> CommonPayloadHandler.handlePlayerOwnedBlockEntityLockPacket(msg, context));
 
