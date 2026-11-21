@@ -78,7 +78,7 @@ public class TaskBuilder {
     }
 
     public TaskBuilder addRequirement(ItemStackTemplate itemStack) {
-        return this.addRequirement(new ItemRequirement(itemStack, Component.translatable(Util.makeDescriptionId("item", RegUtil.id(itemStack.item())))));
+        return this.addRequirement(new ItemRequirement(itemStack));
     }
 
     public TaskBuilder addRequirement(Holder<FactionPlayerBooleanSupplier> function, Component description) {

@@ -11,9 +11,6 @@
     },
     {
       "type": "factionapi:item",
-      "description": {
-        "translate": "item.minecraft.gold_ingot"
-      },
       "id": "minecraft:gold_ingot",
       "item": {
         "count": 2,

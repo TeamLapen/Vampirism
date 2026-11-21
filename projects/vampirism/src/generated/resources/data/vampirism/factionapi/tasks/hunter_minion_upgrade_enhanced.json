@@ -2,9 +2,6 @@
   "requirements": [
     {
       "type": "factionapi:item",
-      "description": {
-        "translate": "item.minecraft.diamond_block"
-      },
       "id": "minecraft:diamond_block",
       "item": {
         "count": 3,
@@ -22,9 +19,6 @@
     },
     {
       "type": "factionapi:item",
-      "description": {
-        "translate": "item.vampirism.vampire_blood_bottle"
-      },
       "id": "vampirism:vampire_blood_bottle",
       "item": {
         "count": 16,
@@ -33,9 +27,6 @@
     },
     {
       "type": "factionapi:item",
-      "description": {
-        "translate": "item.vampirism.vampire_book"
-      },
       "id": "vampirism:vampire_book",
       "item": {
         "id": "vampirism:vampire_book"

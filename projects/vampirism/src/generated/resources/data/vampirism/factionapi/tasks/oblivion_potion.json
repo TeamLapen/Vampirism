@@ -2,9 +2,6 @@
   "requirements": [
     {
       "type": "factionapi:item",
-      "description": {
-        "translate": "item.minecraft.potion"
-      },
       "id": "minecraft:potion",
       "item": {
         "components": {
@@ -17,9 +14,6 @@
     },
     {
       "type": "factionapi:item",
-      "description": {
-        "translate": "item.vampirism.vampire_blood_bottle"
-      },
       "id": "vampirism:vampire_blood_bottle",
       "item": {
         "id": "vampirism:vampire_blood_bottle"

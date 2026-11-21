@@ -11,9 +11,6 @@
     },
     {
       "type": "factionapi:item",
-      "description": {
-        "translate": "item.minecraft.gold_block"
-      },
       "id": "minecraft:gold_block",
       "item": {
         "count": 16,

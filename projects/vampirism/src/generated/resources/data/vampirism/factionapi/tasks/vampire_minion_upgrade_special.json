@@ -2,9 +2,6 @@
   "requirements": [
     {
       "type": "factionapi:item",
-      "description": {
-        "translate": "item.minecraft.diamond_block"
-      },
       "id": "minecraft:diamond_block",
       "item": {
         "count": 8,
@@ -13,9 +10,6 @@
     },
     {
       "type": "factionapi:item",
-      "description": {
-        "translate": "item.vampirism.human_heart"
-      },
       "id": "vampirism:human_heart",
       "item": {
         "count": 64,
@@ -33,9 +27,6 @@
     },
     {
       "type": "factionapi:item",
-      "description": {
-        "translate": "item.vampirism.vampire_book"
-      },
       "id": "vampirism:vampire_book",
       "item": {
         "id": "vampirism:vampire_book"

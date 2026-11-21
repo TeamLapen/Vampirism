@@ -2,9 +2,6 @@
   "requirements": [
     {
       "type": "factionapi:item",
-      "description": {
-        "translate": "item.minecraft.diamond"
-      },
       "id": "minecraft:diamond",
       "item": {
         "id": "minecraft:diamond"
@@ -12,9 +9,6 @@
     },
     {
       "type": "factionapi:item",
-      "description": {
-        "translate": "item.minecraft.obsidian"
-      },
       "id": "minecraft:obsidian",
       "item": {
         "count": 32,
