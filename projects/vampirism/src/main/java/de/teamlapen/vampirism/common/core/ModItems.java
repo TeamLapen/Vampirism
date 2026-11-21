@@ -4,6 +4,7 @@ import de.teamlapen.faction.api.world.items.IRefinementItem;
 import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.util.BlockDescription;
+import de.teamlapen.faction.common.world.items.MinionUpgradeItem;
 import de.teamlapen.faction.common.world.items.RefinementItem;
 import de.teamlapen.faction.common.world.items.consume.FactionFoodEntry;
 import de.teamlapen.faction.common.world.items.consume.FactionFoodList;
@@ -229,7 +230,7 @@ public class ModItems {
     public static final DeferredItem<UmbrellaItem> UMBRELLA = ITEMS.registerItem("umbrella", UmbrellaItem::new, props -> props.stacksTo(1));
 
     public static final DeferredItem<Item> VAMPIRE_MINION_BINDING = ITEMS.registerItem("vampire_minion_binding", Item::new);
-    public static final DeferredItem<MinionUpgradeItem> VAMPIRE_MINION_UPGRADE_SIMPLE = ITEMS.registerItem("vampire_minion_upgrade_simple",  props -> new MinionUpgradeItem(1, 2, ModFactions.VAMPIRE, props));
+    public static final DeferredItem<MinionUpgradeItem> VAMPIRE_MINION_UPGRADE_SIMPLE = ITEMS.registerItem("vampire_minion_upgrade_simple", props -> new MinionUpgradeItem(1, 2, ModFactions.VAMPIRE, props));
     public static final DeferredItem<MinionUpgradeItem> VAMPIRE_MINION_UPGRADE_ENHANCED = ITEMS.registerItem("vampire_minion_upgrade_enhanced",  props -> new MinionUpgradeItem(3, 4, ModFactions.VAMPIRE, props));
     public static final DeferredItem<MinionUpgradeItem> VAMPIRE_MINION_UPGRADE_SPECIAL = ITEMS.registerItem("vampire_minion_upgrade_special",  props -> new MinionUpgradeItem(5, 6, ModFactions.VAMPIRE, props));
 

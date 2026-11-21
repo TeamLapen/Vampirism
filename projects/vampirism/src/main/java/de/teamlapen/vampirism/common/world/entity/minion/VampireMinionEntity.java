@@ -24,7 +24,7 @@ import de.teamlapen.vampirism.common.world.attachments.ModDamageSources;
 import de.teamlapen.vampirism.common.world.entity.ai.goals.FleeSunVampireGoal;
 import de.teamlapen.vampirism.common.world.entity.ai.goals.RestrictSunVampireGoal;
 import de.teamlapen.vampirism.common.world.entity.vampire.BasicVampireEntity;
-import de.teamlapen.vampirism.common.world.items.MinionUpgradeItem;
+import de.teamlapen.faction.common.world.items.MinionUpgradeItem;
 import de.teamlapen.vampirism.common.world.items.component.BottleBlood;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;

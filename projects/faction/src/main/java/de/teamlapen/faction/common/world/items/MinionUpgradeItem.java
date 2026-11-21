@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.common.world.items;
+package de.teamlapen.faction.common.world.items;
 
 import de.teamlapen.faction.api.factions.IFaction;
 import net.minecraft.ChatFormatting;
@@ -27,8 +27,8 @@ public class MinionUpgradeItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltipDisplay, tooltip, flagIn);
-        tooltip.accept(Component.translatable("tooltip.vampirism.minion_upgrade").withStyle(ChatFormatting.GRAY));
-        tooltip.accept(Component.translatable("tooltip.vampirism.for_to_levels", minLevel + 1, maxLevel + 1).withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.translatable("tooltip.factionapi.minion_upgrade").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.translatable("tooltip.factionapi.for_to_levels", minLevel + 1, maxLevel + 1).withStyle(ChatFormatting.GRAY));
     }
 
     public Holder<? extends IFaction<?>> getFaction() {

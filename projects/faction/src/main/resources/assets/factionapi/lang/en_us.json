@@ -226,6 +226,8 @@
   "tooltip.factionapi.tier.normal": "Normal",
   "tooltip.factionapi.tier.enhanced": "Enhanced",
   "tooltip.factionapi.tier.ultimate": "Ultimate",
+  "tooltip.factionapi.minion_upgrade": "One Level-Up",
+  "tooltip.factionapi.for_to_levels": "For Levels %1$s To %2$s",
 
   "command.factionapi.base.level.successful": "%1$s is now a %2$s level %3$s",
   "command.factionapi.base.get_level.successful": "%1$s is a %2$s level %3$s and lord level %4$s",

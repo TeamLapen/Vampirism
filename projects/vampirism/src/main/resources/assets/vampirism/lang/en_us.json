@@ -1257,8 +1257,6 @@
 
   "misc.vampirism.unknown": "Unknown",
 
-  "tooltip.vampirism.minion_upgrade": "One Level-Up",
-  "tooltip.vampirism.for_to_levels": "For Levels %1$s To %2$s",
   "tooltip.vampirism.quarrel_effect": "On Impact:",
   "tooltip.vampirism.quarrel_vampire_killer": "Instantly kills low-level vampire NPCs",
   "tooltip.vampirism.quarrel_spitfire": "Creates an alchemical fire splash",

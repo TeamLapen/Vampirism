@@ -1,28 +1,21 @@
 package de.teamlapen.vampirism.common.world.entity.minion;
 
-import com.google.common.collect.Lists;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IFactionEntity;
 import de.teamlapen.faction.api.factions.IFactionPredicate;
 import de.teamlapen.faction.api.factions.skills.ISkillHandler;
-import de.teamlapen.faction.api.world.entities.minion.MinionStat;
-import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
-import de.teamlapen.faction.common.core.FactionMinionTasks;
 import de.teamlapen.faction.common.factions.minions.MinionData;
 import de.teamlapen.faction.common.factions.minions.MinionEntity;
-import de.teamlapen.faction.common.world.entities.minion.MinionStats;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.world.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.world.entity.hunter.IVampirismCrossbowUser;
 import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
-import de.teamlapen.vampirism.common.config.BalanceMobProps;
 import de.teamlapen.vampirism.common.core.*;
 import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import de.teamlapen.vampirism.common.world.entity.ai.goals.RangedHunterCrossbowAttackGoal;
 import de.teamlapen.vampirism.common.world.entity.hunter.BasicHunterEntity;
-import de.teamlapen.vampirism.common.world.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
-import de.teamlapen.vampirism.common.world.items.MinionUpgradeItem;
+import de.teamlapen.faction.common.world.items.MinionUpgradeItem;
 import de.teamlapen.vampirism.common.world.items.crossbow.TechCrossbowItem;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -35,7 +28,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Enemy;
@@ -47,7 +39,6 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
-import java.util.List;
 import java.util.function.Predicate;
 
 
