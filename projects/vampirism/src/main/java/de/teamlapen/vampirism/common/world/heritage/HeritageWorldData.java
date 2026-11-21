@@ -66,24 +66,28 @@ public final class HeritageWorldData extends SavedData implements ValueIOSeriali
     }
 
     /**
-     * Resolves names stored for actual player and NPC heritage members. Predefined heritage entries are not persisted
-     * here and therefore cannot be resolved by this method.
+     * @return a player recorded in any heritage under the given name
      */
-    public Optional<HeritageMembership> findMembershipByName(String name) {
+    public Optional<UUID> findPlayerByName(String name) {
         return this.records.values().stream()
                 .flatMap(record -> record.members.values().stream())
                 .filter(member -> member.playerName().equalsIgnoreCase(name))
                 .map(HeritageMember::playerId)
-                .map(this::getMembership)
-                .flatMap(Optional::stream)
-                .findFirst()
-                .or(() -> this.records.entrySet().stream()
-                        .filter(entry -> entry.getValue().namedNpc != null && entry.getValue().namedNpc.equalsIgnoreCase(name))
-                        .map(entry -> new HeritageMembership(entry.getKey(), HeritageOrigin.INHERITED, null, entry.getValue().namedNpc, null))
-                        .findFirst());
+                .findFirst();
     }
 
-    Optional<HeritageMembership> getMembership(UUID playerId) {
+    /**
+     * Resolves heritages named after an NPC. Predefined heritage entries are not persisted here and therefore cannot be
+     * resolved by this method.
+     */
+    public Optional<HeritageMembership> findNamedNpcMembership(String name) {
+        return this.records.entrySet().stream()
+                .filter(entry -> entry.getValue().namedNpc != null && entry.getValue().namedNpc.equalsIgnoreCase(name))
+                .map(entry -> new HeritageMembership(entry.getKey(), HeritageOrigin.INHERITED, null, entry.getValue().namedNpc, null))
+                .findFirst();
+    }
+
+    public Optional<HeritageMembership> getMembership(UUID playerId) {
         PlayerHeritage playerHeritage = this.playerHeritages.get(playerId);
         return playerHeritage == null ? Optional.empty() : Optional.ofNullable(playerHeritage.membership);
     }

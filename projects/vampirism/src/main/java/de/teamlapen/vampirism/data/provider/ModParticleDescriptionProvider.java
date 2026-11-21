@@ -58,5 +58,9 @@ public class ModParticleDescriptionProvider extends ParticleDescriptionProvider 
         this.spriteSet(ModParticles.WHISPERS_OF_THE_VEIL.get(),
                 VIdentifier.mod("whispers_of_the_veil")
         );
+        // the glyphs of the enchanting table
+        this.spriteSet(ModParticles.HERITAGE_GLYPH.get(),
+                "abcdefghijklmnopqrstuvwxyz".chars().mapToObj(letter -> VIdentifier.mc("sga_" + (char) letter)).toList()
+        );
     }
 }

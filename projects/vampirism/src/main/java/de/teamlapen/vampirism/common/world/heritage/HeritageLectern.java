@@ -45,6 +45,7 @@ public final class HeritageLectern {
         if (player.isWithinBlockInteractionRange(pos, 1.0) && getReadableLectern(player, pos).isPresent()) {
             player.connection.send(new ClientboundOpenLecternHeritagePacket(pos, false));
             player.awardStat(Stats.INTERACT_WITH_LECTERN);
+            HeritageLibrary.onBookRead(player.level(), pos);
         }
     }
 

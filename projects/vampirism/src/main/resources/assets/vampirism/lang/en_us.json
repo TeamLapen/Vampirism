@@ -1080,6 +1080,8 @@
   "gui.vampirism.faction_menu.heritage": "Heritage",
   "gui.vampirism.heritage.title": "Heritage",
   "gui.vampirism.heritage.empty": "No heritage has been recorded.",
+  "gui.vampirism.heritage.blank": "The pages are still blank. Place this book on a lectern surrounded by bookshelves to research the heritage.",
+  "gui.vampirism.heritage.researching": "The research is still in progress. Keep an eye on the bookshelves around the lectern.",
   "gui.vampirism.heritage_run_away.title": "Run away from your heritage?",
   "gui.vampirism.heritage_run_away.warning": "History cannot be rewritten, so your origin and descendants will not be affected, but you will no longer be connected to your current heritage. This will not allow you to join another heritage and is an irreversible choice.",
   "message.vampirism.heritage_run_away.success": "You have run away from your heritage.",
@@ -1243,7 +1245,7 @@
   "misc.vampirism.unknown": "Unknown",
 
   "tooltip.vampirism.tier.normal": "Normal",
-  "tooltip.vampirism.heritage_book": "Name this book in an anvil after a player or named vampire to view their recorded heritage.",
+  "tooltip.vampirism.heritage_book": "Name this book in an anvil after a player or named vampire, then research their heritage on a lectern surrounded by bookshelves.",
   "tooltip.vampirism.tier.enhanced": "Enhanced",
   "tooltip.vampirism.tier.ultimate": "Ultimate",
   "tooltip.vampirism.minion_upgrade": "One Level-Up",

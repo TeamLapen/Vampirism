@@ -16,6 +16,7 @@
     "ItemMixin",
     "ItemStackMixin",
     "JigsawPlacerMixin",
+    "LecternBlockEntityMixin",
     "LecternBlockMixin",
     "LivingEntityMixin",
     "MobEffectUtilMixin",

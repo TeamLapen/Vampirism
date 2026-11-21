@@ -3,6 +3,8 @@ package de.teamlapen.vampirism.common.network.packets.client;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -14,7 +16,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public record ClientboundHeritagePacket(@Nullable String founderName, List<StaticMember> staticMembers, List<Member> members, @Nullable UUID heritageId, List<UUID> heritageIds, boolean currentHeritage) implements CustomPacketPayload {
+/**
+ * @param notice shown instead of the tree if there are no members, e.g. because the heritage book was not researched yet
+ */
+public record ClientboundHeritagePacket(@Nullable String founderName, List<StaticMember> staticMembers, List<Member> members, @Nullable UUID heritageId, List<UUID> heritageIds, boolean currentHeritage, @Nullable Component notice) implements CustomPacketPayload {
 
     public static final Type<ClientboundHeritagePacket> TYPE = new Type<>(VIdentifier.mod("heritage"));
     private static final StreamCodec<RegistryFriendlyByteBuf, StaticMember> STATIC_MEMBER_CODEC = StreamCodec.composite(
@@ -38,15 +43,12 @@ public record ClientboundHeritagePacket(@Nullable String founderName, List<Stati
             ByteBufCodecs.optional(UUIDUtil.STREAM_CODEC), packet -> Optional.ofNullable(packet.heritageId()),
             UUIDUtil.STREAM_CODEC.apply(ByteBufCodecs.collection(ArrayList::new)), ClientboundHeritagePacket::heritageIds,
             ByteBufCodecs.BOOL, ClientboundHeritagePacket::currentHeritage,
-            (founderName, staticMembers, members, heritageId, heritageIds, currentHeritage) -> new ClientboundHeritagePacket(founderName.orElse(null), staticMembers, members, heritageId.orElse(null), heritageIds, currentHeritage)
+            ByteBufCodecs.optional(ComponentSerialization.STREAM_CODEC), packet -> Optional.ofNullable(packet.notice()),
+            (founderName, staticMembers, members, heritageId, heritageIds, currentHeritage, notice) -> new ClientboundHeritagePacket(founderName.orElse(null), staticMembers, members, heritageId.orElse(null), heritageIds, currentHeritage, notice.orElse(null))
     );
 
-    public ClientboundHeritagePacket(@Nullable String founderName, List<StaticMember> staticMembers, List<Member> members) {
-        this(founderName, staticMembers, members, null, List.of(), true);
-    }
-
-    public ClientboundHeritagePacket(@Nullable String founderName, List<StaticMember> staticMembers, List<Member> members, @Nullable UUID heritageId, List<UUID> heritageIds) {
-        this(founderName, staticMembers, members, heritageId, heritageIds, true);
+    public ClientboundHeritagePacket(@Nullable String founderName, List<StaticMember> staticMembers, List<Member> members, @Nullable UUID heritageId, List<UUID> heritageIds, boolean currentHeritage) {
+        this(founderName, staticMembers, members, heritageId, heritageIds, currentHeritage, null);
     }
 
     public ClientboundHeritagePacket {

@@ -18,5 +18,6 @@ public class ModParticleFactories {
         event.registerSpriteSet(ModParticles.SANGUINARE.get(), SanguinareParticle.Provider::new);
         event.registerSpriteSet(ModParticles.DARK_SPRUCE_OAK_LEAVES.get(), DarkSpruceParticleProvider::new);
         event.registerSpriteSet(ModParticles.WHISPERS_OF_THE_VEIL.get(), WhispersOfTheVeilParticle.Factory::new);
+        event.registerSpriteSet(ModParticles.HERITAGE_GLYPH.get(), HeritageGlyphParticleProvider::new);
     }
 }

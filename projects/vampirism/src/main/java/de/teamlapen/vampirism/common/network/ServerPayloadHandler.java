@@ -29,7 +29,9 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.LecternBlockEntity;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -154,44 +156,63 @@ public class ServerPayloadHandler {
             ServerPlayer player = (ServerPlayer) context.player();
             HeritageWorldData heritageData = HeritageWorldData.getData(player.level().getServer());
             if (msg.lecternPos() != null || msg.targetName() != null) {
-                String bookName = msg.lecternPos() != null
-                        ? HeritageLectern.getReadableLectern(player, msg.lecternPos()).map(lectern -> HeritageBookItem.getTargetName(lectern.getBook())).orElse(null)
-                        : hasNamedHeritageBook(player, msg.targetName()) ? msg.targetName() : null;
+                ItemStack book = msg.lecternPos() != null
+                        ? HeritageLectern.getReadableLectern(player, msg.lecternPos()).map(LecternBlockEntity::getBook).orElse(ItemStack.EMPTY)
+                        : findHeldHeritageBook(player, msg.targetName());
+                String bookName = HeritageBookItem.getTargetName(book);
                 if (bookName == null) {
-                    sendUnavailableHeritagePacket(player, List.of());
+                    sendUnavailableHeritagePacket(player, List.of(), null);
+                    return;
+                }
+                if (!HeritageBookItem.isResearched(book)) {
+                    String notice = HeritageBookItem.getResearchProgress(book) > 0 ? "gui.vampirism.heritage.researching" : "gui.vampirism.heritage.blank";
+                    sendUnavailableHeritagePacket(player, List.of(), Component.translatable(notice));
                     return;
                 }
 
-                findHeritageBookMembership(heritageData, bookName).ifPresentOrElse(
-                        membership -> sendHeritagePacket(player, heritageData, membership, List.of(membership.heritageId()), false),
-                        () -> sendUnavailableHeritagePacket(player, List.of())
-                );
+                Optional<UUID> namedPlayer = heritageData.findPlayerByName(bookName);
+                if (namedPlayer.isPresent()) {
+                    sendPlayerHeritages(player, heritageData, namedPlayer.get(), msg.heritageId());
+                } else {
+                    findNpcHeritageMembership(heritageData, bookName).ifPresentOrElse(
+                            membership -> sendHeritagePacket(player, heritageData, membership, List.of(membership.heritageId()), true),
+                            () -> sendUnavailableHeritagePacket(player, List.of(), null)
+                    );
+                }
                 return;
             }
 
-            List<HeritageWorldData.HeritageHistory> history = heritageData.getHeritagesForPlayer(player.getUUID());
-            Optional<HeritageMembership> current = HeritageManager.getMembership(player);
-            List<UUID> heritageIds = new ArrayList<>();
-            current.map(HeritageMembership::heritageId).ifPresent(heritageIds::add);
-            history.stream()
-                    .map(HeritageWorldData.HeritageHistory::heritageId)
-                    .filter(heritageId -> !heritageIds.contains(heritageId))
-                    .sorted()
-                    .forEach(heritageIds::add);
-
-            Optional<HeritageMembership> selected = msg.heritageId() == null
-                    ? current
-                    : current.filter(membership -> msg.heritageId().equals(membership.heritageId()))
-                    .or(() -> history.stream()
-                            .filter(heritage -> heritage.heritageId().equals(msg.heritageId()))
-                            .map(HeritageWorldData.HeritageHistory::membership)
-                            .findFirst());
-            selected.ifPresentOrElse(
-                    membership -> sendHeritagePacket(player, heritageData, membership, heritageIds,
-                            current.map(currentMembership -> currentMembership.heritageId().equals(membership.heritageId())).orElse(false)),
-                    () -> sendUnavailableHeritagePacket(player, heritageIds)
-            );
+            sendPlayerHeritages(player, heritageData, player.getUUID(), msg.heritageId());
         });
+    }
+
+    /**
+     * Sends the current heritage of a player, or the requested one of the heritages they were part of before running
+     * away. The ids of all of them are sent along, so the screen can switch between them.
+     */
+    private static void sendPlayerHeritages(ServerPlayer receiver, HeritageWorldData heritageData, UUID playerId, @Nullable UUID requestedHeritageId) {
+        List<HeritageWorldData.HeritageHistory> history = heritageData.getHeritagesForPlayer(playerId);
+        Optional<HeritageMembership> current = heritageData.getMembership(playerId);
+        List<UUID> heritageIds = new ArrayList<>();
+        current.map(HeritageMembership::heritageId).ifPresent(heritageIds::add);
+        history.stream()
+                .map(HeritageWorldData.HeritageHistory::heritageId)
+                .filter(heritageId -> !heritageIds.contains(heritageId))
+                .sorted()
+                .forEach(heritageIds::add);
+
+        Optional<HeritageMembership> selected = requestedHeritageId == null
+                ? current
+                : current.filter(membership -> requestedHeritageId.equals(membership.heritageId()))
+                .or(() -> history.stream()
+                        .filter(heritage -> heritage.heritageId().equals(requestedHeritageId))
+                        .map(HeritageWorldData.HeritageHistory::membership)
+                        .findFirst());
+        selected.ifPresentOrElse(
+                membership -> sendHeritagePacket(receiver, heritageData, membership, heritageIds,
+                        current.map(currentMembership -> currentMembership.heritageId().equals(membership.heritageId())).orElse(false)),
+                () -> sendUnavailableHeritagePacket(receiver, heritageIds, null)
+        );
     }
 
     public static void handleReadLecternPacket(ServerboundReadLecternPacket msg, IPayloadContext context) {
@@ -202,13 +223,17 @@ public class ServerPayloadHandler {
         context.enqueueWork(() -> HeritageLectern.takeBook((ServerPlayer) context.player(), msg.pos()));
     }
 
-    private static boolean hasNamedHeritageBook(ServerPlayer player, String targetName) {
-        return hasHeritageBookName(player.getMainHandItem(), targetName)
-                || hasHeritageBookName(player.getOffhandItem(), targetName);
+    private static ItemStack findHeldHeritageBook(ServerPlayer player, String targetName) {
+        for (ItemStack stack : List.of(player.getMainHandItem(), player.getOffhandItem())) {
+            if (targetName.equals(HeritageBookItem.getTargetName(stack))) {
+                return stack;
+            }
+        }
+        return ItemStack.EMPTY;
     }
 
-    private static Optional<HeritageMembership> findHeritageBookMembership(HeritageWorldData heritageData, String targetName) {
-        return heritageData.findMembershipByName(targetName)
+    private static Optional<HeritageMembership> findNpcHeritageMembership(HeritageWorldData heritageData, String targetName) {
+        return heritageData.findNamedNpcMembership(targetName)
                 .or(() -> findPredefinedHeritageMembership(targetName));
     }
 
@@ -222,12 +247,12 @@ public class ServerPayloadHandler {
                 .map(heritage -> HeritageWorldData.membershipForNamedNpc(heritage.id()));
     }
 
-    private static boolean hasHeritageBookName(ItemStack stack, String targetName) {
-        return targetName.equals(HeritageBookItem.getTargetName(stack));
-    }
-
-    private static void sendUnavailableHeritagePacket(ServerPlayer player, List<UUID> heritageIds) {
-        player.connection.send(new ClientboundHeritagePacket(null, List.of(), List.of(), null, heritageIds, false));
+    /**
+     * @param notice shown instead of the default text that no heritage has been recorded
+     */
+    private static void sendUnavailableHeritagePacket(ServerPlayer player, List<UUID> heritageIds, @Nullable Component notice) {
+        // nothing to show, so clean pages
+        player.connection.send(new ClientboundHeritagePacket(null, List.of(), List.of(), null, heritageIds, true, notice));
     }
 
     private static void sendHeritagePacket(ServerPlayer player, HeritageWorldData heritageData, HeritageMembership membership, List<UUID> heritageIds, boolean currentHeritage) {

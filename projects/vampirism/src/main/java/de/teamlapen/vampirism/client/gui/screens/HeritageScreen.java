@@ -19,6 +19,7 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.PlayerSkin;
@@ -250,7 +251,13 @@ public class HeritageScreen extends Screen {
             pose.popMatrix();
         } else if (this.nodes.isEmpty()) {
             pose.popMatrix();
-            graphics.centeredText(this.font, Component.translatable("gui.vampirism.heritage.empty"), contentX + CONTENT_WIDTH / 2, contentY + CONTENT_HEIGHT / 2 - this.font.lineHeight / 2, 0xffffffff);
+            Component text = this.heritage.notice() != null ? this.heritage.notice() : Component.translatable("gui.vampirism.heritage.empty");
+            List<FormattedCharSequence> lines = this.font.split(text, CONTENT_WIDTH - 20);
+            int lineY = contentY + CONTENT_HEIGHT / 2 - lines.size() * this.font.lineHeight / 2;
+            for (FormattedCharSequence line : lines) {
+                graphics.centeredText(this.font, line, contentX + CONTENT_WIDTH / 2, lineY, 0xffffffff);
+                lineY += this.font.lineHeight;
+            }
         } else {
             this.drawConnections(graphics);
             this.drawLostHistorySections(graphics);

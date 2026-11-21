@@ -29,6 +29,7 @@ public class ModParticles {
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> SANGUINARE = PARTICLE_TYPES.register("sanguinare", () -> new SimpleParticleType(false));
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> DARK_SPRUCE_OAK_LEAVES = PARTICLE_TYPES.register("dark_spruce_leaves", () -> new SimpleParticleType(false));
     public static final DeferredHolder<ParticleType<?>, ParticleType<WhispersOfTheVeilParticleOptions>> WHISPERS_OF_THE_VEIL = PARTICLE_TYPES.register("whispers_of_the_veil", () -> create(WhispersOfTheVeilParticleOptions.CODEC, WhispersOfTheVeilParticleOptions.STREAM_CODEC));
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> HERITAGE_GLYPH = PARTICLE_TYPES.register("heritage_glyph", () -> new SimpleParticleType(false));
 
 
     static void register(IEventBus bus) {

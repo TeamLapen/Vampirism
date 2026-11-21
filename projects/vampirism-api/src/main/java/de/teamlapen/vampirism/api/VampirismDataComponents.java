@@ -50,5 +50,6 @@ public class VampirismDataComponents {
         public static final Identifier ENCHANTMENT_OVERRIDE = VIdentifier.mod("enchantment_override");
         public static final Identifier MARKER = VIdentifier.mod("marker");
         public static final Identifier SHATTERED_ARMOR = VIdentifier.mod("shattered_armor");
+        public static final Identifier HERITAGE_RESEARCH = VIdentifier.mod("heritage_research");
     }
 }
