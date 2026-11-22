@@ -1,0 +1,18 @@
+{
+  "values": [
+    "vampirism:armor3_n_health2",
+    "vampirism:health3_n_armor1",
+    "vampirism:attack_speed3_n_speed1",
+    "vampirism:speed1_armor1_health1",
+    "vampirism:damage3_n_armor1",
+    "vampirism:speed3_n_attack_speed1",
+    "vampirism:damage1_attack_speed1",
+    "vampirism:half_invulnerable",
+    "vampirism:summon_bats",
+    "vampirism:sun_screen",
+    "vampirism:dark_blood_projectile_speed",
+    "vampirism:half_invulnerable_debuffed",
+    "vampirism:summon_bats_debuffed",
+    "vampirism:sun_screen_debuffed"
+  ]
+}

@@ -29,7 +29,7 @@ public record RefinementItems(List<Holder<Item>> amulet, List<Holder<Item>> ring
         return Stream.of(amulet, ring, belt).flatMap(Collection::stream).map(Holder::value).map(x -> x instanceof IRefinementItem l ? l : null).filter(Objects::nonNull);
     }
 
-    public Stream<IRefinementItem> stream(IRefinementItem.AccessorySlotType type) {
+    public Stream<IRefinementItem> stream(AccessorySlotType type) {
         var list = switch (type) {
             case AMULET -> amulet;
             case RING -> ring;

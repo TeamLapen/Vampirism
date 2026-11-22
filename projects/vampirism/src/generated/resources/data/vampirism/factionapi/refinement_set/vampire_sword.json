@@ -1,10 +1,8 @@
 {
   "color": 15547147,
-  "faction": "vampirism:is_vampire",
   "name": {
     "translate": "refinement_set.vampirism.vampire_sword"
   },
-  "rarity": "epic",
   "refinements": [
     "vampirism:sword_trained_amount",
     "vampirism:blood_charge_speed"

@@ -1,10 +1,7 @@
 {
   "color": 14877695,
-  "faction": "vampirism:is_vampire",
   "name": {
     "translate": "refinement_set.vampirism.dark_blood_projectile_multi_shot"
   },
-  "rarity": "uncommon",
-  "refinements": "vampirism:dark_blood_projectile_multi_shot",
-  "slot_type": "ring"
+  "refinements": "vampirism:dark_blood_projectile_multi_shot"
 }

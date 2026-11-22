@@ -1,0 +1,30 @@
+{
+  "values": [
+    "vampirism:armor2_n_health2",
+    "vampirism:health2_n_damage1",
+    "vampirism:attack_speed2_n_armor1",
+    "vampirism:damage2_n_speed1",
+    "vampirism:speed2_n_damage1",
+    "vampirism:armor3_n_health3",
+    "vampirism:health3_n_damage2",
+    "vampirism:attack_speed3_n_armor2",
+    "vampirism:damage3_n_speed2",
+    "vampirism:speed3_n_damage2",
+    "vampirism:vista",
+    "vampirism:teleport_distance",
+    "vampirism:dark_blood_projectile_damage",
+    "vampirism:dark_blood_projectile_penetration",
+    "vampirism:dark_blood_projectile_multi_shot",
+    "vampirism:vista_buffed",
+    "vampirism:teleport_distance_buffed",
+    "vampirism:dark_blood_projectile_damage_buffed",
+    "vampirism:dark_blood_projectile_penetration_buffed",
+    "vampirism:dark_blood_projectile_multi_shot_buffed",
+    "vampirism:vista_debuffed",
+    "vampirism:teleport_distance_debuffed",
+    "vampirism:dark_blood_projectile_damage_debuffed",
+    "vampirism:dark_blood_projectile_penetration_debuffed",
+    "vampirism:dark_blood_projectile_multi_shot_debuffed",
+    "vampirism:crucifix_resistant"
+  ]
+}

@@ -1,10 +1,8 @@
 {
   "color": 12648962,
-  "faction": "vampirism:is_vampire",
   "name": {
     "translate": "refinement_set.vampirism.rage_fury_debuffed"
   },
-  "rarity": "epic",
   "refinements": [
     "vampirism:rage_fury",
     "factionapi:n_armor1"

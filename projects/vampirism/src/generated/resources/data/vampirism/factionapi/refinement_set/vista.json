@@ -1,9 +1,7 @@
 {
   "color": 765933,
-  "faction": "vampirism:is_vampire",
   "name": {
     "translate": "refinement_set.vampirism.vista"
   },
-  "rarity": "uncommon",
   "refinements": "vampirism:vista"
 }

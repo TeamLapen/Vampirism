@@ -1,23 +1,20 @@
 package de.teamlapen.faction.client.gui.screens;
 
 import de.teamlapen.faction.FactionsMod;
-import de.teamlapen.faction.api.factions.FactionExtensionType;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
-import de.teamlapen.faction.api.world.items.IRefinementItem;
+import de.teamlapen.faction.api.world.items.AccessorySlotType;
 import de.teamlapen.faction.client.IMinecraftAccessor;
 import de.teamlapen.faction.client.core.FactionAppearanceScreens;
 import de.teamlapen.faction.client.gui.GuiRenderer;
 import de.teamlapen.faction.client.gui.screens.skills.SkillsScreen;
 import de.teamlapen.faction.client.gui.screens.taskboard.TaskListWidget;
-import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.core.FactionKeys;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.network.packets.server.ServerboundDeleteRefinementPacket;
 import de.teamlapen.faction.common.network.packets.server.ServerboundSimpleInputEvent;
 import de.teamlapen.faction.common.world.inventory.FactionMenu;
-import de.teamlapen.faction.common.world.inventory.ITaskMenu;
 import de.teamlapen.faction.misc.mixin.client.accessor.AbstractContainerScreenAccessor;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.ChatFormatting;
@@ -41,7 +38,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Objects;
 
 public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> implements IMinecraftAccessor {
 
@@ -188,7 +184,7 @@ public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> impl
             for (Slot slot : this.menu.slots) {
                 if (slot instanceof FactionMenu.RemovingSelectorSlot) {
                     Button xButton = this.addRenderableWidget(new ImageButton(this.getLeftPos() + slot.x + 16 - 5, this.getTopPos() + slot.y + 16 - 5, 5, 5, REMOVE_ACCESSORY, (button) -> {
-                        FactionsMod.proxy.sendToServer(new ServerboundDeleteRefinementPacket(IRefinementItem.AccessorySlotType.values()[slot.index]));
+                        FactionsMod.proxy.sendToServer(new ServerboundDeleteRefinementPacket(AccessorySlotType.values()[slot.index]));
                         refinementList.set(slot.index, ItemStack.EMPTY);
                     }, Component.empty()) {
 

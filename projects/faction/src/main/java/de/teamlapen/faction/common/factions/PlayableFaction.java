@@ -1,23 +1,16 @@
 package de.teamlapen.faction.common.factions;
 
 import de.teamlapen.faction.api.factions.FactionProperties;
-import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
-import de.teamlapen.faction.api.factions.lord.ILordTitleProvider;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
+import de.teamlapen.faction.api.world.items.AccessorySlotType;
 import de.teamlapen.faction.api.world.items.IRefinementItem;
 import de.teamlapen.faction.api.world.items.RefinementItems;
 import de.teamlapen.faction.common.core.FactionDataComponents;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponentInitializers;
-import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.attachment.AttachmentType;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -60,7 +53,7 @@ public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> imp
     }
 
     @Override
-    public <Z extends Item & IRefinementItem> Z getRandomRefinementItem(RandomSource random, IRefinementItem.AccessorySlotType type) {
+    public <Z extends Item & IRefinementItem> Z getRandomRefinementItem(RandomSource random, AccessorySlotType type) {
         RefinementItems orDefault = components().getOrDefault(FactionDataComponents.REFINEMENTS, RefinementItems.EMPTY);
         List<IRefinementItem> iRefinementItems = orDefault.stream(type).toList();
         return ((Z) iRefinementItems.get(random.nextInt(iRefinementItems.size())));
@@ -73,7 +66,7 @@ public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> imp
     }
 
     @Override
-    public Collection<IRefinementItem> getRefinementItems(IRefinementItem.AccessorySlotType type) {
+    public Collection<IRefinementItem> getRefinementItems(AccessorySlotType type) {
         RefinementItems orDefault = components().getOrDefault(FactionDataComponents.REFINEMENTS, RefinementItems.EMPTY);
         return orDefault.stream(type).toList();
     }

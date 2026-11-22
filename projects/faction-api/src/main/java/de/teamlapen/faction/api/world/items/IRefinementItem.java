@@ -4,7 +4,6 @@ import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.refinements.IRefinementSet;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
-import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
@@ -42,37 +41,4 @@ public interface IRefinementItem extends ItemLike {
 
     HolderSet<IFaction<?>> getExclusiveFactions(ItemStack stack);
 
-    /**
-     * Slots types for {@link IRefinementItem}
-     * <br>
-     * (like {@link net.minecraft.world.entity.EquipmentSlot} for other items)
-     */
-    enum AccessorySlotType implements StringRepresentable {
-        AMULET("amulet", 0),
-        RING("ring", 1),
-        OBI_BELT("obi_belt", 2);
-
-        private final String name;
-        /**
-         * slot index
-         */
-        private final int slot;
-
-        AccessorySlotType(String name, int slot) {
-            this.name = name;
-            this.slot = slot;
-        }
-
-        /**
-         * @return slot index
-         */
-        public int getSlot() {
-            return slot;
-        }
-
-        @Override
-        public String getSerializedName() {
-            return this.name;
-        }
-    }
 }

@@ -1,9 +1,7 @@
 {
   "color": 15547147,
-  "faction": "vampirism:is_vampire",
   "name": {
     "translate": "refinement_set.vampirism.sword_trained_amount"
   },
-  "rarity": "common",
   "refinements": "vampirism:sword_trained_amount"
 }

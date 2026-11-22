@@ -1,9 +1,7 @@
 {
   "color": 12648962,
-  "faction": "vampirism:is_vampire",
   "name": {
     "translate": "refinement_set.vampirism.rage_fury"
   },
-  "rarity": "epic",
   "refinements": "vampirism:rage_fury"
 }

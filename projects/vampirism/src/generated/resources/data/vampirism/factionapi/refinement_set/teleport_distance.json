@@ -1,9 +1,7 @@
 {
   "color": 427861,
-  "faction": "vampirism:is_vampire",
   "name": {
     "translate": "refinement_set.vampirism.teleport_distance"
   },
-  "rarity": "uncommon",
   "refinements": "vampirism:teleport_distance"
 }

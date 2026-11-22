@@ -1,10 +1,8 @@
 {
   "color": 16777215,
-  "faction": "vampirism:is_vampire",
   "name": {
     "translate": "refinement_set.vampirism.damage1_attack_speed1_n_armor2"
   },
-  "rarity": "common",
   "refinements": [
     "factionapi:damage1",
     "factionapi:attack_speed1",

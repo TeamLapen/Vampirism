@@ -1,10 +1,8 @@
 {
   "color": 8213969,
-  "faction": "vampirism:is_vampire",
   "name": {
     "translate": "refinement_set.vampirism.crucifix_resistant_health"
   },
-  "rarity": "epic",
   "refinements": [
     "vampirism:crucifix_resistant",
     "factionapi:health2"

@@ -1,10 +1,9 @@
 package de.teamlapen.faction.api.factions;
 
 import com.mojang.serialization.Codec;
-import de.teamlapen.faction.api.factions.lord.ILordTitleProvider;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
+import de.teamlapen.faction.api.world.items.AccessorySlotType;
 import de.teamlapen.faction.api.world.items.IRefinementItem;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
@@ -12,7 +11,6 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
 import java.util.Collection;
@@ -50,11 +48,11 @@ public interface IPlayableFaction<T extends IFactionPlayer<T>> extends IFaction<
      *
      * @throws NullPointerException if there are no accessories available
      */
-    <Z extends Item & IRefinementItem> Z getRandomRefinementItem(RandomSource random, IRefinementItem.AccessorySlotType type);
+    <Z extends Item & IRefinementItem> Z getRandomRefinementItem(RandomSource random, AccessorySlotType type);
 
     Collection<IRefinementItem> getRefinementItems();
 
-    Collection<IRefinementItem> getRefinementItems(IRefinementItem.AccessorySlotType type);
+    Collection<IRefinementItem> getRefinementItems(AccessorySlotType type);
 
     enum TitleGender implements StringRepresentable {
         UNKNOWN("unknown"),

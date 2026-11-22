@@ -1,10 +1,8 @@
 {
   "color": 5592575,
-  "faction": "vampirism:is_vampire",
   "name": {
     "translate": "refinement_set.vampirism.armor3_n_health2"
   },
-  "rarity": "rare",
   "refinements": [
     "factionapi:armor3",
     "factionapi:n_health2"

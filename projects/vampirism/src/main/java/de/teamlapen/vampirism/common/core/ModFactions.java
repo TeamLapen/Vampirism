@@ -120,6 +120,7 @@ public class ModFactions {
                 .add(Registries.ENTITY_TYPE, ModEntityTags.VAMPIRE)
                 .defaultTargets(ModEntityTags.VAMPIRE_DEFAULT_TARGETS)
                 .add(FactionRegistries.Keys.TASK, ModTaskTags.IS_VAMPIRE)
+                .add(FactionRegistries.Keys.REFINEMENT_SET, ModRefinementSetTags.IS_VAMPIRE)
                 .add(FactionRegistries.Keys.FACTION, VampirismTags.Factions.IS_VAMPIRE)
                 .add(Registries.DATA_COMPONENT_TYPE, ModDataComponentTags.VAMPIRE_FOOD)
                 .add(VampirismRegistries.Keys.VAMPIRE_BOOK, ModVampireBookTags.IS_VAMPIRE)

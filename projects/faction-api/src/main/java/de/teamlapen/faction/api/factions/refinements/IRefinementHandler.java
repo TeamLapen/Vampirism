@@ -1,8 +1,7 @@
 package de.teamlapen.faction.api.factions.refinements;
 
 import de.teamlapen.faction.api.FactionsApi;
-import de.teamlapen.faction.api.world.items.IRefinementItem;
-import net.minecraft.core.Holder;
+import de.teamlapen.faction.api.world.items.AccessorySlotType;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -27,7 +26,7 @@ public interface IRefinementHandler extends IRefinementAccess {
      */
     boolean equipRefinement(ItemStack stack);
 
-    void removeRefinement(IRefinementItem.AccessorySlotType slot);
+    void removeRefinement(AccessorySlotType slot);
 
     void updateItems();
     /**

@@ -1,10 +1,7 @@
 {
   "color": 14877695,
-  "faction": "vampirism:is_vampire",
   "name": {
     "translate": "refinement_set.vampirism.dark_blood_projectile_aoe"
   },
-  "rarity": "epic",
-  "refinements": "vampirism:dark_blood_projectile_aoe",
-  "slot_type": "ring"
+  "refinements": "vampirism:dark_blood_projectile_aoe"
 }

@@ -1,0 +1,26 @@
+{
+  "values": [
+    "vampirism:armor1",
+    "vampirism:health1",
+    "vampirism:speed1",
+    "vampirism:attack_speed1",
+    "vampirism:damage1",
+    "vampirism:damage1_attack_speed1_n_armor2",
+    "vampirism:armor1_health1_n_attack_speed2",
+    "vampirism:regeneration",
+    "vampirism:sword_trained_amount",
+    "vampirism:blood_charge_speed",
+    "vampirism:freeze_duration",
+    "vampirism:sword_finisher",
+    "vampirism:regeneration_buffed",
+    "vampirism:sword_trained_amount_buffed",
+    "vampirism:blood_charge_speed_buffed",
+    "vampirism:freeze_duration_buffed",
+    "vampirism:sword_finisher_buffed",
+    "vampirism:regeneration_debuffed",
+    "vampirism:sword_trained_amount_debuffed",
+    "vampirism:blood_charge_speed_debuffed",
+    "vampirism:freeze_duration_debuffed",
+    "vampirism:sword_finisher_debuffed"
+  ]
+}

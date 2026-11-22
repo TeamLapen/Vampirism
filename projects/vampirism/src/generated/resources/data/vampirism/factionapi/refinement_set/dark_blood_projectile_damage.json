@@ -1,9 +1,7 @@
 {
   "color": 14877695,
-  "faction": "vampirism:is_vampire",
   "name": {
     "translate": "refinement_set.vampirism.dark_blood_projectile_damage"
   },
-  "rarity": "uncommon",
   "refinements": "vampirism:dark_blood_projectile_damage"
 }

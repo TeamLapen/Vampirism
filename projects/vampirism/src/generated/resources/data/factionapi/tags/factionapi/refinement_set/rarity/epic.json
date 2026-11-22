@@ -1,0 +1,16 @@
+{
+  "values": [
+    "vampirism:vampire_sword",
+    "vampirism:dark_blood_projectile",
+    "vampirism:rage_fury",
+    "vampirism:summon_bats_buffed",
+    "vampirism:dark_blood_projectile_aoe",
+    "vampirism:half_invulnerable_buffed",
+    "vampirism:sun_screen_buffed",
+    "vampirism:dark_blood_projectile_speed_buffed",
+    "vampirism:dark_blood_projectile_aoe_debuffed",
+    "vampirism:rage_fury_debuffed",
+    "vampirism:crucifix_resistant_speed",
+    "vampirism:crucifix_resistant_health"
+  ]
+}

@@ -1,26 +1,24 @@
 package de.teamlapen.faction.common.factions.tasks.reward;
 
-import com.google.common.base.Preconditions;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.faction.api.FactionRegistries;
-import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.faction.api.factions.refinements.IRefinementSet;
+import de.teamlapen.faction.api.factions.refinements.Rarity;
 import de.teamlapen.faction.api.factions.tasks.ITaskRewardInstance;
 import de.teamlapen.faction.api.factions.tasks.TaskReward;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
+import de.teamlapen.faction.api.world.items.AccessorySlotType;
 import de.teamlapen.faction.api.world.items.IRefinementItem;
 import de.teamlapen.faction.common.RefinementSet;
 import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.faction.common.util.ModCodecs;
-import de.teamlapen.faction.common.util.RegUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
@@ -37,7 +35,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class RefinementItemReward implements IItemReward {
@@ -45,23 +42,23 @@ public class RefinementItemReward implements IItemReward {
     public static final MapCodec<RefinementItemReward> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             ModCodecs.playableFactionSet().fieldOf("faction").forGetter(i -> i.faction),
             ItemStackTemplate.CODEC.optionalFieldOf("item").forGetter(i -> Optional.ofNullable(i.item)),
-            StringRepresentable.fromEnum(IRefinementSet.Rarity::values).optionalFieldOf("rarity").forGetter(i -> Optional.ofNullable(i.rarity))
+            StringRepresentable.fromEnum(Rarity::values).optionalFieldOf("rarity").forGetter(i -> Optional.ofNullable(i.rarity))
     ).apply(inst, (a,b,c) -> new RefinementItemReward(a,b.orElse(null),c.orElse(null))));
 
     private final @Nullable ItemStackTemplate item;
     private final HolderSet<? extends IPlayableFaction<?>> faction;
     @Nullable
-    private final IRefinementSet.Rarity rarity;
+    private final Rarity rarity;
 
     public RefinementItemReward(HolderSet<? extends IPlayableFaction<?>> faction) {
         this(faction, null);
     }
 
-    public RefinementItemReward(HolderSet<? extends IPlayableFaction<?>> faction, @Nullable IRefinementSet.Rarity refinementRarity) {
+    public RefinementItemReward(HolderSet<? extends IPlayableFaction<?>> faction, @Nullable Rarity refinementRarity) {
         this(faction, null, refinementRarity);
     }
 
-    public RefinementItemReward(HolderSet<? extends IPlayableFaction<?>> faction, @Nullable ItemStackTemplate item, @Nullable IRefinementSet.Rarity refinementRarity) {
+    public RefinementItemReward(HolderSet<? extends IPlayableFaction<?>> faction, @Nullable ItemStackTemplate item, @Nullable Rarity refinementRarity) {
         this.item = item;
         this.faction = faction;
         this.rarity = refinementRarity;
@@ -97,13 +94,13 @@ public class RefinementItemReward implements IItemReward {
         if (randomFaction == null) return new ItemStackTemplate(Items.AIR);
 
         @SuppressWarnings("unchecked")
-        Z item = this.item != null ? (Z) this.item.item() : randomFaction.value().getRandomRefinementItem(random, IRefinementItem.AccessorySlotType.values()[random.nextInt(IRefinementItem.AccessorySlotType.values().length)]);
-        IRefinementItem.AccessorySlotType slot = (item).getSlotType();
+        Z item = this.item != null ? (Z) this.item.item() : randomFaction.value().getRandomRefinementItem(random, AccessorySlotType.values()[random.nextInt(AccessorySlotType.values().length)]);
+        AccessorySlotType slot = (item).getSlotType();
         List<Weighted<Holder<IRefinementSet>>> sets = registries.lookupOrThrow(FactionRegistries.Keys.REFINEMENT_SET)
                 .listElements()
-                .filter(set -> IFaction.is(randomFaction, set.value().getFaction()))
-                .filter(set -> this.rarity == null || set.value().getRarity().ordinal() >= this.rarity.ordinal())
-                .filter(set -> set.value().getSlotType().map(slot1 -> slot1 == slot).orElse(true))
+                .filter(set -> IRefinementSet.isForFaction(set, randomFaction))
+                .filter(set -> this.rarity == null || IRefinementSet.getRarity(set).ordinal() >= this.rarity.ordinal())
+                .filter(set -> IRefinementSet.canBeAppliedTo(set, slot))
                 .map(RefinementSet::weighted).collect(Collectors.toList());
         ItemStack stack = new ItemStack(item);
         if (!sets.isEmpty()) {
@@ -113,7 +110,7 @@ public class RefinementItemReward implements IItemReward {
     }
 
     private List<ItemStack> getAllRefinementItems() {
-        return this.faction.stream().map(Holder::value).filter(IPlayableFaction::hasRefinements).flatMap(faction -> Arrays.stream(IRefinementItem.AccessorySlotType.values()).flatMap(type -> faction.getRefinementItems(type).stream())).map(ItemStack::new).collect(Collectors.toList());
+        return this.faction.stream().map(Holder::value).filter(IPlayableFaction::hasRefinements).flatMap(faction -> Arrays.stream(AccessorySlotType.values()).flatMap(type -> faction.getRefinementItems(type).stream())).map(ItemStack::new).collect(Collectors.toList());
     }
 
     @Nullable

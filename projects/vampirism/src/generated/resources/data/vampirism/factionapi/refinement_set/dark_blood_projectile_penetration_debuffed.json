@@ -1,13 +1,10 @@
 {
   "color": 14877695,
-  "faction": "vampirism:is_vampire",
   "name": {
     "translate": "refinement_set.vampirism.dark_blood_projectile_penetration_debuffed"
   },
-  "rarity": "uncommon",
   "refinements": [
     "vampirism:dark_blood_projectile_penetration",
     "factionapi:n_attack_speed1"
-  ],
-  "slot_type": "ring"
+  ]
 }

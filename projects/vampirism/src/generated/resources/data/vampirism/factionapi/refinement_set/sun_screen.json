@@ -1,9 +1,7 @@
 {
   "color": 15581707,
-  "faction": "vampirism:is_vampire",
   "name": {
     "translate": "refinement_set.vampirism.sun_screen"
   },
-  "rarity": "rare",
   "refinements": "vampirism:sun_screen"
 }

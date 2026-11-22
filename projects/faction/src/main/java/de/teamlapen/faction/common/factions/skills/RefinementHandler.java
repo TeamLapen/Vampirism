@@ -1,10 +1,10 @@
 package de.teamlapen.faction.common.factions.skills;
 
-import de.teamlapen.faction.api.factions.IFactionExtension;
 import de.teamlapen.faction.api.factions.refinements.IRefinement;
 import de.teamlapen.faction.api.factions.refinements.IRefinementHandler;
 import de.teamlapen.faction.api.factions.refinements.IRefinementSet;
 import de.teamlapen.faction.api.util.FIdentifier;
+import de.teamlapen.faction.api.world.items.AccessorySlotType;
 import de.teamlapen.faction.api.world.items.IRefinementItem;
 import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.faction.common.core.FactionAttachments;
@@ -12,7 +12,6 @@ import de.teamlapen.faction.common.factions.FactionExtension;
 import de.teamlapen.faction.common.util.AttachmentSynchronization;
 import de.teamlapen.faction.common.util.collections.SetView;
 import de.teamlapen.faction.common.world.entities.IPlayerEventListener;
-import de.teamlapen.sync.AttachmentSync;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
@@ -20,7 +19,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.ItemStackWithSlot;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -40,8 +38,8 @@ import java.util.stream.Collectors;
 
 public class RefinementHandler extends FactionExtension implements IRefinementHandler, IPlayerEventListener {
 
-    private final NonNullList<ItemStack> refinementItems = NonNullList.withSize(IRefinementItem.AccessorySlotType.values().length, ItemStack.EMPTY);
-    private final Map<IRefinementItem.AccessorySlotType, Set<Holder<IRefinement>>> refinementSets = new HashMap<>();
+    private final NonNullList<ItemStack> refinementItems = NonNullList.withSize(AccessorySlotType.values().length, ItemStack.EMPTY);
+    private final Map<AccessorySlotType, Set<Holder<IRefinement>>> refinementSets = new HashMap<>();
 
     private final Set<Holder<IRefinement>> activeRefinements = new SetView<>(refinementSets);
 
@@ -58,7 +56,7 @@ public class RefinementHandler extends FactionExtension implements IRefinementHa
     public void damageRefinements() {
         Registry<Enchantment> enchantments = this.player.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
         Holder.Reference<Enchantment> unbreaking = enchantments.getOrThrow(Enchantments.UNBREAKING);
-        for (IRefinementItem.AccessorySlotType slot : IRefinementItem.AccessorySlotType.values()) {
+        for (AccessorySlotType slot : AccessorySlotType.values()) {
             ItemStack stack = refinementItems.get(slot.getSlot());
             if (stack.isEmpty()) continue;
 
@@ -68,7 +66,7 @@ public class RefinementHandler extends FactionExtension implements IRefinementHa
             if (set == null) {
                 damage = stack.getMaxDamage();
             } else {
-                damage = 40 + (set.value().getRarity().weight - 1) * 10 + this.player.getRandom().nextInt(60);
+                damage = 40 + (IRefinementSet.getRarity(set).weight - 1) * 10 + this.player.getRandom().nextInt(60);
             }
             int unbreakingLevel = stack.getEnchantmentLevel(unbreaking);
             if (unbreakingLevel > 0) {
@@ -101,7 +99,7 @@ public class RefinementHandler extends FactionExtension implements IRefinementHa
     }
 
     @Override
-    public void removeRefinement(IRefinementItem.AccessorySlotType slot) {
+    public void removeRefinement(AccessorySlotType slot) {
         ItemStack stack = refinementItems.set(slot.getSlot(), ItemStack.EMPTY);
         if (stack.isEmpty()) return;
 
@@ -157,7 +155,7 @@ public class RefinementHandler extends FactionExtension implements IRefinementHa
 
     @Override
     public void updateItems() {
-        for (IRefinementItem.AccessorySlotType value : IRefinementItem.AccessorySlotType.values()) {
+        for (AccessorySlotType value : AccessorySlotType.values()) {
             var refinements = this.refinementSets.remove(value);
             if (refinements != null) {
                 refinements.forEach(this::removeAttributes);
@@ -171,7 +169,7 @@ public class RefinementHandler extends FactionExtension implements IRefinementHa
     private void applyAttributes() {
         for (ItemStack refinementItem : this.refinementItems) {
             if (refinementItem.getItem() instanceof IRefinementItem refinement) {
-                IRefinementItem.AccessorySlotType slotType = refinement.getSlotType();
+                AccessorySlotType slotType = refinement.getSlotType();
                 Set<Holder<IRefinement>> refinements = getRefinements(refinement.getRefinementSet(refinementItem));
                 refinementSets.put(slotType, refinements);
                 refinements.forEach(this::addAttributes);
@@ -181,7 +179,7 @@ public class RefinementHandler extends FactionExtension implements IRefinementHa
 
     @Override
     public void resetRefinements() {
-        for (IRefinementItem.AccessorySlotType slot : IRefinementItem.AccessorySlotType.values()) {
+        for (AccessorySlotType slot : AccessorySlotType.values()) {
             removeRefinement(slot);
         }
         this.refinementItems.clear();

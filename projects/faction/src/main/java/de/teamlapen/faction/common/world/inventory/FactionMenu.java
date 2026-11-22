@@ -9,6 +9,7 @@ import de.teamlapen.faction.api.factions.tasks.ITaskInstance;
 import de.teamlapen.faction.api.factions.tasks.Task;
 import de.teamlapen.faction.api.factions.tasks.TaskRequirement;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
+import de.teamlapen.faction.api.world.items.AccessorySlotType;
 import de.teamlapen.faction.api.world.items.IRefinementItem;
 import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.core.FactionMenus;
@@ -69,9 +70,9 @@ public class FactionMenu extends AbstractInventoryContainer implements ITaskMenu
         Predicate<ItemStack> refinement = stack -> stack.getItem() instanceof IRefinementItem item && IFaction.contains(item.getExclusiveFactions(stack), faction);
 
         return List.of(
-                new SlotDefinition(refinement.and(stack -> ((IRefinementItem)stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.AMULET), 58, 8),
-                new SlotDefinition(refinement.and(stack -> ((IRefinementItem)stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.RING), 58, 26),
-                new SlotDefinition(refinement.and(stack -> ((IRefinementItem)stack.getItem()).getSlotType() == IRefinementItem.AccessorySlotType.OBI_BELT), 58, 44)
+                new SlotDefinition(refinement.and(stack -> ((IRefinementItem)stack.getItem()).getSlotType() == AccessorySlotType.AMULET), 58, 8),
+                new SlotDefinition(refinement.and(stack -> ((IRefinementItem)stack.getItem()).getSlotType() == AccessorySlotType.RING), 58, 26),
+                new SlotDefinition(refinement.and(stack -> ((IRefinementItem)stack.getItem()).getSlotType() == AccessorySlotType.OBI_BELT), 58, 44)
         );
     }
 

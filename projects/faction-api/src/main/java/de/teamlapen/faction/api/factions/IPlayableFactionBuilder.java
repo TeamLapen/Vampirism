@@ -2,6 +2,7 @@ package de.teamlapen.faction.api.factions;
 
 import de.teamlapen.faction.api.factions.lord.ILordPlayerBuilder;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
+import de.teamlapen.faction.api.world.items.AccessorySlotType;
 import de.teamlapen.faction.api.world.items.IRefinementItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextColor;
@@ -27,7 +28,7 @@ public interface IPlayableFactionBuilder<T extends IFactionPlayer<T>> extends IF
      *
      * @return the builder
      */
-    IPlayableFactionBuilder<T> refinementItem(IRefinementItem.AccessorySlotType type, Supplier<IRefinementItem> item);
+    IPlayableFactionBuilder<T> refinementItem(AccessorySlotType type, Supplier<IRefinementItem> item);
 
     @Override
     IPlayableFactionBuilder<T> chatColor(TextColor color);

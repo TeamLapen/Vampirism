@@ -1,9 +1,7 @@
 {
   "color": 15580939,
-  "faction": "vampirism:is_vampire",
   "name": {
     "translate": "refinement_set.vampirism.regeneration"
   },
-  "rarity": "common",
   "refinements": "vampirism:regeneration"
 }

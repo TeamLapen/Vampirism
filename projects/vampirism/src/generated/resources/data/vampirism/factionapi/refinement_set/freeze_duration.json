@@ -1,9 +1,7 @@
 {
   "color": 778221,
-  "faction": "vampirism:is_vampire",
   "name": {
     "translate": "refinement_set.vampirism.freeze_duration"
   },
-  "rarity": "common",
   "refinements": "vampirism:freeze_duration"
 }
