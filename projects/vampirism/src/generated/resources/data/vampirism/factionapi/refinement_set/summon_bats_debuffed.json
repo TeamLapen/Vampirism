@@ -1,0 +1,12 @@
+{
+  "color": 9144977,
+  "faction": "vampirism:is_vampire",
+  "name": {
+    "translate": "refinement_set.vampirism.summon_bats_debuffed"
+  },
+  "rarity": "rare",
+  "refinements": [
+    "vampirism:summon_bats",
+    "factionapi:n_health1"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "color": 15581707,
+  "faction": "vampirism:is_vampire",
+  "name": {
+    "translate": "refinement_set.vampirism.sun_screen_debuffed"
+  },
+  "rarity": "rare",
+  "refinements": [
+    "vampirism:sun_screen",
+    "factionapi:n_armor1"
+  ]
+}

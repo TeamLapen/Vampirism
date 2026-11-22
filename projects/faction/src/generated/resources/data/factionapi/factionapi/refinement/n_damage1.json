@@ -1,0 +1,11 @@
+{
+  "description": {
+    "translate": "refinement.factionapi.n_damage1.desc"
+  },
+  "detrimental": true,
+  "modifier": {
+    "amount": -0.15,
+    "attribute": "minecraft:attack_damage",
+    "operation": "add_value"
+  }
+}

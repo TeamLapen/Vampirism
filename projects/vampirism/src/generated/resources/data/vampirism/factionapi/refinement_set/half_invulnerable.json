@@ -1,0 +1,9 @@
+{
+  "color": 11103671,
+  "faction": "vampirism:is_vampire",
+  "name": {
+    "translate": "refinement_set.vampirism.half_invulnerable"
+  },
+  "rarity": "rare",
+  "refinements": "vampirism:half_invulnerable"
+}

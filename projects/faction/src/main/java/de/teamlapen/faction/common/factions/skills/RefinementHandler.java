@@ -17,6 +17,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.ItemStackWithSlot;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -62,12 +63,12 @@ public class RefinementHandler extends FactionExtension implements IRefinementHa
             if (stack.isEmpty()) continue;
 
             @Nullable
-            IRefinementSet set = ((IRefinementItem) stack.getItem()).getRefinementSet(stack);
+            Holder<IRefinementSet> set = ((IRefinementItem) stack.getItem()).getRefinementSet(stack);
             int damage;
             if (set == null) {
                 damage = stack.getMaxDamage();
             } else {
-                damage = 40 + (set.getRarity().weight - 1) * 10 + this.player.getRandom().nextInt(60);
+                damage = 40 + (set.value().getRarity().weight - 1) * 10 + this.player.getRandom().nextInt(60);
             }
             int unbreakingLevel = stack.getEnchantmentLevel(unbreaking);
             if (unbreakingLevel > 0) {
@@ -88,13 +89,7 @@ public class RefinementHandler extends FactionExtension implements IRefinementHa
         if (!FactionRestriction.canUse(player, stack, false)) return false;
 
         var slotType = refinementItem.getSlotType();
-        IRefinementSet refinementSet = refinementItem.getRefinementSet(stack);
-        Set<Holder<IRefinement>> refinements;
-        if (refinementSet == null) {
-            refinements = Set.of();
-        } else {
-            refinements = refinementSet.getRefinements();
-        }
+        Set<Holder<IRefinement>> refinements = getRefinements(refinementItem.getRefinementSet(stack));
 
         removeRefinement(slotType);
 
@@ -120,15 +115,21 @@ public class RefinementHandler extends FactionExtension implements IRefinementHa
         this.sync();
     }
 
+    private static Set<Holder<IRefinement>> getRefinements(@Nullable Holder<IRefinementSet> set) {
+        if (set == null) {
+            return Set.of();
+        }
+        return set.value().getRefinements().stream().collect(Collectors.toUnmodifiableSet());
+    }
+
     private void addAttributes(Holder<IRefinement> refinement) {
         Holder<Attribute> attribute = refinement.value().getAttribute();
         if (attribute == null) return;
 
         var instance = this.player.getAttribute(attribute);
         if (instance == null) return;
-        var factory = refinement.value().attributeFactory();
-        if (factory == null) return;
-        AttributeModifier attributeModifier = factory.apply(refinement.unwrapKey().orElseThrow().identifier(), refinement.value().getModifierValue());
+        AttributeModifier attributeModifier = refinement.value().createAttributeModifier(refinement.unwrapKey().orElseThrow().identifier());
+        if (attributeModifier == null) return;
         if (instance.hasModifier(attributeModifier.id())) {
             instance.removeModifier(attributeModifier.id());
         }
@@ -145,8 +146,13 @@ public class RefinementHandler extends FactionExtension implements IRefinementHa
     }
 
     @Override
-    public boolean isRefinementEquipped(Holder<IRefinement> refinement) {
-        return this.activeRefinements.contains(refinement);
+    public boolean isRefinementEquipped(ResourceKey<IRefinement> refinement) {
+        for (Holder<IRefinement> active : this.activeRefinements) {
+            if (active.is(refinement)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -166,13 +172,7 @@ public class RefinementHandler extends FactionExtension implements IRefinementHa
         for (ItemStack refinementItem : this.refinementItems) {
             if (refinementItem.getItem() instanceof IRefinementItem refinement) {
                 IRefinementItem.AccessorySlotType slotType = refinement.getSlotType();
-                IRefinementSet refinementSet = refinement.getRefinementSet(refinementItem);
-                Set<Holder<IRefinement>> refinements;
-                if (refinementSet == null) {
-                    refinements = Set.of();
-                } else {
-                    refinements = refinementSet.getRefinements();
-                }
+                Set<Holder<IRefinement>> refinements = getRefinements(refinement.getRefinementSet(refinementItem));
                 refinementSets.put(slotType, refinements);
                 refinements.forEach(this::addAttributes);
             }

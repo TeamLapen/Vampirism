@@ -1,33 +1,33 @@
 package de.teamlapen.faction.api.factions.refinements;
 
+import com.mojang.serialization.Codec;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.world.items.IRefinementItem;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.StringRepresentable;
 
 import java.util.Locale;
 import java.util.Optional;
-import java.util.Set;
 
+/**
+ * A set of refinements that can be applied to a {@link IRefinementItem}
+ * <p>
+ * Refinement sets are loaded from datapacks. Registry key {@link de.teamlapen.faction.api.FactionRegistries.Keys#REFINEMENT_SET}
+ */
 public interface IRefinementSet {
 
     int getColor();
 
     TagKey<IFaction<?>> getFaction();
 
-    default MutableComponent getName() {
-        return Component.translatable(getDescriptionId());
-    }
-
-    String getDescriptionId();
+    Component getName();
 
     Rarity getRarity();
 
-    Set<Holder<IRefinement>> getRefinements();
+    HolderSet<IRefinement> getRefinements();
 
     /**
      * @return The accessory type this can be on, or empty if all
@@ -40,6 +40,8 @@ public interface IRefinementSet {
         RARE(3, ChatFormatting.BLUE),
         EPIC(2, ChatFormatting.DARK_PURPLE),
         LEGENDARY(1, ChatFormatting.GOLD);
+
+        public static final Codec<Rarity> CODEC = StringRepresentable.fromEnum(Rarity::values);
 
         public final int weight;
         public final ChatFormatting color;

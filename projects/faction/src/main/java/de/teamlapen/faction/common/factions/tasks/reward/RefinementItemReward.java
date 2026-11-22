@@ -3,6 +3,7 @@ package de.teamlapen.faction.common.factions.tasks.reward;
 import com.google.common.base.Preconditions;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.faction.api.factions.refinements.IRefinementSet;
@@ -17,6 +18,7 @@ import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.faction.common.util.ModCodecs;
 import de.teamlapen.faction.common.util.RegUtil;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -72,7 +74,7 @@ public class RefinementItemReward implements IItemReward {
 
     @Override
     public ITaskRewardInstance createInstance(IFactionPlayer<?> player) {
-        return new Instance(createItem(player.asEntity().getRandom()));
+        return new Instance(createItem(player.asEntity().registryAccess(), player.asEntity().getRandom()));
     }
 
     @Override
@@ -80,7 +82,7 @@ public class RefinementItemReward implements IItemReward {
         return this.item != null ? Collections.singletonList(this.item.create()) : getAllRefinementItems();
     }
 
-    protected <Z extends Item & IRefinementItem> ItemStackTemplate createItem(RandomSource random) {
+    protected <Z extends Item & IRefinementItem> ItemStackTemplate createItem(HolderLookup.Provider registries, RandomSource random) {
         @SuppressWarnings("unchecked")
         HolderSet<IPlayableFaction<?>> rewardFactions = (HolderSet<IPlayableFaction<?>>) this.faction;
 
@@ -97,11 +99,12 @@ public class RefinementItemReward implements IItemReward {
         @SuppressWarnings("unchecked")
         Z item = this.item != null ? (Z) this.item.item() : randomFaction.value().getRandomRefinementItem(random, IRefinementItem.AccessorySlotType.values()[random.nextInt(IRefinementItem.AccessorySlotType.values().length)]);
         IRefinementItem.AccessorySlotType slot = (item).getSlotType();
-        List<Weighted<IRefinementSet>> sets = ModRegistries.REFINEMENT_SETS.stream()
-                .filter(set -> IFaction.is(randomFaction, set.getFaction()))
-                .filter(set -> this.rarity == null || set.getRarity().ordinal() >= this.rarity.ordinal())
-                .filter(set -> set.getSlotType().map(slot1 -> slot1 == slot).orElse(true))
-                .map(set -> ((RefinementSet) set).getWeightedRandom()).collect(Collectors.toList());
+        List<Weighted<Holder<IRefinementSet>>> sets = registries.lookupOrThrow(FactionRegistries.Keys.REFINEMENT_SET)
+                .listElements()
+                .filter(set -> IFaction.is(randomFaction, set.value().getFaction()))
+                .filter(set -> this.rarity == null || set.value().getRarity().ordinal() >= this.rarity.ordinal())
+                .filter(set -> set.value().getSlotType().map(slot1 -> slot1 == slot).orElse(true))
+                .map(RefinementSet::weighted).collect(Collectors.toList());
         ItemStack stack = new ItemStack(item);
         if (!sets.isEmpty()) {
             WeightedList.of(sets).getRandom(random).ifPresent(x -> item.applyRefinementSet(stack, x));

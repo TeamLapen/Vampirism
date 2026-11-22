@@ -1,0 +1,12 @@
+{
+  "color": 11103671,
+  "faction": "vampirism:is_vampire",
+  "name": {
+    "translate": "refinement_set.vampirism.half_invulnerable_buffed"
+  },
+  "rarity": "epic",
+  "refinements": [
+    "vampirism:half_invulnerable",
+    "factionapi:armor1"
+  ]
+}

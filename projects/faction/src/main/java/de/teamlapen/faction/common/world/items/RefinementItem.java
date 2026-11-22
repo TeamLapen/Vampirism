@@ -3,6 +3,7 @@ package de.teamlapen.faction.common.world.items;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import de.teamlapen.faction.FactionsMod;
+import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.faction.api.factions.refinements.IRefinement;
@@ -13,14 +14,13 @@ import de.teamlapen.faction.common.RefinementSet;
 import de.teamlapen.faction.common.components.EffectiveRefinementSet;
 import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.faction.common.core.FactionDataComponents;
-import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.library.common.world.items.BaseDisplayItemGenerator;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
-import net.minecraft.util.Util;
 import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -51,11 +51,11 @@ public class RefinementItem extends Item implements IRefinementItem, BaseDisplay
         this.type = type;
     }
 
-    public static ItemStack getRandomRefinementItem(Holder<? extends IPlayableFaction<?>> faction) {
-        var sets = ModRegistries.REFINEMENT_SETS.stream().filter(set -> IFaction.is(faction, set.getFaction())).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
+    public static ItemStack getRandomRefinementItem(HolderLookup.Provider registries, Holder<? extends IPlayableFaction<?>> faction) {
+        var sets = registries.lookupOrThrow(FactionRegistries.Keys.REFINEMENT_SET).listElements().filter(set -> IFaction.is(faction, set.value().getFaction())).map(RefinementSet::weighted).collect(Collectors.toList());
         if (sets.isEmpty()) return ItemStack.EMPTY;
-        IRefinementSet s = WeightedList.of(sets).getRandom(RANDOM).orElseGet(() -> sets.getFirst().value());
-        AccessorySlotType t = s.getSlotType().orElseGet(() -> switch (RANDOM.nextInt(3)) {
+        Holder<IRefinementSet> s = WeightedList.of(sets).getRandom(RANDOM).orElseGet(() -> sets.getFirst().value());
+        AccessorySlotType t = s.value().getSlotType().orElseGet(() -> switch (RANDOM.nextInt(3)) {
             case 0 -> AccessorySlotType.OBI_BELT;
             case 1 -> AccessorySlotType.RING;
             default -> AccessorySlotType.AMULET;
@@ -68,8 +68,8 @@ public class RefinementItem extends Item implements IRefinementItem, BaseDisplay
         return ItemStack.EMPTY;
     }
 
-    public static @Nullable IRefinementSet getRandomRefinementForItem(@Nullable Holder<? extends IFaction<?>> faction, IRefinementItem stack) {
-        var sets = ModRegistries.REFINEMENT_SETS.stream().filter(set -> faction == null || IFaction.is(faction, set.getFaction())).filter(set -> set.getSlotType().map(s -> s == stack.getSlotType()).orElse(true)).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
+    public static @Nullable Holder<IRefinementSet> getRandomRefinementForItem(HolderLookup.Provider registries, @Nullable Holder<? extends IFaction<?>> faction, IRefinementItem stack) {
+        var sets = registries.lookupOrThrow(FactionRegistries.Keys.REFINEMENT_SET).listElements().filter(set -> faction == null || IFaction.is(faction, set.value().getFaction())).filter(set -> set.value().getSlotType().map(s -> s == stack.getSlotType()).orElse(true)).map(RefinementSet::weighted).collect(Collectors.toList());
         if (sets.isEmpty()) return null;
         return WeightedList.of(sets).getRandom(RANDOM).orElse(null);
     }
@@ -82,19 +82,20 @@ public class RefinementItem extends Item implements IRefinementItem, BaseDisplay
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipComponents, TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltipDisplay, tooltipComponents, flagIn);
-        IRefinementSet set = getRefinementSet(stack);
+        Holder<IRefinementSet> set = getRefinementSet(stack);
         if (set != null) {
             tooltipComponents.accept(Component.empty());
             tooltipComponents.accept(Component.translatable("tooltip.vampirism.refinement.when_equipped").withStyle(ChatFormatting.DARK_PURPLE));
 
             Multimap<Holder<Attribute>, AttributeModifier> map = LinkedListMultimap.create();
-            for (Holder<IRefinement> refinement : set.getRefinements()) {
+            for (Holder<IRefinement> refinement : set.value().getRefinements()) {
                 IRefinement value = refinement.value();
-                if (value.getAttribute() != null && value.attributeFactory() != null) {
-                    AttributeModifier apply = value.attributeFactory().apply(refinement.getKey().identifier(), value.getModifierValue());
-                    map.put(value.getAttribute(), apply);
+                Holder<Attribute> attribute = value.getAttribute();
+                AttributeModifier modifier = attribute != null ? value.createAttributeModifier(refinement.unwrapKey().orElseThrow().identifier()) : null;
+                if (attribute != null && modifier != null) {
+                    map.put(attribute, modifier);
                 } else {
-                    tooltipComponents.accept(Component.translatable(Util.makeDescriptionId("refinement", refinement.getKey().identifier()) + ".desc").withStyle(ChatFormatting.GRAY));
+                    tooltipComponents.accept(value.getDescription().copy().withStyle(ChatFormatting.GRAY));
                 }
             }
 
@@ -103,8 +104,8 @@ public class RefinementItem extends Item implements IRefinementItem, BaseDisplay
     }
 
     @Override
-    public boolean applyRefinementSet(ItemStack stack, IRefinementSet set) {
-        if (set.getSlotType().map(t -> t == type).orElse(true)) {
+    public boolean applyRefinementSet(ItemStack stack, Holder<IRefinementSet> set) {
+        if (set.value().getSlotType().map(t -> t == type).orElse(true)) {
             stack.set(FactionDataComponents.REFINEMENT_SET, new EffectiveRefinementSet(set));
             return true;
         }
@@ -113,16 +114,16 @@ public class RefinementItem extends Item implements IRefinementItem, BaseDisplay
 
     @Override
     public Component getName(ItemStack stack) {
-        IRefinementSet set = getRefinementSet(stack);
+        Holder<IRefinementSet> set = getRefinementSet(stack);
         if (set == null) {
             return super.getName(stack);
         }
-        return Component.translatable(this.getDescriptionId() + ".of", set.getName()).withStyle(set.getRarity().color);
+        return Component.translatable(this.getDescriptionId() + ".of", set.value().getName()).withStyle(set.value().getRarity().color);
     }
 
     @Nullable
     @Override
-    public IRefinementSet getRefinementSet(ItemStack stack) {
+    public Holder<IRefinementSet> getRefinementSet(ItemStack stack) {
         return stack.getOrDefault(FactionDataComponents.REFINEMENT_SET, EffectiveRefinementSet.EMPTY).set();
     }
 
@@ -146,7 +147,7 @@ public class RefinementItem extends Item implements IRefinementItem, BaseDisplay
     @Override
     public void generateCreativeTab(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
         ItemStack stack = getDefaultInstance();
-        ModRegistries.REFINEMENT_SETS.stream().filter(set -> IFaction.contains(getExclusiveFactions(stack), set.getFaction())).filter(set -> set.getSlotType().map(s -> s == getSlotType()).orElse(true)).map(set -> {
+        parameters.holders().lookupOrThrow(FactionRegistries.Keys.REFINEMENT_SET).listElements().filter(set -> IFaction.contains(getExclusiveFactions(stack), set.value().getFaction())).filter(set -> set.value().getSlotType().map(s -> s == getSlotType()).orElse(true)).map(set -> {
             ItemStack s = stack.copy();
             applyRefinementSet(s, set);
             return s;

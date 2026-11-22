@@ -1,0 +1,12 @@
+{
+  "color": 765933,
+  "faction": "vampirism:is_vampire",
+  "name": {
+    "translate": "refinement_set.vampirism.vista_debuffed"
+  },
+  "rarity": "uncommon",
+  "refinements": [
+    "vampirism:vista",
+    "factionapi:n_speed1"
+  ]
+}

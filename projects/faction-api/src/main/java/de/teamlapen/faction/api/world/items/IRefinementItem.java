@@ -2,6 +2,7 @@ package de.teamlapen.faction.api.world.items;
 
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.refinements.IRefinementSet;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.ItemStack;
@@ -22,7 +23,7 @@ public interface IRefinementItem extends ItemLike {
      * @return the applied refinement set
      */
     @Nullable
-    IRefinementSet getRefinementSet(ItemStack stack);
+    Holder<IRefinementSet> getRefinementSet(ItemStack stack);
 
     /**
      * Gets the accessory slot where this item can be equipped
@@ -37,7 +38,7 @@ public interface IRefinementItem extends ItemLike {
      *
      * @return Whether the set was successfully applied
      */
-    boolean applyRefinementSet(ItemStack stack, IRefinementSet set);
+    boolean applyRefinementSet(ItemStack stack, Holder<IRefinementSet> set);
 
     HolderSet<IFaction<?>> getExclusiveFactions(ItemStack stack);
 

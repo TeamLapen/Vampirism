@@ -1,0 +1,12 @@
+{
+  "color": 5635925,
+  "faction": "vampirism:is_vampire",
+  "name": {
+    "translate": "refinement_set.vampirism.health2_n_damage1"
+  },
+  "rarity": "uncommon",
+  "refinements": [
+    "factionapi:health2",
+    "factionapi:n_damage1"
+  ]
+}

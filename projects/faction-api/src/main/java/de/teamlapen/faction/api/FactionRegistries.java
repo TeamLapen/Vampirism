@@ -37,9 +37,6 @@ public class FactionRegistries {
     public static final Supplier<Registry<IMinionTask<?>>> MINION_TASK = retrieveRegistry(Keys.MINION_TASK);
     public static final Supplier<Registry<IMinionTaskCategory>> MINION_TASK_CATEGORY = retrieveRegistry(Keys.MINION_TASK_CATEGORY);
 
-    public static final Supplier<Registry<IRefinement>> REFINEMENT = retrieveRegistry(Keys.REFINEMENT);
-    public static final Supplier<Registry<IRefinementSet>> REFINEMENT_SET = retrieveRegistry(Keys.REFINEMENT_SET);
-
     public static final Supplier<Registry<MapCodec<? extends TaskReward>>> TASK_REWARD = retrieveRegistry(Keys.TASK_REWARD);
     public static final Supplier<Registry<MapCodec<? extends TaskUnlocker>>> TASK_UNLOCKER = retrieveRegistry(Keys.TASK_UNLOCKER);
     public static final Supplier<Registry<MapCodec<? extends TaskRequirement.Requirement<?>>>> TASK_REQUIREMENT = retrieveRegistry(Keys.TASK_REQUIREMENT);
@@ -60,9 +57,6 @@ public class FactionRegistries {
         public static final ResourceKey<Registry<IMinionTask<?>>> MINION_TASK = registryKey(FIdentifier.mod("miniontasks"));
         public static final ResourceKey<Registry<IMinionTaskCategory>> MINION_TASK_CATEGORY = registryKey(FIdentifier.mod("miniontask_category"));
 
-        public static final ResourceKey<Registry<IRefinement>> REFINEMENT = registryKey(FIdentifier.mod("refinement"));
-        public static final ResourceKey<Registry<IRefinementSet>> REFINEMENT_SET = registryKey(FIdentifier.mod("refinement_set"));
-
         public static final ResourceKey<Registry<MapCodec<? extends TaskReward>>> TASK_REWARD = registryKey(FIdentifier.mod("task_reward"));
         public static final ResourceKey<Registry<MapCodec<? extends TaskUnlocker>>> TASK_UNLOCKER = registryKey(FIdentifier.mod("task_unlocker"));
         public static final ResourceKey<Registry<MapCodec<? extends TaskRequirement.Requirement<?>>>> TASK_REQUIREMENT = registryKey(FIdentifier.mod("task_requirement"));
@@ -74,5 +68,7 @@ public class FactionRegistries {
         public static final ResourceKey<Registry<Task>> TASK = registryKey(FIdentifier.mod("tasks"));
         public static final ResourceKey<Registry<ISkillSegment>> SKILL_SEGMENT = registryKey(FIdentifier.mod("skill_segment"));
         public static final ResourceKey<Registry<ISkillTree>> SKILL_TREE = registryKey(FIdentifier.mod("skill_tree"));
+        public static final ResourceKey<Registry<IRefinement>> REFINEMENT = registryKey(FIdentifier.mod("refinement"));
+        public static final ResourceKey<Registry<IRefinementSet>> REFINEMENT_SET = registryKey(FIdentifier.mod("refinement_set"));
     }
 }

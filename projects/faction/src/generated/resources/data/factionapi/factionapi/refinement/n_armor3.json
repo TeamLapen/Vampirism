@@ -1,0 +1,11 @@
+{
+  "description": {
+    "translate": "refinement.factionapi.n_armor3.desc"
+  },
+  "detrimental": true,
+  "modifier": {
+    "amount": -3.0,
+    "attribute": "minecraft:armor",
+    "operation": "add_value"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "color": 12648962,
+  "faction": "vampirism:is_vampire",
+  "name": {
+    "translate": "refinement_set.vampirism.rage_fury_buffed"
+  },
+  "rarity": "legendary",
+  "refinements": [
+    "vampirism:rage_fury",
+    "factionapi:armor1"
+  ]
+}

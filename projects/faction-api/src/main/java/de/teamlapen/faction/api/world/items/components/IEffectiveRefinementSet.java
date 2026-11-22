@@ -2,6 +2,7 @@ package de.teamlapen.faction.api.world.items.components;
 
 import de.teamlapen.faction.api.factions.refinements.IRefinementSet;
 import de.teamlapen.faction.api.world.items.IRefinementItem;
+import net.minecraft.core.Holder;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -13,5 +14,5 @@ public interface IEffectiveRefinementSet {
      * @return The applied refinement set
      */
     @Nullable
-    IRefinementSet set();
+    Holder<IRefinementSet> set();
 }

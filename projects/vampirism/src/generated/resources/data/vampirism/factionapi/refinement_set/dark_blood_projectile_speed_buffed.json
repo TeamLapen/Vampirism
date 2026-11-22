@@ -1,0 +1,12 @@
+{
+  "color": 15641453,
+  "faction": "vampirism:is_vampire",
+  "name": {
+    "translate": "refinement_set.vampirism.dark_blood_projectile_speed_buffed"
+  },
+  "rarity": "epic",
+  "refinements": [
+    "vampirism:dark_blood_projectile_speed",
+    "factionapi:speed1"
+  ]
+}

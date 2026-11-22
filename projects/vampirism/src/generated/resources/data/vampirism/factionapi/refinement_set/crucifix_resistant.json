@@ -1,0 +1,9 @@
+{
+  "color": 8241873,
+  "faction": "vampirism:is_vampire",
+  "name": {
+    "translate": "refinement_set.vampirism.crucifix_resistant"
+  },
+  "rarity": "uncommon",
+  "refinements": "vampirism:crucifix_resistant"
+}

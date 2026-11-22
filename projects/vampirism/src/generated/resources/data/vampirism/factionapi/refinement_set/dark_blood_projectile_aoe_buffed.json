@@ -1,0 +1,13 @@
+{
+  "color": 14877695,
+  "faction": "vampirism:is_vampire",
+  "name": {
+    "translate": "refinement_set.vampirism.dark_blood_projectile_aoe_buffed"
+  },
+  "rarity": "legendary",
+  "refinements": [
+    "vampirism:dark_blood_projectile_aoe",
+    "factionapi:health1"
+  ],
+  "slot_type": "ring"
+}

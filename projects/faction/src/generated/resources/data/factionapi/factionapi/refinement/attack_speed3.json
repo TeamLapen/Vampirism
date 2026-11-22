@@ -1,0 +1,10 @@
+{
+  "description": {
+    "translate": "refinement.factionapi.attack_speed3.desc"
+  },
+  "modifier": {
+    "amount": 0.11,
+    "attribute": "minecraft:attack_speed",
+    "operation": "add_multiplied_base"
+  }
+}

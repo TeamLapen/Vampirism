@@ -40,9 +40,7 @@ public class ModRegistryManager {
         ModPotions.register(eventBus);
         ModRecipes.register(eventBus);
         ModMapDecorations.register(eventBus);
-        ModRefinements.register(eventBus);
         ModSkillPointProvider.register(eventBus);
-        ModRefinementSets.register(eventBus);
         ModSounds.register(eventBus);
         ModTasks.register(eventBus);
         ModBlockEntities.register(eventBus);

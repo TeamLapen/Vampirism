@@ -48,7 +48,7 @@ public class RefinementSetFunction extends LootItemConditionalFunction {
     @Override
     protected ItemStack run(ItemStack stack, LootContext context) {
         if (stack.getItem() instanceof IRefinementItem) {
-            IRefinementSet set = RefinementItem.getRandomRefinementForItem(faction, ((IRefinementItem) stack.getItem()));
+            Holder<IRefinementSet> set = RefinementItem.getRandomRefinementForItem(context.getLevel().registryAccess(), faction, ((IRefinementItem) stack.getItem()));
             if (set != null) {
                 ((IRefinementItem) stack.getItem()).applyRefinementSet(stack, set);
             }

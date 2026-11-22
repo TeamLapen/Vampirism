@@ -7,115 +7,112 @@ import de.teamlapen.faction.api.factions.refinements.IRefinementSet.Rarity;
 import de.teamlapen.faction.api.world.items.IRefinementItem;
 import de.teamlapen.faction.common.RefinementSet;
 import de.teamlapen.faction.common.core.FactionRefinements;
-import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.common.VampireRefinementSet;
-import net.minecraft.core.Holder;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import de.teamlapen.vampirism.api.VampirismTags;
+import de.teamlapen.vampirism.api.util.VIdentifier;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.resources.ResourceKey;
+
+import java.util.Arrays;
 
 public class ModRefinementSets {
-    public static final DeferredRegister<IRefinementSet> REFINEMENT_SETS = DeferredRegister.create(FactionRegistries.Keys.REFINEMENT_SET, REFERENCE.MODID);
 
-    public static void register(IEventBus bus) {
-        REFINEMENT_SETS.register(bus);
-    }
-
-    static {
+    static void createRefinementSets(BootstrapContext<IRefinementSet> context) {
         // Common refinement set
         {
             // attribute modifier
-            REFINEMENT_SETS.register("armor1", () -> commonV(FactionRefinements.ARMOR1));
-            REFINEMENT_SETS.register("health1", () -> commonV(FactionRefinements.HEALTH1));
-            REFINEMENT_SETS.register("speed1", () -> commonV(FactionRefinements.SPEED1));
-            REFINEMENT_SETS.register("attack_speed1", () -> commonV(FactionRefinements.ATTACK_SPEED1));
-            REFINEMENT_SETS.register("damage1", () -> commonV(FactionRefinements.DAMAGE1));
-            REFINEMENT_SETS.register("damage1_attack_speed1_n_armor2", () -> commonV(FactionRefinements.DAMAGE1, FactionRefinements.ATTACK_SPEED1, FactionRefinements.N_ARMOR2));
-            REFINEMENT_SETS.register("armor1_health1_n_attack_speed2", () -> commonV(FactionRefinements.ARMOR1, FactionRefinements.HEALTH1, FactionRefinements.N_ATTACK_SPEED2));
+            register(context, "armor1", vampire(Rarity.COMMON), FactionRefinements.ARMOR1);
+            register(context, "health1", vampire(Rarity.COMMON), FactionRefinements.HEALTH1);
+            register(context, "speed1", vampire(Rarity.COMMON), FactionRefinements.SPEED1);
+            register(context, "attack_speed1", vampire(Rarity.COMMON), FactionRefinements.ATTACK_SPEED1);
+            register(context, "damage1", vampire(Rarity.COMMON), FactionRefinements.DAMAGE1);
+            register(context, "damage1_attack_speed1_n_armor2", vampire(Rarity.COMMON), FactionRefinements.DAMAGE1, FactionRefinements.ATTACK_SPEED1, FactionRefinements.N_ARMOR2);
+            register(context, "armor1_health1_n_attack_speed2", vampire(Rarity.COMMON), FactionRefinements.ARMOR1, FactionRefinements.HEALTH1, FactionRefinements.N_ATTACK_SPEED2);
 
             //default skill upgrades
-            REFINEMENT_SETS.register("regeneration", () -> new VampireRefinementSet(Rarity.COMMON, 0xedbf0b, ModRefinements.REGENERATION));
-            REFINEMENT_SETS.register("sword_trained_amount", () -> new VampireRefinementSet(Rarity.COMMON, 0xed3b0b, ModRefinements.SWORD_TRAINED_AMOUNT));
-            REFINEMENT_SETS.register("blood_charge_speed", () -> new VampireRefinementSet(Rarity.COMMON, 0xed250b, ModRefinements.BLOOD_CHARGE_SPEED));
-            REFINEMENT_SETS.register("freeze_duration", () -> new VampireRefinementSet(Rarity.COMMON, 0x0bdfed, ModRefinements.FREEZE_DURATION));
-            REFINEMENT_SETS.register("sword_finisher", () -> new VampireRefinementSet(Rarity.COMMON, 0xd10106, ModRefinements.SWORD_FINISHER));
+            register(context, "regeneration", vampire(Rarity.COMMON, 0xedbf0b), ModRefinements.REGENERATION);
+            register(context, "sword_trained_amount", vampire(Rarity.COMMON, 0xed3b0b), ModRefinements.SWORD_TRAINED_AMOUNT);
+            register(context, "blood_charge_speed", vampire(Rarity.COMMON, 0xed250b), ModRefinements.BLOOD_CHARGE_SPEED);
+            register(context, "freeze_duration", vampire(Rarity.COMMON, 0x0bdfed), ModRefinements.FREEZE_DURATION);
+            register(context, "sword_finisher", vampire(Rarity.COMMON, 0xd10106), ModRefinements.SWORD_FINISHER);
 
             //buffed skill upgrades
-            REFINEMENT_SETS.register("regeneration_buffed", () -> new VampireRefinementSet(Rarity.COMMON, 0xedbf0b, ModRefinements.REGENERATION, FactionRefinements.SPEED1));
-            REFINEMENT_SETS.register("sword_trained_amount_buffed", () -> new VampireRefinementSet(Rarity.COMMON, 0xed3b0b, ModRefinements.SWORD_TRAINED_AMOUNT, FactionRefinements.DAMAGE1));
-            REFINEMENT_SETS.register("blood_charge_speed_buffed", () -> new VampireRefinementSet(Rarity.COMMON, 0xed250b, ModRefinements.BLOOD_CHARGE_SPEED, FactionRefinements.ATTACK_SPEED1));
-            REFINEMENT_SETS.register("freeze_duration_buffed", () -> new VampireRefinementSet(Rarity.COMMON, 0x0bdfed, ModRefinements.FREEZE_DURATION, FactionRefinements.HEALTH1));
-            REFINEMENT_SETS.register("sword_finisher_buffed", () -> new VampireRefinementSet(Rarity.COMMON, 0xd10106, ModRefinements.SWORD_FINISHER, FactionRefinements.ARMOR1));
+            register(context, "regeneration_buffed", vampire(Rarity.COMMON, 0xedbf0b), ModRefinements.REGENERATION, FactionRefinements.SPEED1);
+            register(context, "sword_trained_amount_buffed", vampire(Rarity.COMMON, 0xed3b0b), ModRefinements.SWORD_TRAINED_AMOUNT, FactionRefinements.DAMAGE1);
+            register(context, "blood_charge_speed_buffed", vampire(Rarity.COMMON, 0xed250b), ModRefinements.BLOOD_CHARGE_SPEED, FactionRefinements.ATTACK_SPEED1);
+            register(context, "freeze_duration_buffed", vampire(Rarity.COMMON, 0x0bdfed), ModRefinements.FREEZE_DURATION, FactionRefinements.HEALTH1);
+            register(context, "sword_finisher_buffed", vampire(Rarity.COMMON, 0xd10106), ModRefinements.SWORD_FINISHER, FactionRefinements.ARMOR1);
 
             //de-buffed skill upgrades
-            REFINEMENT_SETS.register("regeneration_debuffed", () -> new VampireRefinementSet(Rarity.COMMON, 0xedbf0b, ModRefinements.REGENERATION, FactionRefinements.N_SPEED1));
-            REFINEMENT_SETS.register("sword_trained_amount_debuffed", () -> new VampireRefinementSet(Rarity.COMMON, 0xed3b0b, ModRefinements.SWORD_TRAINED_AMOUNT, FactionRefinements.N_DAMAGE1));
-            REFINEMENT_SETS.register("blood_charge_speed_debuffed", () -> new VampireRefinementSet(Rarity.COMMON, 0xed250b, ModRefinements.BLOOD_CHARGE_SPEED, FactionRefinements.N_ATTACK_SPEED1));
-            REFINEMENT_SETS.register("freeze_duration_debuffed", () -> new VampireRefinementSet(Rarity.COMMON, 0x0bdfed, ModRefinements.FREEZE_DURATION, FactionRefinements.N_HEALTH1));
-            REFINEMENT_SETS.register("sword_finisher_debuffed", () -> new VampireRefinementSet(Rarity.COMMON, 0xd10106, ModRefinements.SWORD_FINISHER, FactionRefinements.N_ARMOR1));
+            register(context, "regeneration_debuffed", vampire(Rarity.COMMON, 0xedbf0b), ModRefinements.REGENERATION, FactionRefinements.N_SPEED1);
+            register(context, "sword_trained_amount_debuffed", vampire(Rarity.COMMON, 0xed3b0b), ModRefinements.SWORD_TRAINED_AMOUNT, FactionRefinements.N_DAMAGE1);
+            register(context, "blood_charge_speed_debuffed", vampire(Rarity.COMMON, 0xed250b), ModRefinements.BLOOD_CHARGE_SPEED, FactionRefinements.N_ATTACK_SPEED1);
+            register(context, "freeze_duration_debuffed", vampire(Rarity.COMMON, 0x0bdfed), ModRefinements.FREEZE_DURATION, FactionRefinements.N_HEALTH1);
+            register(context, "sword_finisher_debuffed", vampire(Rarity.COMMON, 0xd10106), ModRefinements.SWORD_FINISHER, FactionRefinements.N_ARMOR1);
         }
 
         //Uncommon refinement sets
         {
             // attribute modifier
-            REFINEMENT_SETS.register("armor2_n_health2", () -> uncommonV(FactionRefinements.ARMOR2, FactionRefinements.N_HEALTH2));
-            REFINEMENT_SETS.register("health2_n_damage1", () -> uncommonV(FactionRefinements.HEALTH2, FactionRefinements.N_DAMAGE1));
-            REFINEMENT_SETS.register("attack_speed2_n_armor1", () -> uncommonV(FactionRefinements.ATTACK_SPEED2, FactionRefinements.N_ARMOR1));
-            REFINEMENT_SETS.register("damage2_n_speed1", () -> uncommonV(FactionRefinements.DAMAGE2, FactionRefinements.N_SPEED1));
-            REFINEMENT_SETS.register("speed2_n_damage1", () -> uncommonV(FactionRefinements.SPEED2, FactionRefinements.N_DAMAGE1));
+            register(context, "armor2_n_health2", vampire(Rarity.UNCOMMON), FactionRefinements.ARMOR2, FactionRefinements.N_HEALTH2);
+            register(context, "health2_n_damage1", vampire(Rarity.UNCOMMON), FactionRefinements.HEALTH2, FactionRefinements.N_DAMAGE1);
+            register(context, "attack_speed2_n_armor1", vampire(Rarity.UNCOMMON), FactionRefinements.ATTACK_SPEED2, FactionRefinements.N_ARMOR1);
+            register(context, "damage2_n_speed1", vampire(Rarity.UNCOMMON), FactionRefinements.DAMAGE2, FactionRefinements.N_SPEED1);
+            register(context, "speed2_n_damage1", vampire(Rarity.UNCOMMON), FactionRefinements.SPEED2, FactionRefinements.N_DAMAGE1);
 
             // better attribute modifier with de-buffs
-            REFINEMENT_SETS.register("armor3_n_health3", () -> uncommonV(FactionRefinements.ARMOR3, FactionRefinements.N_HEALTH3));
-            REFINEMENT_SETS.register("health3_n_damage2", () -> uncommonV(FactionRefinements.HEALTH3, FactionRefinements.N_DAMAGE2));
-            REFINEMENT_SETS.register("attack_speed3_n_armor2", () -> uncommonV(FactionRefinements.ATTACK_SPEED3, FactionRefinements.N_ARMOR2));
-            REFINEMENT_SETS.register("damage3_n_speed2", () -> uncommonV(FactionRefinements.DAMAGE3, FactionRefinements.N_SPEED3));
-            REFINEMENT_SETS.register("speed3_n_damage2", () -> uncommonV(FactionRefinements.SPEED3, FactionRefinements.N_DAMAGE2));
+            register(context, "armor3_n_health3", vampire(Rarity.UNCOMMON), FactionRefinements.ARMOR3, FactionRefinements.N_HEALTH3);
+            register(context, "health3_n_damage2", vampire(Rarity.UNCOMMON), FactionRefinements.HEALTH3, FactionRefinements.N_DAMAGE2);
+            register(context, "attack_speed3_n_armor2", vampire(Rarity.UNCOMMON), FactionRefinements.ATTACK_SPEED3, FactionRefinements.N_ARMOR2);
+            register(context, "damage3_n_speed2", vampire(Rarity.UNCOMMON), FactionRefinements.DAMAGE3, FactionRefinements.N_SPEED3);
+            register(context, "speed3_n_damage2", vampire(Rarity.UNCOMMON), FactionRefinements.SPEED3, FactionRefinements.N_DAMAGE2);
 
             //default skill upgrades
-            REFINEMENT_SETS.register("vista", () -> new VampireRefinementSet(Rarity.UNCOMMON, 0x0bafed, ModRefinements.VISTA));
-            REFINEMENT_SETS.register("teleport_distance", () -> new VampireRefinementSet(Rarity.UNCOMMON, 0x068755, ModRefinements.TELEPORT_DISTANCE));
-            REFINEMENT_SETS.register("dark_blood_projectile_damage", () -> new VampireRefinementSet(Rarity.UNCOMMON, 0xe303ff, ModRefinements.DARK_BLOOD_PROJECTILE_DAMAGE));
-            REFINEMENT_SETS.register("dark_blood_projectile_penetration", () -> new VampireRefinementSet(Rarity.UNCOMMON, 0xe303ff, ModRefinements.DARK_BLOOD_PROJECTILE_PENETRATION).onlyFor(IRefinementItem.AccessorySlotType.RING));
-            REFINEMENT_SETS.register("dark_blood_projectile_multi_shot", () -> new VampireRefinementSet(Rarity.UNCOMMON, 0xe303ff, ModRefinements.DARK_BLOOD_PROJECTILE_MULTI_SHOT).onlyFor(IRefinementItem.AccessorySlotType.RING));
+            register(context, "vista", vampire(Rarity.UNCOMMON, 0x0bafed), ModRefinements.VISTA);
+            register(context, "teleport_distance", vampire(Rarity.UNCOMMON, 0x068755), ModRefinements.TELEPORT_DISTANCE);
+            register(context, "dark_blood_projectile_damage", vampire(Rarity.UNCOMMON, 0xe303ff), ModRefinements.DARK_BLOOD_PROJECTILE_DAMAGE);
+            register(context, "dark_blood_projectile_penetration", vampire(Rarity.UNCOMMON, 0xe303ff).onlyFor(IRefinementItem.AccessorySlotType.RING), ModRefinements.DARK_BLOOD_PROJECTILE_PENETRATION);
+            register(context, "dark_blood_projectile_multi_shot", vampire(Rarity.UNCOMMON, 0xe303ff).onlyFor(IRefinementItem.AccessorySlotType.RING), ModRefinements.DARK_BLOOD_PROJECTILE_MULTI_SHOT);
 
             //buffed skill upgrades
-            REFINEMENT_SETS.register("vista_buffed", () -> new VampireRefinementSet(Rarity.UNCOMMON, 0x0bafed, ModRefinements.VISTA, FactionRefinements.SPEED1));
-            REFINEMENT_SETS.register("teleport_distance_buffed", () -> new VampireRefinementSet(Rarity.UNCOMMON, 0x068755, ModRefinements.TELEPORT_DISTANCE, FactionRefinements.SPEED1));
-            REFINEMENT_SETS.register("dark_blood_projectile_damage_buffed", () -> new VampireRefinementSet(Rarity.UNCOMMON, 0xe303ff, ModRefinements.DARK_BLOOD_PROJECTILE_DAMAGE, FactionRefinements.DAMAGE1));
-            REFINEMENT_SETS.register("dark_blood_projectile_penetration_buffed", () -> new VampireRefinementSet(Rarity.UNCOMMON, 0xe303ff, ModRefinements.DARK_BLOOD_PROJECTILE_PENETRATION, FactionRefinements.ATTACK_SPEED1).onlyFor(IRefinementItem.AccessorySlotType.RING));
-            REFINEMENT_SETS.register("dark_blood_projectile_multi_shot_buffed", () -> new VampireRefinementSet(Rarity.UNCOMMON, 0xe303ff, ModRefinements.DARK_BLOOD_PROJECTILE_MULTI_SHOT, FactionRefinements.ATTACK_SPEED1).onlyFor(IRefinementItem.AccessorySlotType.RING));
+            register(context, "vista_buffed", vampire(Rarity.UNCOMMON, 0x0bafed), ModRefinements.VISTA, FactionRefinements.SPEED1);
+            register(context, "teleport_distance_buffed", vampire(Rarity.UNCOMMON, 0x068755), ModRefinements.TELEPORT_DISTANCE, FactionRefinements.SPEED1);
+            register(context, "dark_blood_projectile_damage_buffed", vampire(Rarity.UNCOMMON, 0xe303ff), ModRefinements.DARK_BLOOD_PROJECTILE_DAMAGE, FactionRefinements.DAMAGE1);
+            register(context, "dark_blood_projectile_penetration_buffed", vampire(Rarity.UNCOMMON, 0xe303ff).onlyFor(IRefinementItem.AccessorySlotType.RING), ModRefinements.DARK_BLOOD_PROJECTILE_PENETRATION, FactionRefinements.ATTACK_SPEED1);
+            register(context, "dark_blood_projectile_multi_shot_buffed", vampire(Rarity.UNCOMMON, 0xe303ff).onlyFor(IRefinementItem.AccessorySlotType.RING), ModRefinements.DARK_BLOOD_PROJECTILE_MULTI_SHOT, FactionRefinements.ATTACK_SPEED1);
 
             //de-buffed skill upgrades
-            REFINEMENT_SETS.register("vista_debuffed", () -> new VampireRefinementSet(Rarity.UNCOMMON, 0x0bafed, ModRefinements.VISTA, FactionRefinements.N_SPEED1));
-            REFINEMENT_SETS.register("teleport_distance_debuffed", () -> new VampireRefinementSet(Rarity.UNCOMMON, 0x068755, ModRefinements.TELEPORT_DISTANCE, FactionRefinements.N_SPEED1));
-            REFINEMENT_SETS.register("dark_blood_projectile_damage_debuffed", () -> new VampireRefinementSet(Rarity.UNCOMMON, 0xe303ff, ModRefinements.DARK_BLOOD_PROJECTILE_DAMAGE, FactionRefinements.N_DAMAGE1));
-            REFINEMENT_SETS.register("dark_blood_projectile_penetration_debuffed", () -> new VampireRefinementSet(Rarity.UNCOMMON, 0xe303ff, ModRefinements.DARK_BLOOD_PROJECTILE_PENETRATION, FactionRefinements.N_ATTACK_SPEED1).onlyFor(IRefinementItem.AccessorySlotType.RING));
-            REFINEMENT_SETS.register("dark_blood_projectile_multi_shot_debuffed", () -> new VampireRefinementSet(Rarity.UNCOMMON, 0xe303ff, ModRefinements.DARK_BLOOD_PROJECTILE_MULTI_SHOT, FactionRefinements.N_ATTACK_SPEED1).onlyFor(IRefinementItem.AccessorySlotType.RING));
+            register(context, "vista_debuffed", vampire(Rarity.UNCOMMON, 0x0bafed), ModRefinements.VISTA, FactionRefinements.N_SPEED1);
+            register(context, "teleport_distance_debuffed", vampire(Rarity.UNCOMMON, 0x068755), ModRefinements.TELEPORT_DISTANCE, FactionRefinements.N_SPEED1);
+            register(context, "dark_blood_projectile_damage_debuffed", vampire(Rarity.UNCOMMON, 0xe303ff), ModRefinements.DARK_BLOOD_PROJECTILE_DAMAGE, FactionRefinements.N_DAMAGE1);
+            register(context, "dark_blood_projectile_penetration_debuffed", vampire(Rarity.UNCOMMON, 0xe303ff).onlyFor(IRefinementItem.AccessorySlotType.RING), ModRefinements.DARK_BLOOD_PROJECTILE_PENETRATION, FactionRefinements.N_ATTACK_SPEED1);
+            register(context, "dark_blood_projectile_multi_shot_debuffed", vampire(Rarity.UNCOMMON, 0xe303ff).onlyFor(IRefinementItem.AccessorySlotType.RING), ModRefinements.DARK_BLOOD_PROJECTILE_MULTI_SHOT, FactionRefinements.N_ATTACK_SPEED1);
         }
 
         // Rare refinement sets
         {
             // attribute modifier
-            REFINEMENT_SETS.register("armor3_n_health2", () -> rareV(FactionRefinements.ARMOR3, FactionRefinements.N_HEALTH2));
-            REFINEMENT_SETS.register("health3_n_armor1", () -> rareV(FactionRefinements.HEALTH3, FactionRefinements.N_ARMOR1));
-            REFINEMENT_SETS.register("attack_speed3_n_speed1", () -> rareV(FactionRefinements.ATTACK_SPEED3, FactionRefinements.N_SPEED1));
-            REFINEMENT_SETS.register("speed1_armor1_health1", () -> rareV(FactionRefinements.SPEED1, FactionRefinements.ARMOR1, FactionRefinements.HEALTH1));
-            REFINEMENT_SETS.register("damage3_n_armor1", () -> rareV(FactionRefinements.DAMAGE3, FactionRefinements.N_ARMOR2));
-            REFINEMENT_SETS.register("speed3_n_attack_speed1", () -> rareV(FactionRefinements.SPEED3, FactionRefinements.N_ATTACK_SPEED1));
-            REFINEMENT_SETS.register("damage1_attack_speed1", () -> rareV(FactionRefinements.DAMAGE1, FactionRefinements.ATTACK_SPEED1));
+            register(context, "armor3_n_health2", vampire(Rarity.RARE), FactionRefinements.ARMOR3, FactionRefinements.N_HEALTH2);
+            register(context, "health3_n_armor1", vampire(Rarity.RARE), FactionRefinements.HEALTH3, FactionRefinements.N_ARMOR1);
+            register(context, "attack_speed3_n_speed1", vampire(Rarity.RARE), FactionRefinements.ATTACK_SPEED3, FactionRefinements.N_SPEED1);
+            register(context, "speed1_armor1_health1", vampire(Rarity.RARE), FactionRefinements.SPEED1, FactionRefinements.ARMOR1, FactionRefinements.HEALTH1);
+            register(context, "damage3_n_armor1", vampire(Rarity.RARE), FactionRefinements.DAMAGE3, FactionRefinements.N_ARMOR2);
+            register(context, "speed3_n_attack_speed1", vampire(Rarity.RARE), FactionRefinements.SPEED3, FactionRefinements.N_ATTACK_SPEED1);
+            register(context, "damage1_attack_speed1", vampire(Rarity.RARE), FactionRefinements.DAMAGE1, FactionRefinements.ATTACK_SPEED1);
 
             // default skill upgrades
-            REFINEMENT_SETS.register("half_invulnerable", () -> new VampireRefinementSet(Rarity.RARE, 0xa96db7, ModRefinements.HALF_INVULNERABLE));
-            REFINEMENT_SETS.register("summon_bats", () -> new VampireRefinementSet(Rarity.RARE, 0x8b8a91, ModRefinements.SUMMON_BATS));
-            REFINEMENT_SETS.register("sun_screen", () -> new VampireRefinementSet(Rarity.RARE, 0xedc20b, ModRefinements.SUN_SCREEN));
-            REFINEMENT_SETS.register("dark_blood_projectile_speed", () -> new VampireRefinementSet(Rarity.RARE, 0xeeabcd, ModRefinements.DARK_BLOOD_PROJECTILE_SPEED));
+            register(context, "half_invulnerable", vampire(Rarity.RARE, 0xa96db7), ModRefinements.HALF_INVULNERABLE);
+            register(context, "summon_bats", vampire(Rarity.RARE, 0x8b8a91), ModRefinements.SUMMON_BATS);
+            register(context, "sun_screen", vampire(Rarity.RARE, 0xedc20b), ModRefinements.SUN_SCREEN);
+            register(context, "dark_blood_projectile_speed", vampire(Rarity.RARE, 0xeeabcd), ModRefinements.DARK_BLOOD_PROJECTILE_SPEED);
 
             // de-buffed skill upgrades
-            REFINEMENT_SETS.register("half_invulnerable_debuffed", () -> new VampireRefinementSet(Rarity.RARE, 0xa96db7, ModRefinements.HALF_INVULNERABLE, FactionRefinements.N_ARMOR1));
-            REFINEMENT_SETS.register("summon_bats_debuffed", () -> new VampireRefinementSet(Rarity.RARE, 0x8b8a91, ModRefinements.SUMMON_BATS, FactionRefinements.N_HEALTH1));
-            REFINEMENT_SETS.register("sun_screen_debuffed", () -> new VampireRefinementSet(Rarity.RARE, 0xedc20b, ModRefinements.SUN_SCREEN, FactionRefinements.N_ARMOR1));
+            register(context, "half_invulnerable_debuffed", vampire(Rarity.RARE, 0xa96db7), ModRefinements.HALF_INVULNERABLE, FactionRefinements.N_ARMOR1);
+            register(context, "summon_bats_debuffed", vampire(Rarity.RARE, 0x8b8a91), ModRefinements.SUMMON_BATS, FactionRefinements.N_HEALTH1);
+            register(context, "sun_screen_debuffed", vampire(Rarity.RARE, 0xedc20b), ModRefinements.SUN_SCREEN, FactionRefinements.N_ARMOR1);
 
             //other
-            REFINEMENT_SETS.register("crucifix_resistant", () -> new VampireRefinementSet(Rarity.UNCOMMON, 0x7DC2D1, ModRefinements.CRUCIFIX_RESISTANT));
+            register(context, "crucifix_resistant", vampire(Rarity.UNCOMMON, 0x7DC2D1), ModRefinements.CRUCIFIX_RESISTANT);
 
         }
 
@@ -123,56 +120,46 @@ public class ModRefinementSets {
         {
 
             // combined skill upgrades
-            REFINEMENT_SETS.register("vampire_sword", () -> new VampireRefinementSet(Rarity.EPIC, 0xed3b0b, ModRefinements.SWORD_TRAINED_AMOUNT, ModRefinements.BLOOD_CHARGE_SPEED));
-            REFINEMENT_SETS.register("dark_blood_projectile", () -> new VampireRefinementSet(Rarity.EPIC, 0xe303ff, ModRefinements.DARK_BLOOD_PROJECTILE_PENETRATION, ModRefinements.DARK_BLOOD_PROJECTILE_MULTI_SHOT).onlyFor(IRefinementItem.AccessorySlotType.RING));
+            register(context, "vampire_sword", vampire(Rarity.EPIC, 0xed3b0b), ModRefinements.SWORD_TRAINED_AMOUNT, ModRefinements.BLOOD_CHARGE_SPEED);
+            register(context, "dark_blood_projectile", vampire(Rarity.EPIC, 0xe303ff).onlyFor(IRefinementItem.AccessorySlotType.RING), ModRefinements.DARK_BLOOD_PROJECTILE_PENETRATION, ModRefinements.DARK_BLOOD_PROJECTILE_MULTI_SHOT);
 
             // skill upgrades
-            REFINEMENT_SETS.register("rage_fury", () -> new VampireRefinementSet(Rarity.EPIC, 0xc10202, ModRefinements.RAGE_FURY));
-            REFINEMENT_SETS.register("summon_bats_buffed", () -> new VampireRefinementSet(Rarity.EPIC, 0x8b8a91, ModRefinements.SUMMON_BATS, FactionRefinements.HEALTH1));
-            REFINEMENT_SETS.register("dark_blood_projectile_aoe", () -> new VampireRefinementSet(Rarity.EPIC, 0xe303ff, ModRefinements.DARK_BLOOD_PROJECTILE_AOE).onlyFor(IRefinementItem.AccessorySlotType.RING));
-            REFINEMENT_SETS.register("half_invulnerable_buffed", () -> new VampireRefinementSet(Rarity.EPIC, 0xa96db7, ModRefinements.HALF_INVULNERABLE, FactionRefinements.ARMOR1));
-            REFINEMENT_SETS.register("sun_screen_buffed", () -> new VampireRefinementSet(Rarity.EPIC, 0xedc20b, ModRefinements.SUN_SCREEN, FactionRefinements.ARMOR1));
-            REFINEMENT_SETS.register("dark_blood_projectile_speed_buffed", () -> new VampireRefinementSet(Rarity.EPIC, 0xeeab6d, ModRefinements.DARK_BLOOD_PROJECTILE_SPEED, FactionRefinements.SPEED1));
+            register(context, "rage_fury", vampire(Rarity.EPIC, 0xc10202), ModRefinements.RAGE_FURY);
+            register(context, "summon_bats_buffed", vampire(Rarity.EPIC, 0x8b8a91), ModRefinements.SUMMON_BATS, FactionRefinements.HEALTH1);
+            register(context, "dark_blood_projectile_aoe", vampire(Rarity.EPIC, 0xe303ff).onlyFor(IRefinementItem.AccessorySlotType.RING), ModRefinements.DARK_BLOOD_PROJECTILE_AOE);
+            register(context, "half_invulnerable_buffed", vampire(Rarity.EPIC, 0xa96db7), ModRefinements.HALF_INVULNERABLE, FactionRefinements.ARMOR1);
+            register(context, "sun_screen_buffed", vampire(Rarity.EPIC, 0xedc20b), ModRefinements.SUN_SCREEN, FactionRefinements.ARMOR1);
+            register(context, "dark_blood_projectile_speed_buffed", vampire(Rarity.EPIC, 0xeeab6d), ModRefinements.DARK_BLOOD_PROJECTILE_SPEED, FactionRefinements.SPEED1);
 
             // de-buffed skill upgrades
-            REFINEMENT_SETS.register("dark_blood_projectile_aoe_debuffed", () -> new VampireRefinementSet(Rarity.EPIC, 0xe303ff, ModRefinements.DARK_BLOOD_PROJECTILE_AOE, FactionRefinements.N_HEALTH1).onlyFor(IRefinementItem.AccessorySlotType.RING));
-            REFINEMENT_SETS.register("rage_fury_debuffed", () -> new VampireRefinementSet(Rarity.EPIC, 0xc10202, ModRefinements.RAGE_FURY, FactionRefinements.N_ARMOR1));
+            register(context, "dark_blood_projectile_aoe_debuffed", vampire(Rarity.EPIC, 0xe303ff).onlyFor(IRefinementItem.AccessorySlotType.RING), ModRefinements.DARK_BLOOD_PROJECTILE_AOE, FactionRefinements.N_HEALTH1);
+            register(context, "rage_fury_debuffed", vampire(Rarity.EPIC, 0xc10202), ModRefinements.RAGE_FURY, FactionRefinements.N_ARMOR1);
 
             //other
-            REFINEMENT_SETS.register("crucifix_resistant_speed", () -> new VampireRefinementSet(Rarity.EPIC, 0x7D55D1, ModRefinements.CRUCIFIX_RESISTANT, FactionRefinements.ATTACK_SPEED1));
-            REFINEMENT_SETS.register("crucifix_resistant_health", () -> new VampireRefinementSet(Rarity.EPIC, 0x7D55D1, ModRefinements.CRUCIFIX_RESISTANT, FactionRefinements.HEALTH2));
+            register(context, "crucifix_resistant_speed", vampire(Rarity.EPIC, 0x7D55D1), ModRefinements.CRUCIFIX_RESISTANT, FactionRefinements.ATTACK_SPEED1);
+            register(context, "crucifix_resistant_health", vampire(Rarity.EPIC, 0x7D55D1), ModRefinements.CRUCIFIX_RESISTANT, FactionRefinements.HEALTH2);
         }
         // Legendary refinement sets
         {
-            REFINEMENT_SETS.register("dark_blood_projectile_aoe_buffed", () -> new VampireRefinementSet(Rarity.LEGENDARY, 0xe303ff, ModRefinements.DARK_BLOOD_PROJECTILE_AOE, FactionRefinements.HEALTH1).onlyFor(IRefinementItem.AccessorySlotType.RING));
-            REFINEMENT_SETS.register("rage_fury_buffed", () -> new VampireRefinementSet(Rarity.LEGENDARY, 0xc10202, ModRefinements.RAGE_FURY, FactionRefinements.ARMOR1));
-            REFINEMENT_SETS.register("dark_blood_projectile_speed_double_buffed", () -> new VampireRefinementSet(Rarity.LEGENDARY, 0xee5acd, ModRefinements.DARK_BLOOD_PROJECTILE_SPEED, FactionRefinements.SPEED3));
+            register(context, "dark_blood_projectile_aoe_buffed", vampire(Rarity.LEGENDARY, 0xe303ff).onlyFor(IRefinementItem.AccessorySlotType.RING), ModRefinements.DARK_BLOOD_PROJECTILE_AOE, FactionRefinements.HEALTH1);
+            register(context, "rage_fury_buffed", vampire(Rarity.LEGENDARY, 0xc10202), ModRefinements.RAGE_FURY, FactionRefinements.ARMOR1);
+            register(context, "dark_blood_projectile_speed_double_buffed", vampire(Rarity.LEGENDARY, 0xee5acd), ModRefinements.DARK_BLOOD_PROJECTILE_SPEED, FactionRefinements.SPEED3);
         }
     }
 
     @SafeVarargs
-    private static IRefinementSet commonV(Holder<IRefinement>... refinements) {
-        return vampire(Rarity.COMMON, refinements);
+    private static void register(BootstrapContext<IRefinementSet> context, String name, RefinementSet.Builder builder, ResourceKey<IRefinement>... refinements) {
+        HolderGetter<IRefinement> lookup = context.lookup(FactionRegistries.Keys.REFINEMENT);
+        ResourceKey<IRefinementSet> key = ResourceKey.create(FactionRegistries.Keys.REFINEMENT_SET, VIdentifier.mod(name));
+        context.register(key, builder.build(key, Arrays.stream(refinements).map(lookup::getOrThrow).toList()));
     }
 
-    @SafeVarargs
-    private static IRefinementSet uncommonV(Holder<IRefinement>... refinements) {
-        return vampire(Rarity.UNCOMMON, refinements);
+    private static RefinementSet.Builder vampire(Rarity rarity) {
+        //noinspection DataFlowIssue
+        return vampire(rarity, rarity.color.getColor());
     }
 
-    @SafeVarargs
-    private static IRefinementSet rareV(Holder<IRefinement>... refinements) {
-        return vampire(Rarity.RARE, refinements);
-    }
-
-    @SafeVarargs
-    private static IRefinementSet epicV(Holder<IRefinement>... refinements) {
-        return vampire(Rarity.EPIC, refinements);
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    @SafeVarargs
-    private static RefinementSet vampire(Rarity rarity, Holder<IRefinement>... refinements) {
-        return new VampireRefinementSet(rarity, rarity.color.getColor(), refinements);
+    private static RefinementSet.Builder vampire(Rarity rarity, int color) {
+        return RefinementSet.builder(VampirismTags.Factions.IS_VAMPIRE, rarity, color);
     }
 }

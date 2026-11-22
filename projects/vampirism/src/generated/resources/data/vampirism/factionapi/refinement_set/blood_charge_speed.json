@@ -1,0 +1,9 @@
+{
+  "color": 15541515,
+  "faction": "vampirism:is_vampire",
+  "name": {
+    "translate": "refinement_set.vampirism.blood_charge_speed"
+  },
+  "rarity": "common",
+  "refinements": "vampirism:blood_charge_speed"
+}

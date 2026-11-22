@@ -1,0 +1,11 @@
+{
+  "description": {
+    "translate": "refinement.factionapi.n_health1.desc"
+  },
+  "detrimental": true,
+  "modifier": {
+    "amount": -1.0,
+    "attribute": "minecraft:max_health",
+    "operation": "add_value"
+  }
+}

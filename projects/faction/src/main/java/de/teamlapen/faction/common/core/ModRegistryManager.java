@@ -34,7 +34,6 @@ public class ModRegistryManager {
         FactionLootContextParamSets.register();
         FactionAttributes.register(bus);
         FactionLoot.register(bus);
-        FactionRefinements.register(bus);
 
         registerModEventHandler(bus);
     }

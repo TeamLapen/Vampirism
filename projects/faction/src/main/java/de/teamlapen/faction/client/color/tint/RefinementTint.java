@@ -5,6 +5,7 @@ import de.teamlapen.faction.api.factions.refinements.IRefinementSet;
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.api.world.items.IRefinementItem;
 import net.minecraft.client.color.item.ItemTintSource;
+import net.minecraft.core.Holder;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,9 +22,9 @@ public class RefinementTint implements ItemTintSource {
     @Override
     public int calculate(@NotNull ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity) {
         if (stack.getItem() instanceof IRefinementItem refinementItem) {
-            IRefinementSet set = refinementItem.getRefinementSet(stack);
+            Holder<IRefinementSet> set = refinementItem.getRefinementSet(stack);
             if (set != null) {
-                return set.getColor() | 0xFF000000;
+                return set.value().getColor() | 0xFF000000;
             }
         }
         return -1;

@@ -1,0 +1,12 @@
+{
+  "color": 13697286,
+  "faction": "vampirism:is_vampire",
+  "name": {
+    "translate": "refinement_set.vampirism.sword_finisher_buffed"
+  },
+  "rarity": "common",
+  "refinements": [
+    "vampirism:sword_finisher",
+    "factionapi:armor1"
+  ]
+}

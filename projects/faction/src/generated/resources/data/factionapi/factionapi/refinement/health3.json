@@ -1,0 +1,10 @@
+{
+  "description": {
+    "translate": "refinement.factionapi.health3.desc"
+  },
+  "modifier": {
+    "amount": 1.5,
+    "attribute": "minecraft:max_health",
+    "operation": "add_value"
+  }
+}

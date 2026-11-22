@@ -1,8 +1,6 @@
 package de.teamlapen.faction.common.util;
 
 import de.teamlapen.faction.api.factions.actions.IAction;
-import de.teamlapen.faction.api.factions.refinements.IRefinement;
-import de.teamlapen.faction.api.factions.refinements.IRefinementSet;
 import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTask;
 import de.teamlapen.faction.api.world.entities.minion.tasks.IMinionTaskCategory;
 import de.teamlapen.faction.common.core.ModRegistries;
@@ -39,16 +37,6 @@ public class RegUtil {
     @SuppressWarnings("DataFlowIssue")
     public static Identifier id(IMinionTaskCategory category) {
         return ModRegistries.MINION_TASK_CATEGORIES.getKey(category);
-    }
-
-    @SuppressWarnings("DataFlowIssue")
-    public static Identifier id(IRefinement refinement) {
-        return ModRegistries.REFINEMENTS.getKey(refinement);
-    }
-
-    @SuppressWarnings("DataFlowIssue")
-    public static Identifier id(IRefinementSet refinementSet) {
-        return ModRegistries.REFINEMENT_SETS.getKey(refinementSet);
     }
 
 }

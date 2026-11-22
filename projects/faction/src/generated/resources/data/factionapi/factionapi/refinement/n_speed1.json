@@ -1,0 +1,11 @@
+{
+  "description": {
+    "translate": "refinement.factionapi.n_speed1.desc"
+  },
+  "detrimental": true,
+  "modifier": {
+    "amount": -0.025,
+    "attribute": "minecraft:movement_speed",
+    "operation": "add_multiplied_base"
+  }
+}

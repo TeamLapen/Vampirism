@@ -1,80 +1,79 @@
 package de.teamlapen.faction.common.world.refinements;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.faction.api.factions.refinements.IRefinement;
-import de.teamlapen.faction.common.core.ModRegistries;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Util;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.BiFunction;
+import java.util.Optional;
 
-public class Refinement implements IRefinement {
+/**
+ * Data driven implementation of {@link IRefinement}
+ *
+ * @param description the description of the refinement
+ * @param modifier    an optional attribute modifier that is applied while the refinement is equipped
+ * @param detrimental whether the refinement makes things worse instead of better
+ */
+public record Refinement(Component description, Optional<Modifier> modifier, boolean detrimental) implements IRefinement {
 
-    private final @Nullable Holder<Attribute> attribute;
-    private final @Nullable BiFunction<Identifier, Double, AttributeModifier> modifier;
-    private final double baseValue;
-    private boolean detrimental = false;
-    @Nullable
-    private String descriptionId;
+    public static final Codec<Refinement> CODEC = RecordCodecBuilder.create(inst -> inst.group(
+            ComponentSerialization.CODEC.fieldOf("description").forGetter(Refinement::description),
+            Modifier.CODEC.optionalFieldOf("modifier").forGetter(Refinement::modifier),
+            Codec.BOOL.optionalFieldOf("detrimental", false).forGetter(Refinement::detrimental)
+    ).apply(inst, Refinement::new));
 
-    public Refinement(@Nullable Holder<Attribute> attribute, double baseValue, @Nullable BiFunction<Identifier, Double, AttributeModifier> modifier) {
-        this.attribute = attribute;
-        this.modifier = modifier;
-        this.baseValue = baseValue;
-    }
+    public static final Codec<IRefinement> DIRECT_CODEC = CODEC.xmap(r -> r, r -> (Refinement) r);
 
-    public Refinement() {
-        this.attribute = null;
-        this.modifier = null;
-        this.baseValue = 0;
-    }
-
-    @Override
-    public @Nullable BiFunction<Identifier, Double, AttributeModifier> attributeFactory() {
-        return this.modifier;
-    }
-
-    @Nullable
-    @Override
-    public Holder<Attribute> getAttribute() {
-        return this.attribute;
-    }
-
-    @Override
-    public @NotNull MutableComponent getDescription() {
-        var desc = IRefinement.super.getDescription();
-        if (this.detrimental) {
-            desc.withStyle(ChatFormatting.RED);
-        }
-        return desc;
-    }
-
-    @Override
-    public @NotNull String getDescriptionId() {
-        if (this.descriptionId == null) {
-            this.descriptionId = Util.makeDescriptionId("refinement", ModRegistries.REFINEMENTS.getKey(this)) + ".desc";
-        }
-        return this.descriptionId;
-    }
-
-    @Override
-    public double getModifierValue() {
-        return this.baseValue;
+    /**
+     * Creates a refinement without an attribute modifier with a translatable description derived from the key
+     */
+    public static Refinement of(ResourceKey<IRefinement> key) {
+        return new Refinement(Component.translatable(descriptionId(key)), Optional.empty(), false);
     }
 
     /**
-     * Set when refinement actually makes things worse instead of better
-     *
-     * @return this
+     * Creates a refinement that modifies the given attribute with a translatable description derived from the key
      */
-    public @NotNull Refinement setDetrimental() {
-        this.detrimental = true;
-        return this;
+    public static Refinement attribute(ResourceKey<IRefinement> key, Holder<Attribute> attribute, double amount, AttributeModifier.Operation operation) {
+        return new Refinement(Component.translatable(descriptionId(key)), Optional.of(new Modifier(attribute, amount, operation)), amount < 0);
+    }
+
+    public static String descriptionId(ResourceKey<IRefinement> key) {
+        return Util.makeDescriptionId("refinement", key.identifier()) + ".desc";
+    }
+
+    @Override
+    public @Nullable Holder<Attribute> getAttribute() {
+        return this.modifier.map(Modifier::attribute).orElse(null);
+    }
+
+    @Override
+    public @Nullable AttributeModifier createAttributeModifier(Identifier id) {
+        return this.modifier.map(m -> new AttributeModifier(id, m.amount(), m.operation())).orElse(null);
+    }
+
+    @Override
+    public Component getDescription() {
+        if (this.detrimental) {
+            return this.description.copy().withStyle(ChatFormatting.RED);
+        }
+        return this.description;
+    }
+
+    public record Modifier(Holder<Attribute> attribute, double amount, AttributeModifier.Operation operation) {
+        public static final Codec<Modifier> CODEC = RecordCodecBuilder.create(inst -> inst.group(
+                Attribute.CODEC.fieldOf("attribute").forGetter(Modifier::attribute),
+                Codec.DOUBLE.fieldOf("amount").forGetter(Modifier::amount),
+                AttributeModifier.Operation.CODEC.fieldOf("operation").forGetter(Modifier::operation)
+        ).apply(inst, Modifier::new));
     }
 }

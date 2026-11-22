@@ -1,0 +1,10 @@
+{
+  "description": {
+    "translate": "refinement.factionapi.speed3.desc"
+  },
+  "modifier": {
+    "amount": 0.075,
+    "attribute": "minecraft:movement_speed",
+    "operation": "add_multiplied_base"
+  }
+}

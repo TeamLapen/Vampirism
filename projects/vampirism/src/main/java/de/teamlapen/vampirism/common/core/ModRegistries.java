@@ -36,6 +36,8 @@ public class ModRegistries {
             .add(FactionRegistries.Keys.TASK, ModTasks::createTasks)
             .add(FactionRegistries.Keys.SKILL_SEGMENT, ModSkills::createSkillSegments)
             .add(FactionRegistries.Keys.SKILL_TREE, ModSkills::createSkillTrees)
+            .add(FactionRegistries.Keys.REFINEMENT, ModRefinements::createRefinements)
+            .add(FactionRegistries.Keys.REFINEMENT_SET, ModRefinementSets::createRefinementSets)
             .add(VampirismRegistries.Keys.VAMPIRE_BOOK, ModVampireBooks::createVampireBooks)
             .add(Registries.ENCHANTMENT, ModEnchantments::createEnchantments)
             .add(Registries.TIMELINE, ModVillage::createTimelines)

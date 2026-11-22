@@ -1,0 +1,12 @@
+{
+  "color": 15580939,
+  "faction": "vampirism:is_vampire",
+  "name": {
+    "translate": "refinement_set.vampirism.regeneration_buffed"
+  },
+  "rarity": "common",
+  "refinements": [
+    "vampirism:regeneration",
+    "factionapi:speed1"
+  ]
+}
