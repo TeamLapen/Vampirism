@@ -823,7 +823,6 @@
   "dialogue.vampirism.hunter_minion.upgrade": "Cảm ơn ngài vì những nâng cấp về trang bị. Xin hãy chọn vùng tôi nên luyện tập.",
   "dialogue.vampirism.hunter_minion.wrong_upgrade": "Tôi không thể sử dụng nâng cấp này",
   "misc.vampirism.unknown": "Không rõ",
-  "tooltip.vampirism.minion_upgrade": "Nâng một cấp độ",
   "tooltip.vampirism.alchemical_fire.desc1": "Không lây lan",
   "tooltip.vampirism.alchemical_fire.desc2": "Burns vô thời hạn",
   "tooltip.vampirism.more_damage_against": "Gây thêm %1$s% sát thương lên %2$s%",
