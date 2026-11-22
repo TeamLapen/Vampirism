@@ -1,5 +1,6 @@
 package de.teamlapen.faction.common.core;
 
+import de.teamlapen.faction.api.FactionRegistries;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.jetbrains.annotations.ApiStatus;
@@ -33,6 +34,7 @@ public class ModRegistryManager {
         FactionLootContextParamSets.register();
         FactionAttributes.register(bus);
         FactionLoot.register(bus);
+        FactionRefinements.register(bus);
 
         registerModEventHandler(bus);
     }
