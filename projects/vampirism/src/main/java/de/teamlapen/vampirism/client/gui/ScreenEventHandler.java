@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.InBedChatScreen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -18,6 +19,7 @@ import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPosition
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
@@ -79,12 +81,11 @@ public class ScreenEventHandler {
         if (event.getScreen() instanceof InBedChatScreen) {
             Player p = event.getScreen().getMinecraft().player;
             if (p != null && p.isSleeping()) {
-                GuiEventListener l = event.getScreen().children().get(1);
-                if (l instanceof AbstractWidget leaveButton) {
-                    p.getSleepingPos().map(pos -> p.level().getBlockState(pos).getBlock()).map(block -> block instanceof TentBlock ? "gui.vampirism.tent.stop_sleeping" : (block instanceof CoffinBlock ? "gui.vampirism.coffin.stop_sleeping" : null)).ifPresent(newText ->
-                        leaveButton.setMessage(Component.translatable(newText))
-                    );
-                }
+                MutableComponent originalMessage = Component.translatable("multiplayer.stopSleeping");
+                var button = event.getScreen().children().stream().filter(Button.class::isInstance).map(Button.class::cast).filter(x -> x.getMessage().equals(originalMessage)).findFirst();
+                button.ifPresent(value -> p.getSleepingPos().map(pos -> p.level().getBlockState(pos).getBlock()).map(block -> block instanceof TentBlock ? "gui.vampirism.tent.stop_sleeping" : (block instanceof CoffinBlock ? "gui.vampirism.coffin.stop_sleeping" : null)).ifPresent(text -> {
+                    value.setMessage(Component.translatable(text));
+                }));
             }
         }
     }
