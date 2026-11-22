@@ -93,6 +93,7 @@
   "tooltip.factionapi.tier.normal": "Нормальний",
   "tooltip.factionapi.tier.enhanced": "Поліпшене",
   "tooltip.factionapi.tier.ultimate": "Ультимативне",
+  "tooltip.factionapi.minion_upgrade": "Підвищення рівня",
   "command.factionapi.base.level.successful": "%s тепер має %s рівень %s",
   "command.factionapi.base.bind_action.success": "Успішно прив’язано дію %s до клавіші %s",
   "command.factionapi.base.bind_action.not_existing": "Дана дія %s не існує",
