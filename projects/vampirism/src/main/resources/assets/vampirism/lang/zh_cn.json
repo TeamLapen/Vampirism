@@ -1035,8 +1035,6 @@
   "dialogue.vampirism.hunter_minion.upgrade": "谢谢你的训练设备。请指导我应该增强哪一方面。",
   "dialogue.vampirism.hunter_minion.wrong_upgrade": "我不能用这个升级",
   "misc.vampirism.unknown": "未知",
-  "tooltip.vampirism.minion_upgrade": "提高一级",
-  "tooltip.vampirism.for_to_levels": "专供%1$s 到 %2$s 级",
   "tooltip.vampirism.quarrel_effect": "击中时：",
   "tooltip.vampirism.quarrel_vampire_killer": "秒杀低级吸血鬼NPC",
   "tooltip.vampirism.quarrel_spitfire": "在击中时生成炼金之火",
