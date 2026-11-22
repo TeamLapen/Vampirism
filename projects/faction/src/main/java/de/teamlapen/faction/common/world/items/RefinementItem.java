@@ -84,7 +84,7 @@ public class RefinementItem extends Item implements IRefinementItem, BaseDisplay
         Holder<IRefinementSet> set = getRefinementSet(stack);
         if (set != null) {
             tooltipComponents.accept(Component.empty());
-            tooltipComponents.accept(Component.translatable("tooltip.vampirism.refinement.when_equipped").withStyle(ChatFormatting.DARK_PURPLE));
+            tooltipComponents.accept(Component.translatable("tooltip.factionapi.refinement.when_equipped").withStyle(ChatFormatting.DARK_PURPLE));
 
             Multimap<Holder<Attribute>, AttributeModifier> map = LinkedListMultimap.create();
             for (Holder<IRefinement> refinement : set.value().getRefinements()) {

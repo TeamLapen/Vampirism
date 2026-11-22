@@ -1288,7 +1288,6 @@
   "tooltip.vampirism.oil.lasts": "Lasts %s uses",
   "tooltip.vampirism.oil.applied": "Applied Oil Hit Effects:",
   "tooltip.vampirism.oil.applied_left": "Will last for %s more uses",
-  "tooltip.vampirism.refinement.when_equipped": "When equipped:",
   "tooltip.vampirism.no_entity_spawn": "No entity can spawn on this",
   "tooltip.vampirism.only_vampire_spawn": "Only Vampires can spawn on this",
   "tooltip.vampirism.sunscreen_beacon.desc1": "Creative only",
