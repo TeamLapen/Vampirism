@@ -103,7 +103,7 @@ public class LordPlayer extends FactionExtension implements ILordPlayer {
         });
 
         if (player instanceof ServerPlayer serverPlayer) {
-            FactionAdvancements.TRIGGER_FACTION.get().trigger(serverPlayer, change.getFaction(), this.currentLordLevel);
+            FactionAdvancements.TRIGGER_LORD.get().trigger(serverPlayer, change.getFaction(), this.currentLordLevel);
         }
         sync();
     }
