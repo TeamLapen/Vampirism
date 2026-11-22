@@ -139,6 +139,7 @@
   "tooltip.factionapi.tier.normal": "Normal",
   "tooltip.factionapi.tier.enhanced": "Mejorado",
   "tooltip.factionapi.tier.ultimate": "Definitivo",
+  "tooltip.factionapi.minion_upgrade": "Sube un nivel",
   "command.factionapi.base.level.successful": "%s ahora es un %s nivel %s",
   "command.factionapi.base.bind_action.success": "Acción vinculada correctamente %s a la tecla %s",
   "command.factionapi.base.bind_action.not_existing": "La acción %s no existe",
