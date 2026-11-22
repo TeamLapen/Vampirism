@@ -571,7 +571,6 @@
   "dialogue.vampirism.hunter_minion.upgrade": "Дякую вам за оновлення обладунків. Будь ласка, покажіть місце для тренування.",
   "dialogue.vampirism.hunter_minion.wrong_upgrade": "Я не можу використовувати це оновлення",
   "misc.vampirism.unknown": "Невідомо",
-  "tooltip.vampirism.minion_upgrade": "Підвищення рівня",
   "tooltip.vampirism.alchemical_fire.desc1": "Не розтікається",
   "tooltip.vampirism.alchemical_fire.desc2": "Нескінченно горить",
   "tooltip.vampirism.more_damage_against": "Завдає на %s відсотків більше шкоди проти %s",
