@@ -22,6 +22,7 @@
     "NoiseGeneratorSettingsMixin",
     "PotionBrewingMixin",
     "PowderSnowBlockMixin",
+    "ServerGamePacketListenerImplMixin",
     "SpawnStateMixin",
     "StructureMixin",
     "StructurePacketMixin",
