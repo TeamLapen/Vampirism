@@ -1082,8 +1082,6 @@
   "dialogue.vampirism.hunter_minion.upgrade": "Благодарю за улучшенное снаряжение. Прошу, выберите, в какой области мне стоит тренироваться",
   "dialogue.vampirism.hunter_minion.wrong_upgrade": "Я не могу использовать это улучшение",
   "misc.vampirism.unknown": "неизвестно",
-  "tooltip.vampirism.minion_upgrade": "Повышение на один уровень",
-  "tooltip.vampirism.for_to_levels": "Для уровней с %1$s по %2$s",
   "tooltip.vampirism.quarrel_effect": "При попадании:",
   "tooltip.vampirism.quarrel_vampire_killer": "Мгновенно убивает вампиров-NPC низкого уровня",
   "tooltip.vampirism.quarrel_spitfire": "Создаёт алхимический огонь",
