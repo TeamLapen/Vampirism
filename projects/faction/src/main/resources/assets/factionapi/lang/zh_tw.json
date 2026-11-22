@@ -95,6 +95,7 @@
   "tooltip.factionapi.tier.normal": "一般",
   "tooltip.factionapi.tier.enhanced": "強化",
   "tooltip.factionapi.tier.ultimate": "終極",
+  "tooltip.factionapi.minion_upgrade": "一次性升級等級",
   "command.factionapi.base.level.successful": "%s 現在是 %s 等級 %s",
   "command.factionapi.base.bind_action.success": "成功綁定招式 %s 到招式鍵 %s",
   "command.factionapi.base.bind_action.not_existing": "特定的招式 %s 不存在",
