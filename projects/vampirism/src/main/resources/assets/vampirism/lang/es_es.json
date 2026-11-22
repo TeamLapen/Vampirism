@@ -610,7 +610,6 @@
   "dialogue.vampirism.hunter_minion.upgrade": "Muchas gracias por el equipo mejorado. Porfavor, indíqueme que área debería entrenar.",
   "dialogue.vampirism.hunter_minion.wrong_upgrade": "No puedo usar esta mejora",
   "misc.vampirism.unknown": "Desconocido",
-  "tooltip.vampirism.minion_upgrade": "Sube un nivel",
   "tooltip.vampirism.alchemical_fire.desc1": "No se propaga",
   "tooltip.vampirism.alchemical_fire.desc2": "Arde indefinidamente",
   "tooltip.vampirism.more_damage_against": "Hace %s porciento más de daño contra %s",
