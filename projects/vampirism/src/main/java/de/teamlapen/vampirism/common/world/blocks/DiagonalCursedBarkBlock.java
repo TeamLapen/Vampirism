@@ -3,13 +3,11 @@ package de.teamlapen.vampirism.common.world.blocks;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import de.teamlapen.vampirism.common.core.ModBlocks;
-import de.teamlapen.vampirism.common.util.Helper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.InsideBlockEffectApplier;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
@@ -86,7 +84,7 @@ public class DiagonalCursedBarkBlock extends CursedBarkBlock {
 
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier applier, boolean intersects) {
-        if (Helper.isVampire(entity) || (entity instanceof Player player && player.getAbilities().invulnerable)) return;
+        if (!canAffect(entity)) return;
         BlockPos targetPos = pos;
         for (Map.Entry<BooleanProperty, Pair<Direction, Direction>> entry : DIRECTION_MAP.entrySet()) {
             if (state.getValue(entry.getKey())) {

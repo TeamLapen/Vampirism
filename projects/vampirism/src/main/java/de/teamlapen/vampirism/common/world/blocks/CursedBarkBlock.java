@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.common.world.blocks;
 
 import de.teamlapen.vampirism.api.world.blocks.HolyWaterEffectConsumer;
 import de.teamlapen.library.api.world.items.IItemWithTier;
+import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.entity.ExtendedCreature;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import net.minecraft.core.BlockPos;
@@ -27,6 +28,18 @@ public abstract class CursedBarkBlock extends Block implements HolyWaterEffectCo
     public CursedBarkBlock(Properties properties) {
         super(properties.noCollision().replaceable().strength(0.0F).pushReaction(PushReaction.DESTROY).ignitedByLava().isViewBlocking((_,_,_) -> false));
         ((FireBlock) Blocks.FIRE).setFlammable(this, 5, 5);
+    }
+
+    /**
+     * @return whether the bark should pull the given entity. Only entities that have blood are affected:
+     * non-vampire, non-creative players and creatures that currently have blood left.
+     */
+    protected boolean canAffect(Entity entity) {
+        if (Helper.isVampire(entity)) return false;
+        if (entity instanceof Player player) {
+            return !player.getAbilities().invulnerable;
+        }
+        return ExtendedCreature.getSafe(entity).map(creature -> creature.getBlood() > 0).orElse(false);
     }
 
     protected void moveEntityTo(Level level, Entity entity, BlockPos targetPos) {
