@@ -64,6 +64,7 @@
   "tooltip.factionapi.tier.normal": "Normalny",
   "tooltip.factionapi.tier.enhanced": "Ulepszony",
   "tooltip.factionapi.tier.ultimate": "Ostateczny",
+  "tooltip.factionapi.minion_upgrade": "Jeden poziom",
   "command.factionapi.base.level.successful": "%s jest teraz na %s poziomie %s",
   "command.factionapi.base.bind_action.success": "Pomyślnie przypięto akcje %s do przycisku %s",
   "command.factionapi.base.bind_action.not_existing": "Podana akcja %s nie istnieje",
