@@ -609,7 +609,6 @@
   "dialogue.vampirism.hunter_minion.upgrade": "感謝你升級裝備。請選擇我應該訓練的能力。",
   "dialogue.vampirism.hunter_minion.wrong_upgrade": "我無法使用此升級",
   "misc.vampirism.unknown": "未知",
-  "tooltip.vampirism.minion_upgrade": "一次性升級等級",
   "tooltip.vampirism.alchemical_fire.desc1": "不會傳播",
   "tooltip.vampirism.alchemical_fire.desc2": "永久燃燒",
   "tooltip.vampirism.more_damage_against": "對付 %s 時造成 %s %更高的傷害",
