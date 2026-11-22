@@ -460,27 +460,31 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void canContinueToSleep(CanContinueSleepingEvent event) {
-        if (Helper.isVampire(event.getEntity()) && event.getEntity().getSleepingPos().map(s -> event.getEntity().level().getBlockState(s)).map(s -> s.getBlock() instanceof CoffinBlock).orElse(false)) {
-            BedRule value = event.getEntity().level().environmentAttributes().getValue(EnvironmentAttributes.BED_RULE, event.getEntity().position());
-            if (value.canSleep() == BedRule.Rule.WHEN_DARK) {
-                event.setContinueSleeping(!value.canSleep(event.getEntity().level()));
-            } else {
-                event.setContinueSleeping(value.canSleep(event.getEntity().level()));
-            }
-        }
+        getCoffinBedRule(event.getEntity()).ifPresent(rule -> event.setContinueSleeping(isDaySleep(rule, event.getEntity().level())));
     }
 
     @SubscribeEvent
     public void sleepTimeFinish(SleepFinishedTimeEvent event) {
-        if (event.getLevel() instanceof ServerLevel && Helper.isDay(event.getLevel(), BlockPos.ZERO)) {
-            boolean sleepingInCoffin = event.getLevel().players().stream().anyMatch(player -> {
-                Optional<BlockPos> pos = player.getSleepingPos();
-                return pos.isPresent() && event.getLevel().getBlockState(pos.get()).getBlock() instanceof CoffinBlock;
-            });
-            if (sleepingInCoffin) {
-                event.setAdjustment(new ClockAdjustment.Marker(ClockTimeMarkers.NIGHT));
-            }
+        if (event.getLevel() instanceof ServerLevel level && level.players().stream().anyMatch(player -> player.isSleeping() && getCoffinBedRule(player).filter(rule -> isDaySleep(rule, level)).isPresent())) {
+            event.setAdjustment(new ClockAdjustment.Marker(ClockTimeMarkers.NIGHT));
         }
+    }
+
+    private static Optional<BedRule> getCoffinBedRule(LivingEntity entity) {
+        if (!Helper.isVampire(entity)) {
+            return Optional.empty();
+        }
+        Level level = entity.level();
+        return entity.getSleepingPos()
+                .filter(pos -> level.getBlockState(pos).getBlock() instanceof CoffinBlock)
+                .map(pos -> level.environmentAttributes().getValue(EnvironmentAttributes.BED_RULE, entity.position()));
+    }
+
+    /**
+     * Coffins invert {@link BedRule.Rule#WHEN_DARK}: a day sleep is one only a coffin permits, where a regular bed would not.
+     */
+    private static boolean isDaySleep(BedRule rule, Level level) {
+        return rule.canSleep() == BedRule.Rule.WHEN_DARK && !rule.canSleep(level);
     }
 
 
