@@ -463,7 +463,7 @@ public class ModPlayerEventHandler {
         getCoffinBedRule(event.getEntity()).ifPresent(rule -> event.setContinueSleeping(isDaySleep(rule, event.getEntity().level())));
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void sleepTimeFinish(SleepFinishedTimeEvent event) {
         if (event.getLevel() instanceof ServerLevel level && level.players().stream().anyMatch(player -> player.isSleeping() && getCoffinBedRule(player).filter(rule -> isDaySleep(rule, level)).isPresent())) {
             event.setAdjustment(new ClockAdjustment.Marker(ClockTimeMarkers.NIGHT));
