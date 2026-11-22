@@ -175,6 +175,8 @@
   "tooltip.factionapi.tier.normal": "Обычный",
   "tooltip.factionapi.tier.enhanced": "Улучшенный",
   "tooltip.factionapi.tier.ultimate": "Совершенный",
+  "tooltip.factionapi.minion_upgrade": "Повышение на один уровень",
+  "tooltip.factionapi.for_to_levels": "Для уровней с %1$s по %2$s",
   "command.factionapi.base.level.successful": "%1$s теперь %2$s %3$s уровня",
   "command.factionapi.base.get_level.successful": "%1$s — %2$s %3$s уровня и %4$s уровня лорда",
   "command.factionapi.base.bind_action.success": "Умение %1$s успешно назначено на клавишу умений %2$s",
