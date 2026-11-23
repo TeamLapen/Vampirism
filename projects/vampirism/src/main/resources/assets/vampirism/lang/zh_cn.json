@@ -1053,7 +1053,6 @@
   "tooltip.vampirism.oil.lasts": "油还可生效 %s次",
   "tooltip.vampirism.oil.applied": "涂油效果：",
   "tooltip.vampirism.oil.applied_left": "还可以使用 %s 次",
-  "tooltip.vampirism.refinement.when_equipped": "装备时:",
   "tooltip.vampirism.no_entity_spawn": "其上不能生成实体",
   "tooltip.vampirism.only_vampire_spawn": "只有吸血鬼可以在此处生成",
   "tooltip.vampirism.sunscreen_beacon.desc1": "仅限创造模式",
