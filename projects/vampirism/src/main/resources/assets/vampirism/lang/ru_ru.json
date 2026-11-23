@@ -1103,7 +1103,6 @@
   "tooltip.vampirism.oil.on_pickaxe": "При нанесении на кирку:",
   "tooltip.vampirism.oil.auto_smelting": "Автоматически переплавляет разрушенные блоки",
   "tooltip.vampirism.oil.wetting": "Смачивается",
-  "tooltip.vampirism.refinement.when_equipped": "Когда надето:",
   "tooltip.vampirism.no_entity_spawn": "На этом блоке не могут спавниться существа",
   "tooltip.vampirism.only_vampire_spawn": "На этом блоке могут спавниться только вампиры",
   "tooltip.vampirism.sunscreen_beacon.desc1": "Только для творческого режима",
