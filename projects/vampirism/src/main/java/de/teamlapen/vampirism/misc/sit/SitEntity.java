@@ -60,6 +60,22 @@ public class SitEntity extends Entity {
     }
 
     @Override
+    protected void addPassenger(Entity passenger) {
+        super.addPassenger(passenger);
+
+        // turn the passenger into the sitting direction. Runs on both sides, the client is authoritative for the player's rotation
+        float yRot = this.getYRot();
+        passenger.setYRot(yRot);
+        passenger.yRotO = yRot;
+        passenger.setYHeadRot(yRot);
+        if (passenger instanceof LivingEntity living) {
+            living.setYBodyRot(yRot);
+            living.yBodyRotO = yRot;
+            living.yHeadRotO = yRot;
+        }
+    }
+
+    @Override
     protected void positionRider(Entity passenger, MoveFunction callback) {
         super.positionRider(passenger, callback);
 
