@@ -7,7 +7,6 @@
   },
   "carvers": [
     "minecraft:cave",
-    "minecraft:cave_extra_underground",
     "minecraft:canyon"
   ],
   "creature_spawn_probability": 0.5,
@@ -20,10 +19,7 @@
   },
   "features": [
     [],
-    [
-      "minecraft:lake_lava_underground",
-      "minecraft:lake_lava_surface"
-    ],
+    [],
     [],
     [],
     [],
