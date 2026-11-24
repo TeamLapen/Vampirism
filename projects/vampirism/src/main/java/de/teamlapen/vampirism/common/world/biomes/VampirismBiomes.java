@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.common.world.features.VampirismFeatures;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.worldgen.BiomeDefaultFeatures;
+import net.minecraft.data.worldgen.Carvers;
 import net.minecraft.data.worldgen.placement.MiscOverworldPlacements;
 import net.minecraft.data.worldgen.placement.OrePlacements;
 import net.minecraft.sounds.SoundEvents;
@@ -90,7 +91,8 @@ public class VampirismBiomes {
 
         BiomeGenerationSettings.Builder generationSettings = new BiomeGenerationSettings.Builder(placedFeatures, worldCarvers);
 
-        BiomeDefaultFeatures.addDefaultCarversAndLakes(generationSettings);
+        generationSettings.addCarver(Carvers.CAVE);
+        generationSettings.addCarver(Carvers.CANYON);
 
         addVampireFlower(generationSettings);
         addBushPatch(generationSettings);
