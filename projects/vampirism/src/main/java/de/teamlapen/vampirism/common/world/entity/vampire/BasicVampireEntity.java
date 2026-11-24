@@ -409,9 +409,9 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                             player.sendOverlayMessage(Component.translatable("dialogue.vampirism.vampire_minion.no_free_slot"));
                         } else {
                             String key = switch (this.getRandom().nextInt(3)) {
-                                case 0 -> "dialogue.vampirism.vampire.minion.start_serving1";
-                                case 1 -> "dialogue.vampirism.vampire.minion.start_serving2";
-                                default -> "dialogue.vampirism.vampire.minion.start_serving3";
+                                case 0 -> "dialogue.vampirism.vampire_minion.start_serving1";
+                                case 1 -> "dialogue.vampirism.vampire_minion.start_serving2";
+                                default -> "dialogue.vampirism.vampire_minion.start_serving3";
                             };
                             player.sendSystemMessage(Component.translatable(key));
                             convertToMinion(player);
