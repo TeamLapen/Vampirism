@@ -39,6 +39,9 @@ public class SkillProperties<T extends ISkillPlayer<T>> {
     private boolean addDefaultDescription;
     private boolean separateSkillName;
 
+    public SkillProperties() {
+        component(FactionDataComponents.SKILL_COST, 1);
+    }
 
     //<editor-fold desc="Value Getter">
     public SkillProperties<T> setId(ResourceKey<ISkill<?>> id) {
@@ -179,7 +182,6 @@ public class SkillProperties<T extends ISkillPlayer<T>> {
                     if (i != null && i < 0) {
                         throw new IllegalStateException("Skill cost must be positive for: " + key);
                     }
-                    builder.set(FactionDataComponents.SKILL_COST, 1);
                 });
     }
 
