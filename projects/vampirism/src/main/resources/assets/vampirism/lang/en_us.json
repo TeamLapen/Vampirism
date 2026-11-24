@@ -1240,6 +1240,7 @@
   "dialogue.vampirism.hunter_trainer.undercover": "I am not a hunter",
   "dialogue.vampirism.hunter_trainer.undercover.hunter": "It is not safe enough to train you here. Please free the village",
   "dialogue.vampirism.vampire_minion.available": "This vampire can be bound to you making it your minion",
+  "dialogue.vampirism.vampire_minion.unavailable": "This vampire is too powerful to be bound to you",
   "dialogue.vampirism.vampire_minion.start_serving1": "You appear to be someone of great value, I shall endeavor with you my lord",
   "dialogue.vampirism.vampire_minion.start_serving2": "It's indeed an honor to be sired to one such as yourself!",
   "dialogue.vampirism.vampire_minion.start_serving3": "I appreciate your kindness and hospitality, I shall serve you, Sire",
