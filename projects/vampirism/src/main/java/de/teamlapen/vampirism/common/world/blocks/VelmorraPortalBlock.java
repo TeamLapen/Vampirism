@@ -14,13 +14,16 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.InsideBlockEffectApplier;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Relative;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LiquidBlockContainer;
 import net.minecraft.world.level.block.Portal;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -33,6 +36,7 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.EndPlatformFeature;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -41,7 +45,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
-public class VelmorraPortalBlock extends BaseEntityBlock implements Portal {
+public class VelmorraPortalBlock extends BaseEntityBlock implements Portal, LiquidBlockContainer {
 
     public static final MapCodec<VelmorraPortalBlock> CODEC = simpleCodec(VelmorraPortalBlock::new);
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
@@ -127,6 +131,19 @@ public class VelmorraPortalBlock extends BaseEntityBlock implements Portal {
 
     @Override
     protected boolean canBeReplaced(BlockState state, Fluid fluid) {
+        return false;
+    }
+
+    /**
+     * Fluids never flow into or replace the portal (vanilla only hardcodes this for nether/end portals)
+     */
+    @Override
+    public boolean canPlaceLiquid(@Nullable LivingEntity user, BlockGetter level, BlockPos pos, BlockState state, Fluid type) {
+        return false;
+    }
+
+    @Override
+    public boolean placeLiquid(LevelAccessor level, BlockPos pos, BlockState state, FluidState fluidState) {
         return false;
     }
 

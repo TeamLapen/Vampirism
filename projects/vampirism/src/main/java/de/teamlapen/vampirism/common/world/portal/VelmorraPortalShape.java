@@ -14,6 +14,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
@@ -196,22 +197,21 @@ public class VelmorraPortalShape {
         return a1 && a2 && a3 && a4 && a5 && a6 && a7 && a8 && a9 && a10 && a11 && a12 && a13 && a14 && a15;
     }
 
+    /**
+     * @param active if true, all inner blocks must be portal blocks. Otherwise, they may also be air or liquids (which are replaced on activation)
+     */
     private static boolean checkInner(BlockGetter level, BlockPos bottomLeft, Direction direction, boolean active) {
-        Block[] blocksToCheck = active ? new Block[]{ModBlocks.VELMORRA_PORTAL.get()} : new Block[]{ModBlocks.VELMORRA_PORTAL.get(), Blocks.AIR};
-        boolean a1 = checkBlock(level, bottomLeft.above(1).relative(direction, 1), blocksToCheck);
-        boolean a2 = checkBlock(level, bottomLeft.above(1).relative(direction, 2), blocksToCheck);
-        boolean a3 = checkBlock(level, bottomLeft.above(1).relative(direction, 3), blocksToCheck);
-        boolean a4 = checkBlock(level, bottomLeft.above(2).relative(direction, 1), blocksToCheck);
-        boolean a5 = checkBlock(level, bottomLeft.above(2).relative(direction, 2), blocksToCheck);
-        boolean a6 = checkBlock(level, bottomLeft.above(2).relative(direction, 3), blocksToCheck);
-        boolean a7 = checkBlock(level, bottomLeft.above(3).relative(direction, 1), blocksToCheck);
-        boolean a8 = checkBlock(level, bottomLeft.above(3).relative(direction, 2), blocksToCheck);
-        boolean a9 = checkBlock(level, bottomLeft.above(3).relative(direction, 3), blocksToCheck);
-        boolean a10 = checkBlock(level, bottomLeft.above(4).relative(direction, 1), blocksToCheck);
-        boolean a11 = checkBlock(level, bottomLeft.above(4).relative(direction, 2), blocksToCheck);
-        boolean a12 = checkBlock(level, bottomLeft.above(4).relative(direction, 3), blocksToCheck);
-
-        return a1 && a2 && a3 && a4 && a5 && a6 && a7 && a8 && a9 && a10 && a11 && a12;
+        Predicate<BlockState> valid = active
+                ? state -> state.is(ModBlocks.VELMORRA_PORTAL)
+                : state -> state.is(ModBlocks.VELMORRA_PORTAL) || state.isAir() || state.getBlock() instanceof LiquidBlock;
+        for (int height = 1; height <= 4; height++) {
+            for (int width = 1; width <= 3; width++) {
+                if (!valid.test(level.getBlockState(bottomLeft.above(height).relative(direction, width)))) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     private static boolean checkBlock(BlockGetter level, BlockPos pos, Block... block) {
