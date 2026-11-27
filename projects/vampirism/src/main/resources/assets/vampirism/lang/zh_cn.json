@@ -434,7 +434,7 @@
   "attribute.vampirism.sundamage": "晒伤",
   "attribute.vampirism.blood_exhaustion": "油灯枯竭",
   "attribute.vampirism.neonatal_duration": "新生",
-  "attribute.vampirism.dbno_duration": "败倒",
+  "attribute.vampirism.dbno_duration": "死而不朽",
   "fluid.vampirism.blood": "血液",
   "fluid.vampirism.blood.vampirism": "血",
   "enchantment.vampirism.arrow_frugality": "耐久之箭",
@@ -1221,6 +1221,6 @@
   "vampirism.configuration.renderVampireEyes": "渲染吸血鬼眼睛",
   "vampirism.configuration.jumpBoost": "跳跃提升",
   "vampirism.configuration.sundamagePerTick": "晒伤",
-  "vampirism.configuration.dbnoDuration": "败倒",
+  "vampirism.configuration.dbnoDuration": "死而不朽",
   "vampirism.configuration.neonatalDuration": "新生"
 }
