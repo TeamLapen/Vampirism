@@ -8,5 +8,7 @@
   "gui.factionapi.minion.active_task": "المهمة الحالية",
   "gui.factionapi.minion_stats.level": "مستوى",
   "gui.factionapi.level": "مستوى",
+  "tooltip.factionapi.tier.normal": "عادي",
+  "tooltip.factionapi.tier.enhanced": "متطور",
   "command.factionapi.failed_to_execute": "فشل تنفيذ الأمر. حدث خطأ داخلي."
 }

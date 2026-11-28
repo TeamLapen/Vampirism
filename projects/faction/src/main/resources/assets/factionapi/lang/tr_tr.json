@@ -1,8 +1,13 @@
 {
   "effect.factionapi.oblivion": "Unutma",
+  "effect.factionapi.lord_speed": "Hız",
+  "effect.factionapi.lord_attack_speed": "Saldırı Hızı",
+  "action.factionapi.lord_speed": "Lord Hareket Hızı",
+  "action.factionapi.lord_attack_speed": "Lord Saldırı Hızı",
   "minion_task.factionapi.follow_lord": "Takip Et",
   "minion_task.factionapi.protect_lord": "Lord'u Savun",
   "minion_task.factionapi.nothing": "Hiçbir şey",
+  "minion_task.factionapi.collect_resources.start": "Gidip kaynak arayacağım",
   "minion_task.factionapi.call_single": "Tek çağır",
   "minion_task.factionapi.call_all": "Hepsini çağır",
   "minion_task.factionapi.respawn": "Ölüleri dirilt",
@@ -36,6 +41,7 @@
   "gui.factionapi.minion.name": "İsim: ",
   "gui.factionapi.minion_stats": "Dalkavuk İstatistikleri",
   "gui.factionapi.minion_stats.level": "Seviye",
+  "gui.factionapi.minion_stats.inventory_level": "Envanter Boyutu",
   "gui.factionapi.reset": "Sıfırla",
   "gui.factionapi.reset_question": "Emin misin?",
   "gui.factionapi.level": "Seviye",
@@ -52,6 +58,9 @@
   "message.factionapi.minion.minions_recovering": "%s dalkavukları hala iyileşiyor",
   "dialogue.factionapi.minion.died_on_task": "Lordum, üzgünüm ama görevinizi yerine getirirken öldüm",
   "tooltip.factionapi.required_level": "Gereken seviye: %s",
+  "tooltip.factionapi.tier.normal": "Normal",
+  "tooltip.factionapi.tier.enhanced": "Geliştirilmiş",
+  "tooltip.factionapi.tier.ultimate": "Nihai",
   "command.factionapi.base.level.successful": "%s şimdi %s seviye %s",
   "command.factionapi.base.bind_action.success": "%s aksiyonu başarıyla %s tuşuna bağlandı",
   "command.factionapi.base.bind_action.not_existing": "Belirtilen %s aksiyonu yok",
@@ -78,5 +87,6 @@
   "command.factionapi.test.skill.disabled": "Yetenek devre dışı bırakıldı",
   "command.factionapi.failed_to_execute": "Komut çalıştırılamadı. İç hata.",
   "command.factionapi.failed_to_execute.players": "%s için komut yürütme başarısız oldu. İç Hata.",
-  "factionapi.configuration.world": "Dünya"
+  "factionapi.configuration.world": "Dünya",
+  "attribute.factionapi.resource_efficiency": "Kaynak Verimliliği"
 }
